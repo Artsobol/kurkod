@@ -1,18 +1,20 @@
 <template>
   <header class="header">
-    <nav class="nav">
-      <h1 class="logo">🌐 My Website</h1>
-      <ul class="menu">
-        <li><a href="#">Главная</a></li>
-        <li><a href="#">О нас</a></li>
-        <li><a href="#">Контакты</a></li>
-      </ul>
-    </nav>
+    <h1 class="header__title">
+
+    </h1>
   </header>
 </template>
 
 <script setup>
-// Здесь JS-кода нет, но позже можно добавить логику (например, переключение темы)
+
+// Объявляем проп title
+defineProps({
+  title: {
+    type: String,
+    required: true
+  }
+})
 </script>
 
 <style scoped>
