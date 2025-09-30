@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import PanelItem from '../Panel/PanelItem.vue'
+import PanelItem from './PanelItem.vue'
 
 const panelItems = [
   {
@@ -61,18 +61,28 @@ const panelItems = [
 
 <style lang="scss" scoped>
 .panel {
-  width: 250px;
-  height: 100vh;
+  width: 350px;
   background-color: var(--color-white);
-  padding-top: 28px;
-  padding-left: 39px;
+  padding-top: 38px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
+
+
+  @include laptop {
+    width: 250px;
+    padding-top: 28px;
+  }
 }
+
 .panel__list {
   display: flex;
   flex-direction: column;
-  gap: 26px;
+  gap: 38px;
 
-
+  @include laptop {
+    gap: 26px;
+  }
 }
 </style>

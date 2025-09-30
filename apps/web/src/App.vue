@@ -1,6 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router'
-import Header from './components/layouts/Header/Header.vue'
+import Header from './components/layouts/Header.vue'
 const route = useRoute()
 </script>
 

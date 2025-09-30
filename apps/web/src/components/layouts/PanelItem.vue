@@ -10,7 +10,7 @@
           height="48"
       >
       <span class="panel-item__title">
-        {{title}}
+        {{ title }}
       </span>
     </a>
 
@@ -36,13 +36,18 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
-  .panel-item__link {
-    display: flex;
-    gap: 16px;
-    align-items: center;
+.panel-item__link {
+  display: flex;
+  gap: 20px;
+  align-items: center;
 
-    font-weight: 500;
+  font-weight: 500;
+  font-size: 22px;
+  color: var(--color-brown-light);
+
+  @include laptop {
     font-size: 18px;
-    color: var(--color-brown-light);
+    gap: 16px;
   }
+}
 </style>
