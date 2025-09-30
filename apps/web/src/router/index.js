@@ -7,7 +7,7 @@ const routes = [
     path: '/',
     name: 'Home',
     component: HomePage,
-    meta: { title: 'Главная' }
+    meta: { title: 'Home' }
   },
 ]
 
