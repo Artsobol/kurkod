@@ -5,6 +5,7 @@
           src="/logo.png"
           width="64"
           height="64"
+          alt="logo"
       />
       <span class="header__logo-text">
         ChickCode
