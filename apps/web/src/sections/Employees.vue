@@ -24,10 +24,10 @@ import Button from "@/components/ui/Button.vue";
 
 <style lang="scss" scoped>
 .employees {
-  width: 600px;
+  min-width: 445px;
+  width: 100%;
 
   @include desktop {
-    width: 445px;
   }
 
   &__container {

@@ -4,7 +4,6 @@
     <div class="home__content">
       <div class="home__first-row">
         <BestChickens></BestChickens>
-        <InfoHome></InfoHome>
       </div>
       <div class="home__second-row">
         <Employees></Employees>
@@ -58,7 +57,7 @@ import EggsStats from "@/sections/EggsStats.vue";
     flex-direction: row;
     align-items: flex-start;
 
-    justify-content: space-around;
+    justify-content: space-between;
     gap: 37px;
   }
 

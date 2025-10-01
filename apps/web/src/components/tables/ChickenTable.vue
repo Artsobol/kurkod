@@ -46,7 +46,7 @@
           />
         </th>
         <th>
-          Eggs/Month
+          Eggs/Mo
           <img
               src="/ui-icons/table-eggs.svg"
               alt=""
@@ -118,19 +118,25 @@ defineProps({
 .chicken-table__table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 6px 6px;
+  border-spacing: 0;
+  table-layout: fixed;
   font-weight: 500;
   font-size: 18px;
   color: var(--color-brown-dark);
+
+  @include desktop {
+  }
 
   &__image-container {
     width: 64px;
     height: 64px;
     overflow: hidden;
     display: flex;
-    object-fit: contain;
-    background: red;
+    justify-content: center;
+    align-items: center;
+    background: var(--color-sand-dark);
     border-radius: 100%;
+    margin: 0 auto;
   }
 
   &__image-container img {
@@ -143,9 +149,14 @@ defineProps({
 .chicken-table__table th,
 .chicken-table__table td {
   font-weight: 500;
-  padding: 6px 6px;
-  text-align: left;
+  padding: 10px;
+  text-align: center;
   border-radius: 4px;
+  width: calc(100% / 7);
+
+  @include desktop {
+    //padding: 6px 6px;
+  }
 }
 
 .chicken-table__table td {
