@@ -26,9 +26,10 @@ import ChickenTable from "@/components/tables/ChickenTable.vue";
 
 <style lang="scss" scoped>
 .best-chickens {
-  width: 960px;
+  min-width: 1367px;
+  width: 100%;
   @include desktop {
-    width: 820px;
+    min-width: 1117px;
   }
   &__container {
     display: flex;

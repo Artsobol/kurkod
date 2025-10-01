@@ -12,7 +12,8 @@
 </script>
 <style lang="scss" scoped>
 .slider-home {
-  width: 635px;
+  min-width: 635px;
+  width: 100%;
   &__container {
 
   }
