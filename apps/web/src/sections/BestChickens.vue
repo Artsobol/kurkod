@@ -13,7 +13,7 @@
     </div>
 
     <div class="best-chickens__content">
-      lalla
+      <ChickenTable size="small" />
     </div>
   </section>
 </template>
@@ -21,6 +21,7 @@
 <script setup>
 
 import Button from "@/components/ui/Button.vue";
+import ChickenTable from "@/components/tables/ChickenTable.vue";
 </script>
 
 <style lang="scss" scoped>
@@ -37,6 +38,9 @@ import Button from "@/components/ui/Button.vue";
     margin-bottom: 18px;
   }
   &__content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background: var(--color-white);
     border-radius: 25px;
     height: 322px;
