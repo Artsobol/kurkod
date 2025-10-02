@@ -1,15 +1,10 @@
 <template>
   <div class="panel-item">
     <a href="#" class="panel-item__link">
-      <img
-          class="panel-item__image"
-          :src="`/${image}.png`"
-          :alt="title"
-          alt=""
-          width="48"
-          height="48"
+      <span
+          class="panel-item__title"
+          :class="{ 'panel-item__title--main': isMainTitle }"
       >
-      <span class="panel-item__title">
         {{ title }}
       </span>
     </a>
@@ -24,13 +19,13 @@ defineProps({
     type: String,
     required: true
   },
-  image: {
-    type: String,
-    required: false
-  },
   href: {
     type: String,
     required: true
+  },
+  isMainTitle: {
+    type: Boolean,
+    default: false,
   }
 })
 </script>
@@ -41,13 +36,18 @@ defineProps({
   gap: 20px;
   align-items: center;
 
-  font-weight: 500;
-  font-size: 22px;
-  color: var(--color-brown-light);
+  .panel-item__title {
+    font-weight: 500;
+    font-size: 24px;
+    color: var(--color-text-light);
+    padding-left: 44px;
+  }
 
-  @include laptop {
-    font-size: 18px;
-    gap: 16px;
+  .panel-item__title--main {
+    color: var(--color-text);
+    font-weight: 600;
+    padding-left: 0;
+    padding-top: 12px;
   }
 }
 </style>

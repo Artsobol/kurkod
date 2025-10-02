@@ -1,18 +1,29 @@
 <template>
-  <div class="home__container">
-    <Panel></Panel>
-    <div class="home__content">
-      <div class="home__first-row">
-        <BestChickens></BestChickens>
-      </div>
-      <div class="home__second-row">
-        <Employees></Employees>
-        <div class="home__second-row__column">
-          <SliderHome></SliderHome>
-          <EggsStats></EggsStats>
-        </div>
-      </div>
+  <div class="home">
+    <div class="home__info-blocks">
+      <InfoBlock title="Курицы" subTitle="Общее количество" count="1086" href="#"/>
+      <InfoBlock title="Курицы" subTitle="Общее количество" count="1086" href="#"/>
+      <InfoBlock title="Курицы" subTitle="Общее количество" count="1086" href="#"/>
+      <InfoBlock title="Курицы" subTitle="Общее количество" count="1086" href="#"/>
+      <InfoBlock title="Курицы" subTitle="Общее количество" count="1086" href="#"/>
+      <InfoBlock title="Курицы" subTitle="Общее количество" count="1086" href="#"/>
     </div>
+    <div class="home__graph-blocks">
+
+    </div>
+
+<!--    <div class="home__content">-->
+<!--      <div class="home__first-row">-->
+<!--        <BestChickens></BestChickens>-->
+<!--      </div>-->
+<!--      <div class="home__second-row">-->
+<!--        <Employees></Employees>-->
+<!--        <div class="home__second-row__column">-->
+<!--          <SliderHome></SliderHome>-->
+<!--          <EggsStats></EggsStats>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 
 </template>
@@ -24,49 +35,21 @@ import InfoHome from "@/sections/InfoHome.vue";
 import Employees from "@/sections/Employees.vue";
 import SliderHome from "@/sections/SliderHome.vue";
 import EggsStats from "@/sections/EggsStats.vue";
+import InfoBlock from "@/components/ui/InfoBlock.vue";
 </script>
 
 <style lang="scss" scoped>
 .home {
-  &__container {
-    display: flex;
-    flex-direction: row;
-  }
-
-  &__content {
-    width: 100%;
-    padding: 38px 41px 30px 33px;
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    @include laptop {
-      padding-top: 21px;
-    }
-  }
-
-  &__first-row {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-around;
-    gap: 49px;
-  }
-
-  &__second-row {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-
-    justify-content: space-between;
-    gap: 37px;
-  }
-
-  &__second-row__column {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 19px;
+  padding-top: 62px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  &__info-blocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 28px;
   }
 }
 
