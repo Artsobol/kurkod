@@ -1,10 +1,30 @@
 <template>
   <div class="panel">
     <ul class="panel__list">
-      <li v-for="(item, index) in panelItems" :key="index">
+      <li class="panel__list-item-title">
+        <PanelItem href="#" title="Меню" isMainTitle></PanelItem>
+      </li>
+      <li v-for="(item, index) in panelMenuItems" :key="index">
         <PanelItem
             :title="item.label"
-            :image="item.image"
+            :href="item.href"
+        />
+      </li>
+      <li class="panel__list-item-title">
+        <PanelItem href="#" title="Курицы" isMainTitle></PanelItem>
+      </li>
+      <li v-for="(item, index) in panelChickensItems" :key="index">
+        <PanelItem
+            :title="item.label"
+            :href="item.href"
+        />
+      </li>
+      <li class="panel__list-item-title">
+        <PanelItem href="#" title="Уход" isMainTitle></PanelItem>
+      </li>
+      <li v-for="(item, index) in panelCareItems" :key="index">
+        <PanelItem
+            :title="item.label"
             :href="item.href"
         />
       </li>
@@ -15,74 +35,102 @@
 <script setup>
 import PanelItem from './PanelItem.vue'
 
-const panelItems = [
+const panelMenuItems = [
   {
-    label: "Home",
-    image: "home",
+    label: "Главная",
     href: "#"
   },
   {
-    label: "Chickens",
-    image: "chicken",
+    label: "Сотрудники",
     href: "#"
   },
   {
-    label: "Chick",
-    image: "chick",
+    label: "Производство",
     href: "#"
   },
   {
-    label: "Breeds",
-    image: "rooster",
+    label: "Заказы",
     href: "#"
   },
   {
-    label: "Diets",
-    image: "diet",
+    label: "Логистика",
     href: "#"
   },
   {
-    label: "Cages",
-    image: "cage",
-    href: "#"
-  },
-  {
-    label: "Employees",
-    image: "employee",
-    href: "#"
-  },
-  {
-    label: "Reports",
-    image: "report",
+    label: "Отчеты",
     href: "#"
   }
 ]
+const panelChickensItems = [
+  {
+    label: "Курицы",
+    href: "#"
+  },
+  {
+    label: "Петухи",
+    href: "#"
+  },
+  {
+    label: "Цыплята",
+    href: "#"
+  }
+]
+const panelCareItems = [
+  {
+    label: "Корм",
+    href: "#"
+  },
+  {
+    label: "Диеты",
+    href: "#"
+  },
+  {
+    label: "Загоны",
+    href: "#"
+  }
+]
+
 </script>
 
 <style lang="scss" scoped>
 .panel {
+  position: fixed;
   width: 350px;
+  left: 0;
+  top: 79px;
   background-color: var(--color-white);
-  padding-top: 38px;
+  height: calc(100vh - 79px);
+  box-shadow: 4px 0 4px 0 rgba(61, 55, 136, 0.25);
+  padding-block: 40px;
   display: flex;
   flex-direction: column;
   align-items: center;
-
-
-
-  @include laptop {
-    width: 250px;
-    padding-top: 28px;
-  }
+  z-index: 9;
 }
 
 .panel__list {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 38px;
+  gap: 30px;
+  overflow-y: auto;
+  padding: 0 40px;
 
-  @include laptop {
-    gap: 26px;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-purple-contrast);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #575196;
   }
 }
 </style>

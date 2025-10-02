@@ -5,15 +5,15 @@ html {
 body {
   display: flex;
   flex-direction: column;
-  font-family: var(--font-family-poppins), sans-serif;
-  color: var(--color-brown-dark);
-  background-color: var(--color-sand-light);
+  font-family: var(--font-family-montserrat), sans-serif;
+  color: var(--color-text);
+  background-color: var(--color-bg);
 }
 .h2, h2 {
-  font-family: var(--font-family-poppins), sans-serif;
-  font-weight: 600;
-  font-size: 22px;
-  color: var(--color-brown-dark);
+  //font-family: var(--font-family-poppins), sans-serif;
+  //font-weight: 600;
+  //font-size: 22px;
+  //color: var(--color-brown-dark);
 
 }
 /* Reset and base styles  */
