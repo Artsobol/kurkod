@@ -48,6 +48,14 @@ defineProps({
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   border-radius: 8px;
 
+  @include desktop-m {
+    width: 584px;
+  }
+
+  @include desktop {
+    width: 461px;
+  }
+
   &__container {
     display: flex;
     flex-direction: row;
