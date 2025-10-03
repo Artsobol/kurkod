@@ -1,5 +1,11 @@
+@mixin desktop-m {
+  @media (width <= 1920px) {
+    @content;
+  }
+}
+
 @mixin desktop {
-  @media (width <= 1670px) {
+  @media (width <= 1680px) {
     @content;
   }
 }
@@ -10,26 +16,14 @@
   }
 }
 
-@mixin laptop-s {
-  @media (width <= 1240px) {
-    @content;
-  }
-}
-
 @mixin tablet-m {
-  @media (width <= 1023px) {
+  @media (width <= 1080px) {
     @content;
   }
 }
 
 @mixin tablet {
-  @media (width <= 767px) {
-    @content;
-  }
-}
-
-@mixin tablet-s {
-  @media (width <= 620px) {
+  @media (width <= 768px) {
     @content;
   }
 }
