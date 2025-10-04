@@ -40,21 +40,13 @@ defineProps({
 
 <style lang="scss" scoped>
 .info-block {
-  width: 461px;
-  height: 121px;
-  padding: 17px 15px 6px 26px;
-  color: var(--color-white);
-  background-color: var(--color-purple-contrast);
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   border-radius: 8px;
-
-  @include desktop-m {
-    width: 584px;
-  }
-
-  @include desktop {
-    width: 461px;
-  }
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  gap: 18px;
+  color: var(--color-white);
 
   &__container {
     display: flex;
@@ -65,18 +57,18 @@ defineProps({
 
   &__title {
     font-weight: 600;
-    font-size: 28px;
+    font-size: 14px;
   }
 
   &__subtitle {
     font-weight: 500;
-    font-size: 20px;
     opacity: 0.8;
+    font-size: 14px;
   }
 
   &__count {
     font-weight: 600;
-    font-size: 48px;
+    font-size: 23px;
   }
 }
 </style>

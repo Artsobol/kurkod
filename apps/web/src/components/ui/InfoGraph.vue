@@ -40,24 +40,9 @@ defineProps({
 
 <style lang="scss" scoped>
 .info-graph {
-  width: 709px;
-  height: 569px;
-  background-color: var(--color-white);
   padding: 26px 52px 42px 45px;
   box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
   border-radius: 16px;
-
-  @include desktop-m {
-    width: 585px;
-    height: 492px;
-    padding: 29px 20px 41px 31px;
-  }
-
-  @include desktop {
-    width: 461px;
-    height: 410px;
-    padding: 29px 15px 33px 22px;
-  }
 
   &__header {
     display: flex;
@@ -67,8 +52,6 @@ defineProps({
   }
 
   &__image-container {
-    width: 612px;
-    height: 431px;
     overflow: hidden;
     display: flex;
     justify-content: center;
