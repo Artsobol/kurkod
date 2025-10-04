@@ -3,6 +3,7 @@
     <div class="header__logo">
       <Logo/>
     </div>
+    <button class="toggle-btn" @click="$emit('toggle')">☰</button>
 
     <div class="header__nav">
       <a class="header__nav-link" href="#">
