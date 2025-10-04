@@ -1,37 +1,52 @@
 <template>
   <header class="header">
-    <div class="header__logo">
+    <div class="header__left-container">
       <Logo/>
+      <button @click="$emit('toggle')" class="header__burger">
+        <img
+            src="/ui-icons/burger-button.svg"
+            alt=""
+            class="header__burger-icon"
+        />
+      </button>
     </div>
-    <button class="toggle-btn" @click="$emit('toggle')">☰</button>
 
     <div class="header__nav">
       <a class="header__nav-link" href="#">
         <img
+            class="header__nav-link-icon"
+
             src="/ui-icons/light.svg"
             alt=""
         />
       </a>
       <a class="header__nav-link" href="#">
         <img
+            class="header__nav-link-icon"
+
             src="/ui-icons/switch-language.svg"
             alt=""
         />
       </a>
       <a class="header__nav-link" href="#">
         <img
+            class="header__nav-link-icon"
+
             src="/ui-icons/notifications.svg"
             alt=""
         />
       </a>
       <a class="header__nav-link" href="#">
         <img
+            class="header__nav-link-icon"
+
             src="/ui-icons/settings.svg"
             alt=""
         />
       </a>
       <a class="header__nav-link" href="#">
         <img
+            class="header__nav-link-icon"
             src="/ui-icons/settings.svg"
             alt=""
         />
@@ -75,6 +90,17 @@ import Logo from "@/components/ui/Logo.vue";
     background-color: var(--color-bg);
     border-radius: 100%;
     padding: 8px;
+  }
+
+  &__nav-link-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+
+  &__left-container {
+    display: flex;
+    gap: 52px;
   }
 }
 
