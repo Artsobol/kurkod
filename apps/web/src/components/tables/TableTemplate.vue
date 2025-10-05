@@ -28,6 +28,30 @@
             position="Работник птицефермы"
             status="На работе"
         />
+        <EmployeeItem
+            photo="/images/user-photo.jpg"
+            name="Выговорите Макан Яговорю"
+            position="Работник птицефермы"
+            status="На работе"
+        />
+        <EmployeeItem
+            photo="/images/user-photo.jpg"
+            name="Выговорите Макан Яговорю"
+            position="Работник птицефермы"
+            status="На работе"
+        />
+        <EmployeeItem
+            photo="/images/user-photo.jpg"
+            name="Выговорите Макан Яговорю"
+            position="Работник птицефермы"
+            status="На работе"
+        />
+        <EmployeeItem
+            photo="/images/user-photo.jpg"
+            name="Выговорите Макан Яговорю"
+            position="Работник птицефермы"
+            status="На работе"
+        />
         </tbody>
       </table>
     </div>
@@ -62,6 +86,18 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
+.table-template th,
+.table-template td {
+  padding-block: 10px;
+  text-align: center;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.table-template__body {
+  font-size: 14px;
+}
+
 .table-template {
   width: 100%;
   &__header {
@@ -74,19 +110,15 @@ defineProps({
     border-collapse: collapse;
     table-layout: fixed;
   }
+
+  &__title {
+    font-size: 16px;
+  }
+
+  &__button__img {
+    width: 28px;
+    height: auto;
+  }
 }
 
-.table-template th,
-.table-template td {
-  padding: 10px;
-  text-align: center;
-  border-radius: 4px;
-}
-
-.table-template td {
-}
-.table-template tbody tr {
-  position: relative;
-  left: 30px;
-}
 </style>

@@ -26,11 +26,12 @@ defineProps({
 
 <style scoped lang="scss">
 .employee-item {
-  border: 1px solid red;
+  border-top: 2px solid #EBF0F6;
 }
+
 .employee-item__img-container {
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   overflow: hidden;
   border-radius: 100%;
 }
@@ -40,5 +41,12 @@ defineProps({
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.employee-item td {
+  padding-block: 14px;
+  text-align: center;
+  border-radius: 4px;
+  vertical-align: middle;
 }
 </style>

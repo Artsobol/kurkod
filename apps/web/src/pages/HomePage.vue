@@ -1,66 +1,66 @@
 <template>
   <div class="home">
-<!--    <div class="info-blocks">-->
-<!--      <div class="page-block page-info-block">-->
-<!--        <InfoBlock-->
-<!--            title="Курицы"-->
-<!--            href="#"-->
-<!--            subTitle="Общее количество"-->
-<!--            count="1086"-->
-<!--        />-->
-<!--      </div>-->
-<!--      <div class="page-block page-info-block">-->
-<!--        <InfoBlock-->
-<!--            title="Яиц в месяц"-->
-<!--            href="#"-->
-<!--            subTitle="Среднее"-->
-<!--            count="27000"-->
-<!--        />-->
-<!--      </div>-->
-<!--      <div class="page-block page-info-block">-->
-<!--        <InfoBlock-->
-<!--            title="Сотрудники"-->
-<!--            href="#"-->
-<!--            subTitle="Общее количество"-->
-<!--            count="200"-->
-<!--        />-->
-<!--      </div>-->
-<!--      <div class="page-block page-info-block">-->
-<!--        <InfoBlock-->
-<!--            title="Продуктивность курицы"-->
-<!--            href="#"-->
-<!--            subTitle="Средняя"-->
-<!--            count="27"-->
-<!--        />-->
-<!--      </div>-->
-<!--      <div class="page-block page-info-block">-->
-<!--        <InfoBlock-->
-<!--            title="Прибыль"-->
-<!--            href="#"-->
-<!--            subTitle="В месяц"-->
-<!--            count="28.9KK"-->
-<!--        />-->
-<!--      </div>-->
-<!--      <div class="page-block page-info-block">-->
-<!--        <InfoBlock-->
-<!--            title="Курицы"-->
-<!--            href="#"-->
-<!--            subTitle="Общее количество"-->
-<!--            count="1086"-->
-<!--        />-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="graph-blocks">-->
-<!--      <div class="page-block page-graph-block">-->
-<!--        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>-->
-<!--      </div>-->
-<!--      <div class="page-block page-graph-block">-->
-<!--        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>-->
-<!--      </div>-->
-<!--      <div class="page-block page-graph-block">-->
-<!--        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>-->
-<!--      </div>-->
-<!--    </div>-->
+    <div class="info-blocks">
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Курицы"
+            href="#"
+            subTitle="Общее количество"
+            count="1086"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Яиц в месяц"
+            href="#"
+            subTitle="Среднее"
+            count="27000"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Сотрудники"
+            href="#"
+            subTitle="Общее количество"
+            count="200"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Продуктивность курицы"
+            href="#"
+            subTitle="Средняя"
+            count="27"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Прибыль"
+            href="#"
+            subTitle="В месяц"
+            count="28.9KK"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Курицы"
+            href="#"
+            subTitle="Общее количество"
+            count="1086"
+        />
+      </div>
+    </div>
+    <div class="graph-blocks">
+      <div class="page-block page-graph-block">
+        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>
+      </div>
+      <div class="page-block page-graph-block">
+        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>
+      </div>
+      <div class="page-block page-graph-block">
+        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>
+      </div>
+    </div>
     <div class="table-employees-block page-block">
       <TableTemplate
           title="Лучшие сотрудники"
