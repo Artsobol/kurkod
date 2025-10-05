@@ -6,6 +6,7 @@
       </h2>
       <a class="info-graph__button" :href="href">
         <img
+            class="info-graph__button__img"
             src="/ui-icons/arrow-right.svg"
             alt=""
         />
@@ -40,56 +41,21 @@ defineProps({
 
 <style lang="scss" scoped>
 .info-graph {
-  padding: 26px 52px 42px 45px;
-  box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
-  border-radius: 16px;
-
   &__header {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    padding-bottom: 31px;
-  }
-
-  &__image-container {
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
     align-items: center;
-
-    @include desktop-m {
-      width: 508px;
-      height: 358px;
-    }
-
-    @include desktop {
-      width: 424px;
-      height: 298px;
-    }
-  }
-
-  &__image-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    padding-bottom: 20px;
   }
 
   &__title {
-    font-weight: 700;
-    font-size: 32px;
-
-    @include desktop-m {
-      font-size: 28px;
-    }
-
-    @include desktop {
-      font-size: 22px;
-    }
+    font-size: 16px;
   }
 
-  &__button {
-    width: 40px;
-    height: 40px;
+  &__button__img {
+    width: 28px;
+    height: auto;
   }
 }
 </style>
