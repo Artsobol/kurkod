@@ -7,7 +7,6 @@ import Content from "@/components/layouts/Content.vue";
 const route = useRoute()
 
 import {ref} from "vue";
-import InfoBlock from "@/components/ui/InfoBlock.vue";
 const isClosed = ref(false);
 
 function toggleSidebar() {
