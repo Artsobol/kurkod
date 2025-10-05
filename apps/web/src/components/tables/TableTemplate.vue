@@ -82,8 +82,11 @@ defineProps({
   text-align: center;
   border-radius: 4px;
 }
-.table-template thead {
+
+.table-template td {
+}
+.table-template tbody tr {
   position: relative;
-  left: 230px;
+  left: 30px;
 }
 </style>

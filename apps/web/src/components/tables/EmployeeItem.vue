@@ -25,6 +25,9 @@ defineProps({
 </script>
 
 <style scoped lang="scss">
+.employee-item {
+  border: 1px solid red;
+}
 .employee-item__img-container {
   width: 72px;
   height: 72px;

@@ -65,7 +65,7 @@
       <TableTemplate
           title="Лучшие сотрудники"
           :bodyItems="['Имя', 'Должность', 'Статус']"
-          :headersItem="['Имя', 'Должность', 'Статус']"
+          :headersItem="['', 'Имя', 'Должность', 'Статус']"
           stylesPack="table-employees" />
     </div>
   </div>
