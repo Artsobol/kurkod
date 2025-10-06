@@ -15,7 +15,6 @@
       <a class="header__nav-link" href="#">
         <img
             class="header__nav-link-icon"
-
             src="/ui-icons/light.svg"
             alt=""
         />
@@ -23,7 +22,6 @@
       <a class="header__nav-link" href="#">
         <img
             class="header__nav-link-icon"
-
             src="/ui-icons/switch-language.svg"
             alt=""
         />
@@ -31,7 +29,6 @@
       <a class="header__nav-link" href="#">
         <img
             class="header__nav-link-icon"
-
             src="/ui-icons/notifications.svg"
             alt=""
         />
@@ -39,7 +36,6 @@
       <a class="header__nav-link" href="#">
         <img
             class="header__nav-link-icon"
-
             src="/ui-icons/settings.svg"
             alt=""
         />
@@ -96,7 +92,6 @@ import Logo from "@/components/ui/Logo.vue";
       width: 24px;
       height: 24px;
     }
-
 
   &__left-container {
     display: flex;

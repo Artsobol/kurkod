@@ -2,13 +2,17 @@
   <aside :class="['sidebar', { closed: isClosed }]">
     <ul>
       <li>
-        🏠 <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Меню</span>
+        <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Меню</span>
       </li>
       <li>
-        📂 <span class="link-text" :class="{ hidden: isClosed }">Главная</span>
+        <RouterLink to="/" class="nav-link" active-class="active">
+          📂 <span class="link-text" :class="{ hidden: isClosed }">Главная</span>
+        </RouterLink>
       </li>
       <li>
-        ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Сотрудники</span>
+        <RouterLink to="/employees" class="nav-link" active-class="active">
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Сотрудники</span>
+        </RouterLink>
       </li>
       <li>
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Производство</span>
@@ -23,7 +27,7 @@
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Отчеты</span>
       </li>
       <li>
-        ❓ <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Курицы</span>
+        <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Курицы</span>
       </li>
       <li>
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Курицы</span>
@@ -35,7 +39,7 @@
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Цыплята</span>
       </li>
       <li>
-        ❓ <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Уход</span>
+        <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Уход</span>
       </li>
       <li>
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Корм</span>
@@ -99,14 +103,25 @@ defineProps({
   padding-left: 10px;
 }
 
+
 .link-text-contrast {
   color: var(--color-text);
   font-weight: 600;
+  padding-left: 0;
+  margin: 0;
 }
 
 .link-text.hidden {
   max-width: 0;
   opacity: 0;
   margin-left: 0;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+  width: 100%;
 }
 </style>
