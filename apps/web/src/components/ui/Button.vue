@@ -38,12 +38,30 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
+
+//Mode
+
 .transparent {
-  background-color: transparent;
-  color: var(--color-sand-dark)
 }
-.home {
-  font-weight: 500;
-  font-size: 18px;
+
+.violet {
+  background-color: #726DAF;
+  color: var(--color-white);
 }
+
+//Location
+
+.page-action {
+  font-weight: 700;
+  font-size: 16px;
+  width: 248px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: 16px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+
+}
+
 </style>

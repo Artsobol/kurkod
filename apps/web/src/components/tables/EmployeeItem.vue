@@ -11,6 +11,7 @@
     </td>
     <td>{{ name }}</td>
     <td>{{ position }}</td>
+    <td v-if="salary">{{salary}}</td>
     <td>{{ status }}</td>
   </tr>
 </template>
@@ -21,6 +22,7 @@ defineProps({
   position: String,
   photo: String,
   status: String,
+  salary: String,
 })
 </script>
 

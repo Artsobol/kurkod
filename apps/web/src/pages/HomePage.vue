@@ -20,7 +20,7 @@
       <div class="page-block page-info-block">
         <InfoBlock
             title="Сотрудники"
-            href="#"
+            href="/employees"
             subTitle="Общее количество"
             count="200"
         />
@@ -62,8 +62,19 @@
       </div>
     </div>
     <div class="table-employees-block page-block">
+      <div class="table-template__header">
+        <h2 class="table-template__title">
+          Лучшие сотрудники
+        </h2>
+        <a class="table-template__button" href="/employees">
+          <img
+              class="table-template__button__img"
+              src="/ui-icons/arrow-right.svg"
+              alt=""
+          />
+        </a>
+      </div>
       <TableTemplate
-          title="Лучшие сотрудники"
           :bodyItems="['Имя', 'Должность', 'Статус']"
           :headersItem="['', 'Имя', 'Должность', 'Статус']"
           stylesPack="table-employees" />
@@ -113,5 +124,21 @@ import TableTemplate from "@/components/tables/TableTemplate.vue";
 .page-graph-block {
   margin: 0;
   background: var(--color-white);
+}
+
+.table-template {
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  &__title {
+    font-size: 16px;
+  }
+
+  &__button__img {
+    width: 28px;
+    height: auto;
+  }
 }
 </style>

@@ -21,7 +21,7 @@ function toggleSidebar() {
       :isClosed="isClosed"
     />
     <Content>
-      <HomePage />
+      <RouterView />
     </Content>
   </div>
 </template>
