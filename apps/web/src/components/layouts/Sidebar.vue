@@ -15,7 +15,9 @@
         </RouterLink>
       </li>
       <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Производство</span>
+        <RouterLink to="/cells" class="nav-link" active-class="active">
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Закрепленные клетки</span>
+        </RouterLink>
       </li>
       <li>
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Заказы</span>
@@ -30,7 +32,9 @@
         <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Курицы</span>
       </li>
       <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Курицы</span>
+        <RouterLink to="/chickens " class="nav-link" active-class="active">
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Курицы</span>
+        </RouterLink>
       </li>
       <li>
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Петухи</span>

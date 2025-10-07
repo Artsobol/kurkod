@@ -2,7 +2,7 @@
   <div class="employees">
     <div class="employees__header">
       <h2 class="employees__title">Сотрудники</h2>
-      <a class="employees__extra-button" href="#">
+      <a class="employees__extra-button" href="/cells">
       <span class="employees__extra-button__title">
         Закрепленные клетки
       </span>
@@ -65,7 +65,6 @@ import Button from "@/components/ui/Button.vue";
 
   &__title {
     margin-bottom: 16px;
-    font-size: 18px;
   }
 
   &__actions {
@@ -82,7 +81,6 @@ import Button from "@/components/ui/Button.vue";
     gap: 16px;
     &__title {
       font-weight: 700;
-      font-size: 18px;
       color: #3d3788;
     }
     &__icon {

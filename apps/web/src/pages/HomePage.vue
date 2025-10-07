@@ -20,7 +20,7 @@
       <div class="page-block page-info-block">
         <InfoBlock
             title="Сотрудники"
-            href="#"
+            href="/employees"
             subTitle="Общее количество"
             count="200"
         />
@@ -66,7 +66,7 @@
         <h2 class="table-template__title">
           Лучшие сотрудники
         </h2>
-        <a class="table-template__button" href="#">
+        <a class="table-template__button" href="/employees">
           <img
               class="table-template__button__img"
               src="/ui-icons/arrow-right.svg"

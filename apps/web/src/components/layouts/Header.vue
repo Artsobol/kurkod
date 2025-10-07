@@ -89,9 +89,9 @@ import Logo from "@/components/ui/Logo.vue";
   }
 
   &__nav-link-icon {
-      width: 24px;
-      height: 24px;
-    }
+    width: 24px;
+    height: 24px;
+  }
 
   &__left-container {
     display: flex;

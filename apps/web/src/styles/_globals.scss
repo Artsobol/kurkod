@@ -10,6 +10,12 @@ body {
   background-color: var(--color-bg);
 }
 
+h2, .h2 {
+  font-size: 16px;
+  font-weight: 700;
+  color: (--color-text);
+}
+
 /* Reset and base styles  */
 
 * {

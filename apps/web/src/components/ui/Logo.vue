@@ -1,5 +1,5 @@
 <template>
-  <a class="logo">
+  <a class="logo" href="/">
     <span>
       КурКод
     </span>
