@@ -1,4 +1,4 @@
-package io.github.artsobol.kurkod.model.dto.Breed;
+package io.github.artsobol.kurkod.model.dto.breed;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

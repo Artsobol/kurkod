@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.controller;
 
 import io.github.artsobol.kurkod.model.constants.ApiLogMessage;
-import io.github.artsobol.kurkod.model.dto.Breed.BreedDTO;
+import io.github.artsobol.kurkod.model.dto.breed.BreedDTO;
 import io.github.artsobol.kurkod.model.request.breed.BreedRequest;
 import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.service.BreedService;

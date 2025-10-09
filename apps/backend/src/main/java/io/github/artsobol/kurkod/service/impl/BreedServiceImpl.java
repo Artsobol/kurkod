@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.service.impl;
 
 import io.github.artsobol.kurkod.mapper.BreedMapper;
-import io.github.artsobol.kurkod.model.dto.Breed.BreedDTO;
+import io.github.artsobol.kurkod.model.dto.breed.BreedDTO;
 import io.github.artsobol.kurkod.model.entity.Breed;
 import io.github.artsobol.kurkod.model.exception.NotFoundException;
 import io.github.artsobol.kurkod.model.request.breed.BreedRequest;
