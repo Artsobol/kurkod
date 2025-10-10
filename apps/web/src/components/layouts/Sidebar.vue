@@ -67,8 +67,7 @@ defineProps({
 <style scoped>
 .sidebar {
   width: 250px;
-  background: var(--header-bg);
-  color: var(--color-text-light);
+  background: var(--section-bg);
   font-weight: 500;
   font-size: 14px;
   transition: width 0.3s ease;
@@ -105,14 +104,14 @@ defineProps({
   margin-left: 8px;
   transition: max-width 0.3s ease, opacity 0.3s ease, margin-left 0.3s ease;
   padding-left: 10px;
+  color: var(--sidebar-text);
 }
 
-
 .link-text-contrast {
-  color: var(--color-text);
   font-weight: 600;
   padding-left: 0;
   margin: 0;
+  color: var(--color);
 }
 
 .link-text.hidden {

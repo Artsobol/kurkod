@@ -6,19 +6,25 @@ body {
   display: flex;
   flex-direction: column;
   font-family: var(--font-family-montserrat), sans-serif;
-  color: var(--color-text);
-  background-color: var(--color-bg-light);
 }
 
 body.light-theme {
   background-color: var(--color-bg-light);
-  color: var(--color-text-contrast-light);
-  --header-bg: var(--color-section-light);
+  --color: var(--color-text-contrast-light);
+  color: var(--color);
+  --section-bg: var(--color-section-light);
+  --sidebar-text: var(--color-text-light);
+  --contrast: var(--color-section-contrast-light);
+  --header-icons-bg: var(--color-bg-light);
 }
 body.dark-theme {
   background-color: var(--color-bg-dark);
-  color: var(--color-text-contrast-dark);
-  --header-bg: var(--color-section-dark);
+  --color: var(--color-text-contrast-dark);
+  color: var(--color);
+  --section-bg: var(--color-section-dark);
+  --sidebar-text: var(--color-text-dark);
+  --contrast: var(--color-section-contrast-light);
+  --header-icons-bg: var(--color-section-contrast-light);
 }
 
 h2, .h2 {

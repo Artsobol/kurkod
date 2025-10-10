@@ -5,11 +5,11 @@
       <Button
           class="header__burger"
           @click="$emit('toggle')"
+          style="display: flex; justify-content: center; flex-direction: row; align-items: center;"
       >
-        <img
-            src="/ui-icons/burger-button.svg"
-            alt=""
-            class="header__burger-icon"
+        <Icon name="burger-button"
+              width="28"
+              height="21"
         />
       </Button>
     </div>
@@ -67,7 +67,7 @@ const ui = uiStore()
   left: 0;
   right: 0;
   height: 79px;
-  background-color: var(--header-bg);
+  background-color: var(--section-bg);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -84,9 +84,13 @@ const ui = uiStore()
   }
 
   &__nav-link {
-    background-color: var(--color-bg-light);
+    background-color: var(--header-icons-bg);
     border-radius: 100%;
-    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
   }
 
   &__nav-link-icon {
@@ -97,10 +101,6 @@ const ui = uiStore()
   &__left-container {
     display: flex;
     gap: 52px;
-  }
-  &__nav-link {
-    width: 40px;
-    height: 40px;
   }
 }
 
