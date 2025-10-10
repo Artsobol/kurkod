@@ -16,6 +16,7 @@ body.light-theme {
   --sidebar-text: var(--color-text-light);
   --contrast: var(--color-section-contrast-light);
   --header-icons-bg: var(--color-bg-light);
+  --table-border: #EBF0F6;
 }
 body.dark-theme {
   background-color: var(--color-bg-dark);
@@ -23,8 +24,9 @@ body.dark-theme {
   color: var(--color);
   --section-bg: var(--color-section-dark);
   --sidebar-text: var(--color-text-dark);
-  --contrast: var(--color-section-contrast-light);
-  --header-icons-bg: var(--color-section-contrast-light);
+  --contrast: var(--color-section-contrast-dark);
+  --header-icons-bg: var(--color-section-contrast-dark);
+  --table-border: #404955;
 }
 
 h2, .h2 {

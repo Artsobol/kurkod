@@ -66,13 +66,11 @@
         <h2 class="table-template__title">
           Лучшие сотрудники
         </h2>
-        <a class="table-template__button" href="/employees">
-          <img
-              class="table-template__button__img"
-              src="/ui-icons/arrow-right.svg"
-              alt=""
-          />
-        </a>
+        <Button
+            href="/employees"
+            class="table-template__button"
+            specific-button="arrow-right"
+        />
       </div>
       <TableTemplate
           :bodyItems="['Имя', 'Должность', 'Статус']"
@@ -86,11 +84,12 @@
 import InfoBlock from "@/components/ui/InfoBlock.vue";
 import InfoGraph from "@/components/ui/InfoGraph.vue";
 import TableTemplate from "@/components/tables/TableTemplate.vue";
+import Button from "@/components/ui/Button.vue";
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .page-block {
-  background: var(--color-white);
+  background: var(--section-bg);
   border-radius: 6px;
   box-shadow: 0 4px 4px 0 rgba(61, 55, 136, 0.25);
   padding: 12px 19px 17px 17px;
@@ -113,7 +112,7 @@ import TableTemplate from "@/components/tables/TableTemplate.vue";
 .page-info-block {
   margin: 0;
   height: 87px;
-  background: var(--color-purple-contrast);
+  background: var(--contrast);
   &:hover {
     transform: scale(1.03);
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -123,7 +122,7 @@ import TableTemplate from "@/components/tables/TableTemplate.vue";
 
 .page-graph-block {
   margin: 0;
-  background: var(--color-white);
+  background: var(--section-bg);
 }
 
 .table-template {
@@ -134,11 +133,6 @@ import TableTemplate from "@/components/tables/TableTemplate.vue";
   }
   &__title {
     font-size: 16px;
-  }
-
-  &__button__img {
-    width: 28px;
-    height: auto;
   }
 }
 </style>
