@@ -31,4 +31,8 @@ public class Breed {
     @NotNull
     @Column(nullable = false)
     private short weight;
+
+    @NotNull
+    @Column(nullable = false, name = "deleted")
+    private boolean deleted = false;
 }

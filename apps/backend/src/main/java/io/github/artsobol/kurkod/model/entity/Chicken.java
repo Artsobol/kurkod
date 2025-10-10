@@ -33,6 +33,10 @@ public class Chicken {
     @JoinColumn(name = "breed_id", nullable = false)
     private Breed breed;
 
+    @NotNull
+    @Column(nullable = false, name = "deleted")
+    private boolean deleted = false;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
