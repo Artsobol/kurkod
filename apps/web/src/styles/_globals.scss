@@ -7,7 +7,18 @@ body {
   flex-direction: column;
   font-family: var(--font-family-montserrat), sans-serif;
   color: var(--color-text);
-  background-color: var(--color-bg);
+  background-color: var(--color-bg-light);
+}
+
+body.light-theme {
+  background-color: var(--color-bg-light);
+  color: var(--color-text-contrast-light);
+  --header-bg: var(--color-section-light);
+}
+body.dark-theme {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-contrast-dark);
+  --header-bg: var(--color-section-dark);
 }
 
 h2, .h2 {

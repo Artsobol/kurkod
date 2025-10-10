@@ -15,34 +15,27 @@
     </div>
 
     <div class="header__nav">
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/light.svg"
-            alt=""
-        />
-      </a>
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/switch-language.svg"
-            alt=""
-        />
-      </a>
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/notifications.svg"
-            alt=""
-        />
-      </a>
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/settings.svg"
-            alt=""
-        />
-      </a>
+      <Button
+          class="header__nav-link"
+          @click="ui.toggleTheme"
+      >
+        <Icon :name="ui.theme === 'light' ? 'light' : 'dark'" class="header__nav-link-icon"/>
+      </Button>
+      <Button
+          class="header__nav-link"
+      >
+        <Icon name="switch-language"/>
+      </Button>
+      <Button
+          class="header__nav-link"
+      >
+        <Icon name="notifications"/>
+      </Button>
+      <Button
+          class="header__nav-link"
+      >
+        <Icon name="settings"/>
+      </Button>
       <a class="header__nav-link" href="#">
         <img
             class="header__nav-link-icon"
@@ -59,7 +52,12 @@
 
 import Logo from "@/components/ui/Logo.vue";
 import Button from "@/components/ui/Button.vue";
+import {uiStore} from "@/stores/ui.js";
+import SunIcon from '@/assets/icons/light.svg'
+import MoonIcon from '@/assets/icons/dark.svg'
+import Icon from "@/components/ui/Icon.vue";
 
+const ui = uiStore()
 </script>
 
 <style lang="scss" scoped>
@@ -69,8 +67,7 @@ import Button from "@/components/ui/Button.vue";
   left: 0;
   right: 0;
   height: 79px;
-  background-color: var(--color-white);
-  font-family: var(--font-family-poppins);
+  background-color: var(--header-bg);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -87,7 +84,7 @@ import Button from "@/components/ui/Button.vue";
   }
 
   &__nav-link {
-    background-color: var(--color-bg);
+    background-color: var(--color-bg-light);
     border-radius: 100%;
     padding: 8px;
   }
@@ -100,6 +97,10 @@ import Button from "@/components/ui/Button.vue";
   &__left-container {
     display: flex;
     gap: 52px;
+  }
+  &__nav-link {
+    width: 40px;
+    height: 40px;
   }
 }
 

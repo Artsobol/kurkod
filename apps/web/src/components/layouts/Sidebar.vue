@@ -67,7 +67,7 @@ defineProps({
 <style scoped>
 .sidebar {
   width: 250px;
-  background: var(--color-white, #fff);
+  background: var(--header-bg);
   color: var(--color-text-light);
   font-weight: 500;
   font-size: 14px;

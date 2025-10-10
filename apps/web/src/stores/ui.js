@@ -2,7 +2,8 @@ import {defineStore} from "pinia";
 
 export const uiStore = defineStore("ui", {
   state: () => ({
-    isSidebarClosed: false
+    isSidebarClosed: false,
+    theme: localStorage.getItem("theme") || "light"
   }),
   actions: {
     toggleSidebar() {
@@ -13,6 +14,14 @@ export const uiStore = defineStore("ui", {
     },
     closeSidebar() {
       this.isSidebarClosed = true
+    },
+    toggleTheme() {
+      this.theme = this.theme === 'light' ? 'dark' : 'light'
+      localStorage.setItem('theme', this.theme)
+      document.body.className=`${this.theme}-theme`
+    },
+    initTheme() {
+      document.body.className =`${this.theme}-theme`
     }
   }
 })
