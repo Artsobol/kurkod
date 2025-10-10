@@ -2,13 +2,16 @@
   <header class="header">
     <div class="header__left-container">
       <Logo/>
-      <button @click="$emit('toggle')" class="header__burger">
+      <Button
+          class="header__burger"
+          @click="$emit('toggle')"
+      >
         <img
             src="/ui-icons/burger-button.svg"
             alt=""
             class="header__burger-icon"
         />
-      </button>
+      </Button>
     </div>
 
     <div class="header__nav">
@@ -55,6 +58,7 @@
 <script setup>
 
 import Logo from "@/components/ui/Logo.vue";
+import Button from "@/components/ui/Button.vue";
 
 </script>
 

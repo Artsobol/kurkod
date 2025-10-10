@@ -4,19 +4,24 @@
       :href="href"
       :class="[mode, location]"
   >
-    {{ label }}
+    <slot>{{ label }}</slot>
   </a>
 
   <button
       v-else
       type="button"
       :class="[mode, location]"
+      @click="handleClick"
   >
-    {{ label }}
+    <slot>{{ label }}</slot>
   </button>
 </template>
 
 <script setup>
+const emit = defineEmits(['click'])
+const handleClick = (event) => {
+  emit('click', event)
+}
 defineProps({
   label: {
     type: String,
