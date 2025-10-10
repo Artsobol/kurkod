@@ -28,7 +28,7 @@ defineProps({
 
 <style scoped lang="scss">
 .employee-item {
-  border-top: 2px solid #EBF0F6;
+  border-top: 2px solid var(--table-border);
 }
 
 .employee-item__img-container {

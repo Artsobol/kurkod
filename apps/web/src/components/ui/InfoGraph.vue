@@ -2,27 +2,26 @@
   <div class="info-graph">
     <div class="info-graph__header">
       <h2 class="info-graph__title">
-        {{title}}
+        {{ title }}
       </h2>
-      <a class="info-graph__button" :href="href">
-        <img
-            class="info-graph__button__img"
-            src="/ui-icons/arrow-right.svg"
-            alt=""
-        />
-      </a>
+      <Button
+          :href="href"
+          class="info-graph__button"
+          specific-button="arrow-right"
+      />
     </div>
-
     <div class="info-graph__image-container">
       <img
-        :src="image"
-        alt=""
+          :src="image"
+          alt=""
       />
     </div>
   </div>
 </template>
 
 <script setup>
+import Button from "@/components/ui/Button.vue";
+
 defineProps({
   title: {
     type: String,
@@ -41,6 +40,7 @@ defineProps({
 
 <style lang="scss" scoped>
 .info-graph {
+  color: var(--color);
   &__header {
     display: flex;
     flex-direction: row;
@@ -53,9 +53,9 @@ defineProps({
     font-size: 16px;
   }
 
-  &__button__img {
-    width: 28px;
-    height: auto;
+  &__button {
+    color: var(--color);
   }
+
 }
 </style>

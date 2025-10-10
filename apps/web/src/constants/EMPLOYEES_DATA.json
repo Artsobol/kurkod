@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "photo": "/images/user-photo.jpg",
+    "name": "Выговорите Макан Яговорю",
+    "position": "Работник птицефермы",
+    "salary": 30000,
+    "status": "На работе"
+  },
+  {
+    "id": 2,
+    "photo": "/images/user-photo.jpg",
+    "name": "Выговорите Макан Яговорю",
+    "position": "Работник птицефермы",
+    "salary": 30000,
+    "status": "На работе"
+  },
+  {
+    "id": 3,
+    "photo": "/images/user-photo.jpg",
+    "name": "Выговорите Макан Яговорю",
+    "position": "Работник птицефермы",
+    "salary": 30000,
+    "status": "На работе"
+  },
+  {
+    "id": 4,
+    "photo": "/images/user-photo.jpg",
+    "name": "Выговорите Макан Яговорю",
+    "position": "Работник птицефермы",
+    "salary": 30000,
+    "status": "На работе"
+  },
+  {
+    "id": 5,
+    "photo": "/images/user-photo.jpg",
+    "name": "Выговорите Макан Яговорю",
+    "position": "Работник птицефермы",
+    "salary": 30000,
+    "status": "На работе"
+  },
+  {
+    "id": 6,
+    "photo": "/images/user-photo.jpg",
+    "name": "Выговорите Макан Яговорю",
+    "position": "Работник птицефермы",
+    "salary": 30000,
+    "status": "На работе"
+  }
+]

@@ -2,16 +2,12 @@
   <div class="employees">
     <div class="employees__header">
       <h2 class="employees__title">Сотрудники</h2>
-      <a class="employees__extra-button" href="/cells">
-      <span class="employees__extra-button__title">
-        Закрепленные клетки
-      </span>
-        <img
-            class="employees__extra-button__icon"
-            src="/ui-icons/arrow-right.svg"
-            alt=""
-        />
-      </a>
+      <Button
+          href="/cells"
+          class="table-template__button"
+          specific-button="arrow-right"
+          label="Закрепленные клетки"
+      />
     </div>
     <div class="employees__actions">
       <Input
@@ -49,13 +45,6 @@ import Button from "@/components/ui/Button.vue";
 </script>
 
 <style lang="scss" scoped>
-.page-block {
-  background: var(--color-white);
-  border-radius: 6px;
-  box-shadow: 0 4px 4px 0 rgba(61, 55, 136, 0.25);
-  padding: 12px 19px 17px 17px;
-}
-
 .employees {
   &__header {
     display: flex;
@@ -81,7 +70,7 @@ import Button from "@/components/ui/Button.vue";
     gap: 16px;
     &__title {
       font-weight: 700;
-      color: #3d3788;
+      color: var(--color);
     }
     &__icon {
       width: 28px;

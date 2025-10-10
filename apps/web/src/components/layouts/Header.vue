@@ -2,44 +2,40 @@
   <header class="header">
     <div class="header__left-container">
       <Logo/>
-      <button @click="$emit('toggle')" class="header__burger">
-        <img
-            src="/ui-icons/burger-button.svg"
-            alt=""
-            class="header__burger-icon"
+      <Button
+          class="header__burger"
+          @click="$emit('toggle')"
+          style="display: flex; justify-content: center; flex-direction: row; align-items: center;"
+      >
+        <Icon name="burger-button"
+              width="28"
+              height="21"
         />
-      </button>
+      </Button>
     </div>
 
     <div class="header__nav">
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/light.svg"
-            alt=""
-        />
-      </a>
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/switch-language.svg"
-            alt=""
-        />
-      </a>
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/notifications.svg"
-            alt=""
-        />
-      </a>
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/settings.svg"
-            alt=""
-        />
-      </a>
+      <Button
+          class="header__nav-link"
+          @click="ui.toggleTheme"
+      >
+        <Icon :name="ui.theme === 'light' ? 'light' : 'dark'" class="header__nav-link-icon"/>
+      </Button>
+      <Button
+          class="header__nav-link"
+      >
+        <Icon name="switch-language"/>
+      </Button>
+      <Button
+          class="header__nav-link"
+      >
+        <Icon name="notifications"/>
+      </Button>
+      <Button
+          class="header__nav-link"
+      >
+        <Icon name="settings"/>
+      </Button>
       <a class="header__nav-link" href="#">
         <img
             class="header__nav-link-icon"
@@ -55,7 +51,13 @@
 <script setup>
 
 import Logo from "@/components/ui/Logo.vue";
+import Button from "@/components/ui/Button.vue";
+import {uiStore} from "@/stores/ui.js";
+import SunIcon from '@/assets/icons/light.svg'
+import MoonIcon from '@/assets/icons/dark.svg'
+import Icon from "@/components/ui/Icon.vue";
 
+const ui = uiStore()
 </script>
 
 <style lang="scss" scoped>
@@ -65,8 +67,7 @@ import Logo from "@/components/ui/Logo.vue";
   left: 0;
   right: 0;
   height: 79px;
-  background-color: var(--color-white);
-  font-family: var(--font-family-poppins);
+  background-color: var(--section-bg);
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -83,9 +84,13 @@ import Logo from "@/components/ui/Logo.vue";
   }
 
   &__nav-link {
-    background-color: var(--color-bg);
+    background-color: var(--header-icons-bg);
     border-radius: 100%;
-    padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
   }
 
   &__nav-link-icon {

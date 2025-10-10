@@ -4,21 +4,18 @@ import Header from './components/layouts/Header.vue'
 import HomePage from "@/pages/HomePage.vue";
 import Sidebar from "@/components/layouts/Sidebar.vue";
 import Content from "@/components/layouts/Content.vue";
+import {uiStore} from "@/stores/ui.js";
+
 const route = useRoute()
+const ui = uiStore()
 
-import {ref} from "vue";
-const isClosed = ref(false);
-
-function toggleSidebar() {
-  isClosed.value = !isClosed.value;
-}
 </script>
 
 <template>
-  <Header @toggle="toggleSidebar"/>
+  <Header @toggle="ui.toggleSidebar()"/>
   <div class="wrapper">
     <Sidebar
-      :isClosed="isClosed"
+      :isClosed="ui.isSidebarClosed"
     />
     <Content>
       <RouterView />

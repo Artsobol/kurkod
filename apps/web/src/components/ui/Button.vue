@@ -2,23 +2,40 @@
   <a
       v-if="href"
       :href="href"
-      :class="[mode, location]"
+      :class="[mode, location, 'button']"
   >
-    {{ label }}
+    <template v-if="specificButton === 'arrow-right'">
+      <span v-if="label" class="arrow-right__title">{{ label }}</span>
+      <Icon name="arrow-right" width="28" height="28"/>
+    </template>
+    <template v-else>
+      {{ label }}
+    </template>
   </a>
 
   <button
       v-else
       type="button"
       :class="[mode, location]"
+      @click="handleClick"
   >
-    {{ label }}
+    <slot>{{ label }}</slot>
   </button>
 </template>
 
 <script setup>
+import Icon from "@/components/ui/Icon.vue";
+
+const emit = defineEmits(['click'])
+const handleClick = (event) => {
+  emit('click', event)
+}
 defineProps({
   label: {
+    type: String,
+    required: false
+  },
+  specificButton: {
     type: String,
     required: false
   },
@@ -38,18 +55,44 @@ defineProps({
 </script>
 
 <style lang="scss" scoped>
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color);
+}
 
-//Mode
+//specifics
+.button .arrow-right__title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-right: 14px;
+}
+
+.arrow-right {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+
+  &__title {
+    font-size: 16px;
+    font-weight: 700;
+  }
+}
+
+//Mods
 
 .transparent {
 }
 
 .violet {
-  background-color: #726DAF;
+  background-color: var(--contrast);
   color: var(--color-white);
 }
 
-//Location
+//Locations
 
 .page-action {
   font-weight: 700;
@@ -63,5 +106,6 @@ defineProps({
   box-shadow: var(--shadow);
 
 }
+
 
 </style>

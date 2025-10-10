@@ -10,6 +10,7 @@
         </tr>
         </thead>
         <tbody>
+
         <EmployeeItem
             photo="/images/user-photo.jpg"
             name="Выговорите Макан Яговорю"
@@ -48,6 +49,7 @@
 
 <script setup>
 import EmployeeItem from "@/components/tables/EmployeeItem.vue";
+import employees_data from "@/constants/EMPLOYEES_DATA.json";
 
 defineProps({
   heightSize: {
