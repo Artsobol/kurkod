@@ -37,8 +37,6 @@
 </template>
 
 <script setup>
-import InfoBlock from "@/components/ui/InfoBlock.vue";
-import InfoGraph from "@/components/ui/InfoGraph.vue";
 import TableTemplate from "@/components/tables/TableTemplate.vue";
 import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
@@ -62,20 +60,6 @@ import Button from "@/components/ui/Button.vue";
     flex-direction: row;
     justify-content: flex-start;
     gap: 32px;
-  }
-
-  &__extra-button {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    &__title {
-      font-weight: 700;
-      color: var(--color);
-    }
-    &__icon {
-      width: 28px;
-      height: 28px;
-    }
   }
 }
 </style>

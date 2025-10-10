@@ -1,20 +1,20 @@
 <template>
-  <div class="cells">
-    <div class="cells__header">
-      <h2 class="cells__title">Ячейки</h2>
+  <div class="diets">
+    <div class="diets__header">
+      <h2 class="diets__title">Диеты</h2>
     </div>
-    <div class="cells__actions">
+    <div class="diets__actions">
       <Input
-          class="cells__input"
-          labelInput="Найти ячейку"
+          class="diets__input"
+          labelInput="Найти диету"
       />
       <Button
-          label="Добавить ячейку"
+          label="Добавить диету"
           mode="violet"
           location="page-action"
       />
       <Button
-          label="Удалить ячейку"
+          label="Удалить диету"
           mode="violet"
           location="page-action"
       />
@@ -26,7 +26,7 @@ import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
 </script>
 <style lang="scss" scoped>
-.cells {
+.diets {
   &__header {
     display: flex;
     flex-direction: row;
