@@ -5,57 +5,44 @@
       <Button
           class="header__burger"
           @click="$emit('toggle')"
-          style="display: flex; justify-content: center; flex-direction: row; align-items: center;"
-      >
-        <Icon name="burger-button"
-              width="28"
-              height="21"
-        />
-      </Button>
+          iconName="burger-button"
+          :icon-width="28"
+          :icon-height="21"
+      />
     </div>
 
     <div class="header__nav">
       <Button
           class="header__nav-link"
           @click="ui.toggleTheme"
-      >
-        <Icon :name="ui.theme === 'light' ? 'light' : 'dark'" class="header__nav-link-icon"/>
-      </Button>
+          :icon-name="ui.theme === 'light' ? 'light' : 'dark'"
+      />
       <Button
           class="header__nav-link"
-      >
-        <Icon name="switch-language"/>
-      </Button>
+          icon-name="switch-language"
+      />
       <Button
           class="header__nav-link"
-      >
-        <Icon name="notifications"/>
-      </Button>
+          icon-name="notifications"
+      />
       <Button
           class="header__nav-link"
-      >
-        <Icon name="settings"/>
-      </Button>
-      <a class="header__nav-link" href="#">
-        <img
-            class="header__nav-link-icon"
-            src="/ui-icons/settings.svg"
-            alt=""
-        />
-      </a>
+          icon-name="settings"
+      />
+      <Button
+          class="header__nav-link"
+          icon-name="user"
+          href="/account"
+      />
 
     </div>
   </header>
 </template>
 
 <script setup>
-
 import Logo from "@/components/ui/Logo.vue";
 import Button from "@/components/ui/Button.vue";
 import {uiStore} from "@/stores/ui.js";
-import SunIcon from '@/assets/icons/light.svg'
-import MoonIcon from '@/assets/icons/dark.svg'
-import Icon from "@/components/ui/Icon.vue";
 
 const ui = uiStore()
 </script>
@@ -91,11 +78,6 @@ const ui = uiStore()
     align-items: center;
     width: 40px;
     height: 40px;
-  }
-
-  &__nav-link-icon {
-    width: 24px;
-    height: 24px;
   }
 
   &__left-container {

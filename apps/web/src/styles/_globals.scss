@@ -35,6 +35,12 @@ h2, .h2 {
   color: (--color-text);
 }
 
+.text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 /* Reset and base styles  */
 
 * {

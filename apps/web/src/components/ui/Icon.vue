@@ -4,12 +4,11 @@
       :is="iconComponent"
       :width="width"
       :height="height"
-
   />
 </template>
 
 <script setup>
-import {computed, ref, watchEffect} from "vue";
+import { ref, watchEffect, markRaw } from 'vue'
 
 const props = defineProps({
   name: {
@@ -34,7 +33,8 @@ const iconComponent = ref(null)
 
 watchEffect(async () => {
   try {
-    iconComponent.value = (await import(`@/assets/icons/${props.name}.svg`)).default
+    const mod = await import(`@/assets/icons/${props.name}.svg`)
+    iconComponent.value = markRaw(mod.default)
   } catch (e) {
     console.warn(`Icon "${props.name}" not found`)
     iconComponent.value = null

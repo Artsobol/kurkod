@@ -16,31 +16,16 @@
       </li>
       <li>
         <RouterLink to="/cells" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Закрепленные клетки</span>
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Ячейки</span>
         </RouterLink>
-      </li>
-      <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Заказы</span>
-      </li>
-      <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Логистика</span>
-      </li>
-      <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Отчеты</span>
       </li>
       <li>
         <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Курицы</span>
       </li>
       <li>
-        <RouterLink to="/chickens " class="nav-link" active-class="active">
+        <RouterLink to="/chickens" class="nav-link" active-class="active">
           ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Курицы</span>
         </RouterLink>
-      </li>
-      <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Петухи</span>
-      </li>
-      <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Цыплята</span>
       </li>
       <li>
         <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Уход</span>
@@ -49,7 +34,9 @@
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Корм</span>
       </li>
       <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Диеты</span>
+        <RouterLink to="/diets" class="nav-link" active-class="active">
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Диеты</span>
+        </RouterLink>
       </li>
       <li>
         ❓ <span class="link-text" :class="{ hidden: isClosed }">Загоны</span>

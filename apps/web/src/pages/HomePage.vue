@@ -69,7 +69,9 @@
         <Button
             href="/employees"
             class="table-template__button"
-            specific-button="arrow-right"
+            icon-name="arrow-right"
+            :icon-width="28"
+            :icon-height="28"
         />
       </div>
       <TableTemplate
@@ -90,7 +92,7 @@ import Button from "@/components/ui/Button.vue";
 <style lang="scss">
 .page-block {
   background: var(--section-bg);
-  border-radius: 6px;
+  border-radius: 8px;
   box-shadow: 0 4px 4px 0 rgba(61, 55, 136, 0.25);
   padding: 12px 19px 17px 17px;
 }
