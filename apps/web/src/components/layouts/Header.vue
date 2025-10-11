@@ -6,7 +6,7 @@
           class="header__burger"
           @click="$emit('toggle')"
           iconName="burger-button"
-          :icon-width=28
+          :icon-width="28"
           :icon-height="21"
       />
     </div>
@@ -31,7 +31,8 @@
       />
       <Button
           class="header__nav-link"
-          icon-name="settings"
+          icon-name="user"
+          href="/account"
       />
 
     </div>

@@ -5,14 +5,16 @@
       <Button
           href="/cells"
           class="table-template__button"
-          specific-button="arrow-right"
           label="Закрепленные клетки"
+          icon-name="arrow-right"
+          :icon-width="28"
+          :icon-height="28"
       />
     </div>
     <div class="employees__actions">
       <Input
           class="employees__input"
-          labelInput="Найти сотрудника"
+          label-input="Найти сотрудника"
       />
       <Button
         label="Добавить сотрудника"
@@ -29,9 +31,9 @@
     <div class="page-block">
       <TableTemplate
           title="Сотрудники"
-          :bodyItems="['Имя', 'Должность', 'Статус']"
-          :headersItem="['', 'Имя', 'Должность', 'Статус']"
-          stylesPack="table-employees"/>
+          :body-items="['Имя', 'Должность', 'Статус']"
+          :headers-item="['', 'Имя', 'Должность', 'Статус']"
+          styles-pack="table-employees"/>
     </div>
   </div>
 </template>

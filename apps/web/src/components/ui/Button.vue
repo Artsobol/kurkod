@@ -4,12 +4,13 @@
       :href="href"
       :class="[mode, location, 'button']"
   >
-    <template v-if="specificButton === 'arrow-right'">
-      <span v-if="label" class="arrow-right__title">{{ label }}</span>
-      <Icon name="arrow-right" width="28" height="28"/>
-    </template>
-    <template v-else>
-      {{ label }}
+<!--    <template v-if="specificButton === 'arrow-right'">-->
+<!--      <span v-if="label" class="arrow-right__title">{{ label }}</span>-->
+<!--      <Icon name="arrow-right" width="28" height="28"/>-->
+<!--    </template>-->
+    <slot>{{ label }}</slot>
+    <template v-if="iconName">
+      <Icon :name="iconName" :width="iconWidth" :height="iconHeight"/>
     </template>
   </a>
 
@@ -19,10 +20,10 @@
       :class="[mode, location, 'button']"
       @click="handleClick"
   >
+    <slot>{{ label }}</slot>
     <template v-if="iconName">
       <Icon :name="iconName" :width="iconWidth" :height="iconHeight"/>
     </template>
-    <slot>{{ label }}</slot>
   </button>
 </template>
 
@@ -75,33 +76,11 @@ defineProps({
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  gap: 14px;
   color: var(--color);
 }
 
-//specifics
-.button .arrow-right__title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-right: 14px;
-}
-
-.arrow-right {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: 14px;
-
-  &__title {
-    font-size: 16px;
-    font-weight: 700;
-  }
-}
-
 //Mods
-
-.transparent {
-}
 
 .violet {
   background-color: var(--contrast);
@@ -114,14 +93,16 @@ defineProps({
   font-weight: 700;
   font-size: 16px;
   width: 248px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding-block: 16px;
   border-radius: 8px;
-  box-shadow: var(--shadow);
-
 }
 
+.block-action {
+  font-weight: 600;
+  font-size: 14px;
+  width: 194px;
+  border-radius: 8px;
+  padding-block: 8px;
+}
 
 </style>

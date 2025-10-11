@@ -7,7 +7,9 @@
       <Button
           :href="href"
           class="info-graph__button"
-          specific-button="arrow-right"
+          icon-name="arrow-right"
+          :icon-width="28"
+          :icon-height="28"
       />
     </div>
     <div class="info-graph__image-container">

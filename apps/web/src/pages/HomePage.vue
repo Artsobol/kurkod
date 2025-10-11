@@ -69,7 +69,9 @@
         <Button
             href="/employees"
             class="table-template__button"
-            specific-button="arrow-right"
+            icon-name="arrow-right"
+            :icon-width="28"
+            :icon-height="28"
         />
       </div>
       <TableTemplate
