@@ -17,27 +17,31 @@
                 alt="user-photo"
                 class="account__img"
             />
+          </div>
 
-          </div>
           <div class="account__info">
-            <span class="h2 text-ellipsis" style="max-width: 27.8vw">сашкааааааааааа александра вячеславовна</span>
-            <span class="account__info-text" style="padding-top: 3px;">Директор предприятия</span>
+            <span class="h2 text-ellipsis">Фамилия</span>
+            <span class="h2 text-ellipsis">Имя</span>
+            <span class="h2 text-ellipsis">Отчество</span>
           </div>
+
+
           <div class="account__info">
-            <span style="display: flex; flex-direction: row; gap: 16px; align-items: center; padding-top: 3px;">
+            <span class="h2">Директор предприятия</span>
+            <span style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
               <span class="account__info-text text-ellipsis" style="max-width: 27.8vw">emailemailemail@gmail.com</span>
               <Button
                   icon-name="hide"
-                  :icon-width="24"
-                  :icon-height="24"
+                  :icon-width="20"
+                  :icon-height="20"
               />
             </span>
             <span style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
               <span class="account__info-text">+* (***) *** - ** - **</span>
               <Button
                   icon-name="show"
-                  :icon-width="24"
-                  :icon-height="24"
+                  :icon-width="20"
+                  :icon-height="20"
               />
             </span>
 
@@ -107,7 +111,6 @@ import Button from "@/components/ui/Button.vue";
   &__info {
     display: flex;
     flex-direction: column;
-    gap: 24px;
     align-items: center;
 
     &-text {
@@ -116,8 +119,8 @@ import Button from "@/components/ui/Button.vue";
   }
 
   &__img-container {
-    width: 5vw;
-    height: 5vw;
+    width: 10vw;
+    height: 10vw;
     overflow: hidden;
     border-radius: 8px;
   }
