@@ -58,6 +58,5 @@ defineProps({
   &__button {
     color: var(--color);
   }
-
 }
 </style>
