@@ -16,9 +16,12 @@
   <button
       v-else
       type="button"
-      :class="[mode, location]"
+      :class="[mode, location, 'button']"
       @click="handleClick"
   >
+    <template v-if="iconName">
+      <Icon :name="iconName" :width="iconWidth" :height="iconHeight"/>
+    </template>
     <slot>{{ label }}</slot>
   </button>
 </template>
@@ -50,6 +53,18 @@ defineProps({
   href: {
     type: String,
     required: false
+  },
+  iconName: {
+    type: String,
+    required: false
+  },
+  iconWidth: {
+    type: Number,
+    default: 28
+  },
+  iconHeight: {
+    type: Number,
+    default: 28
   }
 })
 </script>
@@ -57,6 +72,7 @@ defineProps({
 <style lang="scss" scoped>
 .button {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   color: var(--color);

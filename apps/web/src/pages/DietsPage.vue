@@ -19,6 +19,10 @@
           location="page-action"
       />
     </div>
+    <img
+        src="/images/coconut.png"
+        alt="coconut"
+    />
   </div>
 </template>
 <script setup>
