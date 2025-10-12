@@ -87,6 +87,16 @@ defineProps({
   color: var(--color-white);
 }
 
+.white-no-switch {
+  background-color: var(--color-white);
+  color: var(--color-section-contrast-light)
+}
+
+.violet-no-switch {
+  background-color: var(--color-section-contrast-light);
+  color: var(--color-white);
+}
+
 //Locations
 
 .page-action {
@@ -103,6 +113,14 @@ defineProps({
   width: 194px;
   border-radius: 8px;
   padding-block: 8px;
+}
+
+.sign-in-button {
+  border-radius: 8px;
+  // width: 262px;
+  height: 48px;
+  font-weight: 700;
+  font-size: 14px
 }
 
 </style>
