@@ -112,6 +112,11 @@ const ui = uiStore()
       align-items: center;
       padding-top: 18px;
       padding-right: 24px;
+
+      background-image: url('/images/sign-in-bg.svg');
+      background-repeat: no-repeat;
+      background-size: 109px 370px;
+      background-position: calc(0% + 24px) calc(100% - 35px);
     }
 
     &__buttons {
@@ -130,7 +135,7 @@ const ui = uiStore()
     text-align: center;
     max-width: 262px;
     padding-top: 49px;
-    padding-bottom: 60px;
+    padding-bottom: 48px;
   }
 
   &__copyright {
@@ -174,8 +179,29 @@ const ui = uiStore()
   }
 
   &__select {
+    width: 168px;
+    height: 32px;
+    font-weight: 500;
+    font-size: 14px;
+    color: #686590;
+    border-radius: 8px;
+    outline: none;
+    padding-left: 12px;
+    background: var(--color-bg-light);
+    appearance: none;
+    background-image: url('@/assets/icons/select-arrow.svg');
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
   }
 
+  &__select__option {
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--color-text-light);
+    width: 168px;
+    outline: none;
+  }
 }
 
 </style>
