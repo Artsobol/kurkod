@@ -1,11 +1,13 @@
 <template class="input-container">
+
+
   <form
       class="input__form"
       action="/search" method="get">
-    <img
-        class="input__form-icon"
-        src="/ui-icons/search.svg"
-        alt=""
+    <Icon
+        name="search"
+        width="24"
+        height="24"
     />
     <input
         class="input__form-input"
@@ -27,24 +29,18 @@ defineProps({
 .input__form {
   background: var(--color-white);
   height: 54px;
-  max-width: 245px;
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 12px;
+  padding: 0 16px;
   border-radius: 8px;
   box-shadow: var(--shadow);
   overflow: hidden;
 
-  &-icon {
-    width: 24px;
-    height: 24px;
-    flex-shrink: 0;
-  }
-
   &-input {
     flex: 1;
     height: 100%;
+    max-width: 180px;
 
     &::placeholder {
       font-weight: 400;
