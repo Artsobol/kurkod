@@ -8,14 +8,21 @@ import {uiStore} from "@/stores/ui.js";
 
 const route = useRoute()
 const ui = uiStore()
-
+const hiddenLayoutRoutes = ['/sign']
 </script>
 
 <template>
-  <Header @toggle="ui.toggleSidebar()"/>
-  <div class="wrapper">
+  <Header
+      v-if="!hiddenLayoutRoutes.includes(route.path)"
+      @toggle="ui.toggleSidebar()"
+  />
+  <div
+      class="wrapper"
+      :class="{ 'no-layout': hiddenLayoutRoutes.includes(route.path) }"
+  >
     <Sidebar
       :isClosed="ui.isSidebarClosed"
+      v-if="!hiddenLayoutRoutes.includes(route.path)"
     />
     <Content>
       <RouterView />
@@ -30,6 +37,11 @@ const ui = uiStore()
   overflow-x: hidden;
   margin-top: 79px;
   height: calc(100vh - 79px);
+
+  &.no-layout {
+    margin-top: 0;
+    height: 100vh;
+  }
 }
 
 

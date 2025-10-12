@@ -138,7 +138,6 @@ function toggleEmail() {
   &__info {
     display: flex;
     flex-direction: column;
-
     gap: 24px;
 
     &-text {

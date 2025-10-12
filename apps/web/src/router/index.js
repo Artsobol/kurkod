@@ -6,6 +6,7 @@ import CellsPage from "@/pages/CellsPage.vue";
 import ChickensPage from "@/pages/ChickensPage.vue";
 import DietsPage from "@/pages/DietsPage.vue";
 import AccountPage from "@/pages/AccountPage.vue";
+import SignInPage from "@/pages/SignInPage.vue";
 
 const routes = [
   {
@@ -43,6 +44,12 @@ const routes = [
     name: 'Account',
     component: AccountPage,
     meta: { title: 'Account' }
+  },
+  {
+    path: '/sign',
+    name: 'Sign',
+    component: SignInPage,
+    meta: { title: 'Sign' }
   },
 ]
 

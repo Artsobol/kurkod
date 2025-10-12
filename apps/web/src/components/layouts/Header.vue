@@ -47,7 +47,7 @@ import {uiStore} from "@/stores/ui.js";
 const ui = uiStore()
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .header {
   position: fixed;
   top: 0;
