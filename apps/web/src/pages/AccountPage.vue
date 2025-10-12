@@ -10,6 +10,7 @@
               location="block-action"
           />
         </div>
+
         <div class="account__content page-block">
           <div class="account__img-container">
             <img
@@ -25,28 +26,34 @@
             <span class="h2 text-ellipsis">Отчество</span>
           </div>
 
-
           <div class="account__info">
             <span class="h2">Директор предприятия</span>
             <span style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
-              <span class="account__info-text text-ellipsis" style="max-width: 27.8vw">emailemailemail@gmail.com</span>
+              <span class="account__info-text text-ellipsis" :class="{ 'letter-spacing-email': isHiddenEmail }" style="width: 20vw">
+                {{ isHiddenEmail ? maskedEmail : email }}
+              </span>
               <Button
+                  style="align-self: flex-end; margin-left: auto"
+                  :icon-name="isHiddenEmail ? 'show' : 'hide'"
                   icon-name="hide"
                   :icon-width="20"
                   :icon-height="20"
+                  @click="toggleEmail"
               />
             </span>
             <span style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
-              <span class="account__info-text">+* (***) *** - ** - **</span>
+              <span class="account__info-text" :class="{ 'letter-spacing-phone': isHiddenPhone }">
+                {{ isHiddenPhone ? maskedPhone : phone }}
+              </span>
               <Button
-                  icon-name="show"
+                  style="align-self: flex-end; margin-left: auto"
+                  :icon-name="isHiddenPhone ? 'show' : 'hide'"
                   :icon-width="20"
                   :icon-height="20"
+                  @click="togglePhone"
               />
             </span>
-
           </div>
-
         </div>
       </div>
 
@@ -63,8 +70,6 @@
 
         </div>
       </div>
-
-
     </div>
     <div class="account__first-row">
 
@@ -79,9 +84,31 @@
     </div>
   </div>
 </template>
-<script setup>
-
+<script setup lang="ts">
 import Button from "@/components/ui/Button.vue";
+import {computed, ref} from "vue";
+
+const phone = ref<string>("+7 (999) 123-45-67")
+const email = ref<string>("emailemailemail@gmail.com")
+
+const isHiddenPhone = ref(true)
+const isHiddenEmail = ref(true)
+
+const maskedPhone = computed(() => {
+  return phone.value.replace(/\d/g, '*')
+})
+
+const maskedEmail = computed(() => {
+  return email.value.replace(/[^@.]/g, '*')
+})
+
+function togglePhone() {
+  isHiddenPhone.value = !isHiddenPhone.value
+}
+
+function toggleEmail() {
+  isHiddenEmail.value = !isHiddenEmail.value
+}
 </script>
 <style lang="scss" scoped>
 .account {
@@ -111,7 +138,7 @@ import Button from "@/components/ui/Button.vue";
   &__info {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 24px;
 
     &-text {
       text-wrap: wrap;
@@ -131,5 +158,13 @@ import Button from "@/components/ui/Button.vue";
     object-fit: cover;
     display: block;
   }
+}
+
+.letter-spacing-email {
+  letter-spacing: 0.155em;
+}
+
+.letter-spacing-phone {
+  letter-spacing: 0.1em;
 }
 </style>
