@@ -74,10 +74,16 @@
             :icon-height="28"
         />
       </div>
-      <TableTemplate
-          :bodyItems="['Имя', 'Должность', 'Статус']"
-          :headersItem="['', 'Имя', 'Должность', 'Статус']"
-          stylesPack="table-employees" />
+      <TableDraft
+          style="margin-block: 8px"
+          :headersItem="[
+              { key: 'photo', label: 'Фото' },
+              { key: 'name', label: 'Имя' },
+              { key: 'position', label: 'Должность' },
+              { key: 'status', label: 'Статус' } ]"
+          :bodyItems="users"
+          :height-size="5"
+      />
     </div>
   </div>
 </template>
@@ -87,6 +93,10 @@ import InfoBlock from "@/components/ui/InfoBlock.vue";
 import InfoGraph from "@/components/ui/InfoGraph.vue";
 import TableTemplate from "@/components/tables/TableTemplate.vue";
 import Button from "@/components/ui/Button.vue";
+import TableDraft from "@/components/tables/TableDraft.vue";
+import employees_data from "@/constants/EMPLOYEES_DATA.json";
+
+const users = employees_data;
 </script>
 
 <style lang="scss">
@@ -115,10 +125,12 @@ import Button from "@/components/ui/Button.vue";
   margin: 0;
   height: 87px;
   background: var(--contrast);
+
   &:hover {
     transform: scale(1.03);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
+
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -133,6 +145,7 @@ import Button from "@/components/ui/Button.vue";
     flex-direction: row;
     justify-content: space-between;
   }
+
   &__title {
     font-size: 16px;
   }

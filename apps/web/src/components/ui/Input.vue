@@ -28,6 +28,7 @@ defineProps({
 <style lang="scss" scoped>
 .input__form {
   background: var(--color-white);
+  color: var(--color-text-light);
   height: 54px;
   display: flex;
   align-items: center;

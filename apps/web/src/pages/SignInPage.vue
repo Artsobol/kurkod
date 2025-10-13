@@ -156,7 +156,7 @@ const ui = uiStore()
   &__text {
     font-weight: 500;
     font-size: 14px;
-    color: var(--color-text-light);
+    color: var(--color);
   }
 
   &__form {
@@ -172,6 +172,7 @@ const ui = uiStore()
     width: 339px;
     height: 48px;
     background: var(--color-bg-light);
+    color: var(--color-text-light);
     display: flex;
     flex-direction: row;
     align-items: center;
