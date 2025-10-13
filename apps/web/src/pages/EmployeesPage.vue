@@ -28,7 +28,7 @@
       />
     </div>
 
-    <TableDraft :headersItem="[
+    <TableTemplate :headersItem="[
           { key: 'photo', label: 'Фото' },
           { key: 'name', label: 'Имя' },
           { key: 'position', label: 'Должность' },
@@ -43,7 +43,7 @@
 <script setup>
 import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
-import TableDraft from "@/components/tables/TableDraft.vue";
+import TableTemplate from "@/components/tables/TableTemplate.vue";
 import employees_data from "@/constants/EMPLOYEES_DATA.json";
 
 const users = employees_data;

@@ -9,6 +9,9 @@
           :icon-width="28"
           :icon-height="21"
       />
+      <h1>
+        {{ pageTitle }}
+      </h1>
     </div>
 
     <div class="header__nav">
@@ -43,8 +46,13 @@
 import Logo from "@/components/ui/Logo.vue";
 import Button from "@/components/ui/Button.vue";
 import {uiStore} from "@/stores/ui.js";
+import {computed} from "vue";
+import {useRoute} from "vue-router";
 
 const ui = uiStore()
+const route = useRoute();
+
+const pageTitle = computed(() => route.name || "");
 </script>
 
 <style lang="scss">
@@ -82,6 +90,7 @@ const ui = uiStore()
 
   &__left-container {
     display: flex;
+    align-items: center;
     gap: 52px;
   }
 }

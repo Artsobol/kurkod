@@ -74,7 +74,7 @@
             :icon-height="28"
         />
       </div>
-      <TableDraft
+      <TableTemplate
           style="margin-block: 8px"
           :headersItem="[
               { key: 'photo', label: 'Фото' },
@@ -93,7 +93,6 @@ import InfoBlock from "@/components/ui/InfoBlock.vue";
 import InfoGraph from "@/components/ui/InfoGraph.vue";
 import TableTemplate from "@/components/tables/TableTemplate.vue";
 import Button from "@/components/ui/Button.vue";
-import TableDraft from "@/components/tables/TableDraft.vue";
 import employees_data from "@/constants/EMPLOYEES_DATA.json";
 
 const users = employees_data;

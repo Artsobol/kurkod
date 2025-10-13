@@ -1,64 +1,43 @@
 <template>
-  <div class="table-template">
-    <div class="table-template__body">
-      <table>
-        <thead>
-        <tr>
-          <th v-for="(headerItem, index) in headersItem" :key="index">
-            {{ headerItem }}
-          </th>
-        </tr>
-        </thead>
-        <tbody>
+  <div class="table">
+    <table>
+      <thead>
+      <tr>
+        <th v-for="(headerItem, index) in headersItem" :key="index">
+          {{ getHeaderLabel(headerItem) }}
+        </th>
+      </tr>
+      </thead>
 
-        <EmployeeItem
-            photo="/images/user-photo.jpg"
-            name="Выговорите Макан Яговорю"
-            position="Работник птицефермы"
-            status="На работе"
-        />
-        <EmployeeItem
-            photo="/images/user-photo.jpg"
-            name="Выговорите Макан Яговорю"
-            position="Работник птицефермы"
-            status="На работе"
-        />
-        <EmployeeItem
-            photo="/images/user-photo.jpg"
-            name="Выговорите Макан Яговорю"
-            position="Работник птицефермы"
-            status="На работе"
-        />
-        <EmployeeItem
-            photo="/images/user-photo.jpg"
-            name="Выговорите Макан Яговорю"
-            position="Работник птицефермы"
-            status="На работе"
-        />
-        <EmployeeItem
-            photo="/images/user-photo.jpg"
-            name="Выговорите Макан Яговорю"
-            position="Работник птицефермы"
-            status="На работе"
-        />
-        </tbody>
-      </table>
-    </div>
+      <tbody>
+      <tr v-for="(row, rowIndex) in bodyRows" :key="rowIndex">
+        <td
+            v-for="(headerItem, colIndex) in headersItem"
+            :key="colIndex"
+        >
+          <img
+              v-if="getHeaderKey(headerItem) === 'photo'"
+              :src="row[getHeaderKey(headerItem)]"
+              alt="Фото"
+              style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"
+          />
+          <span v-else>
+              {{ row[getHeaderKey(headerItem)] }}
+            </span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
 <script setup>
-import EmployeeItem from "@/components/tables/EmployeeItem.vue";
-import employees_data from "@/constants/EMPLOYEES_DATA.json";
+import {computed} from "vue";
 
-defineProps({
+const props = defineProps({
   heightSize: {
     type: Number,
     default: 5,
-  },
-  stylesPack: {
-    type: String,
-    required: true,
   },
   headersItem: {
     type: Array,
@@ -66,32 +45,42 @@ defineProps({
   },
   bodyItems: {
     type: Array,
-    required: true,
+    required: () => [],
   }
 })
+
+const bodyRows = computed(() => {
+  return props.bodyItems.slice(0, props.heightSize)
+})
+
+const getHeaderKey = (headerItem) => {
+  return typeof headerItem === 'object' ? headerItem.key : headerItem
+}
+const getHeaderLabel = (headerItem) => {
+  return typeof headerItem === 'object' ? headerItem.label : headerItem
+}
 </script>
 
-<style scoped lang="scss">
-.table-template th,
-.table-template td {
-  padding-block: 10px;
-  text-align: center;
-  border-radius: 4px;
-  vertical-align: middle;
-}
-
-.table-template__body {
-  font-size: 14px;
-}
-
-.table-template {
+<style lang="scss" scoped>
+table {
   width: 100%;
-
-  &__body table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-  }
+  border-collapse: collapse;
+  background: var(--section-bg);
 }
 
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table, th, td {
+  border: 1px solid var(--sidebar-text);
+  color: var(--color);
+}
+
+th, td {
+  text-align: center;
+  vertical-align: middle;
+  padding: 8px;
+}
 </style>

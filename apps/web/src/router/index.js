@@ -11,37 +11,37 @@ import SignInPage from "@/pages/SignInPage.vue";
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Главная',
     component: HomePage,
     meta: { title: 'Home' }
   },
   {
     path: '/employees',
-    name: 'Employees',
+    name: 'Сотрудники',
     component: EmployeesPage,
     meta: { title: 'Employees' }
   },
   {
     path: '/cells',
-    name: 'Cells',
+    name: 'Ячейки',
     component: CellsPage,
     meta: { title: 'Cells' }
   },
   {
     path: '/chickens',
-    name: 'Chickens',
+    name: 'Курицы',
     component: ChickensPage,
     meta: { title: 'Chickens' }
   },
   {
     path: '/diets',
-    name: 'Diets',
+    name: 'Диеты',
     component: DietsPage,
     meta: { title: 'Diets' }
   },
   {
     path: '/account',
-    name: 'Account',
+    name: 'Ваш профиль',
     component: AccountPage,
     meta: { title: 'Account' }
   },
