@@ -1,8 +1,22 @@
 <template>
   <div class="employees">
-    <div class="employees__header">
-      <h2 class="employees__title">Сотрудники</h2>
+    <div class="employees__actions">
+      <Input
+          class="employees__input"
+          label-input="Найти сотрудника"
+      />
       <Button
+          label="Добавить сотрудника"
+          mode="violet"
+          location="page-action"
+      />
+      <Button
+          label="Удалить сотрудника"
+          mode="violet"
+          location="page-action"
+      />
+      <Button
+          style="margin-left: auto;"
           href="/cells"
           class="table-template__button"
           label="Закрепленные клетки"
@@ -11,37 +25,30 @@
           :icon-height="28"
       />
     </div>
-    <div class="employees__actions">
-      <Input
-          class="employees__input"
-          label-input="Найти сотрудника"
-      />
-      <Button
-        label="Добавить сотрудника"
-        mode="violet"
-        location="page-action"
-      />
-      <Button
-          label="Удалить сотрудника"
-          mode="violet"
-          location="page-action"
-      />
-    </div>
 
-    <div class="page-block">
-      <TableTemplate
-          title="Сотрудники"
-          :body-items="['Имя', 'Должность', 'Статус']"
-          :headers-item="['', 'Имя', 'Должность', 'Статус']"
-          styles-pack="table-employees"/>
-    </div>
+    <TableTemplate :headersItem="[
+          { key: 'photo', label: 'Фото' },
+          { key: 'name', label: 'ФИО' },
+          { key: 'position', label: 'Должность' },
+          { key: 'salary', label: 'Зарплата' },
+          {key: 'phone', label: 'Телефон'},
+          {key: 'email', label: 'Почта'},
+          { key: 'status', label: 'Статус' },
+          {key: 'id', label: 'Ссылка'}
+          ]"
+                :bodyItems="users"
+                :height-size="100"
+    />
   </div>
 </template>
 
 <script setup>
-import TableTemplate from "@/components/tables/TableTemplate.vue";
 import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
+import TableTemplate from "@/components/tables/TableTemplate.vue";
+import employees_data from "@/constants/EMPLOYEES_DATA.json";
+
+const users = employees_data;
 </script>
 
 <style lang="scss" scoped>

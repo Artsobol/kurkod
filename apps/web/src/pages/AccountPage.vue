@@ -29,13 +29,13 @@
           <div class="account__info">
             <span class="h2">Директор предприятия</span>
             <span style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
-              <span class="account__info-text text-ellipsis" :class="{ 'letter-spacing-email': isHiddenEmail }" style="width: 20vw">
+              <span class="account__info-text text-ellipsis" :class="{ 'letter-spacing-email': isHiddenEmail }"
+                    style="width: 20vw">
                 {{ isHiddenEmail ? maskedEmail : email }}
               </span>
               <Button
                   style="align-self: flex-end; margin-left: auto"
                   :icon-name="isHiddenEmail ? 'show' : 'hide'"
-                  icon-name="hide"
                   :icon-width="20"
                   :icon-height="20"
                   @click="toggleEmail"
@@ -84,12 +84,13 @@
     </div>
   </div>
 </template>
-<script setup lang="ts">
+
+<script setup>
 import Button from "@/components/ui/Button.vue";
 import {computed, ref} from "vue";
 
-const phone = ref<string>("+7 (999) 123-45-67")
-const email = ref<string>("emailemailemail@gmail.com")
+const phone = ref("+7 (999) 123-45-67")
+const email = ref("emailemailemail@gmail.com")
 
 const isHiddenPhone = ref(true)
 const isHiddenEmail = ref(true)
@@ -110,6 +111,7 @@ function toggleEmail() {
   isHiddenEmail.value = !isHiddenEmail.value
 }
 </script>
+
 <style lang="scss" scoped>
 .account {
   &__first-row {

@@ -4,7 +4,7 @@
       <div class="page-block page-info-block">
         <InfoBlock
             title="Курицы"
-            href="#"
+            href="/chickens"
             subTitle="Общее количество"
             count="1086"
         />
@@ -75,9 +75,15 @@
         />
       </div>
       <TableTemplate
-          :bodyItems="['Имя', 'Должность', 'Статус']"
-          :headersItem="['', 'Имя', 'Должность', 'Статус']"
-          stylesPack="table-employees" />
+          style="margin-block: 8px"
+          :headersItem="[
+              { key: 'photo', label: 'Фото' },
+              { key: 'name', label: 'Имя' },
+              { key: 'position', label: 'Должность' },
+              { key: 'status', label: 'Статус' } ]"
+          :bodyItems="users"
+          :height-size="5"
+      />
     </div>
   </div>
 </template>
@@ -87,13 +93,15 @@ import InfoBlock from "@/components/ui/InfoBlock.vue";
 import InfoGraph from "@/components/ui/InfoGraph.vue";
 import TableTemplate from "@/components/tables/TableTemplate.vue";
 import Button from "@/components/ui/Button.vue";
+import employees_data from "@/constants/EMPLOYEES_DATA.json";
+
+const users = employees_data;
 </script>
 
 <style lang="scss">
 .page-block {
   background: var(--section-bg);
   border-radius: 8px;
-  box-shadow: 0 4px 4px 0 rgba(61, 55, 136, 0.25);
   padding: 12px 19px 17px 17px;
 }
 
@@ -115,11 +123,12 @@ import Button from "@/components/ui/Button.vue";
   margin: 0;
   height: 87px;
   background: var(--contrast);
+
   &:hover {
     transform: scale(1.03);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: 0.15s;
   }
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
 }
 
 .page-graph-block {
@@ -133,6 +142,7 @@ import Button from "@/components/ui/Button.vue";
     flex-direction: row;
     justify-content: space-between;
   }
+
   &__title {
     font-size: 16px;
   }

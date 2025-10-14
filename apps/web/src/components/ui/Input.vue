@@ -28,13 +28,13 @@ defineProps({
 <style lang="scss" scoped>
 .input__form {
   background: var(--color-white);
+  color: var(--color-text-light);
   height: 54px;
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 0 16px;
   border-radius: 8px;
-  box-shadow: var(--shadow);
   overflow: hidden;
 
   &-input {

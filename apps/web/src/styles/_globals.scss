@@ -16,7 +16,7 @@ body.light-theme {
   --sidebar-text: var(--color-text-light);
   --contrast: var(--color-section-contrast-light);
   --header-icons-bg: var(--color-bg-light);
-  --table-border: #EBF0F6;
+  --border: 1px solid #9A97C5;
 }
 body.dark-theme {
   background-color: var(--color-bg-dark);
@@ -26,7 +26,13 @@ body.dark-theme {
   --sidebar-text: var(--color-text-dark);
   --contrast: var(--color-section-contrast-dark);
   --header-icons-bg: var(--color-section-contrast-dark);
-  --table-border: #404955;
+  --border: 1px solid #404955;
+}
+
+h1, .h1 {
+  font-size: 24px;
+  font-weight: 700;
+  color: (--color-text);
 }
 
 h2, .h2 {

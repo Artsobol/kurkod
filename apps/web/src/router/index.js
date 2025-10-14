@@ -7,41 +7,42 @@ import ChickensPage from "@/pages/ChickensPage.vue";
 import DietsPage from "@/pages/DietsPage.vue";
 import AccountPage from "@/pages/AccountPage.vue";
 import SignInPage from "@/pages/SignInPage.vue";
+import EmployeePage from "@/pages/EmployeePage.vue";
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
+    name: 'Главная',
     component: HomePage,
     meta: { title: 'Home' }
   },
   {
     path: '/employees',
-    name: 'Employees',
+    name: 'Сотрудники',
     component: EmployeesPage,
     meta: { title: 'Employees' }
   },
   {
     path: '/cells',
-    name: 'Cells',
+    name: 'Ячейки',
     component: CellsPage,
     meta: { title: 'Cells' }
   },
   {
     path: '/chickens',
-    name: 'Chickens',
+    name: 'Курицы',
     component: ChickensPage,
     meta: { title: 'Chickens' }
   },
   {
     path: '/diets',
-    name: 'Diets',
+    name: 'Диеты',
     component: DietsPage,
     meta: { title: 'Diets' }
   },
   {
     path: '/account',
-    name: 'Account',
+    name: 'Ваш профиль',
     component: AccountPage,
     meta: { title: 'Account' }
   },
@@ -50,6 +51,12 @@ const routes = [
     name: 'Sign',
     component: SignInPage,
     meta: { title: 'Sign' }
+  },
+  {
+    path: '/employee/:id',
+    name: 'Сотрудник',
+    component: EmployeePage,
+    meta: { title: 'Employee' }
   },
 ]
 
