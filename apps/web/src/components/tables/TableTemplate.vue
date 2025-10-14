@@ -21,9 +21,12 @@
               alt="Фото"
               style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"
           />
-          <span v-else>
+          <span v-else-if="getHeaderKey(headerItem) === 'name'">
+          {{ row.surname }} {{ row.name }} {{ row.patronymic }}
+          </span>
+              <span v-else>
               {{ row[getHeaderKey(headerItem)] }}
-            </span>
+          </span>
         </td>
       </tr>
       </tbody>

@@ -2,39 +2,49 @@
   {
     "id": 1,
     "photo": "/images/user-photo.jpg",
-    "name": "Выговорите Макан Яговорю",
+    "surname": "Иванов",
+    "name": "Алексей",
+    "patronymic": "Сергеевич",
     "position": "Работник птицефермы",
-    "salary": 30000,
+    "salary": 28000,
     "status": "На работе"
   },
   {
     "id": 2,
     "photo": "/images/user-photo.jpg",
-    "name": "Выговорите Макан Яговорю",
-    "position": "Работник птицефермы",
-    "salary": 30000,
-    "status": "На работе"
+    "surname": "Петров",
+    "name": "Дмитрий",
+    "patronymic": "Андреевич",
+    "position": "Ветеринар",
+    "salary": 45000,
+    "status": "В отпуске"
   },
   {
     "id": 3,
     "photo": "/images/user-photo.jpg",
-    "name": "Выговорите Макан Яговорю",
-    "position": "Работник птицефермы",
-    "salary": 30000,
+    "surname": "Сидоров",
+    "name": "Иван",
+    "patronymic": "Павлович",
+    "position": "Менеджер склада",
+    "salary": 40000,
     "status": "На работе"
   },
   {
     "id": 4,
     "photo": "/images/user-photo.jpg",
-    "name": "Выговорите Макан Яговорю",
-    "position": "Работник птицефермы",
-    "salary": 30000,
-    "status": "На работе"
+    "surname": "Кузнецова",
+    "name": "Мария",
+    "patronymic": "Владимировна",
+    "position": "Бухгалтер",
+    "salary": 42000,
+    "status": "Болезнь"
   },
   {
     "id": 5,
     "photo": "/images/user-photo.jpg",
-    "name": "Выговорите Макан Яговорю",
+    "surname": "Морозов",
+    "name": "Николай",
+    "patronymic": "Дмитриевич",
     "position": "Работник птицефермы",
     "salary": 30000,
     "status": "На работе"
@@ -42,9 +52,251 @@
   {
     "id": 6,
     "photo": "/images/user-photo.jpg",
-    "name": "Выговорите Макан Яговорю",
+    "surname": "Федорова",
+    "name": "Екатерина",
+    "patronymic": "Александровна",
+    "position": "Инженер по оборудованию",
+    "salary": 48000,
+    "status": "На работе"
+  },
+  {
+    "id": 7,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Васильев",
+    "name": "Олег",
+    "patronymic": "Игоревич",
+    "position": "Работник птицефермы",
+    "salary": 29000,
+    "status": "В отпуске"
+  },
+  {
+    "id": 8,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Новикова",
+    "name": "Анна",
+    "patronymic": "Сергеевна",
+    "position": "Секретарь",
+    "salary": 35000,
+    "status": "На работе"
+  },
+  {
+    "id": 9,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Александров",
+    "name": "Павел",
+    "patronymic": "Николаевич",
+    "position": "Водитель",
+    "salary": 36000,
+    "status": "На работе"
+  },
+  {
+    "id": 10,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Григорьева",
+    "name": "Ольга",
+    "patronymic": "Викторовна",
+    "position": "Работник птицефермы",
+    "salary": 31000,
+    "status": "Болезнь"
+  },
+  {
+    "id": 11,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Смирнов",
+    "name": "Евгений",
+    "patronymic": "Александрович",
+    "position": "Менеджер по закупкам",
+    "salary": 47000,
+    "status": "На работе"
+  },
+  {
+    "id": 12,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Попова",
+    "name": "Юлия",
+    "patronymic": "Михайловна",
+    "position": "Бухгалтер",
+    "salary": 43000,
+    "status": "В отпуске"
+  },
+  {
+    "id": 13,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Лебедев",
+    "name": "Сергей",
+    "patronymic": "Владимирович",
+    "position": "Работник птицефермы",
+    "salary": 29500,
+    "status": "На работе"
+  },
+  {
+    "id": 14,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Козлова",
+    "name": "Наталья",
+    "patronymic": "Андреевна",
+    "position": "Инженер по качеству",
+    "salary": 49000,
+    "status": "На работе"
+  },
+  {
+    "id": 15,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Михайлов",
+    "name": "Игорь",
+    "patronymic": "Сергеевич",
+    "position": "Ветеринар",
+    "salary": 46000,
+    "status": "Болезнь"
+  },
+  {
+    "id": 16,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Воробьева",
+    "name": "Светлана",
+    "patronymic": "Дмитриевна",
+    "position": "Менеджер склада",
+    "salary": 40500,
+    "status": "На работе"
+  },
+  {
+    "id": 17,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Егоров",
+    "name": "Андрей",
+    "patronymic": "Николаевич",
     "position": "Работник птицефермы",
     "salary": 30000,
+    "status": "В отпуске"
+  },
+  {
+    "id": 18,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Беляева",
+    "name": "Татьяна",
+    "patronymic": "Павловна",
+    "position": "Секретарь",
+    "salary": 34000,
     "status": "На работе"
+  },
+  {
+    "id": 19,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Крылов",
+    "name": "Роман",
+    "patronymic": "Алексеевич",
+    "position": "Водитель",
+    "salary": 36500,
+    "status": "Болезнь"
+  },
+  {
+    "id": 20,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Зайцева",
+    "name": "Ирина",
+    "patronymic": "Викторовна",
+    "position": "Работник птицефермы",
+    "salary": 30500,
+    "status": "На работе"
+  },
+  {
+    "id": 21,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Панков",
+    "name": "Денис",
+    "patronymic": "Михайлович",
+    "position": "Менеджер по закупкам",
+    "salary": 47500,
+    "status": "На работе"
+  },
+  {
+    "id": 22,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Соколова",
+    "name": "Алина",
+    "patronymic": "Александровна",
+    "position": "Бухгалтер",
+    "salary": 43500,
+    "status": "В отпуске"
+  },
+  {
+    "id": 23,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Тихонов",
+    "name": "Владимир",
+    "patronymic": "Сергеевич",
+    "position": "Работник птицефермы",
+    "salary": 29000,
+    "status": "На работе"
+  },
+  {
+    "id": 24,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Мельникова",
+    "name": "Оксана",
+    "patronymic": "Дмитриевна",
+    "position": "Инженер по оборудованию",
+    "salary": 48500,
+    "status": "На работе"
+  },
+  {
+    "id": 25,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Куликов",
+    "name": "Анатолий",
+    "patronymic": "Игоревич",
+    "position": "Ветеринар",
+    "salary": 45500,
+    "status": "Болезнь"
+  },
+  {
+    "id": 26,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Фролова",
+    "name": "Марина",
+    "patronymic": "Владимировна",
+    "position": "Менеджер склада",
+    "salary": 40000,
+    "status": "На работе"
+  },
+  {
+    "id": 27,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Дорофеев",
+    "name": "Максим",
+    "patronymic": "Александрович",
+    "position": "Работник птицефермы",
+    "salary": 29500,
+    "status": "В отпуске"
+  },
+  {
+    "id": 28,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Анисимова",
+    "name": "Людмила",
+    "patronymic": "Павловна",
+    "position": "Секретарь",
+    "salary": 34500,
+    "status": "На работе"
+  },
+  {
+    "id": 29,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Головин",
+    "name": "Константин",
+    "patronymic": "Николаевич",
+    "position": "Водитель",
+    "salary": 37000,
+    "status": "На работе"
+  },
+  {
+    "id": 30,
+    "photo": "/images/user-photo.jpg",
+    "surname": "Капустина",
+    "name": "Вероника",
+    "patronymic": "Алексеевна",
+    "position": "Работник птицефермы",
+    "salary": 31000,
+    "status": "Болезнь"
   }
 ]

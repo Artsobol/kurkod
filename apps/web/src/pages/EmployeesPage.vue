@@ -28,7 +28,7 @@
 
     <TableTemplate :headersItem="[
           { key: 'photo', label: 'Фото' },
-          { key: 'name', label: 'Имя' },
+          { key: 'name', label: 'ФИО' },
           { key: 'position', label: 'Должность' },
           { key: 'salary', label: 'Зарплата' },
           { key: 'status', label: 'Статус' } ]"

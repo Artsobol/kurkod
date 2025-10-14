@@ -7,6 +7,7 @@ import ChickensPage from "@/pages/ChickensPage.vue";
 import DietsPage from "@/pages/DietsPage.vue";
 import AccountPage from "@/pages/AccountPage.vue";
 import SignInPage from "@/pages/SignInPage.vue";
+import EmployeePage from "@/pages/EmployeePage.vue";
 
 const routes = [
   {
@@ -50,6 +51,12 @@ const routes = [
     name: 'Sign',
     component: SignInPage,
     meta: { title: 'Sign' }
+  },
+  {
+    path: '/user:id',
+    name: 'Сотрудник',
+    component: EmployeePage,
+    meta: { title: 'Employee' }
   },
 ]
 
