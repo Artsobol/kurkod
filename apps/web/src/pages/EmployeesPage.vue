@@ -31,7 +31,11 @@
           { key: 'name', label: 'ФИО' },
           { key: 'position', label: 'Должность' },
           { key: 'salary', label: 'Зарплата' },
-          { key: 'status', label: 'Статус' } ]"
+          {key: 'phone', label: 'Телефон'},
+          {key: 'email', label: 'Почта'},
+          { key: 'status', label: 'Статус' },
+          {key: 'id', label: 'Ссылка'}
+          ]"
                 :bodyItems="users"
                 :height-size="100"
     />

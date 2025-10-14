@@ -22,10 +22,15 @@
               style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"
           />
           <span v-else-if="getHeaderKey(headerItem) === 'name'">
-          {{ row.surname }} {{ row.name }} {{ row.patronymic }}
+            {{ row.surname }} {{ row.name }} {{ row.patronymic }}
           </span>
-              <span v-else>
-              {{ row[getHeaderKey(headerItem)] }}
+          <span v-else-if="getHeaderKey(headerItem) === 'id'">
+             <router-link :to="{ name: 'Сотрудник', params: { id: row.id } }">
+               <Icon name="arrow-right" style="color: var(--color);"/>
+             </router-link>
+          </span>
+          <span v-else>
+            {{ row[getHeaderKey(headerItem)] }}
           </span>
         </td>
       </tr>
@@ -36,6 +41,7 @@
 
 <script setup>
 import {computed} from "vue";
+import Icon from "@/components/ui/Icon.vue";
 
 const props = defineProps({
   heightSize: {

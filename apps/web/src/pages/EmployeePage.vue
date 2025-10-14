@@ -1,5 +1,6 @@
 <template>
-  <UserInfo/>
+  <UserInfo />
+  lalalalal
 </template>
 
 <script setup>

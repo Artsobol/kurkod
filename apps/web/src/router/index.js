@@ -53,7 +53,7 @@ const routes = [
     meta: { title: 'Sign' }
   },
   {
-    path: '/user:id',
+    path: '/employee/:id',
     name: 'Сотрудник',
     component: EmployeePage,
     meta: { title: 'Employee' }
