@@ -1,76 +1,141 @@
 <template>
-  <div class="account__block">
-    <div class="account__header">
-      <h2 class="account__title">Основная информация</h2>
-      <Button
-          label="Редактировать"
-          mode="violet"
-          location="block-action"
+  <div class="user page-block">
+    <div class="user__img-container">
+      <img
+          class="user__img"
+          :src="photo"
+          alt="User photo"
       />
     </div>
+    <div class="user__container">
+      <div class="user__info">
+        <h2>Основная информация</h2>
+        <h3 class="h2">ФИО</h3>
+        <span>
+        {{ props.surname }}
+        {{ props.name }}
+        {{ props.patronymic }}
+      </span>
+        <h3 class="h2">Должность</h3>
+        <span>
+        {{ props.position }}
+      </span>
 
-    <div class="account__content page-block">
-      <div class="account__img-container">
-        <img
-            src="/images/user-photo.jpg"
-            alt="user-photo"
-            class="account__img"
-        />
+        <div style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
+          <h3 class="h2">Заработная плата</h3>
+          <Button
+              :icon-name="isHiddenSalary ? 'show' : 'hide'"
+              :icon-width="19"
+              :icon-height="19"
+              @click="toggleSalary"
+          />
+        </div>
+        <span>
+          {{ isHiddenSalary ? maskedSalary : salary + ' ₽'}}
+      </span>
       </div>
-
-      <div class="account__info">
-        <span class="h2 text-ellipsis">Фамилия</span>
-        <span class="h2 text-ellipsis">Имя</span>
-        <span class="h2 text-ellipsis">Отчество</span>
-      </div>
-
-      <div class="account__info">
-        <span class="h2">Директор предприятия</span>
-        <span style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
-        <span class="account__info-text text-ellipsis" :class="{ 'letter-spacing-email': isHiddenEmail }" style="width: 20vw">
+      <div class="user__info" style="min-width: 20%;">
+        <h2>Контакты</h2>
+        <div style="display: flex; flex-direction: row; gap: 40px; align-items: center;">
+          <h3 class="h2">Почта</h3>
+          <Button
+              :icon-name="isHiddenEmail ? 'show' : 'hide'"
+              :icon-width="19"
+              :icon-height="19"
+              @click="toggleEmail"
+          />
+        </div>
+        <span style="max-width: 250px; white-space: normal; word-wrap: break-word; overflow-wrap: anywhere;">
           {{ isHiddenEmail ? maskedEmail : email }}
-        </span>
-        <Button
-            style="align-self: flex-end; margin-left: auto"
-            :icon-name="isHiddenEmail ? 'show' : 'hide'"
-            :icon-width="20"
-            :icon-height="20"
-            @click="toggleEmail"
-        />
-        </span>
-        <span style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
-        <span class="account__info-text" :class="{ 'letter-spacing-phone': isHiddenPhone }">
+      </span>
+        <div style="display: flex; flex-direction: row; gap: 16px; align-items: center;">
+          <h3 class="h2">Телефон</h3>
+          <Button
+              :icon-name="isHiddenPhone ? 'show' : 'hide'"
+              :icon-width="20"
+              :icon-height="20"
+              @click="togglePhone"
+          />
+        </div>
+        <span>
           {{ isHiddenPhone ? maskedPhone : phone }}
-        </span>
-        <Button
-            style="align-self: flex-end; margin-left: auto"
-            :icon-name="isHiddenPhone ? 'show' : 'hide'"
-            :icon-width="20"
-            :icon-height="20"
-            @click="togglePhone"
-        />
-        </span>
+      </span>
+      </div>
+      <div class="user__info">
+        <h2>Документы</h2>
+        <h3 class="h2">Паспорт</h3>
+        <span class="text-ellipsis" style="max-width: 200px">
+        sdjsdakhjshkdajkasdhjkhjsdaksdahdsdsddsj
+      </span>
+        <h3 class="h2">Договор</h3>
+        <span class="text-ellipsis" style="max-width: 200px">
+        sdjsdakhjshkdajkasdhjkhjsdaksdahdsdsddsj
+      </span>
       </div>
     </div>
   </div>
 </template>
-<script setup lang="ts">
-
-import Button from "@/components/ui/Button.vue";
+<script setup>
 import {computed, ref} from "vue";
+import Button from "@/components/ui/Button.vue";
 
-const phone = ref("+7 (999) 123-45-67")
-const email = ref("emailemailemail@gmail.com")
+const props = defineProps({
+  photo: {
+    type: String,
+    required: false,
+  },
+  surname: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  patronymic: {
+    type: String,
+    required: true,
+  },
+  position: {
+    type: String,
+    required: true,
+  },
+  salary: {
+    type: Number,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  }
+})
+
+const phone = ref(props.phone)
+const email = ref(props.email)
+const salary = ref(props.salary)
 
 const isHiddenPhone = ref(true)
 const isHiddenEmail = ref(true)
+const isHiddenSalary = ref(true)
 
 const maskedPhone = computed(() => {
   return phone.value.replace(/\d/g, '*')
 })
 
 const maskedEmail = computed(() => {
-  return email.value.replace(/[^@.]/g, '*')
+  return email.value.replace(/[^@]/g, '*')
+})
+
+const maskedSalary = computed(() => {
+  return salary.value.toString().replace(/\d/g, '*')
 })
 
 function togglePhone() {
@@ -80,39 +145,34 @@ function togglePhone() {
 function toggleEmail() {
   isHiddenEmail.value = !isHiddenEmail.value
 }
+
+function toggleSalary() {
+  isHiddenSalary.value = !isHiddenSalary.value
+}
 </script>
 
 <style lang="scss" scoped>
-.account {
-  &__header {
+.user {
+  display: flex;
+  flex-direction: row;
+
+  &__container {
+    width: 70%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
+    margin-inline: auto;
+    gap: 64px
   }
-
-  &__content {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-evenly;
-    gap: 16px;
-  }
-
   &__info {
     display: flex;
     flex-direction: column;
-    gap: 24px;
-
-    &-text {
-      text-wrap: wrap;
-    }
+    gap: 12px;
   }
 
   &__img-container {
-    width: 10vw;
-    height: 10vw;
+    width: 14vw;
+    height: 14vw;
     overflow: hidden;
     border-radius: 8px;
   }
@@ -125,11 +185,4 @@ function toggleEmail() {
   }
 }
 
-.letter-spacing-email {
-  letter-spacing: 0.155em;
-}
-
-.letter-spacing-phone {
-  letter-spacing: 0.1em;
-}
 </style>

@@ -126,6 +126,7 @@ const users = employees_data;
 
   &:hover {
     transform: scale(1.03);
+    transition: 0.15s;
   }
 
 }
