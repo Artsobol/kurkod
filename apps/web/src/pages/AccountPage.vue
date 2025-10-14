@@ -35,7 +35,6 @@
               <Button
                   style="align-self: flex-end; margin-left: auto"
                   :icon-name="isHiddenEmail ? 'show' : 'hide'"
-                  icon-name="hide"
                   :icon-width="20"
                   :icon-height="20"
                   @click="toggleEmail"

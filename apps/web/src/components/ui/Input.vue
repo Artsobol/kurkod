@@ -35,7 +35,6 @@ defineProps({
   gap: 12px;
   padding: 0 16px;
   border-radius: 8px;
-  box-shadow: var(--shadow);
   overflow: hidden;
 
   &-input {

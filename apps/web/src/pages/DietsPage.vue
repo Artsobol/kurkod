@@ -1,8 +1,5 @@
 <template>
   <div class="diets">
-    <div class="diets__header">
-      <h2 class="diets__title">Диеты</h2>
-    </div>
     <div class="diets__actions">
       <Input
           class="diets__input"

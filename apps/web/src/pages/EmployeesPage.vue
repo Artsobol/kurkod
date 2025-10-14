@@ -1,16 +1,5 @@
 <template>
   <div class="employees">
-    <div class="employees__header">
-      <h2 class="employees__title">Сотрудники</h2>
-      <Button
-          href="/cells"
-          class="table-template__button"
-          label="Закрепленные клетки"
-          icon-name="arrow-right"
-          :icon-width="28"
-          :icon-height="28"
-      />
-    </div>
     <div class="employees__actions">
       <Input
           class="employees__input"
@@ -25,6 +14,15 @@
           label="Удалить сотрудника"
           mode="violet"
           location="page-action"
+      />
+      <Button
+          style="margin-left: auto;"
+          href="/cells"
+          class="table-template__button"
+          label="Закрепленные клетки"
+          icon-name="arrow-right"
+          :icon-width="28"
+          :icon-height="28"
       />
     </div>
 

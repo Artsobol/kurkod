@@ -1,8 +1,5 @@
 <template>
   <div class="cells">
-    <div class="cells__header">
-      <h2 class="cells__title">Ячейки</h2>
-    </div>
     <div class="cells__actions">
       <Input
           class="cells__input"

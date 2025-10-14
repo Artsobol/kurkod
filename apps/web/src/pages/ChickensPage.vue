@@ -1,8 +1,5 @@
 <template>
   <div class="chickens">
-    <div class="chickens__header">
-      <h2 class="chickens__title">Курицы</h2>
-    </div>
     <div class="chickens__actions">
       <Input
           class="chickens__input"

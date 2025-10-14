@@ -69,8 +69,8 @@ const pageTitle = computed(() => route.name || "");
   gap: 53px;
   align-items: center;
   padding: 15px 29px 16px 31px;
-  box-shadow: var(--shadow);
   z-index: 11;
+  border-bottom: var(--border);
 
   &__nav {
     display: flex;

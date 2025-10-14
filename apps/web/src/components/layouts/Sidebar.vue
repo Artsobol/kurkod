@@ -62,7 +62,7 @@ defineProps({
   overflow: hidden;
   padding-top: 20px;
 
-  border-right: 1px solid #9A97C5FF;
+  border-right: var(--border);
 }
 
 .sidebar.closed {

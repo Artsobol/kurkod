@@ -4,7 +4,7 @@
       <div class="page-block page-info-block">
         <InfoBlock
             title="Курицы"
-            href="#"
+            href="/chickens"
             subTitle="Общее количество"
             count="1086"
         />
@@ -102,7 +102,6 @@ const users = employees_data;
 .page-block {
   background: var(--section-bg);
   border-radius: 8px;
-  box-shadow: 0 4px 4px 0 rgba(61, 55, 136, 0.25);
   padding: 12px 19px 17px 17px;
 }
 
@@ -127,10 +126,8 @@ const users = employees_data;
 
   &:hover {
     transform: scale(1.03);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .page-graph-block {
