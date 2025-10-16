@@ -9,6 +9,7 @@ import io.github.artsobol.kurkod.model.request.breed.BreedPostRequest;
 import io.github.artsobol.kurkod.model.request.breed.BreedPutRequest;
 import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.BreedRepository;
+import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.BreedService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +23,13 @@ public class BreedServiceImpl implements BreedService {
 
     private final BreedRepository breedRepository;
     private final BreedMapper breedMapper;
-
+    private final AccessValidator accessValidator;
 
     @Override
     public IamResponse<BreedDTO> createBreed(BreedPostRequest breedPostRequest) {
+
+        accessValidator.validateAdminAccess();
+
         Breed breed = breedMapper.toEntity(breedPostRequest);
         breed = breedRepository.save(breed);
         return IamResponse.createSuccessful(breedMapper.toDto(breed));

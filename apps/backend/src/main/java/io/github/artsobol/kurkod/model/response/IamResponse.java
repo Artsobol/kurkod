@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.model.response;
 
+import io.github.artsobol.kurkod.model.constants.ApiMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,5 +19,9 @@ public class IamResponse<P>{
 
     public static<P> IamResponse<P> createSuccessful(P payload) {
         return new IamResponse<>(StringUtils.EMPTY, payload, true);
+    }
+
+    public static<P> IamResponse<P> createSuccessfulWithNewToken(P payload) {
+        return new IamResponse<>(ApiMessage.TOKEN_CREATED_OR_UPDATED.getMessage(), payload, true);
     }
 }

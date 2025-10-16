@@ -8,6 +8,10 @@ import io.github.artsobol.kurkod.model.request.breed.BreedPutRequest;
 import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.service.BreedService;
 import io.github.artsobol.kurkod.utils.ApiUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,11 +23,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/breed")
 @RequiredArgsConstructor
+@Tag(name = "Breed", description = "Breed operations")
 public class BreedController {
 
     private final BreedService breedService;
 
     @GetMapping("/{id}")
+    @Operation(
+            summary = "Get breed by id",
+            description = "Returns breed by id"
+    )
     public ResponseEntity<IamResponse<BreedDTO>> getBreedById(@PathVariable(name = "id") Integer id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
         IamResponse<BreedDTO> response = breedService.getById(id);
@@ -31,12 +40,20 @@ public class BreedController {
     }
 
     @GetMapping
+    @Operation(
+            summary = "Get all breeds",
+            description = "Returns all breeds"
+    )
     public ResponseEntity<IamResponse<List<BreedDTO>>> getAllBreeds() {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
         IamResponse<List<BreedDTO>> response = breedService.getAll();
         return ResponseEntity.ok(response);
     }
 
+    @ApiResponses(value = {
+
+    }
+    )
     @PostMapping("/create")
     public ResponseEntity<IamResponse<BreedDTO>> createBreed(@RequestBody BreedPostRequest breedPostRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
