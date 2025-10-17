@@ -32,68 +32,68 @@ public class ChickenController {
 
     @Operation(summary = "Create a chicken", description = "Creates a new chicken entity.")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<ChickenDTO>> createChicken(@Valid @RequestBody ChickenPostRequest chickenPostRequest) {
+    public ResponseEntity<IamResponse<ChickenDTO>> create(@Valid @RequestBody ChickenPostRequest chickenPostRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        IamResponse<ChickenDTO> response = chickenService.createChicken(chickenPostRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        ChickenDTO response = chickenService.create(chickenPostRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "List all chickens", description = "Returns all chickens.")
     @GetMapping
-    public ResponseEntity<IamResponse<List<ChickenDTO>>> getAllChickens() {
+    public ResponseEntity<IamResponse<List<ChickenDTO>>> getAll() {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        IamResponse<List<ChickenDTO>> response = chickenService.getAll();
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        List<ChickenDTO> response = chickenService.getAll();
+        return ResponseEntity.status(HttpStatus.OK).body(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Get chicken by ID", description = "Returns a single chicken by its unique identifier.")
     @GetMapping("/{id}")
-    public ResponseEntity<IamResponse<ChickenDTO>> getChickenById(@Parameter(
+    public ResponseEntity<IamResponse<ChickenDTO>> get(@Parameter(
             description = "Chicken identifier",
             example = "42"
     ) @PathVariable(name = "id") Integer id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        IamResponse<ChickenDTO> response = chickenService.getById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        ChickenDTO response = chickenService.get(id);
+        return ResponseEntity.status(HttpStatus.OK).body(IamResponse.createSuccessful(response));
     }
 
 
     @Operation(summary = "Replace a chicken", description = "Fully replaces a chicken by ID.")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<ChickenDTO>> updateFully(@Parameter(
+    public ResponseEntity<IamResponse<ChickenDTO>> replace(@Parameter(
             description = "Chicken identifier",
             example = "42"
     ) @PathVariable(name = "id") Integer id, @Valid @RequestBody ChickenPutRequest chickenPutRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        IamResponse<ChickenDTO> response = chickenService.updateFully(id, chickenPutRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        ChickenDTO response = chickenService.replace(id, chickenPutRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Partially update a chicken", description = "Applies a partial update to a chicken by ID.")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<ChickenDTO>> updatePartially(@Parameter(
+    public ResponseEntity<IamResponse<ChickenDTO>> update(@Parameter(
             description = "Chicken identifier",
             example = "42"
     ) @PathVariable(name = "id") Integer id, @Valid @RequestBody ChickenPatchRequest chickenPatchRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        IamResponse<ChickenDTO> response = chickenService.updatePartially(id, chickenPatchRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        ChickenDTO response = chickenService.update(id, chickenPatchRequest);
+        return ResponseEntity.status(HttpStatus.OK).body(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Delete a chicken", description = "Deletes a chicken by its unique identifier.")
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteById(@Parameter(
+    public ResponseEntity<HttpStatus> delete(@Parameter(
             description = "Chicken identifier",
             example = "42"
     ) @PathVariable(name = "id") Integer id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
 
-        chickenService.deleteById(id);
+        chickenService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

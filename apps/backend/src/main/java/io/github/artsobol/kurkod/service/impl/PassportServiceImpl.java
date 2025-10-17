@@ -2,6 +2,8 @@ package io.github.artsobol.kurkod.service.impl;
 
 
 import io.github.artsobol.kurkod.mapper.PassportMapper;
+import io.github.artsobol.kurkod.error.impl.PassportError;
+import io.github.artsobol.kurkod.error.impl.WorkerError;
 import io.github.artsobol.kurkod.model.dto.passport.PassportDTO;
 import io.github.artsobol.kurkod.model.entity.Passport;
 import io.github.artsobol.kurkod.model.entity.Worker;
@@ -9,40 +11,37 @@ import io.github.artsobol.kurkod.model.exception.NotFoundException;
 import io.github.artsobol.kurkod.model.request.passport.PassportPatchRequest;
 import io.github.artsobol.kurkod.model.request.passport.PassportPostRequest;
 import io.github.artsobol.kurkod.model.request.passport.PassportPutRequest;
-import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.PassportRepository;
 import io.github.artsobol.kurkod.repository.WorkerRepository;
-import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.PassportService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PassportServiceImpl implements PassportService {
 
     private final PassportRepository passportRepository;
     private final PassportMapper passportMapper;
     private final WorkerRepository workerRepository;
-    private final AccessValidator accessValidator;
 
     @Override
-    public IamResponse<PassportDTO> getPassport(Integer workerId) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Passport passport = passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException("Chicken with id " + workerId + " not found")
-        );
-        return IamResponse.createSuccessful(passportMapper.toDto(passport));
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public PassportDTO get(Integer workerId) {
+        Passport passport = getPassportByWorkerId(workerId);
+        return passportMapper.toDto(passport);
     }
 
     @Override
-    public IamResponse<PassportDTO> createPassport(Integer workerId, PassportPostRequest passportPostRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public PassportDTO create(Integer workerId, PassportPostRequest passportPostRequest) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException("Worker with id " + workerId + " not found")
+                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(workerId))
         );
 
         passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId)
@@ -52,43 +51,42 @@ public class PassportServiceImpl implements PassportService {
         passport.setWorker(worker);
         passport.setActive(true);
         passport = passportRepository.save(passport);
-        return IamResponse.createSuccessful(passportMapper.toDto(passport));
+        return passportMapper.toDto(passport);
     }
 
     @Override
-    public IamResponse<PassportDTO> updateFullyPassport(Integer workerId, PassportPutRequest passportPutRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Passport passport = passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException("Chicken with id " + workerId + " not found")
-        );
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public PassportDTO replace(Integer workerId, PassportPutRequest passportPutRequest) {
+        Passport passport = getPassportByWorkerId(workerId);
 
         passportMapper.updateFully(passport, passportPutRequest);
         passport = passportRepository.save(passport);
-        return IamResponse.createSuccessful(passportMapper.toDto(passport));
+        return passportMapper.toDto(passport);
     }
 
     @Override
-    public IamResponse<PassportDTO> updatePartiallyPassport(Integer workerId, PassportPatchRequest passportPatchRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Passport passport = passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException("Chicken with id " + workerId + " not found")
-        );
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public PassportDTO update(Integer workerId, PassportPatchRequest passportPatchRequest) {
+        Passport passport = getPassportByWorkerId(workerId);
         passportMapper.updatePartially(passport, passportPatchRequest);
         passport = passportRepository.save(passport);
-        return IamResponse.createSuccessful(passportMapper.toDto(passport));
+        return passportMapper.toDto(passport);
     }
 
     @Override
-    public void deletePassport(Integer workerId) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Passport passport = passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException("Passport with id " + workerId + " not found")
-        );
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public void delete(Integer workerId) {
+        Passport passport = getPassportByWorkerId(workerId);
         passport.setActive(false);
         passportRepository.save(passport);
+    }
+
+    protected Passport getPassportByWorkerId(Integer workerId) {
+        return passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
+                () -> new NotFoundException(PassportError.NOT_FOUND_BY_ID.format(workerId))
+        );
     }
 }

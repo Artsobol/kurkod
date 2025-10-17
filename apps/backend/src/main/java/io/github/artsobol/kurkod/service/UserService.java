@@ -11,17 +11,17 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    IamResponse<UserDTO> getUserById(Integer userId);
+    UserDTO getById(Integer userId);
 
-    IamResponse<List<UserDTO>> getAllUsers();
+    List<UserDTO> getAll();
 
-    IamResponse<UserDTO> getUserByUsername(String username);
+    UserDTO getByUsername(String username);
 
-    IamResponse<UserDTO> createUser(UserPostRequest userPostRequest);
+    UserDTO create(UserPostRequest userPostRequest);
 
-    IamResponse<UserDTO> updateFullyUser(Integer userId, UserPutRequest userPutRequest);
+    UserDTO replace(Integer userId, UserPutRequest userPutRequest);
 
-    IamResponse<UserDTO> updatePartiallyUser(Integer userId, UserPatchRequest userPatchRequest);
+    UserDTO update(Integer userId, UserPatchRequest userPatchRequest);
 
-    void deleteUser(Integer userId);
+    void deleteById(Integer userId);
 }

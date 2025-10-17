@@ -4,18 +4,19 @@ import io.github.artsobol.kurkod.model.dto.employmentContract.EmploymentContract
 import io.github.artsobol.kurkod.model.request.employmentContract.EmploymentContractPatchRequest;
 import io.github.artsobol.kurkod.model.request.employmentContract.EmploymentContractPostRequest;
 import io.github.artsobol.kurkod.model.request.employmentContract.EmploymentContractPutRequest;
-import io.github.artsobol.kurkod.model.response.IamResponse;
-import jakarta.validation.constraints.NotNull;
 
 public interface EmploymentContractService {
 
-    IamResponse<EmploymentContractDTO> getByWorkerId(@NotNull Integer workerId);
+    EmploymentContractDTO get(Integer workerId);
 
-    IamResponse<EmploymentContractDTO> createEmploymentContract(@NotNull Integer workerId, EmploymentContractPostRequest employmentContractPostRequest);
+    EmploymentContractDTO create(Integer workerId,
+                                              EmploymentContractPostRequest employmentContractPostRequest);
 
-    IamResponse<EmploymentContractDTO> updateFullyEmploymentContract(@NotNull Integer workerId, EmploymentContractPutRequest employmentContractPutRequest);
+    EmploymentContractDTO replace(Integer workerId,
+                                               EmploymentContractPutRequest employmentContractPutRequest);
 
-    IamResponse<EmploymentContractDTO> updatePartiallyEmploymentContract(@NotNull Integer workerId, EmploymentContractPatchRequest employmentContractPatchRequest);
+    EmploymentContractDTO update(Integer workerId,
+                                              EmploymentContractPatchRequest employmentContractPatchRequest);
 
-    void deleteEmploymentContract(@NotNull Integer workerId);
+    void delete(Integer workerId);
 }

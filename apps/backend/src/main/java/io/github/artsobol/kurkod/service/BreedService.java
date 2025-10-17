@@ -13,15 +13,15 @@ import java.util.List;
 
 public interface BreedService {
 
-    IamResponse<BreedDTO> createBreed(BreedPostRequest breedPostRequest);
+    BreedDTO create(BreedPostRequest breedPostRequest);
 
-    IamResponse<BreedDTO> getById(@NotNull Integer id);
+    BreedDTO get(Integer id);
 
-    IamResponse<List<BreedDTO>> getAll();
+    List<BreedDTO> getAll();
 
-    IamResponse<BreedDTO> updateFully(@NotNull Integer id, @Valid @RequestBody BreedPutRequest breedPutRequest);
+    BreedDTO replace(Integer id, BreedPutRequest breedPutRequest);
 
-    IamResponse<BreedDTO> updatePartially(@NotNull Integer id, @RequestBody BreedPatchRequest breedPatchRequest);
+    BreedDTO update(Integer id, BreedPatchRequest breedPatchRequest);
 
-    void deleteById(@NotNull Integer id);
+    void delete(Integer id);
 }

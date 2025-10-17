@@ -10,13 +10,13 @@ import jakarta.validation.constraints.NotNull;
 
 public interface PassportService {
 
-    IamResponse<PassportDTO> getPassport(@NotNull Integer workerId);
+    PassportDTO get(Integer workerId);
 
-    IamResponse<PassportDTO> createPassport(@NotNull Integer workerId, @Valid PassportPostRequest passportPostRequest);
+    PassportDTO create(Integer workerId, PassportPostRequest passportPostRequest);
 
-    IamResponse<PassportDTO> updateFullyPassport(@NotNull Integer workerId, @Valid PassportPutRequest passportPutRequest);
+    PassportDTO replace(Integer workerId, PassportPutRequest passportPutRequest);
 
-    IamResponse<PassportDTO> updatePartiallyPassport(@NotNull Integer workerId, @Valid PassportPatchRequest passportPatchRequest);
+    PassportDTO update(Integer workerId, PassportPatchRequest passportPatchRequest);
 
-    void deletePassport(@NotNull Integer workerId);
+    void delete(Integer workerId);
 }

@@ -31,32 +31,32 @@ public class UserController {
 
     @Operation(summary = "Get user by ID", description = "Returns user information by unique identifier.")
     @GetMapping("/id/{userId}")
-    public ResponseEntity<IamResponse<UserDTO>> getUserById(@Parameter(
+    public ResponseEntity<IamResponse<UserDTO>> getById(@Parameter(
             description = "User identifier",
             example = "5"
     ) @PathVariable(name = "userId") Integer userId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<UserDTO> response = userService.getUserById(userId);
-        return ResponseEntity.ok(response);
+        UserDTO response = userService.getById(userId);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Get user by username", description = "Returns user information by username.")
     @GetMapping("/username/{username}")
-    public ResponseEntity<IamResponse<UserDTO>> getUserByUsername(@Parameter(
+    public ResponseEntity<IamResponse<UserDTO>> getByUsername(@Parameter(
             description = "Username of the user",
             example = "John"
     ) String username) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<UserDTO> response = userService.getUserByUsername(username);
-        return ResponseEntity.ok(response);
+        UserDTO response = userService.getByUsername(username);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Create a new user", description = "Creates a new user account.")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<UserDTO>> createUser(@RequestBody @Valid UserPostRequest userPostRequest) {
+    public ResponseEntity<IamResponse<UserDTO>> create(@RequestBody @Valid UserPostRequest userPostRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<UserDTO> response = userService.createUser(userPostRequest);
-        return ResponseEntity.ok(response);
+        UserDTO response = userService.create(userPostRequest);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Partially update user", description = "Applies a partial update to the user account.")
@@ -66,8 +66,8 @@ public class UserController {
             example = "5"
     ) @PathVariable(name = "userId") Integer userId, @RequestBody @Valid UserPatchRequest userPatchRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<UserDTO> response = userService.updatePartiallyUser(userId, userPatchRequest);
-        return ResponseEntity.ok(response);
+        UserDTO response = userService.update(userId, userPatchRequest);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Fully update user", description = "Fully replaces user data by ID.")
@@ -77,18 +77,18 @@ public class UserController {
             example = "5"
     ) @PathVariable(name = "userId") Integer userId, @RequestBody @Valid UserPutRequest userPutRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<UserDTO> response = userService.updateFullyUser(userId, userPutRequest);
-        return ResponseEntity.ok(response);
+        UserDTO response = userService.replace(userId, userPutRequest);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Delete user", description = "Deletes the user account by ID.")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteUser(@Parameter(
+    public ResponseEntity<Void> deleteById(@Parameter(
             description = "User identifier",
             example = "5"
     ) @PathVariable(name = "userId") Integer userId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        userService.deleteUser(userId);
+        userService.deleteById(userId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -28,12 +28,12 @@ public class EmploymentContractController {
             description = "Returns the employment contract information for the specified worker."
     )
     @GetMapping
-    public ResponseEntity<IamResponse<EmploymentContractDTO>> getEmploymentContractById(@Parameter(
+    public ResponseEntity<IamResponse<EmploymentContractDTO>> get(@Parameter(
             description = "Worker identifier",
             example = "12"
     ) @PathVariable(name = "workerId") Integer workerId) {
-        IamResponse<EmploymentContractDTO> response = employmentContractService.getByWorkerId(workerId);
-        return ResponseEntity.ok(response);
+        EmploymentContractDTO response = employmentContractService.get(workerId);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(
@@ -41,11 +41,11 @@ public class EmploymentContractController {
             description = "Creates a new employment contract for the specified worker. Each worker can have only one active contract."
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<EmploymentContractDTO>> createEmploymentContract(@PathVariable(name = "workerId") Integer workerId,
-                                                                                       @RequestBody @Valid EmploymentContractPostRequest employmentContractPostRequest) {
-        IamResponse<EmploymentContractDTO> response = employmentContractService.createEmploymentContract(workerId,
+    public ResponseEntity<IamResponse<EmploymentContractDTO>> create(@PathVariable(name = "workerId") Integer workerId,
+                                                                     @RequestBody @Valid EmploymentContractPostRequest employmentContractPostRequest) {
+        EmploymentContractDTO response = employmentContractService.create(workerId,
                 employmentContractPostRequest);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
 
@@ -54,14 +54,14 @@ public class EmploymentContractController {
             description = "Fully replaces the employment contract data for the specified worker."
     )
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<EmploymentContractDTO>> updateFullyEmploymentContract(@Parameter(
-                                                                                                    description = "Worker identifier",
-                                                                                                    example = "12"
-                                                                                            ) @PathVariable(name = "workerId") Integer workerId,
-                                                                                            @RequestBody @Valid EmploymentContractPutRequest employmentContractPutRequest) {
-        IamResponse<EmploymentContractDTO> response = employmentContractService.updateFullyEmploymentContract(workerId,
+    public ResponseEntity<IamResponse<EmploymentContractDTO>> replace(@Parameter(
+                                                                              description = "Worker identifier",
+                                                                              example = "12"
+                                                                      ) @PathVariable(name = "workerId") Integer workerId,
+                                                                      @RequestBody @Valid EmploymentContractPutRequest employmentContractPutRequest) {
+        EmploymentContractDTO response = employmentContractService.replace(workerId,
                 employmentContractPutRequest);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(
@@ -69,15 +69,15 @@ public class EmploymentContractController {
             description = "Applies a partial update to the employment contract for the specified worker."
     )
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<EmploymentContractDTO>> updatePartiallyEmploymentContract(@Parameter(
-                                                                                                        description = "Worker identifier",
-                                                                                                        example = "12"
-                                                                                                ) @PathVariable(name = "workerId") Integer workerId,
-                                                                                                @RequestBody @Valid EmploymentContractPatchRequest employmentContractPatchRequest) {
-        IamResponse<EmploymentContractDTO> response = employmentContractService.updatePartiallyEmploymentContract(
+    public ResponseEntity<IamResponse<EmploymentContractDTO>> update(@Parameter(
+                                                                             description = "Worker identifier",
+                                                                             example = "12"
+                                                                     ) @PathVariable(name = "workerId") Integer workerId,
+                                                                     @RequestBody @Valid EmploymentContractPatchRequest employmentContractPatchRequest) {
+        EmploymentContractDTO response = employmentContractService.update(
                 workerId,
                 employmentContractPatchRequest);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(
@@ -85,11 +85,11 @@ public class EmploymentContractController {
             description = "Deletes the employment contract associated with the specified worker."
     )
     @DeleteMapping
-    public ResponseEntity<Void> deleteEmploymentContract(@Parameter(
+    public ResponseEntity<Void> delete(@Parameter(
             description = "Worker identifier",
             example = "12"
     ) @PathVariable(name = "workerId") Integer workerId) {
-        employmentContractService.deleteEmploymentContract(workerId);
+        employmentContractService.delete(workerId);
         return ResponseEntity.noContent().build();
     }
 }

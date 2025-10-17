@@ -1,17 +1,17 @@
 package io.github.artsobol.kurkod.service.impl;
 
 import io.github.artsobol.kurkod.mapper.WorkerMapper;
+import io.github.artsobol.kurkod.error.impl.WorkerError;
 import io.github.artsobol.kurkod.model.dto.worker.WorkerDTO;
 import io.github.artsobol.kurkod.model.entity.Worker;
 import io.github.artsobol.kurkod.model.exception.NotFoundException;
 import io.github.artsobol.kurkod.model.request.worker.WorkerPatchRequest;
 import io.github.artsobol.kurkod.model.request.worker.WorkerPostRequest;
 import io.github.artsobol.kurkod.model.request.worker.WorkerPutRequest;
-import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.WorkerRepository;
-import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.WorkerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,67 +24,61 @@ public class WorkerServiceImpl implements WorkerService {
 
     private final WorkerRepository workerRepository;
     private final WorkerMapper workerMapper;
-    private final AccessValidator accessValidator;
 
     @Override
-    public IamResponse<WorkerDTO> getWorkerById(Integer id) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(id).orElseThrow(
-                () -> new NotFoundException("Worker with id " + id + " not found")
-        );
-        return IamResponse.createSuccessful(workerMapper.toDTO(worker));
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public WorkerDTO get(Integer id) {
+        return workerMapper.toDTO(getWorkerById(id));
     }
 
     @Override
-    public IamResponse<List<WorkerDTO>> getAllWorkers() {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        List<WorkerDTO> workers = workerRepository.findAllByIsActiveTrue().stream().map(workerMapper::toDTO).toList();
-        return IamResponse.createSuccessful(workers);
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public List<WorkerDTO> getAll() {
+        return workerRepository.findAllByIsActiveTrue().stream().map(workerMapper::toDTO).toList();
     }
 
     @Override
-    public IamResponse<WorkerDTO> createWorker(WorkerPostRequest workerPostRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public WorkerDTO create(WorkerPostRequest workerPostRequest) {
         Worker worker = workerMapper.toEntity(workerPostRequest);
         worker = workerRepository.save(worker);
-        return IamResponse.createSuccessful(workerMapper.toDTO(worker));
+        return workerMapper.toDTO(worker);
     }
 
     @Override
-    public IamResponse<WorkerDTO> updateFullyWorker(Integer id, WorkerPutRequest workerPutRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(id).orElseThrow(
-                () -> new NotFoundException("Worker with id " + id + " not found")
-        );
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public WorkerDTO replace(Integer id, WorkerPutRequest workerPutRequest) {
+        Worker worker = getWorkerById(id);
         workerMapper.updateFully(worker, workerPutRequest);
         worker = workerRepository.save(worker);
-        return IamResponse.createSuccessful(workerMapper.toDTO(worker));
+        return workerMapper.toDTO(worker);
     }
 
     @Override
-    public IamResponse<WorkerDTO> updatePartiallyWorker(Integer id, WorkerPatchRequest workerPatchRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(id).orElseThrow(
-                () -> new NotFoundException("Worker with id " + id + " not found")
-        );
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public WorkerDTO update(Integer id, WorkerPatchRequest workerPatchRequest) {
+        Worker worker = getWorkerById(id);
         workerMapper.updatePartially(worker, workerPatchRequest);
         worker = workerRepository.save(worker);
-        return IamResponse.createSuccessful(workerMapper.toDTO(worker));
+        return workerMapper.toDTO(worker);
     }
 
     @Override
-    public void deleteWorker(Integer id) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(id).orElseThrow(
-                () -> new NotFoundException("Worker with id " + id + " not found")
-        );
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public void delete(Integer id) {
+        Worker worker = getWorkerById(id);
         worker.setActive(false);
         workerRepository.save(worker);
+    }
+
+    protected Worker getWorkerById(Integer id) {
+        return workerRepository.findWorkerByIdAndIsActiveTrue(id).orElseThrow(() ->
+                new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(id)));
     }
 }

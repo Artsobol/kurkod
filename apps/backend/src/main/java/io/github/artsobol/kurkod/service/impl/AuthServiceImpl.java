@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.service.impl;
 
 import io.github.artsobol.kurkod.mapper.UserMapper;
-import io.github.artsobol.kurkod.model.constants.ApiErrorMessage;
+import io.github.artsobol.kurkod.error.impl.AuthError;
 import io.github.artsobol.kurkod.model.entity.Role;
 import io.github.artsobol.kurkod.model.exception.NotFoundException;
 import io.github.artsobol.kurkod.model.request.user.LoginRequest;
@@ -32,6 +32,7 @@ import java.util.Set;
 
 @Slf4j
 @Service
+@Transactional(readOnly = true)
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
@@ -51,11 +52,11 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
         } catch (BadCredentialsException e) {
-            throw new InvalidDataException(ApiErrorMessage.INVALID_USER_OR_PASSWORD.getMessage());
+            throw new InvalidDataException(AuthError.INVALID_USER_OR_PASSWORD.format());
         }
 
         User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
-                .orElseThrow(() -> new InvalidDataException(ApiErrorMessage.INVALID_USER_OR_PASSWORD.getMessage()));
+                .orElseThrow(() -> new InvalidDataException(AuthError.INVALID_USER_OR_PASSWORD.format()));
 
         RefreshToken refreshToken = refreshTokenService.generateOrUpdateRefreshToken(user);
         String token = jwtTokenProvider.generateToken(user);
@@ -70,11 +71,13 @@ public class AuthServiceImpl implements AuthService {
         RefreshToken refreshToken = refreshTokenService.validateAndRefreshToken(refreshTokenValue);
         User user = refreshToken.getUser();
         String accessToken = jwtTokenProvider.generateToken(user);
-        return IamResponse.createSuccessfulWithNewToken(userMapper.toUserProfileDto(user, accessToken, refreshToken.getToken()));
+        return IamResponse.createSuccessfulWithNewToken(userMapper.toUserProfileDto(user,
+                accessToken,
+                refreshToken.getToken()));
     }
 
-    @Transactional
     @Override
+    @Transactional
     public IamResponse<UserProfileDTO> registerUser(@NotNull RegistrationUserRequest request) {
         accessValidator.validateNewUser(
                 request.getUsername(),
