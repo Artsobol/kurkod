@@ -11,4 +11,6 @@ public class DataExistException extends BaseException{
     public DataExistException(String message) {
         super(message, HttpStatus.CONFLICT  );
     }
+
+
 }

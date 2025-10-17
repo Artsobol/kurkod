@@ -5,23 +5,20 @@ import io.github.artsobol.kurkod.model.request.chicken.ChickenPatchRequest;
 import io.github.artsobol.kurkod.model.request.chicken.ChickenPutRequest;
 import io.github.artsobol.kurkod.model.request.chicken.ChickenPostRequest;
 import io.github.artsobol.kurkod.model.response.IamResponse;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 public interface ChickenService {
 
-    IamResponse<ChickenDTO> createChicken(ChickenPostRequest chickenPostRequest);
+    ChickenDTO create(ChickenPostRequest chickenPostRequest);
 
-    IamResponse<ChickenDTO> getById(@NotNull Integer id);
+    ChickenDTO get(Integer id);
 
-    IamResponse<List<ChickenDTO>> getAll();
+    List<ChickenDTO> getAll();
 
-    void deleteById(@NotNull Integer id);
+    void delete(Integer id);
 
-    IamResponse<ChickenDTO> updateFully(@NotNull Integer id, @Valid @RequestBody ChickenPutRequest chickenPutRequest);
+    ChickenDTO replace(Integer id, ChickenPutRequest chickenPutRequest);
 
-    IamResponse<ChickenDTO> updatePartially(@NotNull Integer id, @RequestBody ChickenPatchRequest chickenPatchRequest);
+    ChickenDTO update(Integer id, ChickenPatchRequest chickenPatchRequest);
 }

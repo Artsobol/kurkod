@@ -1,6 +1,7 @@
 package io.github.artsobol.kurkod.security.validation;
 
-import io.github.artsobol.kurkod.model.constants.ApiErrorMessage;
+import io.github.artsobol.kurkod.error.impl.AuthError;
+import io.github.artsobol.kurkod.error.impl.UserError;
 import io.github.artsobol.kurkod.model.entity.User;
 import io.github.artsobol.kurkod.model.exception.DataExistException;
 import io.github.artsobol.kurkod.model.exception.InvalidPasswordException;
@@ -26,19 +27,19 @@ public class AccessValidator {
 
     public void validateNewUser(String username, String email, String password, String confirmPassword) {
         userRepository.findByUsernameAndIsActiveTrue(username).ifPresent(u -> {
-            throw new DataExistException(ApiErrorMessage.USER_WITH_USERNAME_ALREADY_EXISTS.getMessage(username));
+            throw new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS.format(username));
         });
 
         userRepository.findByEmailAndIsActiveTrue(email).ifPresent(u -> {
-            throw new DataExistException(ApiErrorMessage.USER_WITH_EMAIL_ALREADY_EXISTS.getMessage(email));
+            throw new DataExistException(UserError.WITH_EMAIL_ALREADY_EXISTS.format(email));
         });
 
         if(!password.equals(confirmPassword)) {
-            throw new InvalidPasswordException(ApiErrorMessage.MISMATCH_PASSWORDS.getMessage());
+            throw new InvalidPasswordException(AuthError.MISMATCH_PASSWORDS.format());
         }
 
         if (PasswordUtils.isNotValidPassword(password) ) {
-            throw new InvalidPasswordException(ApiErrorMessage.INVALID_PASSWORD.getMessage());
+            throw new InvalidPasswordException(AuthError.INVALID_PASSWORD.format());
         }
     }
 
@@ -47,7 +48,7 @@ public class AccessValidator {
         Integer currentUserId = apiUtils.getUserIdFromAuthentication();
 
         if (!hasRole(currentUserId, ServiceUserRole.DIRECTOR, ServiceUserRole.SUPER_ADMIN)) {
-            throw new AccessDeniedException(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
+            throw new AccessDeniedException(UserError.HAVE_NO_ACCESS.format());
         }
     }
 
@@ -56,7 +57,7 @@ public class AccessValidator {
         Integer currentUserId = apiUtils.getUserIdFromAuthentication();
 
         if (!hasRole(currentUserId, ServiceUserRole.SUPER_ADMIN)) {
-            throw new AccessDeniedException(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
+            throw new AccessDeniedException(UserError.HAVE_NO_ACCESS.format());
         }
     }
 
@@ -65,7 +66,7 @@ public class AccessValidator {
         Integer currentUserId = apiUtils.getUserIdFromAuthentication();
 
         if (!hasRole(currentUserId, ServiceUserRole.ADMIN, ServiceUserRole.SUPER_ADMIN)) {
-            throw new AccessDeniedException(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
+            throw new AccessDeniedException(UserError.HAVE_NO_ACCESS.format());
         }
     }
 
@@ -74,7 +75,7 @@ public class AccessValidator {
         Integer currentUserId = apiUtils.getUserIdFromAuthentication();
 
         if (!hasRole(currentUserId, ServiceUserRole.DIRECTOR)) {
-            throw new AccessDeniedException(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
+            throw new AccessDeniedException(UserError.HAVE_NO_ACCESS.format());
         }
     }
 
@@ -87,6 +88,6 @@ public class AccessValidator {
 
     private User getActiveUserById(Integer userId) {
         return userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
+                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_ID.format(userId)));
     }
 }

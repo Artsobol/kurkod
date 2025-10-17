@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.service.impl;
 
 import io.github.artsobol.kurkod.mapper.UserMapper;
-import io.github.artsobol.kurkod.model.constants.ApiErrorMessage;
+import io.github.artsobol.kurkod.error.impl.UserError;
 import io.github.artsobol.kurkod.model.dto.user.UserDTO;
 import io.github.artsobol.kurkod.model.entity.User;
 import io.github.artsobol.kurkod.model.exception.DataExistException;
@@ -9,18 +9,18 @@ import io.github.artsobol.kurkod.model.exception.NotFoundException;
 import io.github.artsobol.kurkod.model.request.user.UserPatchRequest;
 import io.github.artsobol.kurkod.model.request.user.UserPostRequest;
 import io.github.artsobol.kurkod.model.request.user.UserPutRequest;
-import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.UserRepository;
-import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.UserService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,78 +34,71 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final AccessValidator accessValidator;
 
     @Override
-    public IamResponse<UserDTO> getUserById(@NotNull Integer userId) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        User response = userRepository.findByIdAndIsActiveTrue(userId)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
-        return IamResponse.createSuccessful(userMapper.toDto(response));
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public UserDTO getById(@NotNull Integer userId) {
+        return userMapper.toDto(getUserById(userId));
     }
 
     @Override
-    public IamResponse<List<UserDTO>> getAllUsers() {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        List<UserDTO> response = userRepository.findAllByIsActiveTrue().stream().map(userMapper::toDto).toList();
-        return IamResponse.createSuccessful(response);
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public List<UserDTO> getAll() {
+        return userRepository.findAllByIsActiveTrue().stream().map(userMapper::toDto).toList();
     }
 
     @Override
-    public IamResponse<UserDTO> getUserByUsername(@NotBlank String username) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public UserDTO getByUsername(@NotBlank String username) {
         User response = userRepository.findByUsernameAndIsActiveTrue(username)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_USERNAME.getMessage(username)));
-        return IamResponse.createSuccessful(userMapper.toDto(response));
+                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_USERNAME.format(username)));
+        return userMapper.toDto(response);
     }
 
     @Override
-    public IamResponse<UserDTO> createUser(@NotNull UserPostRequest userPostRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public UserDTO create(@NotNull UserPostRequest userPostRequest) {
         if (userRepository.existsByUsername(userPostRequest.getUsername())) {
-            throw new DataExistException(ApiErrorMessage.USER_WITH_USERNAME_ALREADY_EXISTS.getMessage(userPostRequest.getUsername()));
+            throw new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS.format(userPostRequest.getUsername()));
         }
         if (userRepository.existsByEmail(userPostRequest.getEmail())) {
-            throw new DataExistException(ApiErrorMessage.USER_WITH_EMAIL_ALREADY_EXISTS.getMessage(userPostRequest.getEmail()));
+            throw new DataExistException(UserError.WITH_EMAIL_ALREADY_EXISTS.format(userPostRequest.getEmail()));
         }
         User user = userMapper.toEntity(userPostRequest);
         user.setPassword(passwordEncoder.encode(userPostRequest.getPassword()));
         user = userRepository.save(user);
-        return IamResponse.createSuccessful(userMapper.toDto(user));
+        return userMapper.toDto(user);
     }
 
     @Override
-    public IamResponse<UserDTO> updateFullyUser(@NotNull Integer userId, UserPutRequest userPutRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        User user = userRepository.findByIdAndIsActiveTrue(userId)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public UserDTO replace(@NotNull Integer userId, UserPutRequest userPutRequest) {
+        User user = getUserById(userId);
         userMapper.updateFully(user, userPutRequest);
         user = userRepository.save(user);
-        return IamResponse.createSuccessful(userMapper.toDto(user));
+        return userMapper.toDto(user);
     }
 
     @Override
-    public IamResponse<UserDTO> updatePartiallyUser(@NotNull Integer userId, UserPatchRequest userPatchRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        User user = userRepository.findByIdAndIsActiveTrue(userId)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public UserDTO update(@NotNull Integer userId, UserPatchRequest userPatchRequest) {
+        User user = getUserById(userId);
         userMapper.updatePartially(user, userPatchRequest);
         user = userRepository.save(user);
-        return IamResponse.createSuccessful(userMapper.toDto(user));
+        return userMapper.toDto(user);
     }
 
     @Override
-    public void deleteUser(@NotNull Integer userId) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        User user = userRepository.findByIdAndIsActiveTrue(userId)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public void deleteById(@NotNull Integer userId) {
+        User user = getUserById(userId);
         user.setActive(false);
         userRepository.save(user);
     }
@@ -117,12 +110,19 @@ public class UserServiceImpl implements UserService {
 
     static UserDetails getUserDetails(String email, UserRepository userRepository) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_EMAIL.getMessage(email)));
+                .orElseThrow(() -> new NotFoundException(UserError.WITH_EMAIL_ALREADY_EXISTS.format(email)));
 
         user.setLastLogin(LocalDateTime.now());
         userRepository.save(user);
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getRoles().stream().map(
-                role -> new SimpleGrantedAuthority(role.getName())
-        ).collect(Collectors.toList()));
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(),
+                user.getRoles().stream().map(
+                        role -> new SimpleGrantedAuthority(role.getName())
+                ).collect(Collectors.toList()));
+    }
+
+    protected User getUserById(Integer id) {
+        return userRepository.findByIdAndIsActiveTrue(id)
+                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_ID.format(id)));
     }
 }

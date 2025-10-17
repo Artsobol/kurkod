@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.service.impl;
 
-import io.github.artsobol.kurkod.model.constants.ApiErrorMessage;
+import io.github.artsobol.kurkod.error.impl.JwtError;
 import io.github.artsobol.kurkod.model.entity.RefreshToken;
 import io.github.artsobol.kurkod.model.entity.User;
 import io.github.artsobol.kurkod.model.exception.NotFoundException;
@@ -43,7 +43,7 @@ public class RefreshTokenImpl implements RefreshTokenService {
     public RefreshToken validateAndRefreshToken(String requestRefreshToken) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(requestRefreshToken)
                 .orElseThrow(
-                        () -> new NotFoundException(ApiErrorMessage.NOT_FOUND_REFRESH_TOKEN.getMessage(requestRefreshToken))
+                        () -> new NotFoundException(JwtError.NOT_FOUND_REFRESH_TOKEN.format(requestRefreshToken))
                 );
 
         refreshToken.setCreatedAt(LocalDateTime.now());

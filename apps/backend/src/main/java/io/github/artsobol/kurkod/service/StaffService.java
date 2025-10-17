@@ -13,15 +13,15 @@ import java.util.List;
 
 public interface StaffService {
 
-    IamResponse<StaffDTO>  getStaffInfo(@NotNull Integer staffId);
+    StaffDTO get(Integer staffId);
 
-    IamResponse<List<StaffDTO>> getAllStaffs();
+    List<StaffDTO> getAll();
 
-    IamResponse<StaffDTO> createStaff(StaffPostRequest staffPostRequest);
+    StaffDTO create(StaffPostRequest staffPostRequest);
 
-    IamResponse<StaffDTO> updateFullyStaff(@NotNull Integer staffId, @Valid  @RequestBody StaffPutRequest staffPutRequest);
+    StaffDTO replace(Integer staffId, StaffPutRequest staffPutRequest);
 
-    IamResponse<StaffDTO> updatePartiallyStaff(@NotNull Integer staffId, @RequestBody StaffPatchRequest staffPatchRequest);
+    StaffDTO update(Integer staffId, StaffPatchRequest staffPatchRequest);
 
-    void deleteStaff(@NotNull Integer staffId);
+    void delete(Integer staffId);
 }

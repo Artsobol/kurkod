@@ -33,13 +33,13 @@ public class BreedController {
 
     @Operation(summary = "Get breed by ID", description = "Returns a single breed by its unique identifier.")
     @GetMapping("/{id}")
-    public ResponseEntity<IamResponse<BreedDTO>> getBreedById(@Parameter(
+    public ResponseEntity<IamResponse<BreedDTO>> get(@Parameter(
             description = "Breed identifier",
             example = "42"
     ) @PathVariable(name = "id") Integer id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<BreedDTO> response = breedService.getById(id);
-        return ResponseEntity.ok(response);
+        BreedDTO response = breedService.get(id);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
 
@@ -47,16 +47,16 @@ public class BreedController {
     @GetMapping
     public ResponseEntity<IamResponse<List<BreedDTO>>> getAllBreeds() {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<List<BreedDTO>> response = breedService.getAll();
-        return ResponseEntity.ok(response);
+        List<BreedDTO> response = breedService.getAll();
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Create a new breed", description = "Creates a new breed. Name must be unique.")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<BreedDTO>> createBreed(@Valid @RequestBody BreedPostRequest breedPostRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<BreedDTO> response = breedService.createBreed(breedPostRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        BreedDTO response = breedService.create(breedPostRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(IamResponse.createSuccessful(response));
     }
 
 
@@ -68,8 +68,8 @@ public class BreedController {
                                                              ) @PathVariable(name = "id") Integer id,
                                                              @Valid @RequestBody BreedPutRequest breedPutRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<BreedDTO> response = breedService.updateFully(id, breedPutRequest);
-        return ResponseEntity.ok(response);
+        BreedDTO response = breedService.replace(id, breedPutRequest);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Partially update a breed", description = "Applies a partial update to a breed by ID.")
@@ -80,8 +80,8 @@ public class BreedController {
                                                                  ) @PathVariable(name = "id") Integer id,
                                                                  @Valid @RequestBody BreedPatchRequest breedPatchRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<BreedDTO> response = breedService.updatePartially(id, breedPatchRequest);
-        return ResponseEntity.ok(response);
+        BreedDTO response = breedService.update(id, breedPatchRequest);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(summary = "Delete a breed", description = "Deletes a breed by ID.")
@@ -90,7 +90,7 @@ public class BreedController {
             name = "id"
     ) Integer id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        breedService.deleteById(id);
+        breedService.delete(id);
         return ResponseEntity.noContent().build();
     }
 }

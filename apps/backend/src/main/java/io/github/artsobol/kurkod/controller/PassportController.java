@@ -32,13 +32,13 @@ public class PassportController {
             description = "Returns the passport information for a specific worker."
     )
     @GetMapping
-    public ResponseEntity<IamResponse<PassportDTO>> getPassportById(@Parameter(
+    public ResponseEntity<IamResponse<PassportDTO>> get(@Parameter(
             description = "Worker identifier",
             example = "5"
     ) @PathVariable(name = "workerId") Integer workerId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<PassportDTO> response = passportService.getPassport(workerId);
-        return ResponseEntity.ok(response);
+        PassportDTO response = passportService.get(workerId);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(
@@ -46,13 +46,13 @@ public class PassportController {
             description = "Creates a new passport for the specified worker. Each worker can have only one passport."
     )
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<PassportDTO>> createPassport(@Parameter(
+    public ResponseEntity<IamResponse<PassportDTO>> create(@Parameter(
             description = "Worker identifier",
             example = "5"
     ) @PathVariable(name = "workerId") Integer workerId, @RequestBody @Valid PassportPostRequest passportPostRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<PassportDTO> response = passportService.createPassport(workerId, passportPostRequest);
-        return ResponseEntity.ok(response);
+        PassportDTO response = passportService.create(workerId, passportPostRequest);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(
@@ -60,13 +60,13 @@ public class PassportController {
             description = "Fully replaces the passport data for the specified worker."
     )
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<PassportDTO>> updateFullyPassport(@Parameter(
+    public ResponseEntity<IamResponse<PassportDTO>> replace(@Parameter(
             description = "Worker identifier",
             example = "5"
     ) @PathVariable(name = "workerId") Integer workerId, @RequestBody @Valid PassportPutRequest passportPutRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<PassportDTO> response = passportService.updateFullyPassport(workerId, passportPutRequest);
-        return ResponseEntity.ok(response);
+        PassportDTO response = passportService.replace(workerId, passportPutRequest);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(
@@ -74,13 +74,13 @@ public class PassportController {
             description = "Applies a partial update to the passport data for the specified worker."
     )
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<PassportDTO>> updatePartiallyPassport(@Parameter(
+    public ResponseEntity<IamResponse<PassportDTO>> update(@Parameter(
             description = "Worker identifier",
             example = "5"
     ) @PathVariable(name = "workerId") Integer workerId, @RequestBody PassportPatchRequest passportPatchRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        IamResponse<PassportDTO> response = passportService.updatePartiallyPassport(workerId, passportPatchRequest);
-        return ResponseEntity.ok(response);
+        PassportDTO response = passportService.update(workerId, passportPatchRequest);
+        return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
 
     @Operation(
@@ -88,12 +88,12 @@ public class PassportController {
             description = "Deletes the passport associated with the specified worker."
     )
     @DeleteMapping
-    public ResponseEntity<Void> deletePassport(@Parameter(
+    public ResponseEntity<Void> delete(@Parameter(
             description = "Worker identifier",
             example = "5"
     ) @PathVariable(name = "workerId") Integer workerId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), ApiUtils.getMethodName());
-        passportService.deletePassport(workerId);
+        passportService.delete(workerId);
         return ResponseEntity.noContent().build();
     }
 }

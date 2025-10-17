@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.security.filter;
 
-import io.github.artsobol.kurkod.model.constants.ApiErrorMessage;
+import io.github.artsobol.kurkod.error.impl.JwtError;
 import io.github.artsobol.kurkod.security.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -48,7 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String jwt = authHeader.get().substring(BEARER_PREFIX.length());
             try {
                 if (!jwtTokenProvider.validateToken(jwt)) {
-                    throw new ExpiredJwtException(null, null, ApiErrorMessage.TOKEN_EXPIRED.getMessage());
+                    throw new ExpiredJwtException(null, null, JwtError.TOKEN_EXPIRED.format());
                 }
 
                 Optional<String> emailOpt = Optional.ofNullable(jwtTokenProvider.getUsername(jwt));
@@ -88,17 +88,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String refreshedToken = jwtTokenProvider.refreshToken(jwt);
             response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + refreshedToken);
         } else {
-            sendErrorResponse(response, HttpStatus.UNAUTHORIZED, ApiErrorMessage.TOKEN_EXPIRED.getMessage());
+            sendErrorResponse(response, HttpStatus.UNAUTHORIZED, JwtError.TOKEN_EXPIRED.format());
         }
     }
 
     private void handleSignatureException(HttpServletResponse response) throws IOException {
-        sendErrorResponse(response, HttpStatus.UNAUTHORIZED, ApiErrorMessage.INVALID_TOKEN_SIGNATURE.getMessage());
+        sendErrorResponse(response, HttpStatus.UNAUTHORIZED, JwtError.INVALID_TOKEN_SIGNATURE.format());
     }
 
     private void handleUnexpectedException(HttpServletResponse response, Exception e) throws IOException {
-        log.error(ApiErrorMessage.ERROR_DURING_JWT_PROCESSING.getMessage(), e);
-        sendErrorResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, ApiErrorMessage.UNEXPECTED_ERROR_OCCURRED.getMessage());
+        log.error(JwtError.ERROR_DURING_JWT_PROCESSING.format(), e);
+        sendErrorResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, JwtError.UNEXPECTED_ERROR_OCCURRED.format());
     }
 
     private void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {

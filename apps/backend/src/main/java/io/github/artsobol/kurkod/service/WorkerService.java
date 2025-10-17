@@ -11,15 +11,15 @@ import java.util.List;
 
 public interface WorkerService {
 
-    IamResponse<WorkerDTO> getWorkerById(@NotNull Integer id);
+    WorkerDTO get(Integer id);
 
-    IamResponse<List<WorkerDTO>> getAllWorkers();
+    List<WorkerDTO> getAll();
 
-    IamResponse<WorkerDTO> createWorker(WorkerPostRequest workerPostRequest);
+    WorkerDTO create(WorkerPostRequest workerPostRequest);
 
-    IamResponse<WorkerDTO> updateFullyWorker(@NotNull Integer id, WorkerPutRequest workerPutRequest);
+    WorkerDTO replace(Integer id, WorkerPutRequest workerPutRequest);
 
-    IamResponse<WorkerDTO> updatePartiallyWorker(@NotNull Integer id, WorkerPatchRequest workerPatchRequest);
+    WorkerDTO update(Integer id, WorkerPatchRequest workerPatchRequest);
 
-    void deleteWorker(@NotNull Integer id);
+    void delete(Integer id);
 }

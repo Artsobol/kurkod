@@ -1,6 +1,9 @@
 package io.github.artsobol.kurkod.service.impl;
 
 import io.github.artsobol.kurkod.mapper.EmploymentContractMapper;
+import io.github.artsobol.kurkod.error.impl.EmploymentContractError;
+import io.github.artsobol.kurkod.error.impl.StaffError;
+import io.github.artsobol.kurkod.error.impl.WorkerError;
 import io.github.artsobol.kurkod.model.dto.employmentContract.EmploymentContractDTO;
 import io.github.artsobol.kurkod.model.entity.EmploymentContract;
 import io.github.artsobol.kurkod.model.entity.Staff;
@@ -9,16 +12,17 @@ import io.github.artsobol.kurkod.model.exception.NotFoundException;
 import io.github.artsobol.kurkod.model.request.employmentContract.EmploymentContractPatchRequest;
 import io.github.artsobol.kurkod.model.request.employmentContract.EmploymentContractPostRequest;
 import io.github.artsobol.kurkod.model.request.employmentContract.EmploymentContractPutRequest;
-import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.EmploymentContractRepository;
 import io.github.artsobol.kurkod.repository.StaffRepository;
 import io.github.artsobol.kurkod.repository.WorkerRepository;
-import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.EmploymentContractService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class EmploymentContractServiceImpl implements EmploymentContractService {
 
@@ -26,22 +30,22 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     private final EmploymentContractMapper employmentContractMapper;
     private final WorkerRepository workerRepository;
     private final StaffRepository staffRepository;
-    private final AccessValidator accessValidator;
 
     @Override
-    public IamResponse<EmploymentContractDTO> getByWorkerId(Integer workerId) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public EmploymentContractDTO get(Integer workerId) {
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
-        return IamResponse.createSuccessful(employmentContractMapper.toDto(employmentContract));
+        return employmentContractMapper.toDto(employmentContract);
     }
 
     @Override
-    public IamResponse<EmploymentContractDTO> createEmploymentContract(Integer workerId, EmploymentContractPostRequest employmentContractPostRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public EmploymentContractDTO create(Integer workerId,
+                                                                       EmploymentContractPostRequest employmentContractPostRequest) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException("Worker with id " + workerId + " not found")
+                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(workerId))
         );
 
         Integer staffId = employmentContractPostRequest.getStaffId();
@@ -51,13 +55,14 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
         employmentContract.setStaff(staff);
         employmentContract.setWorker(worker);
         employmentContract = employmentContractRepository.save(employmentContract);
-        return IamResponse.createSuccessful(employmentContractMapper.toDto(employmentContract));
+        return employmentContractMapper.toDto(employmentContract);
     }
 
     @Override
-    public IamResponse<EmploymentContractDTO> updateFullyEmploymentContract(Integer workerId, EmploymentContractPutRequest employmentContractPutRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public EmploymentContractDTO replace(Integer workerId,
+                                                                            EmploymentContractPutRequest employmentContractPutRequest) {
         Integer staffId = employmentContractPutRequest.getStaffId();
         Staff staff = getStaffByStaffId(staffId);
 
@@ -66,17 +71,16 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
         employmentContractMapper.updateFully(employmentContract, employmentContractPutRequest);
         employmentContract.setStaff(staff);
         employmentContract = employmentContractRepository.save(employmentContract);
-        return IamResponse.createSuccessful(employmentContractMapper.toDto(employmentContract));
+        return employmentContractMapper.toDto(employmentContract);
     }
 
     @Override
-    public IamResponse<EmploymentContractDTO> updatePartiallyEmploymentContract(Integer workerId, EmploymentContractPatchRequest employmentContractPatchRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public EmploymentContractDTO update(Integer workerId,
+                                                                                EmploymentContractPatchRequest employmentContractPatchRequest) {
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
-
         employmentContractMapper.updatePartially(employmentContract, employmentContractPatchRequest);
-
 
         Integer staffId = employmentContractPatchRequest.getStaffId();
         if (staffId != null) {
@@ -85,13 +89,13 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
         }
 
         employmentContract = employmentContractRepository.save(employmentContract);
-        return IamResponse.createSuccessful(employmentContractMapper.toDto(employmentContract));
+        return employmentContractMapper.toDto(employmentContract);
     }
 
     @Override
-    public void deleteEmploymentContract(Integer workerId) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public void delete(Integer workerId) {
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
         employmentContract.setActive(false);
         employmentContractRepository.save(employmentContract);
@@ -99,13 +103,13 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
 
     protected EmploymentContract getContractByWorkerId(Integer workerId) {
         return employmentContractRepository.findEmploymentContractByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException("Employment contract not found for worker with id " + workerId)
+                () -> new NotFoundException(EmploymentContractError.NOT_FOUND_BY_ID.format(workerId))
         );
     }
 
     protected Staff getStaffByStaffId(Integer staffId) {
         return staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
-                () -> new NotFoundException("Staff with id " + staffId + " not found")
+                () -> new NotFoundException(StaffError.NOT_FOUND_BY_ID.format(staffId))
         );
     }
 }

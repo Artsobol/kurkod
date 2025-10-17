@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.security.handler;
 
-import io.github.artsobol.kurkod.model.constants.ApiErrorMessage;
-import jakarta.servlet.ServletException;
+import io.github.artsobol.kurkod.error.impl.UserError;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.SneakyThrows;
@@ -10,14 +9,12 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-
 @Component
 public class AccessRestrictionHandler implements AccessDeniedHandler {
     @Override
     @SneakyThrows
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
         response.setStatus(HttpStatus.FORBIDDEN.value());
-        response.getWriter().write(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
+        response.getWriter().write(UserError.HAVE_NO_ACCESS.format());
     }
 }

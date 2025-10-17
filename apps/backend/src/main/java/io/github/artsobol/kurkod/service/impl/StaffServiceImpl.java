@@ -1,91 +1,88 @@
 package io.github.artsobol.kurkod.service.impl;
 
 import io.github.artsobol.kurkod.mapper.StaffMapper;
+import io.github.artsobol.kurkod.error.impl.StaffError;
 import io.github.artsobol.kurkod.model.dto.staff.StaffDTO;
 import io.github.artsobol.kurkod.model.entity.Staff;
 import io.github.artsobol.kurkod.model.exception.NotFoundException;
 import io.github.artsobol.kurkod.model.request.staff.StaffPatchRequest;
 import io.github.artsobol.kurkod.model.request.staff.StaffPostRequest;
 import io.github.artsobol.kurkod.model.request.staff.StaffPutRequest;
-import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.StaffRepository;
-import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.StaffService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class StaffServiceImpl implements StaffService {
 
     private final StaffRepository staffRepository;
     private final StaffMapper staffMapper;
-    private final AccessValidator accessValidator;
 
     @Override
-    public IamResponse<StaffDTO> getStaffInfo(Integer staffId) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Staff staff = staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
-                () -> new NotFoundException("Staff with id " + staffId + " not found")
-        );
-        return IamResponse.createSuccessful(staffMapper.toDto(staff));
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public StaffDTO get(Integer staffId) {
+        Staff staff = getStaffById(staffId);
+        return staffMapper.toDto(staff);
     }
 
     @Override
-    public IamResponse<List<StaffDTO>> getAllStaffs() {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        List<StaffDTO> staffs = staffRepository.findAllByIsActiveTrue().stream()
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public List<StaffDTO> getAll() {
+        return staffRepository.findAllByIsActiveTrue().stream()
                 .map(staffMapper::toDto)
                 .toList();
-        return IamResponse.createSuccessful(staffs);
     }
 
 
     @Override
-    public IamResponse<StaffDTO> createStaff(StaffPostRequest staffPostRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public StaffDTO create(StaffPostRequest staffPostRequest) {
         Staff staff = staffMapper.toEntity(staffPostRequest);
         staff = staffRepository.save(staff);
-        return IamResponse.createSuccessful(staffMapper.toDto(staff));
+        return staffMapper.toDto(staff);
     }
 
     @Override
-    public IamResponse<StaffDTO> updateFullyStaff(Integer staffId, StaffPutRequest staffPutRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Staff staff = staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
-                () -> new NotFoundException("Staff with id " + staffId + " not found")
-        );
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public StaffDTO replace(Integer staffId, StaffPutRequest staffPutRequest) {
+        Staff staff = getStaffById(staffId);
         staffMapper.updateFully(staff, staffPutRequest);
         staff = staffRepository.save(staff);
-        return IamResponse.createSuccessful(staffMapper.toDto(staff));
+        return staffMapper.toDto(staff);
     }
 
     @Override
-    public IamResponse<StaffDTO> updatePartiallyStaff(Integer staffId, StaffPatchRequest staffPatchRequest) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Staff staff = staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
-                () -> new NotFoundException("Staff with id " + staffId + " not found")
-        );
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public StaffDTO update(Integer staffId, StaffPatchRequest staffPatchRequest) {
+        Staff staff = getStaffById(staffId);
         staffMapper.updatePartially(staff, staffPatchRequest);
         staff = staffRepository.save(staff);
-        return IamResponse.createSuccessful(staffMapper.toDto(staff));
+        return staffMapper.toDto(staff);
     }
 
     @Override
-    public void deleteStaff(Integer staffId) {
-        accessValidator.validateDirectorOrSuperAdmin();
-
-        Staff staff = staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
-                () -> new NotFoundException("Staff with id " + staffId + " not found")
-        );
+    @Transactional
+    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+    public void delete(Integer staffId) {
+        Staff staff = getStaffById(staffId);
         staff.setActive(false);
         staffRepository.save(staff);
+    }
+
+    protected Staff getStaffById(Integer id) {
+        return staffRepository.findStaffByIdAndIsActiveTrue(id).orElseThrow(() ->
+                new NotFoundException(StaffError.NOT_FOUND_BY_ID.format(id)));
     }
 }
