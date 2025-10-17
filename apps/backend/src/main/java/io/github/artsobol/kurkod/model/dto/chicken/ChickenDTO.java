@@ -15,9 +15,9 @@ public class ChickenDTO implements Serializable {
 
     private Integer id;
 
-    private short weight;
+    private Integer weight;
 
     private LocalDate birthDate;
 
-    private BreedDTO breed;
+    private Integer breedId;
 }

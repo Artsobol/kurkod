@@ -22,7 +22,7 @@ public class Chicken {
 
     @NotNull
     @Column(nullable = false)
-    private short weight;
+    private Integer weight;
 
     @NotNull
     @Column(nullable = false, name = "birth_date")

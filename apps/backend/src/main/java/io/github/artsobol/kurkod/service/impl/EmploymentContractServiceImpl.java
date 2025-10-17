@@ -13,6 +13,7 @@ import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.EmploymentContractRepository;
 import io.github.artsobol.kurkod.repository.StaffRepository;
 import io.github.artsobol.kurkod.repository.WorkerRepository;
+import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.EmploymentContractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,15 +26,20 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     private final EmploymentContractMapper employmentContractMapper;
     private final WorkerRepository workerRepository;
     private final StaffRepository staffRepository;
+    private final AccessValidator accessValidator;
 
     @Override
     public IamResponse<EmploymentContractDTO> getByWorkerId(Integer workerId) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
         return IamResponse.createSuccessful(employmentContractMapper.toDto(employmentContract));
     }
 
     @Override
     public IamResponse<EmploymentContractDTO> createEmploymentContract(Integer workerId, EmploymentContractPostRequest employmentContractPostRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException("Worker with id " + workerId + " not found")
         );
@@ -50,6 +56,8 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
 
     @Override
     public IamResponse<EmploymentContractDTO> updateFullyEmploymentContract(Integer workerId, EmploymentContractPutRequest employmentContractPutRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Integer staffId = employmentContractPutRequest.getStaffId();
         Staff staff = getStaffByStaffId(staffId);
 
@@ -63,6 +71,8 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
 
     @Override
     public IamResponse<EmploymentContractDTO> updatePartiallyEmploymentContract(Integer workerId, EmploymentContractPatchRequest employmentContractPatchRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
 
         employmentContractMapper.updatePartially(employmentContract, employmentContractPatchRequest);
@@ -80,6 +90,8 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
 
     @Override
     public void deleteEmploymentContract(Integer workerId) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
         employmentContract.setActive(false);
         employmentContractRepository.save(employmentContract);

@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class ChickenPostRequest implements Serializable {
 
     @NotNull
-    private short weight;
+    private Integer weight;
 
     @NotNull
     private LocalDate birthDate;

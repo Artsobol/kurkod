@@ -15,7 +15,7 @@ public class BreedPatchRequest implements Serializable {
 
     private String name;
 
-    private short eggsNumber;
+    private Integer eggsNumber;
 
-    private short weight;
+    private Integer weight;
 }

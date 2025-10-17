@@ -19,8 +19,8 @@ public class BreedPutRequest implements Serializable {
     private String name;
 
     @NotNull
-    private short eggsNumber;
+    private Integer eggsNumber;
 
     @NotNull
-    private short weight;
+    private Integer weight;
 }

@@ -14,14 +14,14 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface ChickenMapper {
 
-    @Mapping(source = "breed", target = "breed", ignore = true)
+    @Mapping(source = "breed.id", target = "breedId")
     ChickenDTO toDto(Chicken chicken);
 
     Chicken toEntity(ChickenPostRequest chickenPostRequest);
 
-    @Mapping(target = "breed", source = "breedId", ignore = true)
+    @Mapping(target = "breed", ignore = true)
     void updateFully(@MappingTarget Chicken chicken, ChickenPutRequest chickenPutRequest);
 
-    @Mapping(target = "breed", source = "breedId", ignore = true)
+    @Mapping(target = "breed", ignore = true)
     void updatePartially(@MappingTarget Chicken chicken, ChickenPatchRequest chickenPatchRequest);
 }

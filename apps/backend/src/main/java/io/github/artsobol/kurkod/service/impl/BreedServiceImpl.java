@@ -9,6 +9,7 @@ import io.github.artsobol.kurkod.model.request.breed.BreedPostRequest;
 import io.github.artsobol.kurkod.model.request.breed.BreedPutRequest;
 import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.BreedRepository;
+import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.BreedService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +23,12 @@ public class BreedServiceImpl implements BreedService {
 
     private final BreedRepository breedRepository;
     private final BreedMapper breedMapper;
-
+    private final AccessValidator accessValidator;
 
     @Override
     public IamResponse<BreedDTO> createBreed(BreedPostRequest breedPostRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Breed breed = breedMapper.toEntity(breedPostRequest);
         breed = breedRepository.save(breed);
         return IamResponse.createSuccessful(breedMapper.toDto(breed));
@@ -48,6 +51,8 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public IamResponse<BreedDTO> updateFully(Integer id, BreedPutRequest breedPutRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Breed breed = breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
                 new NotFoundException("Breed with id " + id + " not found"));
         breedMapper.updateFully(breed, breedPutRequest);
@@ -57,6 +62,8 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public IamResponse<BreedDTO> updatePartially(Integer id, BreedPatchRequest breedPatchRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Breed breed = breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
                 new NotFoundException("Breed with id " + id + " not found"));
         breedMapper.updatePartially(breed, breedPatchRequest);
@@ -66,9 +73,12 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public void deleteById(Integer id) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Breed breed = breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
                 new NotFoundException("Breed with id " + id + " not found"));
         breed.setDeleted(true);
         breedRepository.save(breed);
     }
+
 }

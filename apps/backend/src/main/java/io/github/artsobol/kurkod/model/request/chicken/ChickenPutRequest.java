@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class ChickenPutRequest {
 
     @NotNull
-    private short weight;
+    private Integer weight;
 
     @NotNull
     private LocalDate birthDate;

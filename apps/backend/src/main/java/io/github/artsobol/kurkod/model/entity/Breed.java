@@ -26,11 +26,11 @@ public class Breed {
 
     @NotNull
     @Column(nullable = false, name = "eggs_number")
-    private short eggsNumber;
+    private Integer eggsNumber;
 
     @NotNull
     @Column(nullable = false)
-    private short weight;
+    private Integer weight;
 
     @NotNull
     @Column(nullable = false, name = "deleted")
