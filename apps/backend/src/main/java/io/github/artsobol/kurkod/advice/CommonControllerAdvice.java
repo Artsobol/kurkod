@@ -2,46 +2,41 @@ package io.github.artsobol.kurkod.advice;
 
 import io.github.artsobol.kurkod.model.constants.ApiConstants;
 import io.github.artsobol.kurkod.model.exception.InvalidPasswordException;
+import io.github.artsobol.kurkod.model.response.IamError;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.AccessDeniedException;
 
-import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
 import java.util.Objects;
 
 @Slf4j
-@ControllerAdvice
 public class CommonControllerAdvice {
-
-    @ExceptionHandler
-    @ResponseBody
-    protected ResponseEntity<String> handleNotFoundException(Exception e) {
-        logStackTrace(e);
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
 
     @ExceptionHandler(InvalidPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ResponseBody
-    protected String handleInvalidPasswordException(Exception e) {
+    protected IamError handleInvalidPasswordException(Exception e, HttpServletRequest request) {
         logStackTrace(e);
 
-        return e.getMessage();
+        return IamError.createError(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    @ResponseBody
-    protected ResponseEntity<String> handleAccessDeniedException(Exception e) {
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    protected IamError handleAccessDeniedException(Exception e, HttpServletRequest request) {
         logStackTrace(e);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
+        return IamError.createError(HttpStatus.FORBIDDEN, e.getMessage(), request.getRequestURI());
     }
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected IamError handleNotFoundException(Exception e, HttpServletRequest request) {
+        logStackTrace(e);
+
+        return IamError.createError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", request.getRequestURI());
+    }
 
     private void logStackTrace(Exception ex) {
         StringBuilder stackTrace = new StringBuilder();
