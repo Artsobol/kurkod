@@ -1,5 +1,7 @@
 package io.github.artsobol.kurkod.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.artsobol.kurkod.model.response.IamError;
 import io.github.artsobol.kurkod.security.filter.JwtRequestFilter;
 import io.github.artsobol.kurkod.security.handler.AccessRestrictionHandler;
 import io.github.artsobol.kurkod.service.model.ServiceUserRole;
@@ -43,25 +45,35 @@ public class SecurityConfig {
     };
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, NOT_SECURED_POST_URLS).permitAll()
-                        .requestMatchers(HttpMethod.GET, NOT_SECURED_GET_URLS).permitAll()
-                        .requestMatchers(HttpMethod.GET, "/v3/api-docs/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/swagger-ui.html").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/webjars/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/v1/staff/**").hasAnyRole(adminAccessSecurityRoles())
-                        .anyRequest().authenticated()
-                )
-                .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                        .accessDeniedHandler(accessRestrictionHandler)
-                )
-                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            com.fasterxml.jackson.databind.ObjectMapper om,
+            AccessRestrictionHandler accessRestrictionHandler, // твой 403-хэндлер
+            JwtRequestFilter jwtRequestFilter
+    ) throws Exception {
+
+        http.csrf(AbstractHttpConfigurer::disable);
+
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/auth/refresh/token").permitAll()
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/staff/**").hasAnyRole(adminAccessSecurityRoles())
+                .anyRequest().authenticated()
+        );
+
+        http.exceptionHandling(ex -> ex
+                .authenticationEntryPoint((req, res, ex1) -> {
+                    res.setStatus(HttpStatus.UNAUTHORIZED.value());
+                    res.setContentType("application/json");
+                    var body = IamError.createError(HttpStatus.UNAUTHORIZED,
+                            "Authentication required", req.getRequestURI());
+                    res.getWriter().write(om.writeValueAsString(body));
+                })
+                .accessDeniedHandler(accessRestrictionHandler)
+        );
+
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

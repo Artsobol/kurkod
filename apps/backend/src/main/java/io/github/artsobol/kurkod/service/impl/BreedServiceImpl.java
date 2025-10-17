@@ -27,8 +27,7 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public IamResponse<BreedDTO> createBreed(BreedPostRequest breedPostRequest) {
-
-        accessValidator.validateAdminAccess();
+        accessValidator.validateDirectorOrSuperAdmin();
 
         Breed breed = breedMapper.toEntity(breedPostRequest);
         breed = breedRepository.save(breed);
@@ -52,6 +51,8 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public IamResponse<BreedDTO> updateFully(Integer id, BreedPutRequest breedPutRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Breed breed = breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
                 new NotFoundException("Breed with id " + id + " not found"));
         breedMapper.updateFully(breed, breedPutRequest);
@@ -61,6 +62,8 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public IamResponse<BreedDTO> updatePartially(Integer id, BreedPatchRequest breedPatchRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Breed breed = breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
                 new NotFoundException("Breed with id " + id + " not found"));
         breedMapper.updatePartially(breed, breedPatchRequest);
@@ -70,9 +73,12 @@ public class BreedServiceImpl implements BreedService {
 
     @Override
     public void deleteById(Integer id) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Breed breed = breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
                 new NotFoundException("Breed with id " + id + " not found"));
         breed.setDeleted(true);
         breedRepository.save(breed);
     }
+
 }

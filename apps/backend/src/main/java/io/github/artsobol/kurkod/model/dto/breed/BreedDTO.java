@@ -12,6 +12,6 @@ import java.io.Serializable;
 public class BreedDTO implements Serializable {
     private Integer id;
     private String name;
-    private short eggsNumber;
-    private short weight;
+    private Integer eggsNumber;
+    private Integer weight;
 }

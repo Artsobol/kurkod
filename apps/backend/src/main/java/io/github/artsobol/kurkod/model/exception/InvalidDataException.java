@@ -1,11 +1,14 @@
 package io.github.artsobol.kurkod.model.exception;
 
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
-@NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class InvalidDataException extends RuntimeException{
+/**
+ * Thrown when the provided data is invalid or does not meet validation rules.
+ * Example: missing required fields, invalid email format, etc.
+ */
+public class InvalidDataException extends BaseException{
 
     public InvalidDataException(String message) {
-        super(message);
+        super(message, HttpStatus.BAD_REQUEST);
     }
 }

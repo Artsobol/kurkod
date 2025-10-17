@@ -1,12 +1,13 @@
 package io.github.artsobol.kurkod.model.exception;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class InvalidPasswordException extends RuntimeException{
+/**
+ * Thrown when an authentication attempt fails due to an invalid password.
+ */
+public class InvalidPasswordException extends BaseException{
 
     public InvalidPasswordException(String message) {
-        super(message);
+        super(message, HttpStatus.UNAUTHORIZED);
     }
 }

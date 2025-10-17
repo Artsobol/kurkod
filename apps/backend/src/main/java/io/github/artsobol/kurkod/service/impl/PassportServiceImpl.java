@@ -12,6 +12,7 @@ import io.github.artsobol.kurkod.model.request.passport.PassportPutRequest;
 import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.PassportRepository;
 import io.github.artsobol.kurkod.repository.WorkerRepository;
+import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.PassportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -24,9 +25,12 @@ public class PassportServiceImpl implements PassportService {
     private final PassportRepository passportRepository;
     private final PassportMapper passportMapper;
     private final WorkerRepository workerRepository;
+    private final AccessValidator accessValidator;
 
     @Override
     public IamResponse<PassportDTO> getPassport(Integer workerId) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Passport passport = passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException("Chicken with id " + workerId + " not found")
         );
@@ -35,6 +39,8 @@ public class PassportServiceImpl implements PassportService {
 
     @Override
     public IamResponse<PassportDTO> createPassport(Integer workerId, PassportPostRequest passportPostRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException("Worker with id " + workerId + " not found")
         );
@@ -51,6 +57,8 @@ public class PassportServiceImpl implements PassportService {
 
     @Override
     public IamResponse<PassportDTO> updateFullyPassport(Integer workerId, PassportPutRequest passportPutRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Passport passport = passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException("Chicken with id " + workerId + " not found")
         );
@@ -62,6 +70,8 @@ public class PassportServiceImpl implements PassportService {
 
     @Override
     public IamResponse<PassportDTO> updatePartiallyPassport(Integer workerId, PassportPatchRequest passportPatchRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Passport passport = passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException("Chicken with id " + workerId + " not found")
         );
@@ -73,6 +83,8 @@ public class PassportServiceImpl implements PassportService {
 
     @Override
     public void deletePassport(Integer workerId) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Passport passport = passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException("Passport with id " + workerId + " not found")
         );

@@ -1,11 +1,13 @@
 package io.github.artsobol.kurkod.model.exception;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class NotFoundException extends RuntimeException {
+/**
+ * Thrown when a requested resource cannot be found in the system.
+ * Example: user not found, breed not found, etc.
+ */
+public class NotFoundException extends BaseException {
     public NotFoundException(String message) {
-        super(message);
+        super(message, HttpStatus.NOT_FOUND);
     }
 }

@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChickenPatchRequest {
-    private short weight;
+    private Integer weight;
 
     private LocalDate birthDate;
 

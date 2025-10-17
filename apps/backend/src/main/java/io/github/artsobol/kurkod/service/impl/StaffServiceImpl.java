@@ -9,6 +9,7 @@ import io.github.artsobol.kurkod.model.request.staff.StaffPostRequest;
 import io.github.artsobol.kurkod.model.request.staff.StaffPutRequest;
 import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.StaffRepository;
+import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.StaffService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,12 @@ public class StaffServiceImpl implements StaffService {
 
     private final StaffRepository staffRepository;
     private final StaffMapper staffMapper;
+    private final AccessValidator accessValidator;
 
     @Override
     public IamResponse<StaffDTO> getStaffInfo(Integer staffId) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Staff staff = staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
                 () -> new NotFoundException("Staff with id " + staffId + " not found")
         );
@@ -32,6 +36,8 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public IamResponse<List<StaffDTO>> getAllStaffs() {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         List<StaffDTO> staffs = staffRepository.findAllByIsActiveTrue().stream()
                 .map(staffMapper::toDto)
                 .toList();
@@ -41,6 +47,8 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public IamResponse<StaffDTO> createStaff(StaffPostRequest staffPostRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Staff staff = staffMapper.toEntity(staffPostRequest);
         staff = staffRepository.save(staff);
         return IamResponse.createSuccessful(staffMapper.toDto(staff));
@@ -48,6 +56,8 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public IamResponse<StaffDTO> updateFullyStaff(Integer staffId, StaffPutRequest staffPutRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Staff staff = staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
                 () -> new NotFoundException("Staff with id " + staffId + " not found")
         );
@@ -58,6 +68,8 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public IamResponse<StaffDTO> updatePartiallyStaff(Integer staffId, StaffPatchRequest staffPatchRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Staff staff = staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
                 () -> new NotFoundException("Staff with id " + staffId + " not found")
         );
@@ -68,6 +80,8 @@ public class StaffServiceImpl implements StaffService {
 
     @Override
     public void deleteStaff(Integer staffId) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         Staff staff = staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
                 () -> new NotFoundException("Staff with id " + staffId + " not found")
         );

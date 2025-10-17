@@ -2,25 +2,29 @@ package io.github.artsobol.kurkod.advice;
 
 import io.github.artsobol.kurkod.model.constants.ApiConstants;
 import io.github.artsobol.kurkod.model.exception.InvalidPasswordException;
+import io.github.artsobol.kurkod.model.exception.NotFoundException;
 import io.github.artsobol.kurkod.model.response.IamError;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
+@RestControllerAdvice
 public class CommonControllerAdvice {
 
     @ExceptionHandler(InvalidPasswordException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected IamError handleInvalidPasswordException(Exception e, HttpServletRequest request) {
-        logStackTrace(e);
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected IamError handleInvalidPasswordException(InvalidPasswordException exception, HttpServletRequest request) {
+        logStackTrace(exception);
 
-        return IamError.createError(HttpStatus.BAD_REQUEST, e.getMessage(), request.getRequestURI());
+        return IamError.createError(exception.getStatus(), exception.getMessage(), request.getRequestURI());
     }
 
     @ExceptionHandler(AccessDeniedException.class)
@@ -30,9 +34,31 @@ public class CommonControllerAdvice {
         return IamError.createError(HttpStatus.FORBIDDEN, e.getMessage(), request.getRequestURI());
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected IamError handleNotFoundException(NotFoundException exception, HttpServletRequest request) {
+        logStackTrace(exception);
+
+        return IamError.createError(exception.getStatus(), exception.getMessage(), request.getRequestURI());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected IamError handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
+        logStackTrace(exception);
+
+        List<String> errors = exception.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(err -> "%s: %s".formatted(err.getField(), err.getDefaultMessage()))
+                .toList();
+
+        return IamError.validationError(errors, request.getRequestURI());
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected IamError handleNotFoundException(Exception e, HttpServletRequest request) {
+    protected IamError handleException(Exception e, HttpServletRequest request) {
         logStackTrace(e);
 
         return IamError.createError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", request.getRequestURI());

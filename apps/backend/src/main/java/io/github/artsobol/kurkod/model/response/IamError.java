@@ -7,6 +7,8 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -17,13 +19,24 @@ public class IamError {
     private String error;
     private String message;
     private String path;
-    private final Instant timestamp = Instant.now();
+    private final LocalDateTime time = LocalDateTime.now();
+    private List<String> details;
 
     public static IamError createError(HttpStatus status, String message, String path) {
         return IamError.builder()
                 .status(status.value())
                 .error(status.getReasonPhrase())
                 .message(message)
+                .path(path)
+                .build();
+    }
+
+    public static IamError validationError(List<String> fieldErrors, String path) {
+        return IamError.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                .message("Validation failed")
+                .details(fieldErrors)
                 .path(path)
                 .build();
     }

@@ -5,6 +5,7 @@ import io.github.artsobol.kurkod.model.entity.User;
 import io.github.artsobol.kurkod.model.exception.DataExistException;
 import io.github.artsobol.kurkod.model.exception.InvalidPasswordException;
 import io.github.artsobol.kurkod.model.exception.NotFoundException;
+import org.springframework.security.access.AccessDeniedException;
 import io.github.artsobol.kurkod.repository.UserRepository;
 import io.github.artsobol.kurkod.service.model.ServiceUserRole;
 import io.github.artsobol.kurkod.utils.ApiUtils;
@@ -13,7 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.AccessDeniedException;
+import java.util.Arrays;
+
 
 @Component
 @RequiredArgsConstructor
@@ -40,20 +42,51 @@ public class AccessValidator {
         }
     }
 
-    public boolean isAdminOrSuperAdmin(Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
+    @SneakyThrows
+    public void validateDirectorOrSuperAdmin() {
+        Integer currentUserId = apiUtils.getUserIdFromAuthentication();
 
-        return user.getRoles().stream()
-                .map(role -> ServiceUserRole.fromString(role.getName()))
-                .anyMatch(role -> role == ServiceUserRole.ADMIN || role == ServiceUserRole.SUPER_ADMIN);
+        if (!hasRole(currentUserId, ServiceUserRole.DIRECTOR, ServiceUserRole.SUPER_ADMIN)) {
+            throw new AccessDeniedException(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
+        }
+    }
+
+    @SneakyThrows
+    public void validateSuperAdminAccess() {
+        Integer currentUserId = apiUtils.getUserIdFromAuthentication();
+
+        if (!hasRole(currentUserId, ServiceUserRole.SUPER_ADMIN)) {
+            throw new AccessDeniedException(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
+        }
     }
 
     @SneakyThrows
     public void validateAdminAccess() {
         Integer currentUserId = apiUtils.getUserIdFromAuthentication();
-        if (!isAdminOrSuperAdmin(currentUserId)) {
+
+        if (!hasRole(currentUserId, ServiceUserRole.ADMIN, ServiceUserRole.SUPER_ADMIN)) {
             throw new AccessDeniedException(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
         }
+    }
+
+    @SneakyThrows
+    public void validateDirectorAccess() {
+        Integer currentUserId = apiUtils.getUserIdFromAuthentication();
+
+        if (!hasRole(currentUserId, ServiceUserRole.DIRECTOR)) {
+            throw new AccessDeniedException(ApiErrorMessage.HAVE_NO_ACCESS.getMessage());
+        }
+    }
+
+    public boolean hasRole(Integer userId, ServiceUserRole... roles) {
+        User user = getActiveUserById(userId);
+        return user.getRoles().stream()
+                .map(role -> ServiceUserRole.fromString(role.getName()))
+                .anyMatch(userRole -> Arrays.asList(roles).contains(userRole));
+    }
+
+    private User getActiveUserById(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
     }
 }

@@ -11,6 +11,7 @@ import io.github.artsobol.kurkod.model.request.user.UserPostRequest;
 import io.github.artsobol.kurkod.model.request.user.UserPutRequest;
 import io.github.artsobol.kurkod.model.response.IamResponse;
 import io.github.artsobol.kurkod.repository.UserRepository;
+import io.github.artsobol.kurkod.security.validation.AccessValidator;
 import io.github.artsobol.kurkod.service.UserService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,9 +34,12 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final AccessValidator accessValidator;
 
     @Override
     public IamResponse<UserDTO> getUserById(@NotNull Integer userId) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         User response = userRepository.findByIdAndIsActiveTrue(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
         return IamResponse.createSuccessful(userMapper.toDto(response));
@@ -43,12 +47,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public IamResponse<List<UserDTO>> getAllUsers() {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         List<UserDTO> response = userRepository.findAllByIsActiveTrue().stream().map(userMapper::toDto).toList();
         return IamResponse.createSuccessful(response);
     }
 
     @Override
     public IamResponse<UserDTO> getUserByUsername(@NotBlank String username) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         User response = userRepository.findByUsernameAndIsActiveTrue(username)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_USERNAME.getMessage(username)));
         return IamResponse.createSuccessful(userMapper.toDto(response));
@@ -56,6 +64,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public IamResponse<UserDTO> createUser(@NotNull UserPostRequest userPostRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         if (userRepository.existsByUsername(userPostRequest.getUsername())) {
             throw new DataExistException(ApiErrorMessage.USER_WITH_USERNAME_ALREADY_EXISTS.getMessage(userPostRequest.getUsername()));
         }
@@ -70,6 +80,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public IamResponse<UserDTO> updateFullyUser(@NotNull Integer userId, UserPutRequest userPutRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         User user = userRepository.findByIdAndIsActiveTrue(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
         userMapper.updateFully(user, userPutRequest);
@@ -79,6 +91,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public IamResponse<UserDTO> updatePartiallyUser(@NotNull Integer userId, UserPatchRequest userPatchRequest) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         User user = userRepository.findByIdAndIsActiveTrue(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
         userMapper.updatePartially(user, userPatchRequest);
@@ -88,6 +102,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(@NotNull Integer userId) {
+        accessValidator.validateDirectorOrSuperAdmin();
+
         User user = userRepository.findByIdAndIsActiveTrue(userId)
                 .orElseThrow(() -> new NotFoundException(ApiErrorMessage.USER_NOT_FOUND_BY_ID.getMessage(userId)));
         user.setActive(false);

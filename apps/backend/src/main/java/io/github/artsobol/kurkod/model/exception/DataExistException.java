@@ -1,12 +1,14 @@
 package io.github.artsobol.kurkod.model.exception;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class DataExistException extends RuntimeException{
+/**
+ * Thrown when attempting to create or save data that already exists in the system.
+ * Example: trying to register a user with an email that is already taken.
+ */
+public class DataExistException extends BaseException{
 
     public DataExistException(String message) {
-        super(message);
+        super(message, HttpStatus.CONFLICT  );
     }
 }
