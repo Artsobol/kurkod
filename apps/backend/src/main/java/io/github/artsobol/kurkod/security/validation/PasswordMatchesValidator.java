@@ -1,13 +1,13 @@
 package io.github.artsobol.kurkod.security.validation;
 
-import io.github.artsobol.kurkod.model.request.user.RegistrationUserRequest;
-import io.github.artsobol.kurkod.utils.PasswordMatches;
+import io.github.artsobol.kurkod.web.domain.iam.auth.model.request.RegistrationRequest;
+import io.github.artsobol.kurkod.common.validation.PasswordMatches;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, RegistrationUserRequest> {
+public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, RegistrationRequest> {
     @Override
-    public boolean isValid(RegistrationUserRequest registrationUserRequest, ConstraintValidatorContext constraintValidatorContext) {
-        return registrationUserRequest.getPassword().equals(registrationUserRequest.getConfirmPassword());
+    public boolean isValid(RegistrationRequest registrationRequest, ConstraintValidatorContext constraintValidatorContext) {
+        return registrationRequest.getPassword().equals(registrationRequest.getConfirmPassword());
     }
 }
