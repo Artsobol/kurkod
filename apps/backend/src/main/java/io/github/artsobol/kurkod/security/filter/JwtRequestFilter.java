@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.security.filter;
 
-import io.github.artsobol.kurkod.error.impl.JwtError;
-import io.github.artsobol.kurkod.security.JwtTokenProvider;
+import io.github.artsobol.kurkod.security.error.JwtError;
+import io.github.artsobol.kurkod.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
