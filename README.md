@@ -61,4 +61,4 @@ apps/
 
 - **Backend**: Spring Boot, Spring Security, Flyway, PostgreSQL
 - **Frontend**: Vue
-**Infra**: Docker, Maven
+- **Infra**: Docker, Maven
