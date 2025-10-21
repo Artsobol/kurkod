@@ -23,7 +23,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class WorkerServiceImpl implements WorkerService {
 
@@ -36,7 +36,6 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public WorkerDTO get(Integer id) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Worker.class), id);
@@ -44,7 +43,6 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public List<WorkerDTO> getAll() {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Worker.class));
