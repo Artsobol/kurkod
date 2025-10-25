@@ -21,6 +21,9 @@ public class Chicken {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(length = 30)
+    private String name;
+
     @NotNull
     @Column(nullable = false)
     private Integer weight;

@@ -10,6 +10,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChickenPatchRequest {
+
+    private String name;
+
     private Integer weight;
 
     private LocalDate birthDate;

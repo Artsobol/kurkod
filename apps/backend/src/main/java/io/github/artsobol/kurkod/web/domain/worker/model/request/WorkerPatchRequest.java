@@ -14,4 +14,6 @@ public class WorkerPatchRequest {
     private String firstName;
 
     private String lastName;
+
+    private String patronymic;
 }

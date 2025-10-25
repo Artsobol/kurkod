@@ -16,6 +16,8 @@ public class ChickenPostRequest implements Serializable {
     @NotNull
     private Integer weight;
 
+    private String name;
+
     @NotNull
     private LocalDate birthDate;
 

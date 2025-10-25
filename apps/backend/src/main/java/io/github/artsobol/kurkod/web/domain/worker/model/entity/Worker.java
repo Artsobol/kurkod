@@ -25,6 +25,10 @@ public class Worker {
     @Size(min = 2, max = 50, message = "Last name should be between 2 and 50 characters")
     private String lastName;
 
+    @Column(length = 30)
+    @Size(max = 30, message = "Patronymic should be between 2 and 30 characters")
+    private String patronymic;
+
     @NotNull
     @Column(nullable = false, name = "is_active")
     private boolean isActive = true;

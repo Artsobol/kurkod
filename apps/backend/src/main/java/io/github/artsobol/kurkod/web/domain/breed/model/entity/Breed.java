@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.breed.model.entity;
 
+import io.github.artsobol.kurkod.web.domain.diet.model.entity.Diet;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +8,9 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "breed")
@@ -35,4 +39,14 @@ public class Breed {
     @NotNull
     @Column(nullable = false, name = "deleted")
     private boolean deleted = false;
+
+    @ManyToMany(mappedBy = "breeds")
+    private Set<Diet> diets = new HashSet<>();
+
+    @Override public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Breed other)) return false;
+        return id != null && id.equals(other.id);
+    }
+    @Override public int hashCode() { return 31; }
 }

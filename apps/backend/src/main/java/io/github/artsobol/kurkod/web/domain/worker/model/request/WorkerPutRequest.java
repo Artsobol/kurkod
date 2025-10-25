@@ -15,12 +15,14 @@ import lombok.Setter;
 public class WorkerPutRequest {
 
     @NotNull
-    @Column(nullable = false, length = 50)
     @Size(min = 2, max = 50, message = "First name should be between 2 and 50 characters")
     private String firstName;
 
     @NotNull
-    @Column(nullable = false, length = 50)
     @Size(min = 2, max = 50, message = "First name should be between 2 and 50 characters")
     private String lastName;
+
+    @NotNull
+    @Size(max = 30, message = "Patronymic name should be less then 30 characters")
+    private String patronymic;
 }

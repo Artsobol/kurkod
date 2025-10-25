@@ -14,6 +14,8 @@ public class ChickenDTO implements Serializable {
 
     private Integer id;
 
+    private String name;
+
     private Integer weight;
 
     private LocalDate birthDate;

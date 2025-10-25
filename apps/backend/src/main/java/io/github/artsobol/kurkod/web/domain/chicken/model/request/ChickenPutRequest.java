@@ -13,6 +13,9 @@ import java.time.LocalDate;
 public class ChickenPutRequest {
 
     @NotNull
+    private String name;
+
+    @NotNull
     private Integer weight;
 
     @NotNull
