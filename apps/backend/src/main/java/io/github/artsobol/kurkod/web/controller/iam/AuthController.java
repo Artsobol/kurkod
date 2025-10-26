@@ -33,15 +33,17 @@ public class AuthController {
             description = "Authenticates the user using email and password. Returns an access token and sets it in a cookie."
     )
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> login(
+    public ResponseEntity<IamResponse<UserProfileDTO>> login(
             @RequestBody @Valid LoginRequest loginRequest,
             HttpServletResponse response) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
         IamResponse<UserProfileDTO> result = authService.login(loginRequest);
+
         Cookie authorizationCookie = CookieFactory.createAuthCookie(result.getPayload().getToken());
         response.addCookie(authorizationCookie);
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok(result);
     }
 
     @Operation(
