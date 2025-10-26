@@ -9,7 +9,7 @@
           label="Добавить диету"
           mode="violet"
           location="page-action"
-          @click="showForm = !showForm"
+          @click="showModal = true"
       />
       <Button
           label="Удалить диету"
@@ -18,8 +18,13 @@
       />
     </div>
 
-    <AddDietForm v-if="showForm" @close="showForm = false"/>
-
+    <Modal
+        v-if="showModal"
+        title="Добавить диету"
+        :form-component="AddDietForm"
+        @close="showModal = false"
+        @submit="handleSubmit"
+    />
 
     <DietsTable
         v-if="loading===false"
@@ -45,12 +50,16 @@ import Button from "@/components/ui/Button.vue";
 import DietsTable from "@/components/tables/DietsTable.vue";
 import Loader from "@/components/ui/Loader.vue";
 import useDiets from "@/composables/useDiets.js";
-import { createDiet } from "@/api/diets.js";
 import AddDietForm from "@/components/forms/AddDietForm.vue";
+import Modal from "@/components/ui/Modal.vue";
 
 const { diets, loading, fetchDiets } = useDiets();
+const showModal = ref(false);
 
-const showForm = ref(false);
+const handleSubmit = async () => {
+  await fetchDiets();
+  showModal.value = false;
+};
 
 </script>
 

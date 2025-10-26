@@ -14,3 +14,8 @@ export async function getChicken(id) {
     return null;
   }
 }
+
+export async function createChicken(chicken) {
+  const { data } = await http.post("/api/v1/chickens", chicken);
+  return data;
+}

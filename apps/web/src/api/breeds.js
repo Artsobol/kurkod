@@ -14,3 +14,8 @@ export async function getBreed(id) {
     return null;
   }
 }
+
+export async function createBreed(breed) {
+  const { data } = await http.post("/api/v1/breeds", breed);
+  return data;
+}

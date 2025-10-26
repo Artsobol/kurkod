@@ -1,95 +1,80 @@
 <template>
-  <div class="modal-overlay" @click.self="close">
-    <div class="modal">
-      <h2 style="font-size: 24px; padding-bottom: 24px;">Добавить диету</h2>
-      <Button
-          class="modal-close"
-          @click="close"
-          icon-name="close"
-          icon-width="32"
-          icon-height="32"
+  <form @submit.prevent="addDiet" class="add-form">
+    <label class="add-form__label">
+      <span class="add-form__label-title">Название:</span>
+      <input
+          class="add-form__input"
+          type="text"
+          v-model="newDiet.title"
+          placeholder="Введите название диеты"
+          required
       />
-      <form @submit.prevent="addDiet" class="add-form">
-        <label class="add-form__label">
-          <span class="add-form__label-title">Название:</span>
-          <input
-              class="add-form__input"
-              type="text"
-              v-model="newDiet.title"
-              placeholder="Введите название диеты"
-              required
-          />
-        </label>
+    </label>
 
-        <label class="add-form__label">
-          <span class="add-form__label-title">Код:</span>
-          <input
-              class="add-form__input"
-              type="text"
-              v-model="newDiet.code"
-              placeholder="Введите код диеты"
-              required
-          />
-        </label>
+    <label class="add-form__label">
+      <span class="add-form__label-title">Код:</span>
+      <input
+          class="add-form__input"
+          type="text"
+          v-model="newDiet.code"
+          placeholder="Введите код диеты"
+          required
+      />
+    </label>
 
-        <label class="add-form__label">
-          <span class="add-form__label-title">Сезон:</span>
-          <select class="add-form__select" v-model="newDiet.season">
-            <option value="WINTER">Зима</option>
-            <option value="SPRING">Весна</option>
-            <option value="SUMMER">Лето</option>
-            <option value="AUTUMN">Осень</option>
-          </select>
-        </label>
+    <label class="add-form__label">
+      <span class="add-form__label-title">Сезон:</span>
+      <select class="add-form__select" v-model="newDiet.season">
+        <option value="WINTER">Зима</option>
+        <option value="SPRING">Весна</option>
+        <option value="SUMMER">Лето</option>
+        <option value="AUTUMN">Осень</option>
+      </select>
+    </label>
 
-        <label class="add-form__label">
-          <span class="add-form__label-title">Породы:</span>
-          <Multiselect
-              v-model="newDiet.breedIds"
-              :options="breeds"
-              :multiple="true"
-              :close-on-select="false"
-              :clear-on-select="false"
-              :preserve-search="true"
-              label="name"
-              track-by="id"
-              placeholder="Выберите породы"
-              class="add-form__multiselect"
-          />
-        </label>
+    <label class="add-form__label">
+      <span class="add-form__label-title">Породы:</span>
+      <Multiselect
+          v-model="newDiet.breedIds"
+          :options="breeds"
+          :multiple="true"
+          :close-on-select="false"
+          :clear-on-select="false"
+          :preserve-search="true"
+          label="name"
+          track-by="id"
+          placeholder="Выберите породы"
+          class="add-form__multiselect"
+      />
+    </label>
 
-        <label class="add-form__label">
-          <span class="add-form__label-title">Описание:</span>
-          <textarea
-              class="add-form__textarea"
-              v-model="newDiet.description"
-              placeholder="Введите описание диеты"
-              rows="3"
-          />
-        </label>
+    <label class="add-form__label">
+      <span class="add-form__label-title">Описание:</span>
+      <textarea
+          class="add-form__textarea"
+          v-model="newDiet.description"
+          placeholder="Введите описание диеты"
+          rows="3"
+      />
+    </label>
 
-        <Button
-            label="Добавить"
-            mode="violet"
-            location="page-action"
-            type="submit"
-            style="align-self: center; margin-top: 24px;"
-        />
-      </form>
-    </div>
-  </div>
+    <Button
+        label="Добавить"
+        mode="violet"
+        location="page-action"
+        type="submit"
+        style="align-self: center; margin-top: 24px;"
+    />
+  </form>
 </template>
-
 <script setup>
-import {ref, onMounted} from "vue";
-import {createDiet} from "@/api/diets.js";
-import {getBreeds} from "@/api/breeds.js";
-import useDiets from "@/composables/useDiets.js";
+import { ref, onMounted } from "vue";
+import { createDiet } from "@/api/diets.js";
+import { getBreeds } from "@/api/breeds.js";
 import Button from "@/components/ui/Button.vue";
 import Multiselect from "vue-multiselect";
 
-const {fetchDiets} = useDiets();
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "submit"]);
 
 const newDiet = ref({
   title: "",
@@ -125,15 +110,12 @@ const addDiet = async () => {
     }
 
     await createDiet(dietToSend);
-    await fetchDiets();
+    emit("submit", dietToSend);
     emit("close");
   } catch (error) {
     console.error("Ошибка при добавлении диеты:", error);
   }
 };
-
-const close = () => emit("close");
-
 </script>
 
 <style lang="scss">
@@ -213,40 +195,5 @@ const close = () => emit("close");
     color: #686590;
     font-weight: 400;
   }
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal {
-  background: var(--section-bg);
-  padding: 36px;
-  border-radius: 8px;
-  max-width: 800px;
-  width: 100%;
-  position: relative;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  font-size: 24px;
-  cursor: pointer;
 }
 </style>
