@@ -11,23 +11,11 @@
 
       <tbody>
       <tr v-for="(row, rowIndex) in bodyRows" :key="rowIndex">
-        <td v-for="(headerItem, colIndex) in headersItem" :key="colIndex">
-          <img
-              v-if="getHeaderKey(headerItem) === 'photo'"
-              :src="row[getHeaderKey(headerItem)]"
-              alt="Фото"
-              style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"
-          />
-
-          <span v-else-if="getHeaderKey(headerItem) === 'id'">
-            <router-link :to="{ name: 'Курица', params: { id: row.id } }">
-              <Icon name="arrow-right" style="color: var(--color);" />
-            </router-link>
-          </span>
-
-          <span v-else>
-            {{ formattedCell(row, getHeaderKey(headerItem)) }}
-          </span>
+        <td
+            v-for="(headerItem, colIndex) in headersItem"
+            :key="colIndex"
+        >
+          {{ row[getHeaderKey(headerItem)] }}
         </td>
       </tr>
       </tbody>
@@ -36,10 +24,7 @@
 </template>
 
 <script setup>
-import {computed} from "vue";
-import Icon from "@/components/ui/Icon.vue";
-import {formatDate} from "@/utils/formatDate.js";
-
+import { computed } from "vue";
 const props = defineProps({
   heightSize: {
     type: Number,
@@ -58,11 +43,6 @@ const props = defineProps({
 const bodyRows = computed(() => {
   return props.bodyItems.slice(0, props.heightSize)
 });
-
-const formattedCell = (row, key) => {
-  if (key === 'birthDate') return row.birthDate ? formatDate(row.birthDate) : '';
-  return row[key];
-};
 
 const getHeaderKey = (headerItem) => {
   return typeof headerItem === 'object' ? headerItem.key : headerItem

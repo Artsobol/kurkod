@@ -1,32 +1,31 @@
 <template>
-  <div class="diets">
-    <div class="diets__actions">
+  <div class="breeds">
+    <div class="breeds__actions">
       <Input
-          class="diets__input"
-          labelInput="Найти диету"
+          class="breeds__input"
+          labelInput="Найти породу"
       />
       <Button
-          label="Добавить диету"
+          label="Добавить породу"
           mode="violet"
           location="page-action"
       />
       <Button
-          label="Удалить диету"
+          label="Удалить породу"
           mode="violet"
           location="page-action"
       />
     </div>
-    <DietsTable
+    <BreedsTable
         v-if="loading===false"
         :headers-item="[
-            { key: 'code', label: 'Код' },
-            { key: 'title', label: 'Название' },
-            { key: 'season', label: 'Сезон' },
-            { key: 'description', label: 'Описание' },
+            { key: 'name', label: 'Название' },
+            { key: 'eggsNumber', label: 'Яиц в месяц' },
+            { key: 'weight', label: 'Вес' },
             { key: 'id', label: 'Ссылка'}
           ]"
-        :body-items="diets"
-        :height-size="diets.length"
+        :body-items="breeds"
+        :height-size="breeds.length"
     />
 
     <Loader v-if="loading===true"/>
@@ -35,14 +34,14 @@
 <script setup>
 import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
-import DietsTable from "@/components/tables/DietsTable.vue";
 import Loader from "@/components/ui/Loader.vue";
-import useDiets from "@/composables/useDiets.js";
+import BreedsTable from "@/components/tables/BreedsTable.vue";
+import useBreeds from "@/composables/useBreeds.js";
 
-const {diets, loading} = useDiets();
+const {breeds, loading} = useBreeds();
 </script>
 <style lang="scss" scoped>
-.diets {
+.breeds {
   &__header {
     display: flex;
     flex-direction: row;

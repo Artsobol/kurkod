@@ -8,7 +8,7 @@ export async function getChickens() {
 export async function getChicken(id) {
   try {
     const { data } = await http.get(`/api/v1/chickens/${id}`);
-    return data.payload;
+    return data.payload || [];
   } catch (error) {
     console.error(error);
     return null;

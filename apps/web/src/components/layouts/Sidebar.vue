@@ -14,11 +14,11 @@
           ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Сотрудники</span>
         </RouterLink>
       </li>
-      <li>
-        <RouterLink to="/cells" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Ячейки</span>
-        </RouterLink>
-      </li>
+<!--      <li>-->
+<!--        <RouterLink to="/cells" class="nav-link" active-class="active">-->
+<!--          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Ячейки</span>-->
+<!--        </RouterLink>-->
+<!--      </li>-->
       <li>
         <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Курицы</span>
       </li>
@@ -28,10 +28,9 @@
         </RouterLink>
       </li>
       <li>
-        <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Уход</span>
-      </li>
-      <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Корм</span>
+        <RouterLink to="/breeds" class="nav-link" active-class="active">
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Породы</span>
+        </RouterLink>
       </li>
       <li>
         <RouterLink to="/diets" class="nav-link" active-class="active">
@@ -39,7 +38,22 @@
         </RouterLink>
       </li>
       <li>
-        ❓ <span class="link-text" :class="{ hidden: isClosed }">Загоны</span>
+        <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Размещение</span>
+      </li>
+      <li>
+        <RouterLink to="/workshops" class="nav-link" active-class="active">
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Цехи</span>
+        </RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/rows" class="nav-link" active-class="active">
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Ряды</span>
+        </RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/cages" class="nav-link" active-class="active">
+          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Клетки</span>
+        </RouterLink>
       </li>
     </ul>
   </aside>

@@ -20,18 +20,18 @@
           @click="ui.toggleTheme"
           :icon-name="ui.theme === 'light' ? 'light' : 'dark'"
       />
-      <Button
-          class="header__nav-link"
-          icon-name="switch-language"
-      />
-      <Button
-          class="header__nav-link"
-          icon-name="notifications"
-      />
-      <Button
-          class="header__nav-link"
-          icon-name="settings"
-      />
+<!--      <Button-->
+<!--          class="header__nav-link"-->
+<!--          icon-name="switch-language"-->
+<!--      />-->
+<!--      <Button-->
+<!--          class="header__nav-link"-->
+<!--          icon-name="notifications"-->
+<!--      />-->
+<!--      <Button-->
+<!--          class="header__nav-link"-->
+<!--          icon-name="settings"-->
+<!--      />-->
       <Button
           class="header__nav-link"
           icon-name="user"

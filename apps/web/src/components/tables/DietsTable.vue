@@ -11,23 +11,12 @@
 
       <tbody>
       <tr v-for="(row, rowIndex) in bodyRows" :key="rowIndex">
-        <td v-for="(headerItem, colIndex) in headersItem" :key="colIndex">
-          <img
-              v-if="getHeaderKey(headerItem) === 'photo'"
-              :src="row[getHeaderKey(headerItem)]"
-              alt="Фото"
-              style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"
-          />
-
-          <span v-else-if="getHeaderKey(headerItem) === 'id'">
-            <router-link :to="{ name: 'Курица', params: { id: row.id } }">
-              <Icon name="arrow-right" style="color: var(--color);" />
-            </router-link>
-          </span>
-
-          <span v-else>
-            {{ formattedCell(row, getHeaderKey(headerItem)) }}
-          </span>
+        <td
+            v-for="(headerItem, colIndex) in headersItem"
+            :key="colIndex"
+            :style="getSeasonCellStyle(getHeaderKey(headerItem), row[getHeaderKey(headerItem)])"
+        >
+          {{ formatSeason(getHeaderKey(headerItem), row[getHeaderKey(headerItem)]) }}
         </td>
       </tr>
       </tbody>
@@ -36,10 +25,7 @@
 </template>
 
 <script setup>
-import {computed} from "vue";
-import Icon from "@/components/ui/Icon.vue";
-import {formatDate} from "@/utils/formatDate.js";
-
+import { computed } from "vue";
 const props = defineProps({
   heightSize: {
     type: Number,
@@ -59,17 +45,42 @@ const bodyRows = computed(() => {
   return props.bodyItems.slice(0, props.heightSize)
 });
 
-const formattedCell = (row, key) => {
-  if (key === 'birthDate') return row.birthDate ? formatDate(row.birthDate) : '';
-  return row[key];
-};
-
 const getHeaderKey = (headerItem) => {
   return typeof headerItem === 'object' ? headerItem.key : headerItem
 }
 const getHeaderLabel = (headerItem) => {
   return typeof headerItem === 'object' ? headerItem.label : headerItem
 }
+
+const getSeasonCellStyle = (key, value) => {
+  if (key !== 'season') return {};
+
+  const seasonColors = {
+    'WINTER': '#079BFE',
+    'SPRING': '#68CF93',
+    'SUMMER': '#FD684B',
+    'AUTUMN': '#FFA95F'
+  }
+
+  return {
+    backgroundColor: seasonColors[value] || 'transparent',
+    color: 'white',
+    fontWeight: '600',
+  };
+};
+
+const formatSeason = (key, value) => {
+  if (key !== "season") return value;
+
+  const seasonMap = {
+    WINTER: "Зима",
+    SPRING: "Весна",
+    SUMMER: "Лето",
+    AUTUMN: "Осень",
+  };
+
+  return seasonMap[value?.toUpperCase()] || value;
+};
 </script>
 
 <style lang="scss" scoped>
