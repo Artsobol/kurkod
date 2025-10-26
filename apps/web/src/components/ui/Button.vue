@@ -123,4 +123,9 @@ defineProps({
   font-size: 14px
 }
 
+.close {
+  width: 24px;
+  height: 24px;
+}
+
 </style>

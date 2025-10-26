@@ -1,7 +1,6 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import Header from './components/layouts/Header.vue'
-import HomePage from "@/pages/HomePage.vue";
 import Sidebar from "@/components/layouts/Sidebar.vue";
 import Content from "@/components/layouts/Content.vue";
 import {uiStore} from "@/stores/ui.js";

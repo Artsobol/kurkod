@@ -1,5 +1,4 @@
 import {onMounted, ref} from "vue";
-import {getDiets} from "@/api/diets.js";
 import {getBreeds} from "@/api/breeds.js";
 
 export default function useBreeds() {

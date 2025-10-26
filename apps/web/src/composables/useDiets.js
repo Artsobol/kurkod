@@ -1,11 +1,12 @@
-import {onMounted, ref} from "vue";
-import {getDiets} from "@/api/diets.js";
+import { onMounted, ref } from "vue";
+import { getDiets } from "@/api/diets.js";
 
 export default function useDiets() {
   const diets = ref([]);
   const loading = ref(true);
 
-  onMounted(async () => {
+  const fetchDiets = async () => {
+    loading.value = true;
     try {
       diets.value = await getDiets();
     } catch (e) {
@@ -13,7 +14,9 @@ export default function useDiets() {
     } finally {
       loading.value = false;
     }
-  });
+  };
 
-  return { diets, loading };
+  onMounted(fetchDiets);
+
+  return { diets, loading, fetchDiets };
 }
