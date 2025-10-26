@@ -1,13 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import HomePage from '../pages/HomePage.vue'
-import EmployeesPage from "@/pages/EmployeesPage.vue";
+import WorkersPage from "@/pages/WorkersPage.vue";
 import CellsPage from "@/pages/CellsPage.vue";
 import ChickensPage from "@/pages/ChickensPage.vue";
 import DietsPage from "@/pages/DietsPage.vue";
 import AccountPage from "@/pages/AccountPage.vue";
 import SignInPage from "@/pages/SignInPage.vue";
-import EmployeePage from "@/pages/EmployeePage.vue";
+import WorkerPage from "@/pages/WorkerPage.vue";
+import ChickenPage from "@/pages/ChickenPage.vue";
+import WorkshopsPage from "@/pages/WorkshopsPage.vue";
+import RowsPage from "@/pages/RowsPage.vue";
+import CagesPage from "@/pages/CagesPage.vue";
+import BreedsPage from "@/pages/BreedsPage.vue";
 
 const routes = [
   {
@@ -19,7 +24,7 @@ const routes = [
   {
     path: '/employees',
     name: 'Сотрудники',
-    component: EmployeesPage,
+    component: WorkersPage,
     meta: { title: 'Employees' }
   },
   {
@@ -55,9 +60,39 @@ const routes = [
   {
     path: '/employee/:id',
     name: 'Сотрудник',
-    component: EmployeePage,
+    component: WorkerPage,
     meta: { title: 'Employee' }
   },
+  {
+    path: '/chickens/:id',
+    name: 'Курица',
+    component: ChickenPage,
+    meta: { title: 'Chicken' }
+  },
+  {
+    path: '/workshops',
+    name: 'Цехи',
+    component: WorkshopsPage,
+    meta: { title: 'Workshops' }
+  },
+  {
+    path: '/rows',
+    name: 'Ряды',
+    component: RowsPage,
+    meta: { title: 'Rows' }
+  },
+  {
+    path: '/cages',
+    name: 'Клетки',
+    component: CagesPage,
+    meta: { title: 'Cages' }
+  },
+  {
+    path: '/breeds',
+    name: 'Породы',
+    component: BreedsPage,
+    meta: { title: 'Breeds' }
+  }
 ]
 
 const router = createRouter({

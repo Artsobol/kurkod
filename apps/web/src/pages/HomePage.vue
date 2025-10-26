@@ -1,3 +1,14 @@
+<script setup>
+import InfoBlock from "@/components/ui/InfoBlock.vue";
+import InfoGraph from "@/components/ui/InfoGraph.vue";
+import WorkersTable from "@/components/tables/WorkersTable.vue";
+import Button from "@/components/ui/Button.vue";
+import {useWorkers} from "@/composables/useWorkers.js";
+import Loader from "@/components/ui/Loader.vue";
+
+const {workers, loading} = useWorkers();
+</script>
+
 <template>
   <div class="home">
     <div class="info-blocks">
@@ -74,29 +85,22 @@
             :icon-height="28"
         />
       </div>
-      <TableTemplate
+      <Loader v-if="loading===true" />
+      <WorkersTable
+          v-if="loading===false"
           style="margin-block: 8px"
           :headersItem="[
               { key: 'photo', label: 'Фото' },
               { key: 'name', label: 'Имя' },
-              { key: 'position', label: 'Должность' },
-              { key: 'status', label: 'Статус' } ]"
-          :bodyItems="users"
+              { key: 'position', label: 'Должность' }
+              ]"
+          :bodyItems="workers"
           :height-size="5"
       />
     </div>
   </div>
 </template>
 
-<script setup>
-import InfoBlock from "@/components/ui/InfoBlock.vue";
-import InfoGraph from "@/components/ui/InfoGraph.vue";
-import TableTemplate from "@/components/tables/TableTemplate.vue";
-import Button from "@/components/ui/Button.vue";
-import employees_data from "@/constants/EMPLOYEES_DATA.json";
-
-const users = employees_data;
-</script>
 
 <style lang="scss">
 .page-block {

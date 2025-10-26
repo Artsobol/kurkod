@@ -1,0 +1,3 @@
+<template>
+цех
+</template>

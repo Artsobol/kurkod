@@ -14,24 +14,9 @@
         <td
             v-for="(headerItem, colIndex) in headersItem"
             :key="colIndex"
+            :style="getSeasonCellStyle(getHeaderKey(headerItem), row[getHeaderKey(headerItem)])"
         >
-          <img
-              v-if="getHeaderKey(headerItem) === 'photo'"
-              :src="row[getHeaderKey(headerItem)]"
-              alt="Фото"
-              style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"
-          />
-          <span v-else-if="getHeaderKey(headerItem) === 'name'">
-            {{ row.surname }} {{ row.name }} {{ row.patronymic }}
-          </span>
-          <span v-else-if="getHeaderKey(headerItem) === 'id'">
-             <router-link :to="{ name: 'Сотрудник', params: { id: row.id } }">
-               <Icon name="arrow-right" style="color: var(--color);"/>
-             </router-link>
-          </span>
-          <span v-else>
-            {{ row[getHeaderKey(headerItem)] }}
-          </span>
+          {{ formatSeason(getHeaderKey(headerItem), row[getHeaderKey(headerItem)]) }}
         </td>
       </tr>
       </tbody>
@@ -40,9 +25,7 @@
 </template>
 
 <script setup>
-import {computed} from "vue";
-import Icon from "@/components/ui/Icon.vue";
-
+import { computed } from "vue";
 const props = defineProps({
   heightSize: {
     type: Number,
@@ -60,7 +43,7 @@ const props = defineProps({
 
 const bodyRows = computed(() => {
   return props.bodyItems.slice(0, props.heightSize)
-})
+});
 
 const getHeaderKey = (headerItem) => {
   return typeof headerItem === 'object' ? headerItem.key : headerItem
@@ -68,6 +51,36 @@ const getHeaderKey = (headerItem) => {
 const getHeaderLabel = (headerItem) => {
   return typeof headerItem === 'object' ? headerItem.label : headerItem
 }
+
+const getSeasonCellStyle = (key, value) => {
+  if (key !== 'season') return {};
+
+  const seasonColors = {
+    'WINTER': '#079BFE',
+    'SPRING': '#68CF93',
+    'SUMMER': '#FD684B',
+    'AUTUMN': '#FFA95F'
+  }
+
+  return {
+    backgroundColor: seasonColors[value] || 'transparent',
+    color: 'white',
+    fontWeight: '600',
+  };
+};
+
+const formatSeason = (key, value) => {
+  if (key !== "season") return value;
+
+  const seasonMap = {
+    WINTER: "Зима",
+    SPRING: "Весна",
+    SUMMER: "Лето",
+    AUTUMN: "Осень",
+  };
+
+  return seasonMap[value?.toUpperCase()] || value;
+};
 </script>
 
 <style lang="scss" scoped>
