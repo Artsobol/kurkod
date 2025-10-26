@@ -1,15 +1,3 @@
-<script setup>
-
-import Input from "@/components/ui/Input.vue";
-import Button from "@/components/ui/Button.vue";
-import ChickensTable from "@/components/tables/ChickensTable.vue";
-import Loader from "@/components/ui/Loader.vue";
-import {useChickens} from "@/composables/useChickens.js";
-
-const {chickens, loading} = useChickens();
-
-</script>
-
 <template>
   <div class="chickens">
     <div class="chickens__actions">
@@ -21,6 +9,7 @@ const {chickens, loading} = useChickens();
           label="Добавить курицу"
           mode="violet"
           location="page-action"
+          @click="showModal = true"
       />
       <Button
           label="Удалить курицу"
@@ -28,6 +17,15 @@ const {chickens, loading} = useChickens();
           location="page-action"
       />
     </div>
+
+    <Modal
+      v-if="showModal"
+      title="Добавить курицу"
+      :form-component="AddChickenForm"
+      @close="showModal = false"
+      @submit="handleSubmit"
+    />
+
     <ChickensTable
         v-if="loading===false"
         :headers-item="[
@@ -47,6 +45,26 @@ const {chickens, loading} = useChickens();
     <Loader v-if="loading===true"/>
   </div>
 </template>
+
+<script setup>
+
+import Input from "@/components/ui/Input.vue";
+import Button from "@/components/ui/Button.vue";
+import ChickensTable from "@/components/tables/ChickensTable.vue";
+import Loader from "@/components/ui/Loader.vue";
+import {useChickens} from "@/composables/useChickens.js";
+import Modal from "@/components/ui/Modal.vue";
+import AddChickenForm from "@/components/forms/AddChickenForm.vue";
+import {ref} from "vue";
+
+const {chickens, loading, fetchChickens} = useChickens();
+const showModal = ref(false);
+
+const handleSubmit = async () => {
+  await fetchChickens();
+  showModal.value = false;
+};
+</script>
 
 <style lang="scss" scoped>
 .chickens {

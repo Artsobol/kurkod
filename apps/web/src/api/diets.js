@@ -14,3 +14,8 @@ export async function getDiet(id) {
     return null;
   }
 }
+
+export async function createDiet(diet) {
+  const { data } = await http.post("/api/v1/diets", diet);
+  return data;
+}

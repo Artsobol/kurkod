@@ -1,12 +1,12 @@
 import {onMounted, ref} from "vue";
-import {getDiets} from "@/api/diets.js";
 import {getBreeds} from "@/api/breeds.js";
 
 export default function useBreeds() {
   const breeds = ref([]);
   const loading = ref(true);
 
-  onMounted(async () => {
+  const fetchBreeds = async () => {
+    loading.value = true;
     try {
       breeds.value = await getBreeds();
     } catch (e) {
@@ -14,7 +14,9 @@ export default function useBreeds() {
     } finally {
       loading.value = false;
     }
-  });
+  };
 
-  return { breeds, loading };
+  onMounted(fetchBreeds);
+
+  return { breeds, loading, fetchBreeds };
 }

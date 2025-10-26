@@ -9,6 +9,7 @@
           label="Добавить породу"
           mode="violet"
           location="page-action"
+          @click="showModal = true"
       />
       <Button
           label="Удалить породу"
@@ -16,6 +17,15 @@
           location="page-action"
       />
     </div>
+
+    <Modal
+        v-if="showModal"
+        title="Добавить породу"
+        :formComponent="AddBreedForm"
+        @close="showModal = false"
+        @submit="handleSubmit"
+    />
+
     <BreedsTable
         v-if="loading===false"
         :headers-item="[
@@ -37,9 +47,20 @@ import Button from "@/components/ui/Button.vue";
 import Loader from "@/components/ui/Loader.vue";
 import BreedsTable from "@/components/tables/BreedsTable.vue";
 import useBreeds from "@/composables/useBreeds.js";
+import AddDietForm from "@/components/forms/AddDietForm.vue";
+import Modal from "@/components/ui/Modal.vue";
+import {ref} from "vue";
+import AddBreedForm from "@/components/forms/AddBreedForm.vue";
 
-const {breeds, loading} = useBreeds();
+const {breeds, loading, fetchBreeds} = useBreeds();
+const showModal = ref(false);
+
+const handleSubmit = async () => {
+  await fetchBreeds();
+  showModal.value = false;
+};
 </script>
+
 <style lang="scss" scoped>
 .breeds {
   &__header {
