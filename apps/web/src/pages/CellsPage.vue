@@ -16,12 +16,15 @@
           location="page-action"
       />
     </div>
+
   </div>
 </template>
+
 <script setup>
 import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
 </script>
+
 <style lang="scss" scoped>
 .cells {
   &__header {
@@ -41,5 +44,18 @@ import Button from "@/components/ui/Button.vue";
     justify-content: flex-start;
     gap: 32px;
   }
+}
+
+.worker-info {
+  padding: 16px;
+  border: 1px solid #d0d0d0;
+  border-radius: 8px;
+  max-width: 300px;
+  background: #f9f9f9;
+}
+
+.loading {
+  color: gray;
+  font-style: italic;
 }
 </style>

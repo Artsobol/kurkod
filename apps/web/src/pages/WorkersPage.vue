@@ -1,8 +1,18 @@
+<script setup>
+import Input from "@/components/ui/Input.vue";
+import Button from "@/components/ui/Button.vue";
+import WorkersTable from "@/components/tables/WorkersTable.vue";
+import Loader from "@/components/ui/Loader.vue";
+import {useWorkers} from "@/composables/useWorkers.js";
+
+const {workers, loading} = useWorkers();
+</script>
+
 <template>
-  <div class="employees">
-    <div class="employees__actions">
+  <div class="workers">
+    <div class="workers__actions">
       <Input
-          class="employees__input"
+          class="workers__input"
           label-input="Найти сотрудника"
       />
       <Button
@@ -26,33 +36,30 @@
       />
     </div>
 
-    <TableTemplate :headersItem="[
+
+    <WorkersTable
+        v-if="loading===false"
+        :headers-item="[
           { key: 'photo', label: 'Фото' },
           { key: 'name', label: 'ФИО' },
           { key: 'position', label: 'Должность' },
           { key: 'salary', label: 'Зарплата' },
-          {key: 'phone', label: 'Телефон'},
-          {key: 'email', label: 'Почта'},
+          { key: 'phone', label: 'Телефон'},
+          { key: 'email', label: 'Почта'},
           { key: 'status', label: 'Статус' },
-          {key: 'id', label: 'Ссылка'}
+          { key: 'id', label: 'Ссылка'}
           ]"
-                :bodyItems="users"
-                :height-size="100"
+        :body-items="workers"
+        :height-size="workers.length"
     />
+
+    <Loader v-if="loading===true" />
   </div>
 </template>
 
-<script setup>
-import Input from "@/components/ui/Input.vue";
-import Button from "@/components/ui/Button.vue";
-import TableTemplate from "@/components/tables/TableTemplate.vue";
-import employees_data from "@/constants/EMPLOYEES_DATA.json";
-
-const users = employees_data;
-</script>
 
 <style lang="scss" scoped>
-.employees {
+.workers {
   &__header {
     display: flex;
     flex-direction: row;
