@@ -1,6 +1,10 @@
 package io.github.artsobol.kurkod.web.domain.breed.service.impl;
 
 import io.github.artsobol.kurkod.common.constants.ApiLogMessage;
+import io.github.artsobol.kurkod.common.exception.DataExistException;
+
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 import io.github.artsobol.kurkod.common.logging.LogHelper;
 import io.github.artsobol.kurkod.security.facade.SecurityContextFacade;
 import io.github.artsobol.kurkod.web.domain.breed.mapper.BreedMapper;
@@ -40,13 +44,15 @@ public class BreedServiceImpl implements BreedService {
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public BreedDTO create(BreedPostRequest breedPostRequest) {
+        ensureNotExists(breedPostRequest.getName());
+
         Breed breed = breedMapper.toEntity(breedPostRequest);
         breed = breedRepository.save(breed);
 
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
-                getCurrentUsername(),
-                LogHelper.getEntityName(breed),
-                breed.getId());
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(breed),
+                 breed.getId());
         return breedMapper.toDto(breed);
     }
 
@@ -59,50 +65,61 @@ public class BreedServiceImpl implements BreedService {
     @Override
     public List<BreedDTO> getAll() {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername());
-        return breedRepository.findAllByDeletedFalse().stream()
-                .map(breedMapper::toDto)
-                .toList();
+        return breedRepository.findAll().stream().map(breedMapper::toDto).toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO replace(Integer id, BreedPutRequest breedPutRequest) {
+    public BreedDTO replace(Integer id, BreedPutRequest request, Long version) {
         Breed breed = getBreedById(id);
-        breedMapper.updateFully(breed, breedPutRequest);
+        checkVersion(breed.getVersion(), version);
+        breedMapper.updateFully(breed, request);
         breed = breedRepository.save(breed);
 
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed),id);
+        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed), id);
         return breedMapper.toDto(breed);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO update(Integer id, BreedPatchRequest breedPatchRequest) {
+    public BreedDTO update(Integer id, BreedPatchRequest breedPatchRequest, Long version) {
         Breed breed = getBreedById(id);
+        checkVersion(breed.getVersion(), version);
         breedMapper.updatePartially(breed, breedPatchRequest);
         breed = breedRepository.save(breed);
 
-        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed),id);
+        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed), id);
         return breedMapper.toDto(breed);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id) {
-        Breed breed = breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
-                new NotFoundException("Breed with id " + id + " not found"));
-        breed.setDeleted(true);
+    public void delete(Integer id, Long version) {
+        Breed breed = getBreedById(id);
+        checkVersion(breed.getVersion(), version);
+        breed.setActive(false);
 
-        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed),id);
+        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed), id);
         breedRepository.save(breed);
     }
 
     protected Breed getBreedById(Integer id) {
-        return breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
-                new NotFoundException(BreedError.NOT_FOUND_BY_ID.format(id)));
+        return breedRepository.findBreedById(id)
+                              .orElseThrow(() -> new NotFoundException(BreedError.NOT_FOUND_BY_ID, id));
+    }
+
+    protected void ensureNotExists(String name) {
+        if (existsByName(name)) {
+            log.info(BreedError.ALREADY_EXISTS.format(name));
+            throw new DataExistException(BreedError.ALREADY_EXISTS, name);
+        }
+    }
+
+    protected boolean existsByName(String name) {
+        return breedRepository.existsByName(name);
     }
 
 }

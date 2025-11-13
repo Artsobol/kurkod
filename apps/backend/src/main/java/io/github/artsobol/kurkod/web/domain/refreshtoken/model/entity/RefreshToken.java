@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.refreshtoken.model.entity;
 
+import io.github.artsobol.kurkod.web.domain.common.BaseEntity;
 import io.github.artsobol.kurkod.web.domain.iam.user.model.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,17 +12,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "refresh_token")
-public class RefreshToken {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
+public class RefreshToken extends BaseEntity {
     @Column(nullable = false, unique = true)
     private String token;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", nullable = false)

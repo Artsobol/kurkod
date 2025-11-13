@@ -15,9 +15,9 @@ public interface BreedService {
 
     List<BreedDTO> getAll();
 
-    BreedDTO replace(Integer id, BreedPutRequest breedPutRequest);
+    BreedDTO replace(Integer id, BreedPutRequest breedPutRequest, Long version);
 
-    BreedDTO update(Integer id, BreedPatchRequest breedPatchRequest);
+    BreedDTO update(Integer id, BreedPatchRequest breedPatchRequest, Long version);
 
-    void delete(Integer id);
+    void delete(Integer id, Long version);
 }

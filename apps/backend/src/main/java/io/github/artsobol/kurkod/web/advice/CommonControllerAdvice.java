@@ -1,14 +1,25 @@
 package io.github.artsobol.kurkod.web.advice;
 
 import io.github.artsobol.kurkod.common.constants.CommonConstants;
-import io.github.artsobol.kurkod.common.exception.InvalidPasswordException;
-import io.github.artsobol.kurkod.common.exception.NotFoundException;
+import io.github.artsobol.kurkod.common.exception.*;
 import io.github.artsobol.kurkod.common.logging.constants.AnsiColor;
 import io.github.artsobol.kurkod.web.response.IamError;
+import io.github.artsobol.kurkod.web.response.IamResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.access.AccessDeniedException;
 
@@ -17,52 +28,61 @@ import java.util.List;
 import java.util.Objects;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestControllerAdvice
 public class CommonControllerAdvice {
 
-    @ExceptionHandler(InvalidPasswordException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    protected IamError handleInvalidPasswordException(InvalidPasswordException exception, HttpServletRequest request) {
-        logStackTrace(exception);
+    private final MessageSource messageSource;
 
-        return IamError.createError(exception.getStatus(), exception.getMessage(), request.getRequestURI());
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<IamError> handleBaseException(BaseException ex, HttpServletRequest request) {
+        logStackTrace(ex);
+        IamError error = createError(ex, request);
+        return ResponseEntity.status(ex.getStatus()).contentType(MediaType.APPLICATION_JSON).body(error);
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    protected IamError handleAccessDeniedException(Exception e, HttpServletRequest request) {
-        logStackTrace(e);
-        return IamError.createError(HttpStatus.FORBIDDEN, e.getMessage(), request.getRequestURI());
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    protected IamError handleNotFoundException(NotFoundException exception, HttpServletRequest request) {
-        logStackTrace(exception);
-
-        return IamError.createError(exception.getStatus(), exception.getMessage(), request.getRequestURI());
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<IamError> handleMissingParameter(MissingServletRequestParameterException ex, HttpServletRequest request) {
+        logStackTrace(ex);
+        return handleBaseException(Exceptions.of(CommonError.BAD_REQUEST), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected IamError handleMethodArgumentNotValidException(MethodArgumentNotValidException exception, HttpServletRequest request) {
-        logStackTrace(exception);
+    public ResponseEntity<IamError> handleManve(MethodArgumentNotValidException ex, HttpServletRequest req) {
+        return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
+    }
 
-        List<String> errors = exception.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(err -> "%s: %s".formatted(err.getField(), err.getDefaultMessage()))
-                .toList();
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<IamError> handleCve(ConstraintViolationException ex, HttpServletRequest req) {
+        return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
+    }
 
-        return IamError.validationError(errors, request.getRequestURI());
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<IamError> handleUnreadable(HttpMessageNotReadableException ex, HttpServletRequest req) {
+        return handleBaseException(Exceptions.of(CommonError.MALFORMED_JSON), req);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+    public ResponseEntity<IamError> handle415(HttpMediaTypeNotSupportedException ex, HttpServletRequest req) {
+        return handleBaseException(Exceptions.of(CommonError.UNSUPPORTED_MEDIA_TYPE), req);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<IamError> handle405(HttpRequestMethodNotSupportedException ex, HttpServletRequest req) {
+        return handleBaseException(Exceptions.of(CommonError.METHOD_NOT_ALLOWED), req);
+    }
+
+    @ExceptionHandler(MissingRequestHeaderException.class)
+    public ResponseEntity<IamError> handleMissingHeader(MissingRequestHeaderException ex, HttpServletRequest req) {
+        if ("If-Match".equalsIgnoreCase(ex.getHeaderName())) {
+            return handleBaseException(Exceptions.of(CommonError.MISSING_IF_MATCH), req);
+        }
+        return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
     }
 
     @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    protected IamError handleException(Exception e, HttpServletRequest request) {
-        logStackTrace(e);
-
-        return IamError.createError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error", request.getRequestURI());
+    public ResponseEntity<IamError> handleAny(Exception ex, HttpServletRequest req) {
+        return handleBaseException(Exceptions.of(CommonError.INTERNAL_ERROR), req);
     }
 
     private void logStackTrace(Exception ex) {
@@ -88,5 +108,15 @@ public class CommonControllerAdvice {
                 );
 
         log.error(stackTrace.append(AnsiColor.ANSI_WHITE).toString());
+    }
+
+    protected IamError createError(BaseException ex, HttpServletRequest request) {
+        String message = getLocalizedMessage(ex);
+        String path = request.getRequestURI();
+        return IamError.createError(ex.getStatus(), ex.getCode(), message, path);
+    }
+
+    protected String getLocalizedMessage(BaseException ex) {
+        return messageSource.getMessage(ex.getMessageKey(), ex.getArgs(), LocaleContextHolder.getLocale());
     }
 }

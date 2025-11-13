@@ -9,11 +9,11 @@ public interface PassportService {
 
     PassportDTO get(Integer workerId);
 
-    PassportDTO create(Integer workerId, PassportPostRequest passportPostRequest);
+    PassportDTO create(Integer workerId, PassportPostRequest request);
 
-    PassportDTO replace(Integer workerId, PassportPutRequest passportPutRequest);
+    PassportDTO replace(Integer workerId, PassportPutRequest request, Long version);
 
-    PassportDTO update(Integer workerId, PassportPatchRequest passportPatchRequest);
+    PassportDTO update(Integer workerId, PassportPatchRequest request, Long version);
 
-    void delete(Integer workerId);
+    void delete(Integer workerId, Long version);
 }

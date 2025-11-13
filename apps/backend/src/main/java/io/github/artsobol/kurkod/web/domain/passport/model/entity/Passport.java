@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.passport.model.entity;
 
+import io.github.artsobol.kurkod.web.domain.common.BaseEntity;
 import io.github.artsobol.kurkod.web.domain.worker.model.entity.Worker;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -12,15 +13,11 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Table(name = "passport")
+@Table(name = "passport", uniqueConstraints = @UniqueConstraint(columnNames = {"series", "number"}, name = "uq_passport_series_number"))
 @Getter
 @Setter
 @NoArgsConstructor
-public class Passport {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Passport extends BaseEntity {
 
     @Column(length = 4, nullable = false)
     @Pattern(regexp = "^[0-9]{4}$", message = "Invalid passport series")
@@ -34,28 +31,4 @@ public class Passport {
     @OneToOne(optional = false)
     @JoinColumn(name = "worker_id", nullable = false)
     private Worker worker;
-
-    @NotNull
-    @Column(nullable = false, name = "is_active")
-    private boolean isActive = true;
-
-    @NotNull
-    @Column(nullable = false, updatable = false, name = "created_at")
-    private LocalDateTime createdAt;
-
-    @NotNull
-    @Column(nullable = false, name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

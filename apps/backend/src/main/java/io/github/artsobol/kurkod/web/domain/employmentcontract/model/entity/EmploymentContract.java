@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.employmentcontract.model.entity;
 
+import io.github.artsobol.kurkod.web.domain.common.BaseEntity;
 import io.github.artsobol.kurkod.web.domain.staff.model.entity.Staff;
 import io.github.artsobol.kurkod.web.domain.worker.model.entity.Worker;
 import jakarta.persistence.*;
@@ -20,15 +21,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "employment_contract")
-public class EmploymentContract {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class EmploymentContract extends BaseEntity {
 
     @NotBlank
     @Column(nullable = false, unique = true, length = 20)
-    @Size(min = 2, max = 20, message = "Contract number should be between 2 and 20 characters")
+    @Size(max = 20, message = "Contract number should be less than 20 characters")
     private String contractNumber;
 
     @NotNull
@@ -50,28 +47,4 @@ public class EmploymentContract {
     @NotNull
     @Column(nullable = false, name = "end_date")
     private LocalDate endDate;
-
-    @NotNull
-    @Column(nullable = false, name = "is_active")
-    private boolean isActive = true;
-
-    @NotNull
-    @Column(nullable = false, name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @NotNull
-    @Column(nullable = false, name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

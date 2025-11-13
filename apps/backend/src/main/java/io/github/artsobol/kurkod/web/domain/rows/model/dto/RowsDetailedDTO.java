@@ -7,24 +7,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-public class RowsDetailedDTO {
-
-
-    private Integer id;
-
-    private Integer rowNumber;
-
-    private Integer workshopNumber;
-
-    private List<Cage> cages;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-}
+public record RowsDetailedDTO(
+        Integer id,
+        Integer rowNumber,
+        Integer workshopNumber,
+        List<Cage> cages,
+        OffsetDateTime createdAt,
+        OffsetDateTime updatedAt
+) {
+};

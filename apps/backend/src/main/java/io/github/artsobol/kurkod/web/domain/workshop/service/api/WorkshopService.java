@@ -13,11 +13,11 @@ public interface WorkshopService {
 
     List<WorkshopDTO> getAll();
 
-    WorkshopDTO create(WorkshopPostRequest workshopPostRequest);
+    WorkshopDTO create(WorkshopPostRequest request);
 
-    WorkshopDTO update(Integer id, WorkshopPatchRequest workshopPatchRequest);
+    WorkshopDTO update(Integer id, WorkshopPatchRequest request, Long version);
 
-    WorkshopDTO replace(Integer id, WorkshopPutRequest workshopPutRequest);
+    WorkshopDTO replace(Integer id, WorkshopPutRequest request, Long version);
 
-    void delete(Integer id);
+    void delete(Integer id, Long version);
 }

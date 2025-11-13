@@ -5,7 +5,6 @@ import io.github.artsobol.kurkod.common.exception.DataExistException;
 import io.github.artsobol.kurkod.common.exception.NotFoundException;
 import io.github.artsobol.kurkod.common.logging.LogHelper;
 import io.github.artsobol.kurkod.security.facade.SecurityContextFacade;
-import io.github.artsobol.kurkod.web.domain.worker.error.WorkerError;
 import io.github.artsobol.kurkod.web.domain.workshop.error.WorkshopError;
 import io.github.artsobol.kurkod.web.domain.workshop.mapper.WorkshopMapper;
 import io.github.artsobol.kurkod.web.domain.workshop.model.dto.WorkshopDTO;
@@ -22,6 +21,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
 
 @Slf4j
 @Service
@@ -55,11 +56,11 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopDTO create(WorkshopPostRequest workshopPostRequest) {
-        Integer workshopNumber = workshopPostRequest.getWorkshopNumber();
+    public WorkshopDTO create(WorkshopPostRequest request) {
+        Integer workshopNumber = request.getWorkshopNumber();
         ensureNotExists(workshopNumber);
 
-        Workshop workshop = workshopMapper.toEntity(workshopPostRequest);
+        Workshop workshop = workshopMapper.toEntity(request);
         workshopRepository.save(workshop);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(workshop), workshop.getId());
         return workshopMapper.toDto(workshop);
@@ -68,15 +69,15 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopDTO update(Integer id, WorkshopPatchRequest workshopPatchRequest) {
+    public WorkshopDTO update(Integer id, WorkshopPatchRequest request, Long version) {
         Workshop workshop = getWorkshopById(id);
-
-        Integer newWorkshopNumber = workshopPatchRequest.getWorkshopNumber();
+        checkVersion(workshop.getVersion(), version);
+        Integer newWorkshopNumber = request.getWorkshopNumber();
         if (newWorkshopNumber != null && !newWorkshopNumber.equals(workshop.getWorkshopNumber())) {
             ensureNotExists(newWorkshopNumber);
         }
 
-        workshopMapper.update(workshop, workshopPatchRequest);
+        workshopMapper.update(workshop, request);
         workshopRepository.save(workshop);
 
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(workshop), id);
@@ -86,15 +87,15 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopDTO replace(Integer id, WorkshopPutRequest workshopPutRequest) {
+    public WorkshopDTO replace(Integer id, WorkshopPutRequest request, Long version) {
         Workshop workshop = getWorkshopById(id);
-
-        Integer newWorkshopNumber = workshopPutRequest.getWorkshopNumber();
+        checkVersion(workshop.getVersion(), version);
+        Integer newWorkshopNumber = request.getWorkshopNumber();
         if (newWorkshopNumber != null && !newWorkshopNumber.equals(workshop.getWorkshopNumber())) {
             ensureNotExists(newWorkshopNumber);
         }
 
-        workshopMapper.replace(workshop, workshopPutRequest);
+        workshopMapper.replace(workshop, request);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(workshop), id);
         return workshopMapper.toDto(workshopRepository.save(workshop));
     }
@@ -102,9 +103,11 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id) {
+    public void delete(Integer id, Long version) {
+        Workshop workshop = getWorkshopById(id);
+        checkVersion(workshop.getVersion(), version);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Workshop.class), id);
-        workshopRepository.deleteById(id);
+        workshop.setActive(false);
     }
 
     protected Workshop getWorkshopById(Integer id) {

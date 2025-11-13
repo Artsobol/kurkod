@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -52,8 +54,8 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO create(WorkerPostRequest workerPostRequest) {
-        Worker worker = workerMapper.toEntity(workerPostRequest);
+    public WorkerDTO create(WorkerPostRequest request) {
+        Worker worker = workerMapper.toEntity(request);
         worker = workerRepository.save(worker);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(worker), worker.getId());
         return workerMapper.toDTO(worker);
@@ -62,9 +64,10 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO replace(Integer id, WorkerPutRequest workerPutRequest) {
+    public WorkerDTO replace(Integer id, WorkerPutRequest request, Long version) {
         Worker worker = getWorkerById(id);
-        workerMapper.updateFully(worker, workerPutRequest);
+        checkVersion(worker.getVersion(), version);
+        workerMapper.updateFully(worker, request);
         worker = workerRepository.save(worker);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(worker), id);
         return workerMapper.toDTO(worker);
@@ -73,9 +76,10 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO update(Integer id, WorkerPatchRequest workerPatchRequest) {
+    public WorkerDTO update(Integer id, WorkerPatchRequest request, Long version) {
         Worker worker = getWorkerById(id);
-        workerMapper.updatePartially(worker, workerPatchRequest);
+        checkVersion(worker.getVersion(), version);
+        workerMapper.updatePartially(worker, request);
         worker = workerRepository.save(worker);
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(worker), id);
         return workerMapper.toDTO(worker);
@@ -84,8 +88,9 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id) {
+    public void delete(Integer id, Long version) {
         Worker worker = getWorkerById(id);
+        checkVersion(worker.getVersion(), version);
         worker.setActive(false);
         workerRepository.save(worker);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Worker.class), id);

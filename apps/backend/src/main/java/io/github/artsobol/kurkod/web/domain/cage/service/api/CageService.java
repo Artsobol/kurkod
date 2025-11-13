@@ -15,9 +15,9 @@ public interface CageService {
 
     CageDTO create(Integer rowId, CagePostRequest cagePostRequest);
 
-    CageDTO replace(Integer rowId, Integer cageNumber, CagePutRequest cagePutRequest);
+    CageDTO replace(Integer rowId, Integer cageNumber, CagePutRequest cagePutRequest, Long expected);
 
-    CageDTO update(Integer rowId, Integer cageNumber, CagePatchRequest cagePatchRequest);
+    CageDTO update(Integer rowId, Integer cageNumber, CagePatchRequest cagePatchRequest, Long expected);
 
-    void delete(Integer rowId, Integer cageNumber);
+    void delete(Integer rowId, Integer cageNumber, Long expected);
 }

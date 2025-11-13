@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Slf4j
@@ -70,7 +71,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
                 .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID.format(chickenId))));
         chickenMovement.setFromCage(fromCage);
         chickenMovement.setToCage(toCage);
-        chickenMovement.setMovedAt(LocalDateTime.now());
+        chickenMovement.setMovedAt(OffsetDateTime.now());
         chickenMovement = chickenMovementRepository.save(chickenMovement);
         return chickenMovementMapper.toDto(chickenMovement);
     }
@@ -82,6 +83,6 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
 
     protected Cage findCageById(Integer cageId) {
         return cageRepository.findById(cageId)
-                .orElseThrow(() -> new NotFoundException(CageError.NOT_FOUND_BY_ID.format(cageId)));
+                .orElseThrow(() -> new NotFoundException(CageError.NOT_FOUND_BY_KEYS, cageId));
     }
 }

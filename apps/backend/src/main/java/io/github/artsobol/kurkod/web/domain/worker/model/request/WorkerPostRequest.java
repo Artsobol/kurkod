@@ -1,6 +1,5 @@
 package io.github.artsobol.kurkod.web.domain.worker.model.request;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

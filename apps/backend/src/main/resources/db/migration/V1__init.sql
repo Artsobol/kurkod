@@ -1,6 +1,0 @@
-CREATE TABLE breed(
-    id BIGSERIAL PRIMARY KEY,
-    name VARCHAR(20) NOT NULL UNIQUE,
-    eggs_number SMALLINT NOT NULL,
-    weight SMALLINT NOT NULL
-);

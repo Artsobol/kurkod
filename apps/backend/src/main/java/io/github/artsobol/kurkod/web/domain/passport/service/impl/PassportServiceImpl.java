@@ -23,6 +23,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -69,10 +71,10 @@ public class PassportServiceImpl implements PassportService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO replace(Integer workerId, PassportPutRequest passportPutRequest) {
+    public PassportDTO replace(Integer workerId, PassportPutRequest request, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
-
-        passportMapper.updateFully(passport, passportPutRequest);
+        checkVersion(passport.getVersion(), version);
+        passportMapper.updateFully(passport, request);
         passport = passportRepository.save(passport);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(passport), workerId);
         return passportMapper.toDto(passport);
@@ -81,9 +83,10 @@ public class PassportServiceImpl implements PassportService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO update(Integer workerId, PassportPatchRequest passportPatchRequest) {
+    public PassportDTO update(Integer workerId, PassportPatchRequest request, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
-        passportMapper.updatePartially(passport, passportPatchRequest);
+        checkVersion(passport.getVersion(), version);
+        passportMapper.updatePartially(passport, request);
         passport = passportRepository.save(passport);
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(passport), workerId);
         return passportMapper.toDto(passport);
@@ -92,8 +95,9 @@ public class PassportServiceImpl implements PassportService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer workerId) {
+    public void delete(Integer workerId, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
+        checkVersion(passport.getVersion(), version);
         passport.setActive(false);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Passport.class), workerId);
         passportRepository.save(passport);
@@ -101,7 +105,7 @@ public class PassportServiceImpl implements PassportService {
 
     protected Passport getPassportByWorkerId(Integer workerId) {
         return passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException(PassportError.NOT_FOUND_BY_ID.format(workerId))
+                () -> new NotFoundException(PassportError.NOT_FOUND_BY_WORKER_ID, workerId)
         );
     }
 }

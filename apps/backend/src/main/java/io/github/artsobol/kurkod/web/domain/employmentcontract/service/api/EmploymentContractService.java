@@ -9,14 +9,11 @@ public interface EmploymentContractService {
 
     EmploymentContractDTO get(Integer workerId);
 
-    EmploymentContractDTO create(Integer workerId,
-                                              EmploymentContractPostRequest employmentContractPostRequest);
+    EmploymentContractDTO create(Integer workerId, EmploymentContractPostRequest request);
 
-    EmploymentContractDTO replace(Integer workerId,
-                                               EmploymentContractPutRequest employmentContractPutRequest);
+    EmploymentContractDTO replace(Integer workerId, EmploymentContractPutRequest request, Long expectedVersion);
 
-    EmploymentContractDTO update(Integer workerId,
-                                              EmploymentContractPatchRequest employmentContractPatchRequest);
+    EmploymentContractDTO update(Integer workerId, EmploymentContractPatchRequest request, Long expectedVersion);
 
-    void delete(Integer workerId);
+    void delete(Integer workerId, Long expectedVersion);
 }

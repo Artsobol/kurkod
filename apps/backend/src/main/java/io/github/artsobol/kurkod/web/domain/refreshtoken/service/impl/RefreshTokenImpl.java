@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Slf4j
 @Service
@@ -24,7 +24,7 @@ public class RefreshTokenImpl implements RefreshTokenService {
     public RefreshToken generateOrUpdateRefreshToken(User user) {
         return refreshTokenRepository.findByUserId(user.getId())
                 .map(refreshToken -> {
-                    refreshToken.setCreatedAt(LocalDateTime.now());
+                    refreshToken.setCreatedAt(OffsetDateTime.now());
                     refreshToken.setToken(UuidUtils.generateUuidWithoutDash());
                     return refreshTokenRepository.save(refreshToken);
                 })
@@ -32,7 +32,7 @@ public class RefreshTokenImpl implements RefreshTokenService {
                         () -> {
                             RefreshToken newToken = new RefreshToken();
                             newToken.setUser(user);
-                            newToken.setCreatedAt(LocalDateTime.now());
+                            newToken.setCreatedAt(OffsetDateTime.now());
                             newToken.setToken(UuidUtils.generateUuidWithoutDash());
                             return refreshTokenRepository.save(newToken);
                         }
@@ -46,7 +46,7 @@ public class RefreshTokenImpl implements RefreshTokenService {
                         () -> new NotFoundException(JwtError.NOT_FOUND_REFRESH_TOKEN.format(requestRefreshToken))
                 );
 
-        refreshToken.setCreatedAt(LocalDateTime.now());
+        refreshToken.setCreatedAt(OffsetDateTime.now());
         refreshToken.setToken(UuidUtils.generateUuidWithoutDash());
         return refreshTokenRepository.save(refreshToken);
     }

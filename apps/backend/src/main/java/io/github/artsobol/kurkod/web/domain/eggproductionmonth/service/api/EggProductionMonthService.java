@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.eggproductionmonth.service.api;
 
 import io.github.artsobol.kurkod.web.domain.eggproductionmonth.model.dto.EggProductionMonthDTO;
-import io.github.artsobol.kurkod.web.domain.eggproductionmonth.model.entity.EggProductionMonth;
 import io.github.artsobol.kurkod.web.domain.eggproductionmonth.model.request.EggProductionMonthPatchRequest;
 import io.github.artsobol.kurkod.web.domain.eggproductionmonth.model.request.EggProductionMonthPostRequest;
 import io.github.artsobol.kurkod.web.domain.eggproductionmonth.model.request.EggProductionMonthPutRequest;
@@ -16,11 +15,11 @@ public interface EggProductionMonthService {
 
     List<EggProductionMonthDTO> getAllByChickenAndYear(int chickenId, int year);
 
-    EggProductionMonthDTO create(int chickenId, int month, int year, EggProductionMonthPostRequest eggProductionMonthPostRequest);
+    EggProductionMonthDTO create(int chickenId, int month, int year, EggProductionMonthPostRequest request);
 
-    EggProductionMonthDTO replace(int chickenId, int month, int year, EggProductionMonthPutRequest eggProductionMonthPutRequest);
+    EggProductionMonthDTO replace(int chickenId, int month, int year, EggProductionMonthPutRequest request, Long version);
 
-    EggProductionMonthDTO update(int chickenId, int month, int year, EggProductionMonthPatchRequest eggProductionMonthPatchRequest);
+    EggProductionMonthDTO update(int chickenId, int month, int year, EggProductionMonthPatchRequest request, Long version);
 
-    void delete(int chickenId, int month, int year);
+    void delete(int chickenId, int month, int year, Long version);
 }

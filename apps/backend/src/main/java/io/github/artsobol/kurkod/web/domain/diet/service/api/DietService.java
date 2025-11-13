@@ -13,11 +13,11 @@ public interface DietService {
 
     List<DietDTO> getAll();
 
-    DietDTO create(DietPostRequest dietPostRequest);
+    DietDTO create(DietPostRequest request);
 
-    DietDTO update(Integer id, DietPatchRequest dietPatchRequest);
+    DietDTO update(Integer id, DietPatchRequest request, Long version);
 
-    DietDTO replace(Integer id, DietPutRequest dietPutRequest);
+    DietDTO replace(Integer id, DietPutRequest request, Long version);
 
-    void delete(Integer id);
+    void delete(Integer id, Long expectedVersion);
 }

@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -38,9 +40,9 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO get(Integer staffId) {
-        log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Staff.class), staffId);
-        return staffMapper.toDto(getStaffById(staffId));
+    public StaffDTO get(Integer id) {
+        log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Staff.class), id);
+        return staffMapper.toDto(getStaffById(id));
     }
 
     @Override
@@ -57,8 +59,8 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO create(StaffPostRequest staffPostRequest) {
-        Staff staff = staffMapper.toEntity(staffPostRequest);
+    public StaffDTO create(StaffPostRequest request) {
+        Staff staff = staffMapper.toEntity(request);
         staff = staffRepository.save(staff);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(staff));
         return staffMapper.toDto(staff);
@@ -67,32 +69,35 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO replace(Integer staffId, StaffPutRequest staffPutRequest) {
-        Staff staff = getStaffById(staffId);
-        staffMapper.updateFully(staff, staffPutRequest);
+    public StaffDTO replace(Integer id, StaffPutRequest request, Long version) {
+        Staff staff = getStaffById(id);
+        checkVersion(staff.getVersion(), version);
+        staffMapper.updateFully(staff, request);
         staff = staffRepository.save(staff);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(staff), staffId);
+        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(staff), id);
         return staffMapper.toDto(staff);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO update(Integer staffId, StaffPatchRequest staffPatchRequest) {
-        Staff staff = getStaffById(staffId);
-        staffMapper.updatePartially(staff, staffPatchRequest);
+    public StaffDTO update(Integer id, StaffPatchRequest request, Long version) {
+        Staff staff = getStaffById(id);
+        checkVersion(staff.getVersion(), version);
+        staffMapper.updatePartially(staff, request);
         staff = staffRepository.save(staff);
-        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(staff), staffId);
+        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(staff), id);
         return staffMapper.toDto(staff);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer staffId) {
-        Staff staff = getStaffById(staffId);
+    public void delete(Integer id, Long version) {
+        Staff staff = getStaffById(id);
+        checkVersion(staff.getVersion(), version);
         staff.setActive(false);
-        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Staff.class), staffId);
+        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Staff.class), id);
         staffRepository.save(staff);
     }
 

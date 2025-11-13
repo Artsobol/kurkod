@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -63,7 +65,7 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     public List<ChickenDTO> getAll() {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Chicken.class));
-        return chickenRepository.findAllByDeletedFalse().stream()
+        return chickenRepository.findAll().stream()
                 .map(chickenMapper::toDto)
                 .toList();
     }
@@ -71,9 +73,10 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id) {
+    public void delete(Integer id, Long version) {
         Chicken chicken = getChickenById(id);
-        chicken.setDeleted(true);
+        checkVersion(chicken.getVersion(), version);
+        chicken.setActive(false);
         chickenRepository.save(chicken);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
     }
@@ -81,8 +84,9 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO replace(Integer id, ChickenPutRequest chickenPutRequest) {
+    public ChickenDTO replace(Integer id, ChickenPutRequest chickenPutRequest, Long version) {
         Chicken chicken = getChickenById(id);
+        checkVersion(chicken.getVersion(), version);
         chickenMapper.updateFully(chicken, chickenPutRequest);
         Breed breed = getBreedById(chickenPutRequest.getBreedId());
         chicken.setBreed(breed);
@@ -93,8 +97,9 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO update(Integer id, ChickenPatchRequest chickenPatchRequest) {
+    public ChickenDTO update(Integer id, ChickenPatchRequest chickenPatchRequest, Long version) {
         Chicken chicken = getChickenById(id);
+        checkVersion(chicken.getVersion(), version);
         chickenMapper.updatePartially(chicken, chickenPatchRequest);
         if (chickenPatchRequest.getBreedId() != null) {
             Breed breed = getBreedById(chickenPatchRequest.getBreedId());
@@ -105,12 +110,12 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     private Breed getBreedById(Integer id) {
-        return breedRepository.findBreedByIdAndDeletedFalse(id).orElseThrow(() ->
-                new NotFoundException(BreedError.NOT_FOUND_BY_ID.format(id)));
+        return breedRepository.findBreedById(id).orElseThrow(() ->
+                new NotFoundException(BreedError.NOT_FOUND_BY_ID, id));
     }
 
     protected Chicken getChickenById(Integer id) {
-        return chickenRepository.findChickenByIdAndDeletedFalse(id).orElseThrow(() ->
-                new NotFoundException(ChickenError.NOT_FOUND_BY_ID.format(id)));
+        return chickenRepository.findChickenById(id).orElseThrow(() ->
+                new NotFoundException(ChickenError.NOT_FOUND_BY_ID, id));
     }
 }
