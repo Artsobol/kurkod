@@ -35,3 +35,5 @@ build/
 **/application-*.properties
 !**/application-example.properties
 !**/application-prod.properties
+
+.env

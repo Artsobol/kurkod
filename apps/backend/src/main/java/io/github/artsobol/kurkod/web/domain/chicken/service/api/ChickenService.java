@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface ChickenService {
 
-    ChickenDTO create(ChickenPostRequest chickenPostRequest);
+    ChickenDTO create(ChickenPostRequest request);
 
     ChickenDTO get(Integer id);
 
     List<ChickenDTO> getAll();
 
-    void delete(Integer id);
+    void delete(Integer id, Long version);
 
-    ChickenDTO replace(Integer id, ChickenPutRequest chickenPutRequest);
+    ChickenDTO replace(Integer id, ChickenPutRequest request, Long version);
 
-    ChickenDTO update(Integer id, ChickenPatchRequest chickenPatchRequest);
+    ChickenDTO update(Integer id, ChickenPatchRequest request, Long version);
 }

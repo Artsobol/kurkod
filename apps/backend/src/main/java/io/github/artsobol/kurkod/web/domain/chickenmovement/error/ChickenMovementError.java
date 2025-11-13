@@ -8,8 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ChickenMovementError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("CHM-404", "chicken_movement.chicken_movement_not_found_by_id", HttpStatus.NOT_FOUND),
-    ALREADY_EXISTS("CHM-409", "chicken_movement.chicken_movement_already_exists", HttpStatus.CONFLICT),
+    NOT_FOUND_BY_ID("CHM-404", "chicken_movement.not_found_by_id", HttpStatus.NOT_FOUND),
     ;
 
     private final String code;

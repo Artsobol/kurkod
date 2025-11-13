@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -36,95 +38,118 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     private final ChickenRepository chickenRepository;
     private final SecurityContextFacade securityContextFacade;
 
-    private String getCurrentUsername(){
+    private String getCurrentUsername() {
         return securityContextFacade.getCurrentUsername();
     }
 
     @Override
     public EggProductionMonthDTO get(int chickenId, int month, int year) {
-        log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EggProductionMonth.class), chickenId, month, year);
+        log.debug(ApiLogMessage.GET_ENTITY.getValue(),
+                  getCurrentUsername(),
+                  LogHelper.getEntityName(EggProductionMonth.class),
+                  chickenId,
+                  month,
+                  year);
         return eggProductionMonthMapper.toDto(findByIdMonthYear(chickenId, month, year));
     }
 
     @Override
     public List<EggProductionMonthDTO> getAllByChicken(int chickenId) {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(EggProductionMonth.class));
-        return eggProductionMonthRepository.findAllByChicken_IdAndIsActiveTrue(chickenId)
-                .stream()
-                .map(eggProductionMonthMapper::toDto)
-                .toList();
+        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(),
+                  getCurrentUsername(),
+                  LogHelper.getEntityName(EggProductionMonth.class));
+        return eggProductionMonthRepository.findAllByChicken_IdAndIsActiveTrue(chickenId).stream().map(
+                eggProductionMonthMapper::toDto).toList();
     }
 
     @Override
     public List<EggProductionMonthDTO> getAllByChickenAndYear(int chickenId, int year) {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(EggProductionMonth.class));
-        return eggProductionMonthRepository.findAllByChicken_IdAndYearAndIsActiveTrue(chickenId, year)
-                .stream()
-                .map(eggProductionMonthMapper::toDto)
-                .toList();
+        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(),
+                  getCurrentUsername(),
+                  LogHelper.getEntityName(EggProductionMonth.class));
+        return eggProductionMonthRepository.findAllByChicken_IdAndYearAndIsActiveTrue(chickenId, year).stream().map(
+                eggProductionMonthMapper::toDto).toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EggProductionMonthDTO create(int chickenId,
-                                        int month,
-                                        int year,
-                                        EggProductionMonthPostRequest eggProductionMonthPostRequest) {
+    public EggProductionMonthDTO create(int chickenId, int month, int year, EggProductionMonthPostRequest request) {
         ensureNotExistsByIdMonthYear(chickenId, month, year);
-        EggProductionMonth eggProductionMonth = eggProductionMonthMapper.toEntity(eggProductionMonthPostRequest);
-        Chicken chicken = chickenRepository.findById(chickenId).orElseThrow(
-                () -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID.format(chickenId))
-        );
+        EggProductionMonth eggProductionMonth = eggProductionMonthMapper.toEntity(request);
+        Chicken chicken = chickenRepository.findById(chickenId)
+                                           .orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID.format(
+                                                   chickenId)));
         eggProductionMonth.setChicken(chicken);
 
         eggProductionMonthRepository.save(eggProductionMonth);
-        log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EggProductionMonth.class), chickenId);
+        log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(EggProductionMonth.class),
+                 chickenId);
         return eggProductionMonthMapper.toDto(eggProductionMonth);
     }
 
     @Override
-    public EggProductionMonthDTO replace(int chickenId,
-                                      int month,
-                                      int year,
-                                      EggProductionMonthPutRequest eggProductionMonthPutRequest) {
+    public EggProductionMonthDTO replace(
+            int chickenId,
+            int month,
+            int year,
+            EggProductionMonthPutRequest request,
+            Long version) {
         EggProductionMonth eggProductionMonth = findByIdMonthYear(chickenId, month, year);
-        eggProductionMonthMapper.replace(eggProductionMonth, eggProductionMonthPutRequest);
+        checkVersion(eggProductionMonth.getVersion(), version);
+        eggProductionMonthMapper.replace(eggProductionMonth, request);
 
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EggProductionMonth.class), chickenId);
-        return  eggProductionMonthMapper.toDto(eggProductionMonthRepository.save(eggProductionMonth));
-    }
-
-    @Override
-    public EggProductionMonthDTO update(int chickenId,
-                                     int month,
-                                     int year,
-                                     EggProductionMonthPatchRequest eggProductionMonthPatchRequest) {
-        EggProductionMonth eggProductionMonth = findByIdMonthYear(chickenId, month, year);
-        eggProductionMonthMapper.update(eggProductionMonth, eggProductionMonthPatchRequest);
-
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EggProductionMonth.class), chickenId);
+        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(),
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(EggProductionMonth.class),
+                 chickenId);
         return eggProductionMonthMapper.toDto(eggProductionMonthRepository.save(eggProductionMonth));
     }
 
     @Override
-    public void delete(int chickenId, int month, int year) {
+    public EggProductionMonthDTO update(
+            int chickenId,
+            int month,
+            int year,
+            EggProductionMonthPatchRequest request,
+            Long version) {
         EggProductionMonth eggProductionMonth = findByIdMonthYear(chickenId, month, year);
+        checkVersion(eggProductionMonth.getVersion(), version);
+        eggProductionMonthMapper.update(eggProductionMonth, request);
+
+        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(),
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(EggProductionMonth.class),
+                 chickenId);
+        return eggProductionMonthMapper.toDto(eggProductionMonthRepository.save(eggProductionMonth));
+    }
+
+    @Override
+    public void delete(int chickenId, int month, int year, Long version) {
+        EggProductionMonth eggProductionMonth = findByIdMonthYear(chickenId, month, year);
+        checkVersion(eggProductionMonth.getVersion(), version);
         eggProductionMonth.setActive(false);
-        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EggProductionMonth.class), chickenId);
+        log.info(ApiLogMessage.DELETE_ENTITY.getValue(),
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(EggProductionMonth.class),
+                 chickenId);
         eggProductionMonthRepository.save(eggProductionMonth);
     }
 
     protected EggProductionMonth findByIdMonthYear(int chickenId, int month, int year) {
         return eggProductionMonthRepository.findByChicken_IdAndMonthAndYearAndIsActiveTrue(chickenId, month, year)
-                .orElseThrow(() -> new NotFoundException(EggProductionMonthError.NOT_FOUND_BY_ID.format(chickenId, month, year))
-                );
+                                           .orElseThrow(() -> new NotFoundException(EggProductionMonthError.NOT_FOUND_BY_KEYS,
+                                                                                    chickenId,
+                                                                                    month,
+                                                                                    year));
     }
 
     protected void ensureNotExistsByIdMonthYear(int chickenId, int month, int year) {
-        if(existsByIdMonthYear(chickenId, month, year)){
+        if (existsByIdMonthYear(chickenId, month, year)) {
             log.info(EggProductionMonthError.ALREADY_EXISTS.format(chickenId, month, year));
-            throw new DataExistException(EggProductionMonthError.ALREADY_EXISTS.format(chickenId, month, year));
+            throw new DataExistException(EggProductionMonthError.ALREADY_EXISTS, chickenId, month, year);
         }
     }
 

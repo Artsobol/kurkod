@@ -15,9 +15,9 @@ public interface DismissalService {
 
     List<DismissalDTO> getAllByDismissed(Integer dismissedId);
 
-    DismissalDTO create(DismissalPostRequest dismissalPostRequest);
+    DismissalDTO create(DismissalPostRequest request);
 
-    DismissalDTO replace(Integer workerId, DismissalPutRequest dismissalPutRequest);
+    DismissalDTO replace(Integer workerId, DismissalPutRequest request, Long version);
 
-    DismissalDTO update(Integer workerId, DismissalPatchRequest dismissalPatchRequest);
+    DismissalDTO update(Integer workerId, DismissalPatchRequest request, Long version);
 }

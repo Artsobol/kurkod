@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -55,9 +57,9 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO create(DietPostRequest dietPostRequest) {
-        ensureNotExists(dietPostRequest.getCode());
-        Diet diet = dietMapper.toEntity(dietPostRequest);
+    public DietDTO create(DietPostRequest request) {
+        ensureNotExists(request.getCode());
+        Diet diet = dietMapper.toEntity(request);
         dietRepository.save(diet);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(diet), diet.getId());
         return dietMapper.toDTO(diet);
@@ -66,9 +68,10 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO update(Integer id, DietPatchRequest dietPatchRequest) {
+    public DietDTO update(Integer id, DietPatchRequest request, Long version) {
         Diet diet = getDietById(id);
-        dietMapper.update(diet, dietPatchRequest);
+        checkVersion(diet.getVersion(), version);
+        dietMapper.update(diet, request);
         dietRepository.save(diet);
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(diet), id);
         return dietMapper.toDTO(diet);
@@ -77,9 +80,10 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO replace(Integer id, DietPutRequest dietPutRequest) {
+    public DietDTO replace(Integer id, DietPutRequest request, Long version) {
         Diet diet = getDietById(id);
-        dietMapper.replace(diet, dietPutRequest);
+        checkVersion(diet.getVersion(), version);
+        dietMapper.replace(diet, request);
         diet = dietRepository.save(diet);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(diet), id);
         return dietMapper.toDTO(diet);
@@ -88,8 +92,9 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id) {
+    public void delete(Integer id, Long version) {
         Diet diet = getDietById(id);
+        checkVersion(diet.getVersion(), version);
         diet.setActive(false);
         dietRepository.save(diet);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(diet), id);

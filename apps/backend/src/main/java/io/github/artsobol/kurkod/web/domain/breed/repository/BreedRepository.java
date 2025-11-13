@@ -8,7 +8,9 @@ import java.util.Optional;
 
 public interface BreedRepository extends JpaRepository<Breed, Integer> {
 
-    Optional<Breed> findBreedByIdAndDeletedFalse(int id);
+    Optional<Breed> findBreedById(Integer id);
 
-    List<Breed> findAllByDeletedFalse();
+    List<Breed> findAll();
+
+    boolean existsByName(String name);
 }

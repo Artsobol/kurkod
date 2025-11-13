@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum DismissalError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("DE-404", "dismissal.dismissal_not_found_by_id", HttpStatus.NOT_FOUND),
-    ALREADY_EXISTS("DE-409", "dismissal.dismissal_already_exists", HttpStatus.CONFLICT),
+    NOT_FOUND_BY_WORKER_AND_DISMISSED("DE-404", "dismissal.not_found_by_worker_and_dismissed", HttpStatus.NOT_FOUND),
+    NOT_FOUND_BY_WORKER_ID("DE-404", "dismissal.not_found_by_worker_id", HttpStatus.NOT_FOUND),
     ;
 
     private final String code;

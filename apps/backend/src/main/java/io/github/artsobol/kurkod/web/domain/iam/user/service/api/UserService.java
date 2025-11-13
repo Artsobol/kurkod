@@ -16,11 +16,11 @@ public interface UserService extends UserDetailsService {
 
     UserDTO getByUsername(String username);
 
-    UserDTO create(UserPostRequest userPostRequest);
+    UserDTO create(UserPostRequest request);
 
-    UserDTO replace(Integer userId, UserPutRequest userPutRequest);
+    UserDTO replace(Integer userId, UserPutRequest request, Long version);
 
-    UserDTO update(Integer userId, UserPatchRequest userPatchRequest);
+    UserDTO update(Integer userId, UserPatchRequest request, Long version);
 
-    void deleteById(Integer userId);
+    void deleteById(Integer userId, Long expectedVersion);
 }

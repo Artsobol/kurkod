@@ -25,6 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -62,7 +64,7 @@ public class CageServiceImpl implements CageService {
         ensureNotExists(rowId, cagePostRequest.getCageNumber());
         Cage cage = cageMapper.toEntity(cagePostRequest);
         Rows rows = rowsRepository.findById(rowId).orElseThrow(
-                () -> new NotFoundException(RowsError.NOT_FOUND_BY_ID.format(rowId))
+                () -> new NotFoundException(RowsError.NOT_FOUND_BY_ID, rowId)
         );
         cage.setRow(rows);
         cageRepository.save(cage);
@@ -73,7 +75,7 @@ public class CageServiceImpl implements CageService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO replace(Integer rowId, Integer cageNumber, CagePutRequest cagePutRequest) {
+    public CageDTO replace(Integer rowId, Integer cageNumber, CagePutRequest cagePutRequest, Long version) {
         ensureExists(rowId, cageNumber);
         Integer newCageNumber = cagePutRequest.getCageNumber();
         if (!newCageNumber.equals(cageNumber)) {
@@ -81,6 +83,7 @@ public class CageServiceImpl implements CageService {
         }
 
         Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
+        checkVersion(cage.getVersion(), version);
         cageMapper.replace(cage, cagePutRequest);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId);
         return cageMapper.toDto(cageRepository.save(cage));
@@ -89,7 +92,7 @@ public class CageServiceImpl implements CageService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO update(Integer rowId, Integer cageNumber, CagePatchRequest cagePatchRequest) {
+    public CageDTO update(Integer rowId, Integer cageNumber, CagePatchRequest cagePatchRequest, Long version) {
         ensureExists(rowId, cageNumber);
         Integer newCageNumber = cagePatchRequest.getCageNumber();
         if (newCageNumber != null && !newCageNumber.equals(cageNumber)) {
@@ -97,6 +100,7 @@ public class CageServiceImpl implements CageService {
         }
 
         Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
+        checkVersion(cage.getVersion(), version);
         cageMapper.update(cage, cagePatchRequest);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId);
         return cageMapper.toDto(cageRepository.save(cage));
@@ -105,30 +109,31 @@ public class CageServiceImpl implements CageService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer rowId, Integer cageNumber) {
+    public void delete(Integer rowId, Integer cageNumber, Long version) {
         Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
-        cage.setIsActive(false);
+        checkVersion(cage.getVersion(), version);
+        cage.setActive(false);
         cageRepository.save(cage);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId);
     }
 
     protected Cage findCageByRowIdAndCageNumber(Integer rowId, Integer cageNumber){
         return cageRepository.findByRow_IdAndCageNumber(rowId, cageNumber).orElseThrow(
-                () -> new NotFoundException(CageError.NOT_FOUND_BY_ID.format(rowId, cageNumber))
+                () -> new NotFoundException(CageError.NOT_FOUND_BY_KEYS, rowId, cageNumber)
         );
     }
 
     protected void ensureExists(Integer rowId, Integer cageNumber){
         if(!existsByRowIdAndCageNumber(rowId, cageNumber)){
-            log.info(CageError.NOT_FOUND_BY_ID.format(rowId, cageNumber));
-            throw new NotFoundException(CageError.NOT_FOUND_BY_ID.format(rowId, cageNumber));
+            log.info(CageError.NOT_FOUND_BY_KEYS.format(rowId, cageNumber));
+            throw new NotFoundException(CageError.NOT_FOUND_BY_KEYS, rowId, cageNumber);
         }
     }
 
     protected void ensureNotExists(Integer rowId, Integer cageNumber){
         if(existsByRowIdAndCageNumber(rowId, cageNumber)){
             log.info(CageError.ALREADY_EXISTS.format(rowId, cageNumber));
-            throw new DataExistException(CageError.ALREADY_EXISTS.format(rowId, cageNumber));
+            throw new DataExistException(CageError.ALREADY_EXISTS, rowId, cageNumber);
         }
     }
 

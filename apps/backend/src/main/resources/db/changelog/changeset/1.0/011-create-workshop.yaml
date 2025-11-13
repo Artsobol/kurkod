@@ -1,0 +1,70 @@
+databaseChangeLog:
+    - changeSet:
+        id: 001-create-workshop
+        author: artsobol
+        preConditions:
+          - onFail: HALT
+            not:
+              tableExists:
+                tableName: workshop
+
+        changes:
+          - createTable:
+              tableName: workshop
+              columns:
+                - column:
+                    name: id
+                    type: bigserial
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: pk_workshop
+                      nullable: false
+                - column:
+                    name: workshop_number
+                    type: integer
+                    constraints:
+                      nullable: false
+                - column:
+                    name: created_at
+                    type: timestamp with time zone
+                    defaultValueComputed: now()
+                    constraints:
+                      nullable: false
+                - column:
+                    name: updated_at
+                    type: timestamp with time zone
+                    defaultValueComputed: now()
+                    constraints:
+                      nullable: false
+                - column:
+                    name: is_active
+                    type: boolean
+                    defaultValueBoolean: true
+                    constraints:
+                      nullable: false
+                - column:
+                    name: version
+                    type: bigint
+                    defaultValueNumeric: "0"
+                    constraints:
+                      nullable: false
+
+          - addUniqueConstraint:
+              tableName: workshop
+              columnNames: workshop_number
+              constraintName: uq_workshop_number
+
+          - addCheckConstraint:
+              tableName: workshop
+              constraintName: ck_workshop_number_gt_0
+              constraintBody: "workshop_number > 0"
+
+        rollback:
+          - dropCheckConstraint:
+              tableName: workshop
+              constraintName: ck_workshop_number_gt_0
+          - dropUniqueConstraint:
+              tableName: workshop
+              constraintName: uq_workshop_number
+          - dropTable:
+              tableName: workshop

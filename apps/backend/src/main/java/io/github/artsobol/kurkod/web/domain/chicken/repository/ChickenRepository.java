@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface ChickenRepository extends JpaRepository<Chicken, Integer> {
 
-    Optional<Chicken> findChickenByIdAndDeletedFalse(int id);
+    Optional<Chicken> findChickenById(int id);
 
-    List<Chicken> findAllByDeletedFalse();
+    List<Chicken> findAll();
 }

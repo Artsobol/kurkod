@@ -1,21 +1,9 @@
 package io.github.artsobol.kurkod.web.domain.passport.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class PassportDTO {
-
-    private String series;
-
-    private String number;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
-}
+public record PassportDTO(
+        String series, String number, OffsetDateTime createdAt, OffsetDateTime updatedAt, Long version
+) {
+};

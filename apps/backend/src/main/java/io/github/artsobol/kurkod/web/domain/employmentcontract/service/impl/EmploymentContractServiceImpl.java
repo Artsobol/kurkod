@@ -45,85 +45,98 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public EmploymentContractDTO get(Integer workerId) {
-        log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EmploymentContract.class), workerId);
+        log.debug(ApiLogMessage.GET_ENTITY.getValue(),
+                  getCurrentUsername(),
+                  LogHelper.getEntityName(EmploymentContract.class),
+                  workerId);
         return employmentContractMapper.toDto(getContractByWorkerId(workerId));
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO create(Integer workerId,
-                                                                       EmploymentContractPostRequest employmentContractPostRequest) {
-        Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(workerId))
-        );
+    public EmploymentContractDTO create(Integer workerId, EmploymentContractPostRequest request) {
+        Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId)
+                                        .orElseThrow(() -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(
+                                                workerId)));
 
-        Integer staffId = employmentContractPostRequest.getStaffId();
+        Integer staffId = request.getStaffId();
         Staff staff = getStaffByStaffId(staffId);
 
-        EmploymentContract employmentContract = employmentContractMapper.toEntity(employmentContractPostRequest);
+        EmploymentContract employmentContract = employmentContractMapper.toEntity(request);
         employmentContract.setStaff(staff);
         employmentContract.setWorker(worker);
         employmentContract = employmentContractRepository.save(employmentContract);
-        log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EmploymentContract.class), workerId);
+        log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(EmploymentContract.class),
+                 workerId);
         return employmentContractMapper.toDto(employmentContract);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO replace(Integer workerId,
-                                                                            EmploymentContractPutRequest employmentContractPutRequest) {
-        Integer staffId = employmentContractPutRequest.getStaffId();
+    public EmploymentContractDTO replace(Integer workerId, EmploymentContractPutRequest request, Long expectedVersion) {
+        Integer staffId = request.getStaffId();
         Staff staff = getStaffByStaffId(staffId);
 
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
 
-        employmentContractMapper.updateFully(employmentContract, employmentContractPutRequest);
+        employmentContractMapper.updateFully(employmentContract, request);
         employmentContract.setStaff(staff);
         employmentContract = employmentContractRepository.save(employmentContract);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EmploymentContract.class), workerId);
+        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(),
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(EmploymentContract.class),
+                 workerId);
         return employmentContractMapper.toDto(employmentContract);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO update(Integer workerId,
-                                                                                EmploymentContractPatchRequest employmentContractPatchRequest) {
+    public EmploymentContractDTO update(
+            Integer workerId,
+            EmploymentContractPatchRequest request,
+            Long expectedVersion) {
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
-        employmentContractMapper.updatePartially(employmentContract, employmentContractPatchRequest);
+        employmentContractMapper.updatePartially(employmentContract, request);
 
-        Integer staffId = employmentContractPatchRequest.getStaffId();
+        Integer staffId = request.getStaffId();
         if (staffId != null) {
             Staff staff = getStaffByStaffId(staffId);
             employmentContract.setStaff(staff);
         }
 
         employmentContract = employmentContractRepository.save(employmentContract);
-        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EmploymentContract.class), workerId);
+        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(),
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(EmploymentContract.class),
+                 workerId);
         return employmentContractMapper.toDto(employmentContract);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer workerId) {
+    public void delete(Integer workerId, Long expectedVersion) {
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
         employmentContract.setActive(false);
-        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(EmploymentContract.class), workerId);
+        log.info(ApiLogMessage.DELETE_ENTITY.getValue(),
+                 getCurrentUsername(),
+                 LogHelper.getEntityName(EmploymentContract.class),
+                 workerId);
         employmentContractRepository.save(employmentContract);
     }
 
     protected EmploymentContract getContractByWorkerId(Integer workerId) {
-        return employmentContractRepository.findEmploymentContractByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException(EmploymentContractError.NOT_FOUND_BY_ID.format(workerId))
-        );
+        return employmentContractRepository.findEmploymentContractByWorkerIdAndIsActiveTrue(workerId)
+                                           .orElseThrow(() -> new NotFoundException(EmploymentContractError.NOT_FOUND_BY_WORKER_ID, workerId));
     }
 
     protected Staff getStaffByStaffId(Integer staffId) {
-        return staffRepository.findStaffByIdAndIsActiveTrue(staffId).orElseThrow(
-                () -> new NotFoundException(StaffError.NOT_FOUND_BY_ID.format(staffId))
-        );
+        return staffRepository.findStaffByIdAndIsActiveTrue(staffId)
+                              .orElseThrow(() -> new NotFoundException(StaffError.NOT_FOUND_BY_ID.format(staffId)));
     }
 }

@@ -28,10 +28,8 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @Operation(
-            summary = "Authenticate user",
-            description = "Authenticates the user using email and password. Returns an access token and sets it in a cookie."
-    )
+    @Operation(summary = "Authenticate user",
+               description = "Authenticates the user using email and password. Returns an access token and sets it in a cookie.")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<UserProfileDTO>> login(
             @RequestBody @Valid LoginRequest loginRequest,
@@ -46,15 +44,12 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
-    @Operation(
-            summary = "Refresh access token",
-            description = "Generates a new access token using a valid refresh token. The new token is also set in a cookie."
-    )
+    @Operation(summary = "Refresh access token",
+               description = "Generates a new access token using a valid refresh token. The new token is also set in a cookie.")
     @GetMapping("/refresh/token")
     public ResponseEntity<IamResponse<UserProfileDTO>> refreshToken(
             @RequestParam(name = "token") String refreshToken,
-            HttpServletResponse response
-    ) {
+            HttpServletResponse response) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
         IamResponse<UserProfileDTO> result = authService.refreshAccessToken(refreshToken);
@@ -63,13 +58,12 @@ public class AuthController {
         return ResponseEntity.ok(result);
     }
 
-    @Operation(
-            summary = "Register new user",
-            description = "Registers a new user account and immediately returns an access token set in a cookie."
-    )
+    @Operation(summary = "Register new user",
+               description = "Registers a new user account and immediately returns an access token set in a cookie.")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<UserProfileDTO>> register(@RequestBody @Valid RegistrationRequest registrationRequest,
-                                                                HttpServletResponse response) {
+    public ResponseEntity<IamResponse<UserProfileDTO>> register(
+            @RequestBody @Valid RegistrationRequest registrationRequest,
+            HttpServletResponse response) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
         IamResponse<UserProfileDTO> result = authService.registerUser(registrationRequest);

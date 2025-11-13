@@ -70,7 +70,8 @@ public class SecurityConfig {
                 .authenticationEntryPoint((req, res, ex1) -> {
                     res.setStatus(HttpStatus.UNAUTHORIZED.value());
                     res.setContentType("application/json");
-                    var body = IamError.createError(HttpStatus.UNAUTHORIZED,
+                    // TODO
+                    var body = IamError.createError(HttpStatus.UNAUTHORIZED, "123",
                             "Authentication required", req.getRequestURI());
                     res.getWriter().write(om.writeValueAsString(body));
                 })

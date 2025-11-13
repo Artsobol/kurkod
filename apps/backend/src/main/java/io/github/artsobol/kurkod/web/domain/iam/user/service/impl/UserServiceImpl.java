@@ -23,8 +23,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
 
 
 @Service
@@ -53,23 +56,18 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public UserDTO getByUsername(@NotBlank String username) {
-        User response = userRepository.findByUsernameAndIsActiveTrue(username)
-                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_USERNAME.format(username)));
+        User response = getUserByUsername(username);
         return userMapper.toDto(response);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO create(@NotNull UserPostRequest userPostRequest) {
-        if (userRepository.existsByUsername(userPostRequest.getUsername())) {
-            throw new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS.format(userPostRequest.getUsername()));
-        }
-        if (userRepository.existsByEmail(userPostRequest.getEmail())) {
-            throw new DataExistException(UserError.WITH_EMAIL_ALREADY_EXISTS.format(userPostRequest.getEmail()));
-        }
-        User user = userMapper.toEntity(userPostRequest);
-        user.setPassword(passwordEncoder.encode(userPostRequest.getPassword()));
+    public UserDTO create(@NotNull UserPostRequest request) {
+        ensureNotExistsByUsername(request.getUsername());
+        ensureNotExistsByEmail(request.getEmail());
+        User user = userMapper.toEntity(request);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user = userRepository.save(user);
         return userMapper.toDto(user);
     }
@@ -77,9 +75,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO replace(@NotNull Integer userId, UserPutRequest userPutRequest) {
+    public UserDTO replace(@NotNull Integer userId, UserPutRequest request, Long version) {
         User user = getUserById(userId);
-        userMapper.updateFully(user, userPutRequest);
+        checkVersion(user.getVersion(), version);
+        userMapper.updateFully(user, request);
         user = userRepository.save(user);
         return userMapper.toDto(user);
     }
@@ -87,9 +86,10 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO update(@NotNull Integer userId, UserPatchRequest userPatchRequest) {
+    public UserDTO update(@NotNull Integer userId, UserPatchRequest request,Long version) {
         User user = getUserById(userId);
-        userMapper.updatePartially(user, userPatchRequest);
+        checkVersion(user.getVersion(), version);
+        userMapper.updatePartially(user, request);
         user = userRepository.save(user);
         return userMapper.toDto(user);
     }
@@ -97,8 +97,9 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void deleteById(@NotNull Integer userId) {
+    public void deleteById(@NotNull Integer userId, Long version) {
         User user = getUserById(userId);
+        checkVersion(user.getVersion(), version);
         user.setActive(false);
         userRepository.save(user);
     }
@@ -112,7 +113,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NotFoundException(UserError.WITH_EMAIL_ALREADY_EXISTS.format(email)));
 
-        user.setLastLogin(LocalDateTime.now());
+        user.setLastLogin(OffsetDateTime.now());
         userRepository.save(user);
         return new org.springframework.security.core.userdetails.User(user.getUsername(),
                 user.getPassword(),
@@ -121,8 +122,25 @@ public class UserServiceImpl implements UserService {
                 ).collect(Collectors.toList()));
     }
 
+    protected User getUserByUsername(String username) {
+        return userRepository.findByUsernameAndIsActiveTrue(username)
+                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_USERNAME, username));
+    }
+
     protected User getUserById(Integer id) {
         return userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_ID.format(id)));
+                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_ID, id));
+    }
+
+    protected void ensureNotExistsByUsername(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS, username);
+        }
+    }
+
+    protected void ensureNotExistsByEmail(String email) {
+        if (userRepository.existsByEmail(email)) {
+            throw new DataExistException(UserError.WITH_EMAIL_ALREADY_EXISTS, email);
+        }
     }
 }

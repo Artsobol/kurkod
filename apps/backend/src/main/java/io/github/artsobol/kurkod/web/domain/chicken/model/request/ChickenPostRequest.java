@@ -13,10 +13,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ChickenPostRequest implements Serializable {
 
+    private String name;
+
     @NotNull
     private Integer weight;
-
-    private String name;
 
     @NotNull
     private LocalDate birthDate;

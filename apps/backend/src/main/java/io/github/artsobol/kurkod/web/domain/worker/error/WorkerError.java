@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum WorkerError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("WRK-404", "worker.worker_not_found_by_id", HttpStatus.NOT_FOUND),
+    NOT_FOUND_BY_ID("WRK-404", "worker.not_found_by_id", HttpStatus.NOT_FOUND),
     ;
 
     private final String code;

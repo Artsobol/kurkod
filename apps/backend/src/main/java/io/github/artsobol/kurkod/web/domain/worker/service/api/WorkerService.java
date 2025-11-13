@@ -13,11 +13,11 @@ public interface WorkerService {
 
     List<WorkerDTO> getAll();
 
-    WorkerDTO create(WorkerPostRequest workerPostRequest);
+    WorkerDTO create(WorkerPostRequest request);
 
-    WorkerDTO replace(Integer id, WorkerPutRequest workerPutRequest);
+    WorkerDTO replace(Integer id, WorkerPutRequest request, Long version);
 
-    WorkerDTO update(Integer id, WorkerPatchRequest workerPatchRequest);
+    WorkerDTO update(Integer id, WorkerPatchRequest request, Long version);
 
-    void delete(Integer id);
+    void delete(Integer id, Long version);
 }

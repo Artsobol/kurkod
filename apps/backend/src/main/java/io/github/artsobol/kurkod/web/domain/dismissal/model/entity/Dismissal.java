@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.dismissal.model.entity;
 
+import io.github.artsobol.kurkod.web.domain.common.BaseEntity;
 import io.github.artsobol.kurkod.web.domain.worker.model.entity.Worker;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,11 +18,7 @@ import java.time.LocalDateTime;
 @Table(name = "dismissal")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Dismissal {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Dismissal extends BaseEntity {
 
     @NotNull
     @Column(nullable = false, name = "dismissal_date")
@@ -39,24 +35,4 @@ public class Dismissal {
     @ManyToOne(optional = false)
     @JoinColumn(name = "who_dismiss_id", nullable = false)
     private Worker whoDismiss;
-
-    @NotNull
-    @Column(nullable = false, updatable = false, name = "created_at")
-    private LocalDateTime createdAt;
-
-    @NotNull
-    @Column(nullable = false, name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

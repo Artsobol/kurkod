@@ -15,9 +15,9 @@ public interface RowsService {
 
     RowsDTO create(Integer workshopId, RowsPostRequest request);
 
-    RowsDTO update(Integer workshopId, Integer rowHumber, RowsPatchRequest rowsPatchRequest);
+    RowsDTO update(Integer workshopId, Integer rowHumber, RowsPatchRequest request, Long version);
 
-    RowsDTO replace(Integer workshopId, Integer rowHumber, RowsPutRequest rowsPutRequest);
+    RowsDTO replace(Integer workshopId, Integer rowHumber, RowsPutRequest request, Long version);
 
-    void delete(Integer workshopId, Integer rowHumber);
+    void delete(Integer workshopId, Integer rowHumber, Long version);
 }

@@ -17,5 +17,5 @@ public class EggProductionMonthPutRequest {
 
     @Positive
     @NotNull
-    private Integer eggsCount;
+    private Integer count;
 }

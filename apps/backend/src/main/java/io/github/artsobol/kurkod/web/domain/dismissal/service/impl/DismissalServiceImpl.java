@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -70,9 +72,9 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     @Transactional
-    public DismissalDTO create(DismissalPostRequest dismissalPostRequest) {
-        Dismissal dismissal = dismissalMapper.toEntity(dismissalPostRequest);
-        Worker worker = getWorkerById(dismissalPostRequest.getWorkerId());
+    public DismissalDTO create(DismissalPostRequest request) {
+        Dismissal dismissal = dismissalMapper.toEntity(request);
+        Worker worker = getWorkerById(request.getWorkerId());
         Worker whoDismiss = getWorkerById(getCurrentUserId());
         dismissal.setWorker(worker);
         dismissal.setWhoDismiss(whoDismiss);
@@ -83,9 +85,10 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     @Transactional
-    public DismissalDTO replace(Integer workerId, DismissalPutRequest dismissalPutRequest) {
+    public DismissalDTO replace(Integer workerId, DismissalPutRequest request, Long version) {
         Dismissal dismissal = getDismissalByWorkerId(workerId);
-        dismissalMapper.replace(dismissal, dismissalPutRequest);
+        checkVersion(dismissal.getVersion(), version);
+        dismissalMapper.replace(dismissal, request);
         dismissal = dismissalRepository.save(dismissal);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(dismissal), dismissal.getId());
         return dismissalMapper.toDTO(dismissal);
@@ -93,9 +96,10 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     @Transactional
-    public DismissalDTO update(Integer workerId, DismissalPatchRequest dismissalPatchRequest) {
+    public DismissalDTO update(Integer workerId, DismissalPatchRequest request, Long version) {
         Dismissal dismissal = getDismissalByWorkerId(workerId);
-        dismissalMapper.update(dismissal, dismissalPatchRequest);
+        checkVersion(dismissal.getVersion(), version);
+        dismissalMapper.update(dismissal, request);
         dismissal = dismissalRepository.save(dismissal);
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(dismissal), dismissal.getId());
         return dismissalMapper.toDTO(dismissal);
@@ -109,12 +113,12 @@ public class DismissalServiceImpl implements DismissalService {
 
     protected Dismissal getDismissalByWorkerId(Integer id) {
         return dismissalRepository.findDismissalByWorker_Id(id)
-                .orElseThrow(() -> new NotFoundException(DismissalError.NOT_FOUND_BY_ID.format(id)));
+                .orElseThrow(() -> new NotFoundException(DismissalError.NOT_FOUND_BY_WORKER_ID, id));
     }
 
     protected Dismissal getDismissalByWorkerAndDismissed(Integer workerId, Integer dismissId) {
         return dismissalRepository.findDismissalByWorker_IdAndWhoDismiss_Id(workerId, dismissId)
-                .orElseThrow(() -> new NotFoundException(DismissalError.NOT_FOUND_BY_ID.format(workerId, dismissId)));
+                .orElseThrow(() -> new NotFoundException(DismissalError.NOT_FOUND_BY_WORKER_AND_DISMISSED, workerId, dismissId));
     }
 
 

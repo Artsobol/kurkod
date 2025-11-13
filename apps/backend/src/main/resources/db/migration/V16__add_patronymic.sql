@@ -1,5 +1,0 @@
-ALTER TABLE worker
-    ADD COLUMN patronymic VARCHAR(50);
-
-ALTER TABLE chicken
-    ADD COLUMN name VARCHAR(30);

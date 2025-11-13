@@ -1,0 +1,95 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-breed
+      author: artsobol
+      preConditions:
+        - onFail: HALT
+          not:
+            tableExists:
+              tableName: breed
+
+      changes:
+        - createTable:
+            tableName: breed
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_breed
+                    nullable: false
+
+              - column:
+                  name: name
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: eggs_number
+                  type: integer
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: weight
+                  type: integer
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: "0"
+                  constraints:
+                    nullable: false
+
+        - addUniqueConstraint:
+            tableName: breed
+            columnNames: name
+            constraintName: uq_breed_name
+
+        - addCheckConstraint:
+            tableName: breed
+            constraintName: ck_breed_eggs_number_gt_0
+            constraintBody: eggs_number > 0
+
+        - addCheckConstraint:
+            tableName: breed
+            constraintName: ck_breed_weight_gt_0
+            constraintBody: weight > 0
+
+      rollback:
+        - dropUniqueConstraint:
+            tableName: breed
+            constraintName: uq_breed_name
+        - dropCheckConstraint:
+            tableName: breed
+            constraintName: ck_breed_eggs_number_gt_0
+        - dropCheckConstraint:
+            tableName: breed
+            constraintName: ck_breed_weight_gt_0
+        - dropTable:
+            tableName: breed

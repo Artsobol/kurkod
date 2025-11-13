@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface StaffService {
 
-    StaffDTO get(Integer staffId);
+    StaffDTO get(Integer id);
 
     List<StaffDTO> getAll();
 
-    StaffDTO create(StaffPostRequest staffPostRequest);
+    StaffDTO create(StaffPostRequest request);
 
-    StaffDTO replace(Integer staffId, StaffPutRequest staffPutRequest);
+    StaffDTO replace(Integer id, StaffPutRequest request, Long version);
 
-    StaffDTO update(Integer staffId, StaffPatchRequest staffPatchRequest);
+    StaffDTO update(Integer id, StaffPatchRequest request, Long version);
 
-    void delete(Integer staffId);
+    void delete(Integer id, Long version);
 }

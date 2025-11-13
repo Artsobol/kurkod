@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
+
 @Slf4j
 @Service
 @Transactional(readOnly = true)
@@ -56,11 +58,11 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO create(Integer workshopId, RowsPostRequest rowsPostRequest) {
-        Integer rowNumber = rowsPostRequest.getRowNumber();
+    public RowsDTO create(Integer workshopId, RowsPostRequest request) {
+        Integer rowNumber = request.getRowNumber();
         ensureNotExists(workshopId, rowNumber);
 
-        Rows rows = rowsMapper.toEntity(rowsPostRequest);
+        Rows rows = rowsMapper.toEntity(request);
         rows.setWorkshop(workshopRepository.findById(workshopId).orElseThrow(
                 () -> new NotFoundException(WorkshopError.NOT_FOUND_BY_ID.format(workshopId))
         ));
@@ -72,14 +74,15 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO update(Integer workshopId, Integer rowHumber, RowsPatchRequest rowsPatchRequest) {
-        Integer updatedRowNumber = rowsPatchRequest.getRowNumber();
+    public RowsDTO update(Integer workshopId, Integer rowHumber, RowsPatchRequest request, Long version) {
+        Integer updatedRowNumber = request.getRowNumber();
         if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
             ensureNotExists(workshopId, updatedRowNumber);
         }
 
         Rows rows = getRowsById(workshopId, rowHumber);
-        rowsMapper.update(rows, rowsPatchRequest);
+        checkVersion(rows.getVersion(), version);
+        rowsMapper.update(rows, request);
         rowsRepository.save(rows);
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class), workshopId);
         return rowsMapper.toDto(rows);
@@ -88,14 +91,15 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO replace(Integer workshopId, Integer rowHumber, RowsPutRequest rowsPutRequest) {
-        Integer updatedRowNumber = rowsPutRequest.getRowNumber();
+    public RowsDTO replace(Integer workshopId, Integer rowHumber, RowsPutRequest request, Long version) {
+        Integer updatedRowNumber = request.getRowNumber();
         if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
             ensureNotExists(workshopId, updatedRowNumber);
         }
 
         Rows rows = getRowsById(workshopId, rowHumber);
-        rowsMapper.replace(rows, rowsPutRequest);
+        checkVersion(rows.getVersion(), version);
+        rowsMapper.replace(rows, request);
         rowsRepository.save(rows);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class), workshopId);
         return rowsMapper.toDto(rows);
@@ -104,16 +108,17 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer workshopId, Integer rowHumber) {
+    public void delete(Integer workshopId, Integer rowHumber, Long version) {
         Rows rows = getRowsById(workshopId, rowHumber);
-        rows.setIsActive(false);
+        checkVersion(rows.getVersion(), version);
+        rows.setActive(false);
         rowsRepository.save(rows);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class), workshopId);
     }
 
     protected Rows getRowsById(Integer workshopId, Integer rowHumber) {
         return rowsRepository.findByWorkshop_IdAndRowNumberAndIsActiveTrue(workshopId, rowHumber).orElseThrow(
-                () -> new NotFoundException(RowsError.NOT_FOUND_BY_ID.format(workshopId, rowHumber))
+                () -> new NotFoundException(RowsError.NOT_FOUND_BY_KEYS, workshopId, rowHumber)
         );
     }
 

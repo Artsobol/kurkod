@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum EggProductionMonthError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("EPM-404", "egg_production_month.egg_production_month_not_found_by_id", HttpStatus.NOT_FOUND),
-    ALREADY_EXISTS("EPM-409", "egg_production_month.egg_production_month_already_exists", HttpStatus.CONFLICT),
+    NOT_FOUND_BY_KEYS("EPM-404", "egg_production_month.not_found_by_keys", HttpStatus.NOT_FOUND),
+    ALREADY_EXISTS("EPM-409", "egg_production_month.already_exists", HttpStatus.CONFLICT),
     ;
 
     private final String code;

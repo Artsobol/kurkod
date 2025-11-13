@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.iam.user.model.entity;
 
+import io.github.artsobol.kurkod.web.domain.common.BaseEntity;
 import io.github.artsobol.kurkod.web.domain.iam.role.model.entity.Role;
 import io.github.artsobol.kurkod.web.domain.iam.user.model.enums.RegistrationStatus;
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collection;
 
 @Entity
@@ -19,11 +21,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class User extends BaseEntity {
 
     @NotBlank
     @Size(max = 30, message = "Username should be less than 30 characters")
@@ -40,23 +38,11 @@ public class User {
     @Column(nullable = false, length = 80)
     private String email;
 
-    @NotNull
-    @Column(nullable = false)
-    private boolean isActive = true;
-
-    private LocalDateTime lastLogin;
+    private OffsetDateTime lastLogin;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "registration_status", nullable = false)
     private RegistrationStatus registrationStatus;
-
-    @NotNull
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @NotNull
-    @Column(nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -65,16 +51,4 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Collection<Role> roles;
-
-    @PrePersist
-    protected void onCreate() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }

@@ -1,0 +1,124 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-add_egg_production_month
+      author: artsobol
+      preConditions:
+        - onFail: HALT
+          and:
+            - not:
+                tableExists:
+                  tableName: egg_production_month
+            - tableExists:
+                tableName: chicken
+
+      changes:
+        - createTable:
+            tableName: egg_production_month
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_egg_production_month
+                    nullable: false
+
+              - column:
+                  name: month
+                  type: integer
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: year
+                  type: integer
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: count
+                  type: integer
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: chicken_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: created_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: updated_at
+                  type: timestamp with time zone
+                  defaultValueComputed: now()
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: version
+                  type: bigint
+                  defaultValueNumeric: "0"
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: egg_production_month
+            baseColumnNames: chicken_id
+            constraintName: fk_egg_production_month_chicken_id
+            referencedTableName: chicken
+            referencedColumnNames: id
+            onDelete: RESTRICT
+            onUpdate: RESTRICT
+
+        - addUniqueConstraint:
+            tableName: egg_production_month
+            columnNames: chicken_id, month, year
+            constraintName: uq_egg_production_month_chicken_id_month_year
+
+        - addCheckConstraint:
+            tableName: egg_production_month
+            constraintName: ck_egg_production_month_count
+            constraintBody: count > 0
+
+        - addCheckConstraint:
+            tableName: egg_production_month
+            constraintName: ck_egg_production_month_between_1_12
+            constraintBody: month >= 1 and month <= 12
+
+        - addCheckConstraint:
+            tableName: egg_production_month
+            constraintName: ck_egg_production_month_year_gt_0
+            constraintBody: year > 0
+
+      rollback:
+        - dropUniqueConstraint:
+            tableName: egg_production_month
+            constraintName: uq_egg_production_month_chicken_id_month_year
+        - dropCheckConstraint:
+            tableName: egg_production_month
+            constraintName: ck_egg_production_month_year_gt_0
+        - dropCheckConstraint:
+            tableName: egg_production_month
+            constraintName: ck_egg_production_month_month_between_1_12
+        - dropCheckConstraint:
+            tableName: egg_production_month
+            constraintName: ck_egg_production_month_count
+        - dropForeignKeyConstraint:
+            baseTableName: egg_production_month
+            constraintName: fk_egg_production_month_chicken_id
+        - dropTable:
+            tableName: egg_production_month

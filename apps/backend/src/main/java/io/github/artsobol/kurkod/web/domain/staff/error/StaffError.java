@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum StaffError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("STAFF-404", "staff.staff_not_found_by_id", HttpStatus.NOT_FOUND),
+    NOT_FOUND_BY_ID("STAFF-404", "staff.not_found_by_id", HttpStatus.NOT_FOUND),
+    ALREADY_EXISTS("STAFF-409", "staff.already_exists", HttpStatus.CONFLICT),
     ;
 
     private final String code;
