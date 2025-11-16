@@ -25,16 +25,20 @@ databaseChangeLog:
                   type: varchar(30)
                   constraints:
                     nullable: false
+                    checkConstraint: "btrim(first_name) = first_name AND char_length(btrim(first_name)) BETWEEN 1 AND 50"
 
               - column:
                   name: last_name
                   type: varchar(30)
                   constraints:
                     nullable: false
+                    checkConstraint: "btrim(last_name) = last_name AND char_length(btrim(last_name)) BETWEEN 1 AND 50"
 
               - column:
                   name: patronymic
                   type: varchar(30)
+                  constraints:
+                    checkConstraint: "patronymic IS NULL OR (btrim(patronymic) = patronymic AND char_length(patronymic) <= 30)"
 
               - column:
                   name: created_at
@@ -64,30 +68,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
-        - addCheckConstraint:
-            tableName: worker
-            constraintName: ck_worker_first_name
-            constraintBody: "btrim(first_name) = first_name AND char_length(btrim(first_name)) BETWEEN 1 AND 50"
-
-        - addCheckConstraint:
-            tableName: worker
-            constraintName: ck_worker_last_name
-            constraintBody: "btrim(last_name) = last_name AND char_length(btrim(last_name)) BETWEEN 1 AND 50"
-
-        - addCheckConstraint:
-            tableName: worker
-            constraintName: ck_worker_patronymic
-            constraintBody: "patronymic IS NULL OR (btrim(patronymic) = patronymic AND char_length(patronymic) <= 30)"
-
       rollback:
-        - dropCheckConstraint:
-            tableName: worker
-            constraintName: ck_worker_last_name
-        - dropCheckConstraint:
-            tableName: worker
-            constraintName: ck_worker_first_name
-        - dropCheckConstraint:
-            tableName: worker
-            constraintName: ck_worker_patronymic
         - dropTable:
             tableName: worker

@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.web.controller.dismissal;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artsobol.kurkod.common.exception.MatchFailedException;
 import io.github.artsobol.kurkod.common.exception.NotFoundException;
-import io.github.artsobol.kurkod.common.exception.RequiredHeaderError;
+import io.github.artsobol.kurkod.web.domain.common.error.RequiredHeaderError;
 import io.github.artsobol.kurkod.common.util.EtagUtils;
 import io.github.artsobol.kurkod.security.facade.SecurityContextFacade;
 import io.github.artsobol.kurkod.security.filter.JwtRequestFilter;

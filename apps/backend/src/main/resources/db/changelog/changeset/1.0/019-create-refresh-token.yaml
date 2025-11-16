@@ -1,31 +1,32 @@
 databaseChangeLog:
-    - changeSet:
-        id: 001-create-workshop
-        author: artsobol
-        preConditions:
-          - onFail: HALT
-            not:
-              tableExists:
-                tableName: workshop
+  - changeSet:
+      id: 001-create-refresh-token
+      author: artsobol
 
-        changes:
-          - createTable:
-              tableName: workshop
+      changes:
+        - createTable:
+              tableName: refresh_token
               columns:
                 - column:
                     name: id
                     type: bigserial
                     constraints:
                       primaryKey: true
-                      primaryKeyName: pk_workshop
+                      primaryKeyName: pk_refresh_token
                       nullable: false
 
                 - column:
-                    name: workshop_number
-                    type: integer
+                    name: token
+                    type: varchar(255)
                     constraints:
                       nullable: false
-                      checkConstraint: workshop_number > 0
+                      unique: true
+
+                - column:
+                    name: user_id
+                    type: bigint
+                    constraints:
+                      nullable: false
 
                 - column:
                     name: created_at
@@ -33,7 +34,6 @@ databaseChangeLog:
                     defaultValueComputed: now()
                     constraints:
                       nullable: false
-
                 - column:
                     name: updated_at
                     type: timestamp with time zone
@@ -45,24 +45,8 @@ databaseChangeLog:
                     name: is_active
                     type: boolean
                     defaultValueBoolean: true
-                    constraints:
-                      nullable: false
 
                 - column:
                     name: version
                     type: bigint
                     defaultValueNumeric: "0"
-                    constraints:
-                      nullable: false
-
-          - addUniqueConstraint:
-              tableName: workshop
-              columnNames: workshop_number
-              constraintName: uq_workshop_number
-
-        rollback:
-          - dropUniqueConstraint:
-              tableName: workshop
-              constraintName: uq_workshop_number
-          - dropTable:
-              tableName: workshop

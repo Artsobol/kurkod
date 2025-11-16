@@ -28,18 +28,21 @@ databaseChangeLog:
                   type: integer
                   constraints:
                     nullable: false
+                    checkConstraint: month >= 1 and month <= 12
 
               - column:
                   name: year
                   type: integer
                   constraints:
                     nullable: false
+                    checkConstraint: year > 0
 
               - column:
                   name: count
                   type: integer
                   constraints:
                     nullable: false
+                    checkConstraint: count >= 0
 
               - column:
                   name: chicken_id
@@ -89,34 +92,10 @@ databaseChangeLog:
             columnNames: chicken_id, month, year
             constraintName: uq_egg_production_month_chicken_id_month_year
 
-        - addCheckConstraint:
-            tableName: egg_production_month
-            constraintName: ck_egg_production_month_count
-            constraintBody: count > 0
-
-        - addCheckConstraint:
-            tableName: egg_production_month
-            constraintName: ck_egg_production_month_between_1_12
-            constraintBody: month >= 1 and month <= 12
-
-        - addCheckConstraint:
-            tableName: egg_production_month
-            constraintName: ck_egg_production_month_year_gt_0
-            constraintBody: year > 0
-
       rollback:
         - dropUniqueConstraint:
             tableName: egg_production_month
             constraintName: uq_egg_production_month_chicken_id_month_year
-        - dropCheckConstraint:
-            tableName: egg_production_month
-            constraintName: ck_egg_production_month_year_gt_0
-        - dropCheckConstraint:
-            tableName: egg_production_month
-            constraintName: ck_egg_production_month_month_between_1_12
-        - dropCheckConstraint:
-            tableName: egg_production_month
-            constraintName: ck_egg_production_month_count
         - dropForeignKeyConstraint:
             baseTableName: egg_production_month
             constraintName: fk_egg_production_month_chicken_id

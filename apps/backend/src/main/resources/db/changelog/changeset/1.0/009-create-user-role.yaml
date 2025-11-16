@@ -9,7 +9,7 @@ databaseChangeLog:
                 tableExists:
                   tableName: user_role
             - tableExists:
-                tableName: user
+                tableName: users
             - tableExists:
                 tableName: role
 

@@ -27,6 +27,13 @@ databaseChangeLog:
                     unique: true
 
               - column:
+                  name: user_system_role
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+
+              - column:
                   name: created_at
                   type: timestamp with time zone
                   defaultValueComputed: now()

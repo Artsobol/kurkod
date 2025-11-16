@@ -31,3 +31,9 @@ databaseChangeLog:
       file: db/changelog/changeset/1.0/015-create-chicken-movement.yaml
   - include:
       file: db/changelog/changeset/1.0/016-create-dismissal.yaml
+  - include:
+      file: db/changelog/changeset/1.0/017-create-current-chicken-position-view.yaml
+  - include:
+      file: db/changelog/changeset/1.0/018-create-report-chicken-by-workshop-and-breed-view.yaml
+  - include:
+      file: db/changelog/changeset/1.0/019-create-refresh-token.yaml

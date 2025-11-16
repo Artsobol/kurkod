@@ -12,6 +12,7 @@ import io.github.artsobol.kurkod.web.domain.chicken.model.request.ChickenPatchRe
 import io.github.artsobol.kurkod.web.domain.chicken.model.request.ChickenPostRequest;
 import io.github.artsobol.kurkod.web.domain.chicken.model.request.ChickenPutRequest;
 import io.github.artsobol.kurkod.web.domain.chicken.service.api.ChickenService;
+import io.github.artsobol.kurkod.web.domain.common.error.RequiredHeaderError;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

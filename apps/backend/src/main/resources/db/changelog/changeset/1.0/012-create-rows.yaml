@@ -22,41 +22,47 @@ databaseChangeLog:
                       primaryKey: true
                       primaryKeyName: pk_rows
                       nullable: false
+
                 - column:
                     name: row_number
                     type: integer
                     constraints:
                       nullable: false
+                      checkConstraint: row_number > 0
+
                 - column:
                     name: workshop_id
                     type: bigint
                     constraints:
                       nullable: false
+
                 - column:
                     name: created_at
                     type: timestamp with time zone
                     defaultValueComputed: now()
                     constraints:
                       nullable: false
+
                 - column:
                     name: updated_at
                     type: timestamp with time zone
                     defaultValueComputed: now()
                     constraints:
                       nullable: false
+
                 - column:
                     name: is_active
                     type: boolean
                     defaultValueBoolean: true
                     constraints:
                       nullable: false
+
                 - column:
                     name: version
                     type: bigint
                     defaultValue: "0"
                     constraints:
                       nullable: false
-
 
           - addForeignKeyConstraint:
               baseTableName: rows
@@ -72,11 +78,6 @@ databaseChangeLog:
               columnNames: workshop_id, row_number
               constraintName: uq_rows_workshop_id_row_number
 
-          - addCheckConstraint:
-              tableName: rows
-              constraintName: ck_rows_row_number_gt_0
-              constraintBody: "row_number > 0"
-
           - createIndex:
               tableName: rows
               indexName: idx_rows_workshop_id
@@ -91,9 +92,6 @@ databaseChangeLog:
           - dropUniqueConstraint:
               tableName: rows
               constraintName: uq_rows_workshop_id_row_number
-          - dropCheckConstraint:
-              tableName: rows
-              constraintName: ck_rows_row_number_gt_0
           - dropIndex:
               tableName: rows
               indexName: idx_rows_workshop_id

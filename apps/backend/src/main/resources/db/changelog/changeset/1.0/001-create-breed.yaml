@@ -31,12 +31,14 @@ databaseChangeLog:
                   type: integer
                   constraints:
                     nullable: false
+                    checkConstraint: eggs_number > 0
 
               - column:
                   name: weight
                   type: integer
                   constraints:
                     nullable: false
+                    checkConstraint: weight > 0
 
               - column:
                   name: created_at
@@ -71,25 +73,9 @@ databaseChangeLog:
             columnNames: name
             constraintName: uq_breed_name
 
-        - addCheckConstraint:
-            tableName: breed
-            constraintName: ck_breed_eggs_number_gt_0
-            constraintBody: eggs_number > 0
-
-        - addCheckConstraint:
-            tableName: breed
-            constraintName: ck_breed_weight_gt_0
-            constraintBody: weight > 0
-
       rollback:
         - dropUniqueConstraint:
             tableName: breed
             constraintName: uq_breed_name
-        - dropCheckConstraint:
-            tableName: breed
-            constraintName: ck_breed_eggs_number_gt_0
-        - dropCheckConstraint:
-            tableName: breed
-            constraintName: ck_breed_weight_gt_0
         - dropTable:
             tableName: breed

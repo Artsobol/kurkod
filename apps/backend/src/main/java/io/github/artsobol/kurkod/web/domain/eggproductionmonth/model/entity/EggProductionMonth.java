@@ -19,11 +19,21 @@ import lombok.*;
 @AllArgsConstructor
 public class EggProductionMonth extends BaseEntity {
 
-    @NotNull @Positive @Column(nullable = false) private Integer year;
+    @NotNull
+    @Positive
+    @Column(nullable = false)
+    private Integer year;
 
-    @Min(1) @Max(12) @NotNull @Column(nullable = false) private Integer month;
+    @Min(1)
+    @Max(12)
+    @NotNull
+    @Column(nullable = false)
+    private Integer month;
 
-    @NotNull @Positive @Column(nullable = false) private Integer count;
+    @NotNull
+    @Positive
+    @Column(nullable = false)
+    private Integer count;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "chicken_id", nullable = false)
     private Chicken chicken;

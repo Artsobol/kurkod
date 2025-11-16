@@ -1,4 +1,4 @@
-package io.github.artsobol.kurkod.common.exception;
+package io.github.artsobol.kurkod.web.domain.common.error;
 
 import io.github.artsobol.kurkod.common.error.ErrorDescriptor;
 import lombok.AllArgsConstructor;

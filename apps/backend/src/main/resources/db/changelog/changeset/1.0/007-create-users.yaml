@@ -25,6 +25,7 @@ databaseChangeLog:
                   type: varchar(30)
                   constraints:
                     nullable: false
+                    checkConstraint: "char_length(btrim(username)) > 0"
 
               - column:
                   name: password
@@ -37,6 +38,7 @@ databaseChangeLog:
                   type: varchar(80)
                   constraints:
                     nullable: false
+                    checkConstraint: "char_length(btrim(email)) > 0"
 
               - column:
                   name: last_login
@@ -94,23 +96,7 @@ databaseChangeLog:
                   computed: true
                   valueComputed: lower(email)
 
-        - addCheckConstraint:
-            tableName: users
-            constraintName: ck_app_user_username_not_blank
-            constraintBody: length(trim(username)) > 0
-        - addCheckConstraint:
-            tableName: users
-            constraintName: ck_app_user_email_not_blank
-            constraintBody: length(trim(email)) > 0
-
-
       rollback:
-        - dropCheckConstraint:
-            tableName: users
-            constraintName: ck_app_user_email_not_blank
-        - dropCheckConstraint:
-            tableName: users
-            constraintName: ck_app_user_username_not_blank
         - dropIndex:
             tableName: users
             indexName: uq_app_user_email_lower

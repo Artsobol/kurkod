@@ -1,4 +1,4 @@
-package io.github.artsobol.kurkod.common.exception;
+package io.github.artsobol.kurkod.web.domain.common.error;
 
 import io.github.artsobol.kurkod.common.error.ErrorDescriptor;
 import lombok.AllArgsConstructor;
@@ -7,10 +7,8 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @AllArgsConstructor
-public enum RequiredHeaderError implements ErrorDescriptor {
-    IF_MATCH("IFM-428", "error.header.if_match.missing", HttpStatus.PRECONDITION_REQUIRED),
-    MATCH_FAILED("IFM-412", "error.version_not_equals", HttpStatus.PRECONDITION_FAILED),
-    MATCH_INVALID("IFM-400", "error.header.match_invalid", HttpStatus.BAD_REQUEST),
+public enum VersionError implements ErrorDescriptor {
+    VERSION_NOT_EQUALS("VNQ-409", "error.version_not_equals", HttpStatus.CONFLICT),
     ;
 
     private final String code;
