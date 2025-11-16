@@ -3,28 +3,27 @@ package io.github.artsobol.kurkod.web.advice;
 import io.github.artsobol.kurkod.common.constants.CommonConstants;
 import io.github.artsobol.kurkod.common.exception.*;
 import io.github.artsobol.kurkod.common.logging.constants.AnsiColor;
+import io.github.artsobol.kurkod.web.domain.common.error.CommonError;
+import io.github.artsobol.kurkod.web.domain.iam.user.error.UserError;
 import io.github.artsobol.kurkod.web.response.IamError;
-import io.github.artsobol.kurkod.web.response.IamResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.security.access.AccessDeniedException;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -48,27 +47,32 @@ public class CommonControllerAdvice {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<IamError> handleManve(MethodArgumentNotValidException ex, HttpServletRequest req) {
+    public ResponseEntity<IamError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest req) {
+        logStackTrace(ex);
         return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<IamError> handleCve(ConstraintViolationException ex, HttpServletRequest req) {
+        logStackTrace(ex);
         return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<IamError> handleUnreadable(HttpMessageNotReadableException ex, HttpServletRequest req) {
+        logStackTrace(ex);
         return handleBaseException(Exceptions.of(CommonError.MALFORMED_JSON), req);
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<IamError> handle415(HttpMediaTypeNotSupportedException ex, HttpServletRequest req) {
+        logStackTrace(ex);
         return handleBaseException(Exceptions.of(CommonError.UNSUPPORTED_MEDIA_TYPE), req);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<IamError> handle405(HttpRequestMethodNotSupportedException ex, HttpServletRequest req) {
+        logStackTrace(ex);
         return handleBaseException(Exceptions.of(CommonError.METHOD_NOT_ALLOWED), req);
     }
 
@@ -80,8 +84,15 @@ public class CommonControllerAdvice {
         return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
     }
 
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<IamError> handleAccessDenied(AccessDeniedException ex, HttpServletRequest req) {
+        logStackTrace(ex);
+        return handleBaseException(Exceptions.of(UserError.HAVE_NO_ACCESS), req);
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<IamError> handleAny(Exception ex, HttpServletRequest req) {
+        logStackTrace(ex);
         return handleBaseException(Exceptions.of(CommonError.INTERNAL_ERROR), req);
     }
 

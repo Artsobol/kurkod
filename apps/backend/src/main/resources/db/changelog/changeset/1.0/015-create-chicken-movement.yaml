@@ -49,6 +49,7 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
+                    checkConstraint: "from_cage_id != to_cage_id or from_cage_id is null"
 
               - column:
                   name: created_at
@@ -105,11 +106,6 @@ databaseChangeLog:
             onDelete: RESTRICT
             onUpdate: RESTRICT
 
-        - addCheckConstraint:
-            tableName: chicken_movement
-            constraintName: ck_chicken_movement_from_to
-            constraintBody: from_cage_id != to_cage_id or from_cage_id is null
-
         - createIndex:
             tableName: chicken_movement
             indexName: idx_chicken_movement_chicken_id
@@ -141,9 +137,6 @@ databaseChangeLog:
         - dropForeignKeyConstraint:
             baseTableName: chicken_movement
             constraintName: fk_chicken_movement_to_cage
-        - dropCheckConstraint:
-            tableName: chicken_movement
-            constraintName: ck_chicken_movement_from_to
         - dropIndex:
             tableName: chicken_movement
             indexName: idx_chicken_movement_chicken_id

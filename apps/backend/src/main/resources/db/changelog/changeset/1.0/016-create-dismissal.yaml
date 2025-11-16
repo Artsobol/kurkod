@@ -46,6 +46,7 @@ databaseChangeLog:
                     type: bigint
                     constraints:
                       nullable: false
+                      checkConstraint: who_dismiss_id != worker_id
 
                 - column:
                     name: created_at
@@ -93,11 +94,6 @@ databaseChangeLog:
               onDelete: RESTRICT
               onUpdate: RESTRICT
 
-          - addCheckConstraint:
-              tableName: dismissal
-              constraintName: ck_dismissal_not_self
-              constraintBody: worker_id <> who_dismiss_id
-
           - createIndex:
               tableName: dismissal
               indexName: idx_dismissal_worker_id
@@ -119,9 +115,6 @@ databaseChangeLog:
         - dropIndex:
             tableName: dismissal
             indexName: idx_dismissal_worker_id
-        - dropCheckConstraint:
-            tableName: dismissal
-            constraintName: ck_dismissal_not_self
         - dropForeignKeyConstraint:
             baseTableName: dismissal
             constraintName: fk_dismissal_who_dismiss

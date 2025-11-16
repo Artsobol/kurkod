@@ -6,8 +6,8 @@ databaseChangeLog:
         - onFail: HALT
           and:
             - not:
-              tableExists:
-                tableName: employment_contract
+                tableExists:
+                  tableName: employment_contract
             - tableExists:
                 tableName: worker
             - tableExists:
@@ -30,6 +30,8 @@ databaseChangeLog:
                   type: varchar(20)
                   constraints:
                     nullable: false
+                    checkConstraint: "btrim(contract_number) = contract_number AND char_length(contract_number) BETWEEN 1 AND 20"
+
               - column:
                   name: start_date
                   type: date
@@ -41,18 +43,21 @@ databaseChangeLog:
                   type: date
                   constraints:
                     nullable: false
+                    checkConstraint: start_date <= end_date
 
               - column:
                   name: salary
                   type: integer
                   constraints:
                     nullable: false
+                    checkConstraint: salary > 0
 
               - column:
                   name: worker_id
                   type: bigint
                   constraints:
                     nullable: false
+
               - column:
                   name: staff_id
                   type: bigint
@@ -124,29 +129,7 @@ databaseChangeLog:
             columnNames: contract_number
             constraintName: uq_employment_contract_contract_number
 
-        - addCheckConstraint:
-            tableName: employment_contract
-            constraintName: ck_employment_contract_salary
-            constraintBody: salary > 0
-
-        - addCheckConstraint:
-            tableName: employment_contract
-            constraintName: ck_employment_contract_start_date_before_end_date
-            constraintBody: start_date <= end_date
-
-        - addCheckConstraint:
-            tableName: employment_contract
-            constraintName: ch_employment_contract_contract_number_trim
-            constraintBody: btrim(contract_number) = contract_number AND char_length(contract_number) BETWEEN 1 AND 20
-
-
       rollback:
-        - dropCheckConstraint:
-            tableName: employment_contract
-            constraintName: ck_employment_contract_salary
-        - dropCheckConstraint:
-            tableName: employment_contract
-            constraintName: ck_employment_contract_start_date_before_end_date
         - dropUniqueConstraint:
             tableName: employment_contract
             constraintName: uq_employment_contract_contract_number

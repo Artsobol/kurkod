@@ -28,6 +28,7 @@ databaseChangeLog:
                     type: integer
                     constraints:
                       nullable: false
+                      checkConstraint: cage_number > 0
 
                 - column:
                     name: row_id
@@ -77,10 +78,6 @@ databaseChangeLog:
               columnNames: row_id, cage_number
               constraintName: uq_cage_row_id_cage_number
 
-          - addCheckConstraint:
-              tableName: cage
-              constraintName: ck_cage_number_number_gt_0
-              constraintBody: "cage_number > 0"
 
         rollback:
           - dropForeignKeyConstraint:
@@ -89,8 +86,5 @@ databaseChangeLog:
           - dropUniqueConstraint:
               tableName: cage
               constraintName: uq_cage_row_id_cage_number
-          - dropCheckConstraint:
-              tableName: cage
-              constraintName: ck_cage_number_gt_0
           - dropTable:
               tableName: cage

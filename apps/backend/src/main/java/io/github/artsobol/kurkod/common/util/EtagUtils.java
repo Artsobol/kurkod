@@ -1,8 +1,7 @@
 package io.github.artsobol.kurkod.common.util;
 
 import io.github.artsobol.kurkod.common.exception.*;
-
-import java.util.Objects;
+import io.github.artsobol.kurkod.web.domain.common.error.RequiredHeaderError;
 
 public final class EtagUtils {
 

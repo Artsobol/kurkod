@@ -25,6 +25,7 @@ databaseChangeLog:
                   type: varchar(50)
                   constraints:
                     nullable: false
+                    checkConstraint: "char_length(btrim(position)) BETWEEN 2 AND 50"
 
               - column:
                   name: created_at
@@ -59,15 +60,7 @@ databaseChangeLog:
             columnNames: position
             constraintName: uq_staff_position
 
-        - addCheckConstraint:
-            tableName: staff
-            constraintName: ck_staff_position
-            constraintBody: "char_length(position) BETWEEN 2 AND 50"
-
       rollback:
-        - dropCheckConstraint:
-            tableName: staff
-            constraintName: ck_staff_position
         - dropUniqueConstraint:
             tableName: staff
             constraintName: uq_staff_position

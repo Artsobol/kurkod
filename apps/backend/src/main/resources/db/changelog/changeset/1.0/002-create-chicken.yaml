@@ -34,12 +34,14 @@ databaseChangeLog:
                   type: integer
                   constraints:
                     nullable: false
+                    checkConstraint: weight > 0
 
               - column:
                   name: birth_date
                   type: date
                   constraints:
                     nullable: false
+                    checkConstraint: birth_date <= now()
 
               - column:
                   name: breed_id
@@ -91,23 +93,7 @@ databaseChangeLog:
               - column:
                   name: breed_id
 
-        - addCheckConstraint:
-            tableName: chicken
-            constraintName: ck_chicken_weight
-            constraintBody: weight > 0
-
-        - addCheckConstraint:
-            tableName: chicken
-            constraintName: ck_chicken_birth_date
-            constraintBody: birth_date <= now()
-
       rollback:
-        - dropCheckConstraint:
-            tableName: chicken
-            constraintName: ck_chicken_birth_date
-        - dropCheckConstraint:
-            tableName: chicken
-            constraintName: ck_chicken_weight
         - dropForeignKeyConstraint:
             baseTableName: chicken
             constraintName: fk_chicken_breed

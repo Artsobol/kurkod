@@ -3,8 +3,8 @@ package io.github.artsobol.kurkod.web.domain.chicken.service.impl;
 import io.github.artsobol.kurkod.common.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.common.logging.LogHelper;
 import io.github.artsobol.kurkod.security.facade.SecurityContextFacade;
+import io.github.artsobol.kurkod.web.domain.breed.service.impl.BreedLookupService;
 import io.github.artsobol.kurkod.web.domain.chicken.mapper.ChickenMapper;
-import io.github.artsobol.kurkod.web.domain.breed.error.BreedError;
 import io.github.artsobol.kurkod.web.domain.chicken.error.ChickenError;
 import io.github.artsobol.kurkod.web.domain.chicken.model.dto.ChickenDTO;
 import io.github.artsobol.kurkod.web.domain.breed.model.entity.Breed;
@@ -13,7 +13,6 @@ import io.github.artsobol.kurkod.common.exception.NotFoundException;
 import io.github.artsobol.kurkod.web.domain.chicken.model.request.ChickenPatchRequest;
 import io.github.artsobol.kurkod.web.domain.chicken.model.request.ChickenPutRequest;
 import io.github.artsobol.kurkod.web.domain.chicken.model.request.ChickenPostRequest;
-import io.github.artsobol.kurkod.web.domain.breed.repository.BreedRepository;
 import io.github.artsobol.kurkod.web.domain.chicken.repository.ChickenRepository;
 import io.github.artsobol.kurkod.web.domain.chicken.service.api.ChickenService;
 import lombok.RequiredArgsConstructor;
@@ -33,9 +32,9 @@ import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
 public class ChickenServiceImpl implements ChickenService {
 
     private final ChickenRepository chickenRepository;
-    private final BreedRepository breedRepository;
     private final ChickenMapper chickenMapper;
     private final SecurityContextFacade securityContextFacade;
+    private final BreedLookupService breedLookupService;
 
     private String getCurrentUsername() {
         return securityContextFacade.getCurrentUsername();
@@ -110,8 +109,7 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     private Breed getBreedById(Integer id) {
-        return breedRepository.findBreedById(id).orElseThrow(() ->
-                new NotFoundException(BreedError.NOT_FOUND_BY_ID, id));
+        return breedLookupService.getBreedByIdOrThrow(id);
     }
 
     protected Chicken getChickenById(Integer id) {

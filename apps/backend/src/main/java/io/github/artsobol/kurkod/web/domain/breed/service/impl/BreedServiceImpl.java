@@ -33,6 +33,7 @@ import java.util.List;
 public class BreedServiceImpl implements BreedService {
 
     private final BreedRepository breedRepository;
+    private final BreedLookupService breedLookupService;
     private final BreedMapper breedMapper;
     private final SecurityContextFacade securityContextFacade;
 
@@ -59,7 +60,7 @@ public class BreedServiceImpl implements BreedService {
     @Override
     public BreedDTO get(@NotNull Integer id) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Breed.class), id);
-        return breedMapper.toDto(getBreedById(id));
+        return breedMapper.toDto(breedLookupService.getBreedByIdOrThrow(id));
     }
 
     @Override
@@ -72,7 +73,7 @@ public class BreedServiceImpl implements BreedService {
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public BreedDTO replace(Integer id, BreedPutRequest request, Long version) {
-        Breed breed = getBreedById(id);
+        Breed breed = breedLookupService.getBreedByIdOrThrow(id);
         checkVersion(breed.getVersion(), version);
         breedMapper.updateFully(breed, request);
         breed = breedRepository.save(breed);
@@ -85,7 +86,7 @@ public class BreedServiceImpl implements BreedService {
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public BreedDTO update(Integer id, BreedPatchRequest breedPatchRequest, Long version) {
-        Breed breed = getBreedById(id);
+        Breed breed = breedLookupService.getBreedByIdOrThrow(id);
         checkVersion(breed.getVersion(), version);
         breedMapper.updatePartially(breed, breedPatchRequest);
         breed = breedRepository.save(breed);
@@ -98,17 +99,12 @@ public class BreedServiceImpl implements BreedService {
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public void delete(Integer id, Long version) {
-        Breed breed = getBreedById(id);
+        Breed breed = breedLookupService.getBreedByIdOrThrow(id);
         checkVersion(breed.getVersion(), version);
         breed.setActive(false);
 
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed), id);
         breedRepository.save(breed);
-    }
-
-    protected Breed getBreedById(Integer id) {
-        return breedRepository.findBreedById(id)
-                              .orElseThrow(() -> new NotFoundException(BreedError.NOT_FOUND_BY_ID, id));
     }
 
     protected void ensureNotExists(String name) {
