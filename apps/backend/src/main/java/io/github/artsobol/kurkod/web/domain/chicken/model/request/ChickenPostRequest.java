@@ -23,4 +23,7 @@ public class ChickenPostRequest implements Serializable {
 
     @NotNull
     private Integer breedId;
+
+    @NotNull
+    private Integer cageId;
 }

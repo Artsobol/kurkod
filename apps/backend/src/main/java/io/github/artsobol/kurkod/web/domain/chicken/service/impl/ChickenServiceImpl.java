@@ -4,6 +4,7 @@ import io.github.artsobol.kurkod.common.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.common.logging.LogHelper;
 import io.github.artsobol.kurkod.security.facade.SecurityContextFacade;
 import io.github.artsobol.kurkod.web.domain.breed.service.impl.BreedLookupService;
+import io.github.artsobol.kurkod.web.domain.cage.repository.CageRepository;
 import io.github.artsobol.kurkod.web.domain.chicken.mapper.ChickenMapper;
 import io.github.artsobol.kurkod.web.domain.chicken.error.ChickenError;
 import io.github.artsobol.kurkod.web.domain.chicken.model.dto.ChickenDTO;
@@ -31,6 +32,7 @@ import static io.github.artsobol.kurkod.common.util.VersionUtils.checkVersion;
 @RequiredArgsConstructor
 public class ChickenServiceImpl implements ChickenService {
 
+    private final CageRepository cageRepository;
     private final ChickenRepository chickenRepository;
     private final ChickenMapper chickenMapper;
     private final SecurityContextFacade securityContextFacade;
@@ -46,6 +48,7 @@ public class ChickenServiceImpl implements ChickenService {
     public ChickenDTO create(ChickenPostRequest chickenPostRequest) {
         Chicken chicken = chickenMapper.toEntity(chickenPostRequest);
         chicken.setBreed(getBreedById(chickenPostRequest.getBreedId()));
+        chicken.setCage(cageRepository.findById(chickenPostRequest.getCageId()).orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenPostRequest.getCageId())));
         chicken = chickenRepository.save(chicken);
 
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
@@ -89,6 +92,7 @@ public class ChickenServiceImpl implements ChickenService {
         chickenMapper.updateFully(chicken, chickenPutRequest);
         Breed breed = getBreedById(chickenPutRequest.getBreedId());
         chicken.setBreed(breed);
+        chicken.setCage(cageRepository.findById(chickenPutRequest.getCageId()).orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenPutRequest.getCageId())));
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
         return chickenMapper.toDto(chickenRepository.save(chicken));
     }
@@ -103,6 +107,9 @@ public class ChickenServiceImpl implements ChickenService {
         if (chickenPatchRequest.getBreedId() != null) {
             Breed breed = getBreedById(chickenPatchRequest.getBreedId());
             chicken.setBreed(breed);
+        }
+        if (chickenPatchRequest.getCageId() != null) {
+            chicken.setCage(cageRepository.findById(chickenPatchRequest.getCageId()).orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenPatchRequest.getCageId())));
         }
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
         return chickenMapper.toDto(chickenRepository.save(chicken));

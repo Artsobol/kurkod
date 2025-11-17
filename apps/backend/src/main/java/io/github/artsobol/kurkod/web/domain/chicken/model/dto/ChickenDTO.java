@@ -9,6 +9,7 @@ public record ChickenDTO(
         Integer weight,
         LocalDate birthDate,
         Integer breedId,
+        Integer cageId,
         Long version
 ) {
 };

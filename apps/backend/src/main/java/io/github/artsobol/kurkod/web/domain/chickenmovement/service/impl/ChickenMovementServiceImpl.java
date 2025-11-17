@@ -20,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -63,8 +62,9 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
     }
 
     @Override
+    @Transactional
     public ChickenMovementDTO create(Integer chickenId, ChickenMovementPostRequest request) {
-        Cage fromCage = findCageById(request.getFromCageId());
+        Cage fromCage = findFromCageById(request.getFromCageId());
         Cage toCage = findCageById(request.getToCageId());
         ChickenMovement chickenMovement = chickenMovementMapper.toEntity(request);
         chickenMovement.setChicken(chickenRepository.findById(chickenId)
@@ -79,6 +79,10 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
     protected ChickenMovement findChickenMovementById(Integer movementId) {
         return chickenMovementRepository.findById(movementId)
                 .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID.format(movementId)));
+    }
+
+    protected Cage findFromCageById(Integer cageId) {
+        return cageId == null ? null : findCageById(cageId);
     }
 
     protected Cage findCageById(Integer cageId) {

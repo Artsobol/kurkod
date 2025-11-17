@@ -12,12 +12,15 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface CageMapper {
 
-    @Mapping(target = "rowNumber", ignore = true)
+    @Mapping(target = "rowId", source = "row.id")
     CageDTO toDto(Cage cage);
 
+    @Mapping(target = "row", ignore = true)
     Cage toEntity(CagePostRequest cagePostRequest);
 
+    @Mapping(target = "row", ignore = true)
     void replace(@MappingTarget Cage cage, CagePutRequest cagePutRequest);
 
+    @Mapping(target = "row", ignore = true)
     void update(@MappingTarget Cage cage, CagePatchRequest cagePatchRequest);
 }

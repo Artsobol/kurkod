@@ -23,4 +23,7 @@ public class ChickenPutRequest {
 
     @NotNull
     private Integer breedId;
+
+    @NotNull
+    private Integer cageId;
 }

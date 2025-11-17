@@ -26,4 +26,6 @@ public class ChickenPatchRequest {
     private LocalDate birthDate;
 
     private Integer breedId;
+
+    private Integer cageId;
 }
