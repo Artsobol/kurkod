@@ -37,3 +37,13 @@ databaseChangeLog:
       file: db/changelog/changeset/1.0/018-create-report-chicken-by-workshop-and-breed-view.yaml
   - include:
       file: db/changelog/changeset/1.0/019-create-refresh-token.yaml
+  - include:
+      file: db/changelog/changeset/1.0/020-create-report-breed-by-avg-diff-view.yaml
+  - include:
+      file: db/changelog/changeset/1.0/021-create-report-chicken-eggs-stats-view.yaml
+  - include:
+      file: db/changelog/changeset/1.0/022-create-report-chicken-by-month-view.yaml
+  - include:
+      file: db/changelog/changeset/1.0/023-create-chicken-cage-check-function.yaml
+  - include:
+      file: db/changelog/changeset/1.0/024-create-chicken-cage-check-trigger.yaml
