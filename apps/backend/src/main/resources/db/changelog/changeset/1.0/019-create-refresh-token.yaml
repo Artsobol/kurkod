@@ -34,19 +34,3 @@ databaseChangeLog:
                     defaultValueComputed: now()
                     constraints:
                       nullable: false
-                - column:
-                    name: updated_at
-                    type: timestamp with time zone
-                    defaultValueComputed: now()
-                    constraints:
-                      nullable: false
-
-                - column:
-                    name: is_active
-                    type: boolean
-                    defaultValueBoolean: true
-
-                - column:
-                    name: version
-                    type: bigint
-                    defaultValueNumeric: "0"

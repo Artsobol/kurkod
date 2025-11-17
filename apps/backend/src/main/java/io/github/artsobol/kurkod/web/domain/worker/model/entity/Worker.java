@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.worker.model.entity;
 
+import io.github.artsobol.kurkod.web.domain.cage.model.entity.Cage;
 import io.github.artsobol.kurkod.web.domain.common.BaseEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "worker")
@@ -28,4 +31,13 @@ public class Worker extends BaseEntity {
     @Column(length = 30)
     @Size(max = 30, message = "Patronymic should be less than 30 characters")
     private String patronymic;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name="worker_cage",
+            joinColumns = @JoinColumn(name = "worker_id", foreignKey = @ForeignKey(name = "fk_worker_cage_worker_id")),
+            inverseJoinColumns = @JoinColumn(name = "cage_id", foreignKey = @ForeignKey(name = "fk_worker_cage_cage_id")),
+            uniqueConstraints = @UniqueConstraint(name = "uq_worker_cage", columnNames = {"worker_id", "cage_id"})
+    )
+    private Set<Cage> cages;
 }

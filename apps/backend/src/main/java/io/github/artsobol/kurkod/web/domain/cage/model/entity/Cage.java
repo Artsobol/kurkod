@@ -2,12 +2,16 @@ package io.github.artsobol.kurkod.web.domain.cage.model.entity;
 
 import io.github.artsobol.kurkod.web.domain.common.BaseEntity;
 import io.github.artsobol.kurkod.web.domain.rows.model.entity.Rows;
+import io.github.artsobol.kurkod.web.domain.worker.model.entity.Worker;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -25,4 +29,7 @@ public class Cage extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "row_id", nullable = false, referencedColumnName = "id")
     private Rows row;
+
+    @ManyToMany(mappedBy = "cages", fetch = FetchType.LAZY)
+    private Set<Worker> workers;
 }

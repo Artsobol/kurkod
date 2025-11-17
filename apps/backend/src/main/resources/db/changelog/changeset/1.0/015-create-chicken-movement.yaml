@@ -41,8 +41,6 @@ databaseChangeLog:
               - column:
                   name: from_cage_id
                   type: bigint
-                  constraints:
-                    nullable: false
 
               - column:
                   name: to_cage_id
