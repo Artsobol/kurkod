@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface RowsRepository extends JpaRepository<Rows, Integer> {
-    Optional<Rows> findByWorkshop_IdAndRowNumberAndIsActiveTrue(Integer workshopId, Integer rowNumber);
+public interface RowsRepository extends JpaRepository<Rows, Long> {
+    Optional<Rows> findByWorkshop_IdAndRowNumberAndIsActiveTrue(Long workshopId, Integer rowNumber);
 
-    List<Rows> findAllByWorkshop_IdAndIsActiveTrue(Integer workshopId);
+    List<Rows> findAllByWorkshop_IdAndIsActiveTrue(Long workshopId);
 
-    boolean existsByWorkshop_IdAndRowNumberAndIsActiveTrue(Integer workshopId, Integer rowNumber);
+    boolean existsByWorkshop_IdAndRowNumberAndIsActiveTrue(Long workshopId, Integer rowNumber);
 }

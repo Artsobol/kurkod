@@ -38,7 +38,7 @@ public class StaffController {
     @Operation(summary = "Get staff by ID", description = "Returns a single staff member by their unique identifier.")
     @GetMapping("/{id}")
     public ResponseEntity<IamResponse<StaffDTO>> get(
-            @Parameter(description = "Staff identifier", example = "7") @PathVariable Integer id) {
+            @Parameter(description = "Staff identifier", example = "7") @PathVariable Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         StaffDTO response = staffService.get(id);
         return ResponseEntity.status(HttpStatus.OK)
@@ -69,7 +69,7 @@ public class StaffController {
     @Operation(summary = "Replace a staff position", description = "Fully replaces an existing staff position by ID.")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<StaffDTO>> replace(
-            @Parameter(description = "Staff identifier", example = "7") @PathVariable Integer id,
+            @Parameter(description = "Staff identifier", example = "7") @PathVariable Long id,
             @Valid @RequestBody StaffPutRequest staffPutRequest,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -88,7 +88,7 @@ public class StaffController {
                description = "Applies a partial update to a staff position by ID.")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<StaffDTO>> update(
-            @Parameter(description = "Staff identifier", example = "7") @PathVariable Integer id,
+            @Parameter(description = "Staff identifier", example = "7") @PathVariable Long id,
             @Valid @RequestBody StaffPatchRequest staffPatchRequest,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -106,7 +106,7 @@ public class StaffController {
     @Operation(summary = "Delete a staff position", description = "Deletes a staff position by its unique identifier.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Staff identifier", example = "7") @PathVariable Integer id,
+            @Parameter(description = "Staff identifier", example = "7") @PathVariable Long id,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,

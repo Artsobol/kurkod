@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface WorkshopService {
 
-    WorkshopDTO get(Integer id);
+    WorkshopDTO get(Long id);
 
     List<WorkshopDTO> getAll();
 
     WorkshopDTO create(WorkshopPostRequest request);
 
-    WorkshopDTO update(Integer id, WorkshopPatchRequest request, Long version);
+    WorkshopDTO update(Long id, WorkshopPatchRequest request, Long version);
 
-    WorkshopDTO replace(Integer id, WorkshopPutRequest request, Long version);
+    WorkshopDTO replace(Long id, WorkshopPutRequest request, Long version);
 
-    void delete(Integer id, Long version);
+    void delete(Long id, Long version);
 }

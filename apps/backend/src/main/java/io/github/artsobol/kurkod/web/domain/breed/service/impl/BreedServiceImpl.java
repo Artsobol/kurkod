@@ -11,7 +11,6 @@ import io.github.artsobol.kurkod.web.domain.breed.mapper.BreedMapper;
 import io.github.artsobol.kurkod.web.domain.breed.error.BreedError;
 import io.github.artsobol.kurkod.web.domain.breed.model.dto.BreedDTO;
 import io.github.artsobol.kurkod.web.domain.breed.model.entity.Breed;
-import io.github.artsobol.kurkod.common.exception.NotFoundException;
 import io.github.artsobol.kurkod.web.domain.breed.model.request.BreedPatchRequest;
 import io.github.artsobol.kurkod.web.domain.breed.model.request.BreedPostRequest;
 import io.github.artsobol.kurkod.web.domain.breed.model.request.BreedPutRequest;
@@ -58,7 +57,7 @@ public class BreedServiceImpl implements BreedService {
     }
 
     @Override
-    public BreedDTO get(@NotNull Integer id) {
+    public BreedDTO get(@NotNull Long id) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Breed.class), id);
         return breedMapper.toDto(breedLookupService.getBreedByIdOrThrow(id));
     }
@@ -66,13 +65,13 @@ public class BreedServiceImpl implements BreedService {
     @Override
     public List<BreedDTO> getAll() {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername());
-        return breedRepository.findAll().stream().map(breedMapper::toDto).toList();
+        return breedRepository.findAllByIsActiveTrue().stream().map(breedMapper::toDto).toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO replace(Integer id, BreedPutRequest request, Long version) {
+    public BreedDTO replace(Long id, BreedPutRequest request, Long version) {
         Breed breed = breedLookupService.getBreedByIdOrThrow(id);
         checkVersion(breed.getVersion(), version);
         breedMapper.updateFully(breed, request);
@@ -85,7 +84,7 @@ public class BreedServiceImpl implements BreedService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO update(Integer id, BreedPatchRequest breedPatchRequest, Long version) {
+    public BreedDTO update(Long id, BreedPatchRequest breedPatchRequest, Long version) {
         Breed breed = breedLookupService.getBreedByIdOrThrow(id);
         checkVersion(breed.getVersion(), version);
         breedMapper.updatePartially(breed, breedPatchRequest);
@@ -98,7 +97,7 @@ public class BreedServiceImpl implements BreedService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id, Long version) {
+    public void delete(Long id, Long version) {
         Breed breed = breedLookupService.getBreedByIdOrThrow(id);
         checkVersion(breed.getVersion(), version);
         breed.setActive(false);
@@ -115,7 +114,7 @@ public class BreedServiceImpl implements BreedService {
     }
 
     protected boolean existsByName(String name) {
-        return breedRepository.existsByName(name);
+        return breedRepository.existsByNameAndIsActiveTrue(name);
     }
 
 }

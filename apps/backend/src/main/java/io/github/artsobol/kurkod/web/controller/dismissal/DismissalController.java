@@ -38,8 +38,8 @@ public class DismissalController {
     @Operation(summary = "Get dismissal by worker and dismissed",
                description = "Returns a single dismissal by worker and dismissed.")
     public ResponseEntity<IamResponse<DismissalDTO>> getByWorkerAndDismissed(
-            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Integer workerId,
-            @Parameter(name = "dismissed id", example = "1") @PathVariable(name = "dismissedId") Integer dismissedId) {
+            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Long workerId,
+            @Parameter(name = "dismissed id", example = "1") @PathVariable(name = "dismissedId") Long dismissedId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         DismissalDTO response = dismissalService.getByWorkerAndDismissed(workerId, dismissedId);
         return ResponseEntity.status(HttpStatus.OK)
@@ -50,7 +50,7 @@ public class DismissalController {
     @GetMapping("/dismissed/{dismissedId}")
     @Operation(summary = "Get dismissals by dismissed", description = "Returns all dismissals by dismissed.")
     public ResponseEntity<IamResponse<List<DismissalDTO>>> getAllByDismissed(
-            @Parameter(name = "dismissed id", example = "1") @PathVariable(name = "dismissedId") Integer dismissedId) {
+            @Parameter(name = "dismissed id", example = "1") @PathVariable(name = "dismissedId") Long dismissedId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<DismissalDTO> response = dismissalService.getAllByDismissed(dismissedId);
         return ResponseEntity.ok(IamResponse.createSuccessful(response));
@@ -59,7 +59,7 @@ public class DismissalController {
     @GetMapping("/workers/{workerId}")
     @Operation(summary = "Get dismissals by worker", description = "Returns all dismissals by worker.")
     public ResponseEntity<IamResponse<List<DismissalDTO>>> getAllByWorker(
-            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Integer workerId) {
+            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Long workerId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<DismissalDTO> response = dismissalService.getAllByWorker(workerId);
         return ResponseEntity.ok(IamResponse.createSuccessful(response));
@@ -79,7 +79,7 @@ public class DismissalController {
     @PutMapping("/{workerId}")
     @Operation(summary = "Replace dismissal by worker id", description = "Replace an existing dismissal with new data.")
     public ResponseEntity<IamResponse<DismissalDTO>> replace(
-            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Integer workerId,
+            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Long workerId,
             @RequestBody @Valid DismissalPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -96,7 +96,7 @@ public class DismissalController {
     @PatchMapping("/{workerId}")
     @Operation(summary = "Update dismissal by worker id", description = "Update an existing dismissal with new data.")
     public ResponseEntity<IamResponse<DismissalDTO>> update(
-            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Integer workerId,
+            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Long workerId,
             @RequestBody @Valid DismissalPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,

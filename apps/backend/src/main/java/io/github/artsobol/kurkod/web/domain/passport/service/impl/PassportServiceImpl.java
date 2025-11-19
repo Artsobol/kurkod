@@ -42,7 +42,7 @@ public class PassportServiceImpl implements PassportService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO get(Integer workerId) {
+    public PassportDTO get(Long workerId) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Passport.class), workerId);
         return passportMapper.toDto(getPassportByWorkerId(workerId));
     }
@@ -50,7 +50,7 @@ public class PassportServiceImpl implements PassportService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO create(Integer workerId, PassportPostRequest passportPostRequest) {
+    public PassportDTO create(Long workerId, PassportPostRequest passportPostRequest) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, workerId)
         );
@@ -71,7 +71,7 @@ public class PassportServiceImpl implements PassportService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO replace(Integer workerId, PassportPutRequest request, Long version) {
+    public PassportDTO replace(Long workerId, PassportPutRequest request, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
         checkVersion(passport.getVersion(), version);
         passportMapper.updateFully(passport, request);
@@ -83,7 +83,7 @@ public class PassportServiceImpl implements PassportService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO update(Integer workerId, PassportPatchRequest request, Long version) {
+    public PassportDTO update(Long workerId, PassportPatchRequest request, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
         checkVersion(passport.getVersion(), version);
         passportMapper.updatePartially(passport, request);
@@ -95,7 +95,7 @@ public class PassportServiceImpl implements PassportService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer workerId, Long version) {
+    public void delete(Long workerId, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
         checkVersion(passport.getVersion(), version);
         passport.setActive(false);
@@ -103,7 +103,7 @@ public class PassportServiceImpl implements PassportService {
         passportRepository.save(passport);
     }
 
-    protected Passport getPassportByWorkerId(Integer workerId) {
+    protected Passport getPassportByWorkerId(Long workerId) {
         return passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException(PassportError.NOT_FOUND_BY_WORKER_ID, workerId)
         );

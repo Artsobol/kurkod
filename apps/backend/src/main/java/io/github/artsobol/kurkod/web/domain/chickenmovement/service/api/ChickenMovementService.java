@@ -9,11 +9,11 @@ import java.util.List;
 
 public interface ChickenMovementService {
 
-    ChickenMovementDTO get(Integer movementId);
+    ChickenMovementDTO get(Long movementId);
 
-    ChickenMovementDTO getCurrentCage(Integer chickenId);
+    ChickenMovementDTO getCurrentCage(Long chickenId);
 
-    List<ChickenMovementDTO> getAllByChickenId(Integer chickenId);
+    List<ChickenMovementDTO> getAllByChickenId(Long chickenId);
 
-    ChickenMovementDTO create(Integer chickenId, ChickenMovementPostRequest request);
+    ChickenMovementDTO create(Long chickenId, ChickenMovementPostRequest request);
 }

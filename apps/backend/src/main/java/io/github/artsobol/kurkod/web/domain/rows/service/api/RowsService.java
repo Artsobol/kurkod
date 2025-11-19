@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface RowsService {
 
-    RowsDTO find(Integer workshopId, Integer rowHumber);
+    RowsDTO find(Long workshopId, Integer rowHumber);
 
-    List<RowsDTO> findAll(Integer workshopId);
+    List<RowsDTO> findAll(Long workshopId);
 
-    RowsDTO create(Integer workshopId, RowsPostRequest request);
+    RowsDTO create(Long workshopId, RowsPostRequest request);
 
-    RowsDTO update(Integer workshopId, Integer rowHumber, RowsPatchRequest request, Long version);
+    RowsDTO update(Long workshopId, Integer rowHumber, RowsPatchRequest request, Long version);
 
-    RowsDTO replace(Integer workshopId, Integer rowHumber, RowsPutRequest request, Long version);
+    RowsDTO replace(Long workshopId, Integer rowHumber, RowsPutRequest request, Long version);
 
-    void delete(Integer workshopId, Integer rowHumber, Long version);
+    void delete(Long workshopId, Integer rowHumber, Long version);
 }

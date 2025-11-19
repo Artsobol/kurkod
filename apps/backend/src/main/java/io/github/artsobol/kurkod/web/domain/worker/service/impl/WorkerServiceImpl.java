@@ -39,16 +39,16 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO get(Integer id) {
+    public WorkerDTO get(Long id) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Worker.class), id);
-        return workerMapper.toDTO(getWorkerById(id));
+        return workerMapper.toDto(getWorkerById(id));
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public List<WorkerDTO> getAll() {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Worker.class));
-        return workerRepository.findAllByIsActiveTrue().stream().map(workerMapper::toDTO).toList();
+        return workerRepository.findAllByIsActiveTrue().stream().map(workerMapper::toDto).toList();
     }
 
     @Override
@@ -58,37 +58,37 @@ public class WorkerServiceImpl implements WorkerService {
         Worker worker = workerMapper.toEntity(request);
         worker = workerRepository.save(worker);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(worker), worker.getId());
-        return workerMapper.toDTO(worker);
+        return workerMapper.toDto(worker);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO replace(Integer id, WorkerPutRequest request, Long version) {
+    public WorkerDTO replace(Long id, WorkerPutRequest request, Long version) {
         Worker worker = getWorkerById(id);
         checkVersion(worker.getVersion(), version);
         workerMapper.updateFully(worker, request);
         worker = workerRepository.save(worker);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(worker), id);
-        return workerMapper.toDTO(worker);
+        return workerMapper.toDto(worker);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO update(Integer id, WorkerPatchRequest request, Long version) {
+    public WorkerDTO update(Long id, WorkerPatchRequest request, Long version) {
         Worker worker = getWorkerById(id);
         checkVersion(worker.getVersion(), version);
         workerMapper.updatePartially(worker, request);
         worker = workerRepository.save(worker);
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(worker), id);
-        return workerMapper.toDTO(worker);
+        return workerMapper.toDto(worker);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id, Long version) {
+    public void delete(Long id, Long version) {
         Worker worker = getWorkerById(id);
         checkVersion(worker.getVersion(), version);
         worker.setActive(false);
@@ -96,7 +96,7 @@ public class WorkerServiceImpl implements WorkerService {
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Worker.class), id);
     }
 
-    protected Worker getWorkerById(Integer id) {
+    protected Worker getWorkerById(Long id) {
         return workerRepository.findWorkerByIdAndIsActiveTrue(id).orElseThrow(() ->
                 new NotFoundException(WorkerError.NOT_FOUND_BY_ID, id));
     }

@@ -40,7 +40,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO get(Integer id) {
+    public StaffDTO get(Long id) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Staff.class), id);
         return staffMapper.toDto(getStaffById(id));
     }
@@ -69,7 +69,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO replace(Integer id, StaffPutRequest request, Long version) {
+    public StaffDTO replace(Long id, StaffPutRequest request, Long version) {
         Staff staff = getStaffById(id);
         checkVersion(staff.getVersion(), version);
         staffMapper.updateFully(staff, request);
@@ -81,7 +81,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO update(Integer id, StaffPatchRequest request, Long version) {
+    public StaffDTO update(Long id, StaffPatchRequest request, Long version) {
         Staff staff = getStaffById(id);
         checkVersion(staff.getVersion(), version);
         staffMapper.updatePartially(staff, request);
@@ -93,7 +93,7 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id, Long version) {
+    public void delete(Long id, Long version) {
         Staff staff = getStaffById(id);
         checkVersion(staff.getVersion(), version);
         staff.setActive(false);
@@ -101,7 +101,7 @@ public class StaffServiceImpl implements StaffService {
         staffRepository.save(staff);
     }
 
-    protected Staff getStaffById(Integer id) {
+    protected Staff getStaffById(Long id) {
         return staffRepository.findStaffByIdAndIsActiveTrue(id).orElseThrow(() ->
                 new NotFoundException(StaffError.NOT_FOUND_BY_ID, id));
     }

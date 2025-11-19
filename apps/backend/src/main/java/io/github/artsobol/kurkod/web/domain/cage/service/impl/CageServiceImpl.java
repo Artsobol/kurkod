@@ -44,23 +44,23 @@ public class CageServiceImpl implements CageService {
 
 
     @Override
-    public CageDTO find(Integer rowId, Integer cageNumber) {
+    public CageDTO find(Long rowId, Integer cageNumber) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId, cageNumber);
         return cageMapper.toDto(findCageByRowIdAndCageNumber(rowId, cageNumber));
     }
 
     @Override
-    public List<CageDTO> findAll(Integer rowId) {
+    public List<CageDTO> findAll(Long rowId) {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class));
-        return cageRepository.findAllByRow_IdOrderByCageNumberAsc(rowId).stream()
-                .map(cageMapper::toDto)
-                .toList();
+        return cageRepository.findAllByRow_IdAndIsActiveTrueOrderByCageNumberAsc(rowId).stream()
+                             .map(cageMapper::toDto)
+                             .toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO create(Integer rowId, CagePostRequest cagePostRequest) {
+    public CageDTO create(Long rowId, CagePostRequest cagePostRequest) {
         ensureNotExists(rowId, cagePostRequest.getCageNumber());
         Cage cage = cageMapper.toEntity(cagePostRequest);
         Rows rows = rowsRepository.findById(rowId).orElseThrow(
@@ -75,16 +75,16 @@ public class CageServiceImpl implements CageService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO replace(Integer rowId, Integer cageNumber, CagePutRequest cagePutRequest, Long version) {
+    public CageDTO replace(Long rowId, Integer cageNumber, CagePutRequest request, Long version) {
         ensureExists(rowId, cageNumber);
-        Integer newCageNumber = cagePutRequest.getCageNumber();
+        Integer newCageNumber = request.getCageNumber();
         if (!newCageNumber.equals(cageNumber)) {
             ensureNotExists(rowId, newCageNumber);
         }
 
         Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
         checkVersion(cage.getVersion(), version);
-        cageMapper.replace(cage, cagePutRequest);
+        cageMapper.replace(cage, request);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId);
         return cageMapper.toDto(cageRepository.save(cage));
     }
@@ -92,7 +92,7 @@ public class CageServiceImpl implements CageService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO update(Integer rowId, Integer cageNumber, CagePatchRequest cagePatchRequest, Long version) {
+    public CageDTO update(Long rowId, Integer cageNumber, CagePatchRequest cagePatchRequest, Long version) {
         ensureExists(rowId, cageNumber);
         Integer newCageNumber = cagePatchRequest.getCageNumber();
         if (newCageNumber != null && !newCageNumber.equals(cageNumber)) {
@@ -109,7 +109,7 @@ public class CageServiceImpl implements CageService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer rowId, Integer cageNumber, Long version) {
+    public void delete(Long rowId, Integer cageNumber, Long version) {
         Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
         checkVersion(cage.getVersion(), version);
         cage.setActive(false);
@@ -117,27 +117,27 @@ public class CageServiceImpl implements CageService {
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId);
     }
 
-    protected Cage findCageByRowIdAndCageNumber(Integer rowId, Integer cageNumber){
-        return cageRepository.findByRow_IdAndCageNumber(rowId, cageNumber).orElseThrow(
+    protected Cage findCageByRowIdAndCageNumber(Long rowId, Integer cageNumber){
+        return cageRepository.findByRow_IdAndCageNumberAndIsActiveTrue(rowId, cageNumber).orElseThrow(
                 () -> new NotFoundException(CageError.NOT_FOUND_BY_KEYS, rowId, cageNumber)
-        );
+                                                                                                     );
     }
 
-    protected void ensureExists(Integer rowId, Integer cageNumber){
+    protected void ensureExists(Long rowId, Integer cageNumber){
         if(!existsByRowIdAndCageNumber(rowId, cageNumber)){
             log.info(CageError.NOT_FOUND_BY_KEYS.format(rowId, cageNumber));
             throw new NotFoundException(CageError.NOT_FOUND_BY_KEYS, rowId, cageNumber);
         }
     }
 
-    protected void ensureNotExists(Integer rowId, Integer cageNumber){
+    protected void ensureNotExists(Long rowId, Integer cageNumber){
         if(existsByRowIdAndCageNumber(rowId, cageNumber)){
             log.info(CageError.ALREADY_EXISTS.format(rowId, cageNumber));
             throw new DataExistException(CageError.ALREADY_EXISTS, rowId, cageNumber);
         }
     }
 
-    protected boolean existsByRowIdAndCageNumber(Integer rowId, Integer cageNumber){
-        return cageRepository.existsByRow_IdAndCageNumber(rowId, cageNumber);
+    protected boolean existsByRowIdAndCageNumber(Long rowId, Integer cageNumber){
+        return cageRepository.existsByRow_IdAndCageNumberAndIsActiveTrue(rowId, cageNumber);
     }
 }

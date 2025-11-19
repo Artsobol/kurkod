@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface CageService {
 
-    CageDTO find(Integer rowId, Integer cageNumber);
+    CageDTO find(Long rowId, Integer cageNumber);
 
-    List<CageDTO> findAll(Integer rowId);
+    List<CageDTO> findAll(Long rowId);
 
-    CageDTO create(Integer rowId, CagePostRequest cagePostRequest);
+    CageDTO create(Long rowId, CagePostRequest request);
 
-    CageDTO replace(Integer rowId, Integer cageNumber, CagePutRequest cagePutRequest, Long expected);
+    CageDTO replace(Long rowId, Integer cageNumber, CagePutRequest request, Long expectedVersion);
 
-    CageDTO update(Integer rowId, Integer cageNumber, CagePatchRequest cagePatchRequest, Long expected);
+    CageDTO update(Long rowId, Integer cageNumber, CagePatchRequest request, Long expectedVersion);
 
-    void delete(Integer rowId, Integer cageNumber, Long expected);
+    void delete(Long rowId, Integer cageNumber, Long expectedVersion);
 }

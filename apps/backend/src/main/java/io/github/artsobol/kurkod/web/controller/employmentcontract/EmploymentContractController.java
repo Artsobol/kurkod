@@ -36,7 +36,7 @@ public class EmploymentContractController {
     @GetMapping
     public ResponseEntity<IamResponse<EmploymentContractDTO>> get(
             @Parameter(description = "Worker identifier", example = "12") @PathVariable(name = "workerId")
-            Integer workerId) {
+            Long workerId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
         EmploymentContractDTO response = employmentContractService.get(workerId);
@@ -49,7 +49,7 @@ public class EmploymentContractController {
                description = "Creates a new employment contract for the specified worker. Each worker can have only one active contract.")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<EmploymentContractDTO>> create(
-            @PathVariable(name = "workerId") Integer workerId,
+            @PathVariable(name = "workerId") Long workerId,
             @RequestBody @Valid EmploymentContractPostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
@@ -64,7 +64,7 @@ public class EmploymentContractController {
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<EmploymentContractDTO>> replace(
             @Parameter(description = "Worker identifier", example = "12") @PathVariable(name = "workerId")
-            Integer workerId,
+            Long workerId,
             @RequestBody @Valid EmploymentContractPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -84,7 +84,7 @@ public class EmploymentContractController {
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<EmploymentContractDTO>> update(
             @Parameter(description = "Worker identifier", example = "12") @PathVariable(name = "workerId")
-            Integer workerId,
+            Long workerId,
             @RequestBody @Valid EmploymentContractPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -104,7 +104,7 @@ public class EmploymentContractController {
     @DeleteMapping
     public ResponseEntity<Void> delete(
             @Parameter(description = "Worker identifier", example = "12") @PathVariable(name = "workerId")
-            Integer workerId,
+            Long workerId,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,

@@ -43,7 +43,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     }
 
     @Override
-    public EggProductionMonthDTO get(int chickenId, int month, int year) {
+    public EggProductionMonthDTO get(Long chickenId, int month, int year) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(),
                   getCurrentUsername(),
                   LogHelper.getEntityName(EggProductionMonth.class),
@@ -54,7 +54,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     }
 
     @Override
-    public List<EggProductionMonthDTO> getAllByChicken(int chickenId) {
+    public List<EggProductionMonthDTO> getAllByChicken(Long chickenId) {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(),
                   getCurrentUsername(),
                   LogHelper.getEntityName(EggProductionMonth.class));
@@ -63,7 +63,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     }
 
     @Override
-    public List<EggProductionMonthDTO> getAllByChickenAndYear(int chickenId, int year) {
+    public List<EggProductionMonthDTO> getAllByChickenAndYear(Long chickenId, int year) {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(),
                   getCurrentUsername(),
                   LogHelper.getEntityName(EggProductionMonth.class));
@@ -74,7 +74,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EggProductionMonthDTO create(int chickenId, int month, int year, EggProductionMonthPostRequest request) {
+    public EggProductionMonthDTO create(Long chickenId, int month, int year, EggProductionMonthPostRequest request) {
         ensureNotExistsByIdMonthYear(chickenId, month, year);
         EggProductionMonth eggProductionMonth = eggProductionMonthMapper.toEntity(request);
         Chicken chicken = chickenRepository.findById(chickenId)
@@ -91,7 +91,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
 
     @Override
     public EggProductionMonthDTO replace(
-            int chickenId,
+            Long chickenId,
             int month,
             int year,
             EggProductionMonthPutRequest request,
@@ -109,7 +109,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
 
     @Override
     public EggProductionMonthDTO update(
-            int chickenId,
+            Long chickenId,
             int month,
             int year,
             EggProductionMonthPatchRequest request,
@@ -126,10 +126,11 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     }
 
     @Override
-    public void delete(int chickenId, int month, int year, Long version) {
+    public void delete(Long chickenId, int month, int year, Long version) {
         EggProductionMonth eggProductionMonth = findByIdMonthYear(chickenId, month, year);
         checkVersion(eggProductionMonth.getVersion(), version);
         eggProductionMonth.setActive(false);
+
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(),
                  getCurrentUsername(),
                  LogHelper.getEntityName(EggProductionMonth.class),
@@ -142,7 +143,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         return eggProductionMonthRepository.countEggsByMonth(month, year);
     }
 
-    protected EggProductionMonth findByIdMonthYear(int chickenId, int month, int year) {
+    protected EggProductionMonth findByIdMonthYear(Long chickenId, int month, int year) {
         return eggProductionMonthRepository.findByChicken_IdAndMonthAndYearAndIsActiveTrue(chickenId, month, year)
                                            .orElseThrow(() -> new NotFoundException(EggProductionMonthError.NOT_FOUND_BY_KEYS,
                                                                                     chickenId,
@@ -150,14 +151,14 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
                                                                                     year));
     }
 
-    protected void ensureNotExistsByIdMonthYear(int chickenId, int month, int year) {
+    protected void ensureNotExistsByIdMonthYear(Long chickenId, int month, int year) {
         if (existsByIdMonthYear(chickenId, month, year)) {
             log.info(EggProductionMonthError.ALREADY_EXISTS.format(chickenId, month, year));
             throw new DataExistException(EggProductionMonthError.ALREADY_EXISTS, chickenId, month, year);
         }
     }
 
-    protected boolean existsByIdMonthYear(int chickenId, int month, int year) {
+    protected boolean existsByIdMonthYear(Long chickenId, int month, int year) {
         return eggProductionMonthRepository.existsByChicken_IdAndMonthAndYearAndIsActiveTrue(chickenId, month, year);
     }
 }

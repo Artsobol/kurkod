@@ -8,7 +8,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 public record UserDTO(
-        Integer id,
+        Long id,
         String username,
         String email,
         UserRole role,

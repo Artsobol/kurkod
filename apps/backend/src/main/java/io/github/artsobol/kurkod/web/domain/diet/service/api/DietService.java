@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface DietService {
 
-    DietDTO get(Integer id);
+    DietDTO get(Long id);
 
     List<DietDTO> getAll();
 
     DietDTO create(DietPostRequest request);
 
-    DietDTO update(Integer id, DietPatchRequest request, Long version);
+    DietDTO update(Long id, DietPatchRequest request, Long version);
 
-    DietDTO replace(Integer id, DietPutRequest request, Long version);
+    DietDTO replace(Long id, DietPutRequest request, Long version);
 
-    void delete(Integer id, Long expectedVersion);
+    void delete(Long id, Long expectedVersion);
 }

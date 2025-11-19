@@ -42,18 +42,18 @@ public class DismissalServiceImpl implements DismissalService {
         return securityContextFacade.getCurrentUsername();
     }
 
-    private Integer getCurrentUserId() {
+    private Long getCurrentUserId() {
         return securityContextFacade.getCurrentUserId();
     }
 
     @Override
-    public DismissalDTO getByWorkerAndDismissed(Integer workerId, Integer dismissedId) {
+    public DismissalDTO getByWorkerAndDismissed(Long workerId, Long dismissedId) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Dismissal.class), workerId, dismissedId);
         return dismissalMapper.toDTO(getDismissalByWorkerAndDismissed(workerId, dismissedId));
     }
 
     @Override
-    public List<DismissalDTO> getAllByWorker(Integer workerId) {
+    public List<DismissalDTO> getAllByWorker(Long workerId) {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Dismissal.class));
         return dismissalRepository.findAllByWorker_Id(workerId)
                 .stream()
@@ -62,7 +62,7 @@ public class DismissalServiceImpl implements DismissalService {
     }
 
     @Override
-    public List<DismissalDTO> getAllByDismissed(Integer dismissedId) {
+    public List<DismissalDTO> getAllByDismissed(Long dismissedId) {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Dismissal.class));
         return dismissalRepository.findAllByWhoDismiss_Id(dismissedId)
                 .stream()
@@ -85,7 +85,7 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     @Transactional
-    public DismissalDTO replace(Integer workerId, DismissalPutRequest request, Long version) {
+    public DismissalDTO replace(Long workerId, DismissalPutRequest request, Long version) {
         Dismissal dismissal = getDismissalByWorkerId(workerId);
         checkVersion(dismissal.getVersion(), version);
         dismissalMapper.replace(dismissal, request);
@@ -96,7 +96,7 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     @Transactional
-    public DismissalDTO update(Integer workerId, DismissalPatchRequest request, Long version) {
+    public DismissalDTO update(Long workerId, DismissalPatchRequest request, Long version) {
         Dismissal dismissal = getDismissalByWorkerId(workerId);
         checkVersion(dismissal.getVersion(), version);
         dismissalMapper.update(dismissal, request);
@@ -105,18 +105,18 @@ public class DismissalServiceImpl implements DismissalService {
         return dismissalMapper.toDTO(dismissal);
     }
 
-    protected Worker getWorkerById(Integer id) {
+    protected Worker getWorkerById(Long id) {
         return workerRepository.findById(id).orElseThrow(
                 () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, id)
         );
     }
 
-    protected Dismissal getDismissalByWorkerId(Integer id) {
+    protected Dismissal getDismissalByWorkerId(Long id) {
         return dismissalRepository.findDismissalByWorker_Id(id)
                 .orElseThrow(() -> new NotFoundException(DismissalError.NOT_FOUND_BY_WORKER_ID, id));
     }
 
-    protected Dismissal getDismissalByWorkerAndDismissed(Integer workerId, Integer dismissId) {
+    protected Dismissal getDismissalByWorkerAndDismissed(Long workerId, Long dismissId) {
         return dismissalRepository.findDismissalByWorker_IdAndWhoDismiss_Id(workerId, dismissId)
                 .orElseThrow(() -> new NotFoundException(DismissalError.NOT_FOUND_BY_WORKER_AND_DISMISSED, workerId, dismissId));
     }

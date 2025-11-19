@@ -36,7 +36,7 @@ public class RowsController {
     @Operation(summary = "Get row by ID", description = "Returns a single row by its unique identifier.")
     public ResponseEntity<IamResponse<RowsDTO>> get(
             @Parameter(description = "Workshop identifier", example = "1") @PathVariable(name = "workshopId")
-            Integer workshopId,
+            Long workshopId,
             @Parameter(description = "Row identifier", example = "2") @PathVariable(name = "rowNumber")
             Integer rowsNumber) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
@@ -50,7 +50,7 @@ public class RowsController {
     @Operation(summary = "Get all rows", description = "Returns all rows available in the system.")
     public ResponseEntity<IamResponse<List<RowsDTO>>> getAll(
             @Parameter(description = "Workshop identifier", example = "1") @PathVariable(name = "workshopId")
-            Integer workshopId) {
+            Long workshopId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<RowsDTO> response = rowsService.findAll(workshopId);
         return ResponseEntity.ok(IamResponse.createSuccessful(response));
@@ -60,7 +60,7 @@ public class RowsController {
     @Operation(summary = "Create a new row", description = "Creates a new row in the system.")
     public ResponseEntity<IamResponse<RowsDTO>> create(
             @Parameter(description = "Workshop identifier", example = "1") @PathVariable(name = "workshopId")
-            Integer workshopId, @RequestBody @Valid RowsPostRequest request) {
+            Long workshopId, @RequestBody @Valid RowsPostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         RowsDTO response = rowsService.create(workshopId, request);
         return ResponseEntity.created(LocationUtils.buildLocation(response.rowNumber()))
@@ -72,7 +72,7 @@ public class RowsController {
     @Operation(summary = "Replace row by ID", description = "Replaces an existing row with new data.")
     public ResponseEntity<IamResponse<RowsDTO>> replace(
             @Parameter(description = "Workshop identifier", example = "1") @PathVariable(name = "workshopId")
-            Integer workshopId,
+            Long workshopId,
             @Parameter(description = "Row identifier", example = "2") @PathVariable(name = "rowNumber")
             Integer rowsNumber,
             @RequestBody @Valid RowsPutRequest request,
@@ -93,7 +93,7 @@ public class RowsController {
                description = "Applies a partial update to an existing row by ID.")
     public ResponseEntity<IamResponse<RowsDTO>> update(
             @Parameter(description = "Workshop identifier", example = "1") @PathVariable(name = "workshopId")
-            Integer workshopId,
+            Long workshopId,
             @Parameter(description = "Row identifier", example = "2") @PathVariable(name = "rowNumber")
             Integer rowsNumber,
             @RequestBody @Valid RowsPatchRequest request,
@@ -113,7 +113,7 @@ public class RowsController {
     @Operation(summary = "Delete row by ID", description = "Deletes a row by its unique identifier.")
     public ResponseEntity<Void> delete(
             @Parameter(description = "Workshop identifier", example = "1") @PathVariable(name = "workshopId")
-            Integer workshopId,
+            Long workshopId,
             @Parameter(description = "Row identifier", example = "2") @PathVariable(name = "rowNumber")
             Integer rowsNumber,
             @Parameter(name = "If-Match",

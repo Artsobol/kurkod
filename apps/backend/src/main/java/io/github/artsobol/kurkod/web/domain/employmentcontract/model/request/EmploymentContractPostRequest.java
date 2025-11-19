@@ -21,7 +21,7 @@ public class EmploymentContractPostRequest {
     private Integer salary;
 
     @NotNull
-    private Integer staffId;
+    private Long staffId;
 
     @NotNull
     private LocalDate startDate;

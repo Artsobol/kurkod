@@ -16,6 +16,14 @@ public final class LocationUtils {
                 .toUri();
     }
 
+    public static URI buildLocation(Long id) {
+        return ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(id)
+                .toUri();
+    }
+
     public static URI buildLocation() {
         return ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -23,7 +31,7 @@ public final class LocationUtils {
                 .toUri();
     }
 
-    public static URI buildLocation(Integer workerId, Integer dismissedId) {
+    public static URI buildLocation(Long workerId, Long dismissedId) {
         return ServletUriComponentsBuilder
                 .fromCurrentContextPath()
                 .path("/api/v1/dismissals/workers/{workerId}/dismissed/{dismissedId}")

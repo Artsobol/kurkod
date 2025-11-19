@@ -12,7 +12,7 @@ import org.mapstruct.MappingTarget;
 nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE)
 public interface WorkerMapper {
 
-    WorkerDTO toDTO(Worker worker);
+    WorkerDTO toDto(Worker worker);
 
     Worker toEntity(WorkerPostRequest workerPostRequest);
 

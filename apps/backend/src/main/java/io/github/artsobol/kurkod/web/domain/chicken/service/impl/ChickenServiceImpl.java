@@ -59,7 +59,7 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     @Override
-    public ChickenDTO get(Integer id) {
+    public ChickenDTO get(Long id) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Chicken.class), id);
         return chickenMapper.toDto(getChickenById(id));
     }
@@ -67,15 +67,15 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     public List<ChickenDTO> getAll() {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Chicken.class));
-        return chickenRepository.findAll().stream()
-                .map(chickenMapper::toDto)
-                .toList();
+        return chickenRepository.findAllByIsActiveTrue().stream()
+                                .map(chickenMapper::toDto)
+                                .toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id, Long version) {
+    public void delete(Long id, Long version) {
         Chicken chicken = getChickenById(id);
         checkVersion(chicken.getVersion(), version);
         chicken.setActive(false);
@@ -86,7 +86,7 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO replace(Integer id, ChickenPutRequest chickenPutRequest, Long version) {
+    public ChickenDTO replace(Long id, ChickenPutRequest chickenPutRequest, Long version) {
         Chicken chicken = getChickenById(id);
         checkVersion(chicken.getVersion(), version);
         chickenMapper.updateFully(chicken, chickenPutRequest);
@@ -100,7 +100,7 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO update(Integer id, ChickenPatchRequest chickenPatchRequest, Long version) {
+    public ChickenDTO update(Long id, ChickenPatchRequest chickenPatchRequest, Long version) {
         Chicken chicken = getChickenById(id);
         checkVersion(chicken.getVersion(), version);
         chickenMapper.updatePartially(chicken, chickenPatchRequest);
@@ -115,12 +115,12 @@ public class ChickenServiceImpl implements ChickenService {
         return chickenMapper.toDto(chickenRepository.save(chicken));
     }
 
-    private Breed getBreedById(Integer id) {
+    private Breed getBreedById(Long id) {
         return breedLookupService.getBreedByIdOrThrow(id);
     }
 
-    protected Chicken getChickenById(Integer id) {
-        return chickenRepository.findChickenById(id).orElseThrow(() ->
+    protected Chicken getChickenById(Long id) {
+        return chickenRepository.findChickenByIdAndIsActiveTrue(id).orElseThrow(() ->
                 new NotFoundException(ChickenError.NOT_FOUND_BY_ID, id));
     }
 }

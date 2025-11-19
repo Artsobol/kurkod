@@ -37,7 +37,7 @@ public class EggProductionMonthController {
                description = "Creates a new egg production month for the specified chicken.")
     public ResponseEntity<IamResponse<EggProductionMonthDTO>> create(
             @Parameter(description = "Chicken identifier", example = "1") @PathVariable(name = "chickenId")
-            Integer chickenId,
+            Long chickenId,
             @Parameter(description = "Year", example = "2020") @PathVariable(name = "year") Integer year,
             @Parameter(description = "Month", example = "5") @PathVariable(name = "month") Integer month,
             @Valid @RequestBody EggProductionMonthPostRequest request) {
@@ -53,7 +53,7 @@ public class EggProductionMonthController {
                description = "Returns an egg production month by its unique identifier.")
     public ResponseEntity<IamResponse<EggProductionMonthDTO>> getById(
             @Parameter(description = "Chicken identifier", example = "1") @PathVariable(name = "chickenId")
-            Integer chickenId,
+            Long chickenId,
             @Parameter(description = "Year", example = "2020") @PathVariable(name = "year") Integer year,
             @Parameter(description = "Month", example = "5") @PathVariable(name = "month") Integer month) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
@@ -68,7 +68,7 @@ public class EggProductionMonthController {
     @Operation(summary = "Get all egg production months", description = "Returns all egg production months.")
     public ResponseEntity<IamResponse<List<EggProductionMonthDTO>>> getAllByChickenId(
             @Parameter(description = "Chicken identifier", example = "1") @PathVariable(name = "chickenId")
-            Integer chickenId) {
+            Long chickenId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
         List<EggProductionMonthDTO> response = eggProductionMonthService.getAllByChicken(chickenId);
@@ -80,7 +80,7 @@ public class EggProductionMonthController {
                description = "Returns all egg production months for year")
     public ResponseEntity<IamResponse<List<EggProductionMonthDTO>>> getAllByChickenIdAndYear(
             @Parameter(description = "Chicken identifier", example = "1") @PathVariable(name = "chickenId")
-            Integer chickenId,
+            Long chickenId,
             @Parameter(description = "Year", example = "2020") @PathVariable(name = "year") Integer year) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
@@ -92,7 +92,7 @@ public class EggProductionMonthController {
     @Operation(summary = "Replace egg production month", description = "Fully replaces an egg production month by ID.")
     public ResponseEntity<IamResponse<EggProductionMonthDTO>> replace(
             @Parameter(description = "Chicken identifier", example = "1") @PathVariable(name = "chickenId")
-            Integer chickenId,
+            Long chickenId,
             @Parameter(description = "Year", example = "2020") @PathVariable(name = "year") Integer year,
             @Parameter(description = "Month", example = "5") @PathVariable(name = "month") Integer month,
             @Valid @RequestBody EggProductionMonthPutRequest request,
@@ -113,7 +113,7 @@ public class EggProductionMonthController {
                description = "Update an existing egg production month with new data.")
     public ResponseEntity<IamResponse<EggProductionMonthDTO>> update(
             @Parameter(description = "Chicken identifier", example = "1") @PathVariable(name = "chickenId")
-            Integer chickenId,
+            Long chickenId,
             @Parameter(description = "Year", example = "2020") @PathVariable(name = "year") Integer year,
             @Parameter(description = "Month", example = "5") @PathVariable(name = "month") Integer month,
             @Valid @RequestBody EggProductionMonthPatchRequest request,
@@ -134,7 +134,7 @@ public class EggProductionMonthController {
                description = "Deletes an existing egg production month by its unique identifier.")
     public ResponseEntity<Void> delete(
             @Parameter(description = "Chicken identifier", example = "1") @PathVariable(name = "chickenId")
-            Integer chickenId,
+            Long chickenId,
             @Parameter(description = "Year", example = "2020") @PathVariable(name = "year") Integer year,
             @Parameter(description = "Month", example = "5") @PathVariable(name = "month") Integer month,
             @Parameter(name = "If-Match",

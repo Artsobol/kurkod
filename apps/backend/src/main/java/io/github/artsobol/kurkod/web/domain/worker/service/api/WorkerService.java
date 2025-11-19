@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface WorkerService {
 
-    WorkerDTO get(Integer id);
+    WorkerDTO get(Long id);
 
     List<WorkerDTO> getAll();
 
     WorkerDTO create(WorkerPostRequest request);
 
-    WorkerDTO replace(Integer id, WorkerPutRequest request, Long version);
+    WorkerDTO replace(Long id, WorkerPutRequest request, Long version);
 
-    WorkerDTO update(Integer id, WorkerPatchRequest request, Long version);
+    WorkerDTO update(Long id, WorkerPatchRequest request, Long version);
 
-    void delete(Integer id, Long version);
+    void delete(Long id, Long version);
 }

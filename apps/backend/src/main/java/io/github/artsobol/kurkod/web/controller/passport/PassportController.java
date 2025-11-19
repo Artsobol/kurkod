@@ -35,7 +35,7 @@ public class PassportController {
                description = "Returns the passport information for a specific worker.")
     @GetMapping
     public ResponseEntity<IamResponse<PassportDTO>> get(
-            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Integer id) {
+            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         PassportDTO response = passportService.get(id);
         return ResponseEntity.status(HttpStatus.OK)
@@ -47,7 +47,7 @@ public class PassportController {
                description = "Creates a new passport for the specified worker. Each worker can have only one passport.")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<PassportDTO>> create(
-            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Integer id,
+            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportPostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         PassportDTO response = passportService.create(id, request);
@@ -58,7 +58,7 @@ public class PassportController {
                description = "Fully replaces the passport data for the specified worker.")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<PassportDTO>> replace(
-            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Integer id,
+            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -77,7 +77,7 @@ public class PassportController {
                description = "Applies a partial update to the passport data for the specified worker.")
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<PassportDTO>> update(
-            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Integer id,
+            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -96,7 +96,7 @@ public class PassportController {
                description = "Deletes the passport associated with the specified worker.")
     @DeleteMapping
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Integer id,
+            @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,

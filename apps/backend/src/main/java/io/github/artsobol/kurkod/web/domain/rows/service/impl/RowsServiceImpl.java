@@ -42,13 +42,13 @@ public class RowsServiceImpl implements RowsService {
     }
 
     @Override
-    public RowsDTO find(Integer workshopId, Integer rowHumber) {
+    public RowsDTO find(Long workshopId, Integer rowHumber) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class), workshopId, rowHumber);
         return rowsMapper.toDto(getRowsById(workshopId, rowHumber));
     }
 
     @Override
-    public List<RowsDTO> findAll(Integer workshopId) {
+    public List<RowsDTO> findAll(Long workshopId) {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class));
         return rowsRepository.findAllByWorkshop_IdAndIsActiveTrue(workshopId).stream()
                 .map(rowsMapper::toDto)
@@ -58,7 +58,7 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO create(Integer workshopId, RowsPostRequest request) {
+    public RowsDTO create(Long workshopId, RowsPostRequest request) {
         Integer rowNumber = request.getRowNumber();
         ensureNotExists(workshopId, rowNumber);
 
@@ -74,7 +74,7 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO update(Integer workshopId, Integer rowHumber, RowsPatchRequest request, Long version) {
+    public RowsDTO update(Long workshopId, Integer rowHumber, RowsPatchRequest request, Long version) {
         Integer updatedRowNumber = request.getRowNumber();
         if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
             ensureNotExists(workshopId, updatedRowNumber);
@@ -91,7 +91,7 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO replace(Integer workshopId, Integer rowHumber, RowsPutRequest request, Long version) {
+    public RowsDTO replace(Long workshopId, Integer rowHumber, RowsPutRequest request, Long version) {
         Integer updatedRowNumber = request.getRowNumber();
         if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
             ensureNotExists(workshopId, updatedRowNumber);
@@ -108,7 +108,7 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer workshopId, Integer rowHumber, Long version) {
+    public void delete(Long workshopId, Integer rowHumber, Long version) {
         Rows rows = getRowsById(workshopId, rowHumber);
         checkVersion(rows.getVersion(), version);
         rows.setActive(false);
@@ -116,20 +116,20 @@ public class RowsServiceImpl implements RowsService {
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class), workshopId);
     }
 
-    protected Rows getRowsById(Integer workshopId, Integer rowHumber) {
+    protected Rows getRowsById(Long workshopId, Integer rowHumber) {
         return rowsRepository.findByWorkshop_IdAndRowNumberAndIsActiveTrue(workshopId, rowHumber).orElseThrow(
                 () -> new NotFoundException(RowsError.NOT_FOUND_BY_KEYS, workshopId, rowHumber)
         );
     }
 
-    protected void ensureNotExists(Integer workshopId, Integer rowNumber) {
+    protected void ensureNotExists(Long workshopId, Integer rowNumber) {
         if (existsByWorkshopIdAndRowNumber(workshopId, rowNumber)) {
             log.info(RowsError.ALREADY_EXISTS.format(workshopId, rowNumber));
             throw new DataExistException(RowsError.ALREADY_EXISTS, workshopId, rowNumber);
         }
     }
 
-    protected boolean existsByWorkshopIdAndRowNumber(Integer workshopId, Integer rowNumber) {
+    protected boolean existsByWorkshopIdAndRowNumber(Long workshopId, Integer rowNumber) {
         return rowsRepository.existsByWorkshop_IdAndRowNumberAndIsActiveTrue(workshopId, rowNumber);
     }
 }

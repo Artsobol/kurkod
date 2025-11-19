@@ -35,7 +35,7 @@ public class CageController {
     @GetMapping("/{cageNumber}")
     @Operation(summary = "Get cage by cage number", description = "Returns a single cage by its unique number.")
     public ResponseEntity<IamResponse<CageDTO>> get(
-            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Integer rowId,
+            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Long rowId,
             @Parameter(description = "Cage number", example = "2") @PathVariable(name = "cageNumber")
             Integer cageNumber) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
@@ -48,7 +48,7 @@ public class CageController {
     @GetMapping
     @Operation(summary = "Get all cages", description = "Returns all cages available in the system.")
     public ResponseEntity<IamResponse<List<CageDTO>>> getAll(
-            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Integer rowId) {
+            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Long rowId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<CageDTO> response = cageService.findAll(rowId);
         return ResponseEntity.ok(IamResponse.createSuccessful(response));
@@ -57,7 +57,7 @@ public class CageController {
     @PostMapping
     @Operation(summary = "Create a new cage", description = "Creates a new cage in the system.")
     public ResponseEntity<IamResponse<CageDTO>> create(
-            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Integer rowId,
+            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Long rowId,
             @RequestBody @Valid CagePostRequest cagePostRequest) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         CageDTO response = cageService.create(rowId, cagePostRequest);
@@ -69,7 +69,7 @@ public class CageController {
     @PutMapping("/{cageNumber}")
     @Operation(summary = "Replace cage by cage number", description = "Replaces an existing cage with new data.")
     public ResponseEntity<IamResponse<CageDTO>> replace(
-            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Integer rowId,
+            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Long rowId,
             @Parameter(description = "Cage number", example = "2") @PathVariable(name = "cageNumber")
             Integer cageNumber,
             @RequestBody @Valid CagePutRequest cagePutRequest,
@@ -88,7 +88,7 @@ public class CageController {
     @PatchMapping("/{cageNumber}")
     @Operation(summary = "Update cage by cage number", description = "Update an existing cage with new data.")
     public ResponseEntity<IamResponse<CageDTO>> update(
-            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Integer rowId,
+            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Long rowId,
             @Parameter(description = "Cage number", example = "2") @PathVariable(name = "cageNumber")
             Integer cageNumber,
             @RequestBody @Valid CagePatchRequest cagePatchRequest,
@@ -107,7 +107,7 @@ public class CageController {
     @DeleteMapping("/{cageNumber}")
     @Operation(summary = "Delete cage by cage number", description = "Deletes a cage by its unique number.")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Integer rowId,
+            @Parameter(description = "Row identifier", example = "1") @PathVariable(name = "rowId") Long rowId,
             @Parameter(description = "Cage number", example = "2") @PathVariable(name = "cageNumber")
             Integer cageNumber,
             @Parameter(name = "If-Match",

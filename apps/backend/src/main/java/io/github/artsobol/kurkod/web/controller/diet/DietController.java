@@ -33,7 +33,7 @@ public class DietController {
     @GetMapping("/{id}")
     @Operation(summary = "Get diet by ID", description = "Returns a single diet by its unique identifier.")
     public ResponseEntity<IamResponse<DietDTO>> get(
-            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Integer id) {
+            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         DietDTO response = dietService.get(id);
         return ResponseEntity.status(HttpStatus.OK)
@@ -62,7 +62,7 @@ public class DietController {
     @PutMapping("/{id}")
     @Operation(summary = "Replace diet by ID", description = "Replaces an existing diet with new data.")
     public ResponseEntity<IamResponse<DietDTO>> replace(
-            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Integer id,
+            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Long id,
             @RequestBody @Valid DietPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -80,7 +80,7 @@ public class DietController {
     @Operation(summary = "Partially update diet by ID",
                description = "Applies a partial update to an existing diet by ID.")
     public ResponseEntity<IamResponse<DietDTO>> update(
-            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Integer id,
+            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Long id,
             @RequestBody @Valid DietPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -97,7 +97,7 @@ public class DietController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete diet by ID", description = "Deletes an existing diet by its unique identifier.")
     public ResponseEntity<Void> delete(
-            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Integer id,
+            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Long id,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,

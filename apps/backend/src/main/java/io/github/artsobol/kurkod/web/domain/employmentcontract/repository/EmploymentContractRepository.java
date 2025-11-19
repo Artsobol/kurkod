@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface EmploymentContractRepository extends JpaRepository<EmploymentContract, Integer> {
-    Optional<EmploymentContract> findEmploymentContractByWorkerIdAndIsActiveTrue(int workerId);
+public interface EmploymentContractRepository extends JpaRepository<EmploymentContract, Long> {
+    Optional<EmploymentContract> findEmploymentContractByWorkerIdAndIsActiveTrue(Long workerId);
 }

@@ -9,15 +9,15 @@ import java.util.List;
 
 public interface DismissalService {
 
-    DismissalDTO getByWorkerAndDismissed(Integer workerId, Integer dismissedId);
+    DismissalDTO getByWorkerAndDismissed(Long workerId, Long dismissedId);
 
-    List<DismissalDTO> getAllByWorker(Integer workerId);
+    List<DismissalDTO> getAllByWorker(Long workerId);
 
-    List<DismissalDTO> getAllByDismissed(Integer dismissedId);
+    List<DismissalDTO> getAllByDismissed(Long dismissedId);
 
     DismissalDTO create(DismissalPostRequest request);
 
-    DismissalDTO replace(Integer workerId, DismissalPutRequest request, Long version);
+    DismissalDTO replace(Long workerId, DismissalPutRequest request, Long version);
 
-    DismissalDTO update(Integer workerId, DismissalPatchRequest request, Long version);
+    DismissalDTO update(Long workerId, DismissalPatchRequest request, Long version);
 }

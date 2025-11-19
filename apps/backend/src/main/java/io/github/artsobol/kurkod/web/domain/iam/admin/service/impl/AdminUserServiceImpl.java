@@ -43,7 +43,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public UserDTO changeUserRole(Integer userId, ChangeRoleRequest request, Long expectedVersion) {
+    public UserDTO changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion) {
         VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
         User user = getUserById(userId);
         Role role = getRoleBySystemRole(request.role());
@@ -57,7 +57,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public UserDTO activateUser(Integer userId, Long expectedVersion) {
+    public UserDTO activateUser(Long userId, Long expectedVersion) {
         VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
         User user = changeStatus(getUserById(userId), RegistrationStatus.ACTIVE);
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(User.class), userId);
@@ -65,7 +65,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     @Override
-    public UserDTO deactivateUser(Integer userId, Long expectedVersion) {
+    public UserDTO deactivateUser(Long userId, Long expectedVersion) {
         VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
         User user = changeStatus(getUserById(userId), RegistrationStatus.INACTIVE);
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(User.class), userId);
@@ -77,7 +77,7 @@ public class AdminUserServiceImpl implements AdminUserService {
         return userRepository.save(user);
     }
 
-    protected User getUserById(Integer id) {
+    protected User getUserById(Long id) {
         return userRepository.findByIdAndIsActiveTrue(id)
                              .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_ID, id));
     }

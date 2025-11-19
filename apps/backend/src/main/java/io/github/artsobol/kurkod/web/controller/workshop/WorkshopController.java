@@ -36,7 +36,7 @@ public class WorkshopController {
     @GetMapping("/{id}")
     @Operation(summary = "Get workshop by ID", description = "Returns a single workshop by its unique identifier.")
     public ResponseEntity<IamResponse<WorkshopDTO>> get(
-            @Parameter(description = "Workshop identifier", example = "42") @PathVariable(name = "id") Integer id) {
+            @Parameter(description = "Workshop identifier", example = "42") @PathVariable(name = "id") Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         WorkshopDTO response = workshopService.get(id);
         return ResponseEntity.status(HttpStatus.OK)
@@ -65,7 +65,7 @@ public class WorkshopController {
     @PutMapping("/{id}")
     @Operation(summary = "Replace workshop by ID", description = "Replaces an existing workshop with new data.")
     public ResponseEntity<IamResponse<WorkshopDTO>> replace(
-            @Parameter(description = "Workshop identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Workshop identifier", example = "42") @PathVariable(name = "id") Long id,
             @RequestBody @Valid WorkshopPutRequest workshopPutRequest,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -83,7 +83,7 @@ public class WorkshopController {
     @Operation(summary = "Partially update workshop by ID",
                description = "Applies a partial update to an existing workshop by ID.")
     public ResponseEntity<IamResponse<WorkshopDTO>> update(
-            @Parameter(description = "Workshop identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Workshop identifier", example = "42") @PathVariable(name = "id") Long id,
             @RequestBody @Valid WorkshopPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -101,7 +101,7 @@ public class WorkshopController {
     @Operation(summary = "Delete workshop by ID",
                description = "Deletes an existing workshop by its unique identifier.")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Workshop identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Workshop identifier", example = "42") @PathVariable(name = "id") Long id,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,

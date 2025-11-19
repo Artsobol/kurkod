@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    UserDTO getById(Integer userId);
+    UserDTO getById(Long userId);
 
     List<UserDTO> getAll();
 
@@ -18,9 +18,9 @@ public interface UserService extends UserDetailsService {
 
     UserDTO create(UserPostRequest request);
 
-    UserDTO replace(Integer userId, UserPutRequest request, Long version);
+    UserDTO replace(Long userId, UserPutRequest request, Long version);
 
-    UserDTO update(Integer userId, UserPatchRequest request, Long version);
+    UserDTO update(Long userId, UserPatchRequest request, Long version);
 
-    void deleteById(Integer userId, Long expectedVersion);
+    void deleteById(Long userId, Long expectedVersion);
 }

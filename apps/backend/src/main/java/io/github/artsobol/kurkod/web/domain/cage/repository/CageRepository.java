@@ -6,10 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface CageRepository extends JpaRepository<Cage, Integer> {
-    Optional<Cage> findByRow_IdAndCageNumber(Integer rowId, Integer cageNumber);
+public interface CageRepository extends JpaRepository<Cage, Long> {
 
-    List<Cage> findAllByRow_IdOrderByCageNumberAsc(Integer rowId);
+    Optional<Cage> findByRow_IdAndCageNumberAndIsActiveTrue(Long rowId, Integer cageNumber);
 
-    boolean existsByRow_IdAndCageNumber(Integer rowId, Integer cageNumber);
+    List<Cage> findAllByRow_IdAndIsActiveTrueOrderByCageNumberAsc(Long rowId);
+
+    boolean existsByRow_IdAndCageNumberAndIsActiveTrue(Long rowId, Integer cageNumber);
 }

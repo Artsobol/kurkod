@@ -31,7 +31,7 @@ public class ChickenMovementController {
     @Operation(summary = "Get movement by ID", description = "Returns a single movement by its unique identifier.")
     @GetMapping("/chicken-movements/{id}")
     public ResponseEntity<IamResponse<ChickenMovementDTO>> getById(
-            @Parameter(description = "Movement identifier", example = "15") @PathVariable Integer id) {
+            @Parameter(description = "Movement identifier", example = "15") @PathVariable Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         ChickenMovementDTO response = chickenMovementService.get(id);
         return ResponseEntity.ok(IamResponse.createSuccessful(response));
@@ -41,7 +41,7 @@ public class ChickenMovementController {
                description = "Returns all movements for a chicken, newest first.")
     @GetMapping("/chickens/{chickenId}/movements")
     public ResponseEntity<IamResponse<List<ChickenMovementDTO>>> getAllByChicken(
-            @Parameter(description = "Chicken identifier", example = "7") @PathVariable Integer chickenId) {
+            @Parameter(description = "Chicken identifier", example = "7") @PathVariable Long chickenId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<ChickenMovementDTO> response = chickenMovementService.getAllByChickenId(chickenId);
         return ResponseEntity.ok(IamResponse.createSuccessful(response));
@@ -51,7 +51,7 @@ public class ChickenMovementController {
                description = "Returns the last movement for a chicken (current location derived from 'toCageId').")
     @GetMapping("/chickens/{chickenId}/movements/current")
     public ResponseEntity<IamResponse<ChickenMovementDTO>> getCurrent(
-            @Parameter(description = "Chicken identifier", example = "7") @PathVariable Integer chickenId) {
+            @Parameter(description = "Chicken identifier", example = "7") @PathVariable Long chickenId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         ChickenMovementDTO response = chickenMovementService.getCurrentCage(chickenId);
         return ResponseEntity.ok(IamResponse.createSuccessful(response));
@@ -64,7 +64,7 @@ public class ChickenMovementController {
                                                                             """)
     @PostMapping(value = "/chickens/{chickenId}/movements", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<ChickenMovementDTO>> create(
-            @Parameter(description = "Chicken identifier", example = "7") @PathVariable Integer chickenId,
+            @Parameter(description = "Chicken identifier", example = "7") @PathVariable Long chickenId,
             @Valid @RequestBody ChickenMovementPostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         ChickenMovementDTO response = chickenMovementService.create(chickenId, request);

@@ -40,13 +40,13 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
     }
 
     @Override
-    public ChickenMovementDTO get(Integer movementId) {
+    public ChickenMovementDTO get(Long movementId) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(ChickenMovement.class), movementId);
         return chickenMovementMapper.toDto(findChickenMovementById(movementId));
     }
 
     @Override
-    public ChickenMovementDTO getCurrentCage(Integer chickenId) {
+    public ChickenMovementDTO getCurrentCage(Long chickenId) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(ChickenMovement.class), chickenId);
         return chickenMovementMapper.toDto(chickenMovementRepository
                 .findTopByChicken_IdOrderByMovedAtDesc(chickenId)
@@ -54,7 +54,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
     }
 
     @Override
-    public List<ChickenMovementDTO> getAllByChickenId(Integer chickenId) {
+    public List<ChickenMovementDTO> getAllByChickenId(Long chickenId) {
         return chickenMovementRepository.findAllByChicken_IdOrderByMovedAtDesc(chickenId)
                 .stream()
                 .map(chickenMovementMapper::toDto)
@@ -63,7 +63,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
 
     @Override
     @Transactional
-    public ChickenMovementDTO create(Integer chickenId, ChickenMovementPostRequest request) {
+    public ChickenMovementDTO create(Long chickenId, ChickenMovementPostRequest request) {
         Cage fromCage = findFromCageById(request.getFromCageId());
         Cage toCage = findCageById(request.getToCageId());
         ChickenMovement chickenMovement = chickenMovementMapper.toEntity(request);
@@ -76,16 +76,16 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
         return chickenMovementMapper.toDto(chickenMovement);
     }
 
-    protected ChickenMovement findChickenMovementById(Integer movementId) {
+    protected ChickenMovement findChickenMovementById(Long movementId) {
         return chickenMovementRepository.findById(movementId)
                 .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID, movementId));
     }
 
-    protected Cage findFromCageById(Integer cageId) {
+    protected Cage findFromCageById(Long cageId) {
         return cageId == null ? null : findCageById(cageId);
     }
 
-    protected Cage findCageById(Integer cageId) {
+    protected Cage findCageById(Long cageId) {
         return cageRepository.findById(cageId)
                 .orElseThrow(() -> new NotFoundException(CageError.NOT_FOUND_BY_KEYS, cageId));
     }

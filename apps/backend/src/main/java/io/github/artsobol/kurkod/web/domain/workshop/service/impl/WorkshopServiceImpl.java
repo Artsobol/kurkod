@@ -40,7 +40,7 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 
     @Override
-    public WorkshopDTO get(Integer id) {
+    public WorkshopDTO get(Long id) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Workshop.class), id);
         return workshopMapper.toDto(getWorkshopById(id));
     }
@@ -69,7 +69,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopDTO update(Integer id, WorkshopPatchRequest request, Long version) {
+    public WorkshopDTO update(Long id, WorkshopPatchRequest request, Long version) {
         Workshop workshop = getWorkshopById(id);
         checkVersion(workshop.getVersion(), version);
         Integer newWorkshopNumber = request.getWorkshopNumber();
@@ -87,7 +87,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopDTO replace(Integer id, WorkshopPutRequest request, Long version) {
+    public WorkshopDTO replace(Long id, WorkshopPutRequest request, Long version) {
         Workshop workshop = getWorkshopById(id);
         checkVersion(workshop.getVersion(), version);
         Integer newWorkshopNumber = request.getWorkshopNumber();
@@ -103,14 +103,14 @@ public class WorkshopServiceImpl implements WorkshopService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id, Long version) {
+    public void delete(Long id, Long version) {
         Workshop workshop = getWorkshopById(id);
         checkVersion(workshop.getVersion(), version);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Workshop.class), id);
         workshop.setActive(false);
     }
 
-    protected Workshop getWorkshopById(Integer id) {
+    protected Workshop getWorkshopById(Long id) {
         return workshopRepository.findWorkshopByIdAndIsActiveTrue(id).orElseThrow(
                 () -> new NotFoundException(WorkshopError.NOT_FOUND_BY_ID, id)
         );
@@ -124,6 +124,6 @@ public class WorkshopServiceImpl implements WorkshopService {
     }
 
     protected boolean existsById(Integer id){
-        return workshopRepository.existsById(id);
+        return workshopRepository.existsByWorkshopNumberAndIsActiveTrue(id);
     }
 }

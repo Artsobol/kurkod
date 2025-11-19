@@ -39,7 +39,7 @@ public class DietServiceImpl implements DietService {
     }
 
     @Override
-    public DietDTO get(Integer id) {
+    public DietDTO get(Long id) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Diet.class), id);
         return dietMapper.toDTO(getDietById(id));
     }
@@ -67,7 +67,7 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO update(Integer id, DietPatchRequest request, Long version) {
+    public DietDTO update(Long id, DietPatchRequest request, Long version) {
         Diet diet = getDietById(id);
         checkVersion(diet.getVersion(), version);
         dietMapper.update(diet, request);
@@ -79,7 +79,7 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO replace(Integer id, DietPutRequest request, Long version) {
+    public DietDTO replace(Long id, DietPutRequest request, Long version) {
         Diet diet = getDietById(id);
         checkVersion(diet.getVersion(), version);
         dietMapper.replace(diet, request);
@@ -91,7 +91,7 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer id, Long version) {
+    public void delete(Long id, Long version) {
         Diet diet = getDietById(id);
         checkVersion(diet.getVersion(), version);
         diet.setActive(false);
@@ -110,7 +110,7 @@ public class DietServiceImpl implements DietService {
         return dietRepository.existsByCodeAndIsActiveTrue(code);
     }
 
-    protected Diet getDietById(Integer id){
+    protected Diet getDietById(Long id){
         return dietRepository.findById(id).orElseThrow(() -> new NotFoundException(DietError.NOT_FOUND_BY_ID, id));
     }
 }

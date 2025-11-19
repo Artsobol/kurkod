@@ -7,13 +7,13 @@ import io.github.artsobol.kurkod.web.domain.passport.model.request.PassportPatch
 
 public interface PassportService {
 
-    PassportDTO get(Integer workerId);
+    PassportDTO get(Long workerId);
 
-    PassportDTO create(Integer workerId, PassportPostRequest request);
+    PassportDTO create(Long workerId, PassportPostRequest request);
 
-    PassportDTO replace(Integer workerId, PassportPutRequest request, Long version);
+    PassportDTO replace(Long workerId, PassportPutRequest request, Long version);
 
-    PassportDTO update(Integer workerId, PassportPatchRequest request, Long version);
+    PassportDTO update(Long workerId, PassportPatchRequest request, Long version);
 
-    void delete(Integer workerId, Long version);
+    void delete(Long workerId, Long version);
 }

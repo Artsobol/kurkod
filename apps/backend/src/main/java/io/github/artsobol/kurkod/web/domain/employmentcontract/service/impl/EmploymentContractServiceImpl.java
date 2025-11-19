@@ -44,7 +44,7 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO get(Integer workerId) {
+    public EmploymentContractDTO get(Long workerId) {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(),
                   getCurrentUsername(),
                   LogHelper.getEntityName(EmploymentContract.class),
@@ -55,11 +55,11 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO create(Integer workerId, EmploymentContractPostRequest request) {
+    public EmploymentContractDTO create(Long workerId, EmploymentContractPostRequest request) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId)
                                         .orElseThrow(() -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, workerId));
 
-        Integer staffId = request.getStaffId();
+        Long staffId = request.getStaffId();
         Staff staff = getStaffByStaffId(staffId);
 
         EmploymentContract employmentContract = employmentContractMapper.toEntity(request);
@@ -76,8 +76,8 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO replace(Integer workerId, EmploymentContractPutRequest request, Long expectedVersion) {
-        Integer staffId = request.getStaffId();
+    public EmploymentContractDTO replace(Long workerId, EmploymentContractPutRequest request, Long expectedVersion) {
+        Long staffId = request.getStaffId();
         Staff staff = getStaffByStaffId(staffId);
 
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
@@ -96,13 +96,13 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public EmploymentContractDTO update(
-            Integer workerId,
+            Long workerId,
             EmploymentContractPatchRequest request,
             Long expectedVersion) {
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
         employmentContractMapper.updatePartially(employmentContract, request);
 
-        Integer staffId = request.getStaffId();
+        Long staffId = request.getStaffId();
         if (staffId != null) {
             Staff staff = getStaffByStaffId(staffId);
             employmentContract.setStaff(staff);
@@ -119,7 +119,7 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Integer workerId, Long expectedVersion) {
+    public void delete(Long workerId, Long expectedVersion) {
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
         employmentContract.setActive(false);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(),
@@ -129,12 +129,12 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
         employmentContractRepository.save(employmentContract);
     }
 
-    protected EmploymentContract getContractByWorkerId(Integer workerId) {
+    protected EmploymentContract getContractByWorkerId(Long workerId) {
         return employmentContractRepository.findEmploymentContractByWorkerIdAndIsActiveTrue(workerId)
                                            .orElseThrow(() -> new NotFoundException(EmploymentContractError.NOT_FOUND_BY_WORKER_ID, workerId));
     }
 
-    protected Staff getStaffByStaffId(Integer staffId) {
+    protected Staff getStaffByStaffId(Long staffId) {
         return staffRepository.findStaffByIdAndIsActiveTrue(staffId)
                               .orElseThrow(() -> new NotFoundException(StaffError.NOT_FOUND_BY_ID, staffId));
     }

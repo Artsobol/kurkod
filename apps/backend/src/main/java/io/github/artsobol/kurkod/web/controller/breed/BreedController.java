@@ -37,7 +37,7 @@ public class BreedController {
     @Operation(summary = "Get breed by ID", description = "Returns a single breed by its unique identifier.")
     @GetMapping("/{id}")
     public ResponseEntity<IamResponse<BreedDTO>> getById(
-            @Parameter(description = "Breed identifier", example = "42") @PathVariable(name = "id") Integer id) {
+            @Parameter(description = "Breed identifier", example = "42") @PathVariable(name = "id") Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         BreedDTO response = breedService.get(id);
         return ResponseEntity.ok()
@@ -70,7 +70,7 @@ public class BreedController {
     @Operation(summary = "Replace a breed", description = "Fully replaces a breed by ID.")
     @PutMapping("/{id}")
     public ResponseEntity<IamResponse<BreedDTO>> replaceById(
-            @Parameter(description = "Breed identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Breed identifier", example = "42") @PathVariable(name = "id") Long id,
             @Valid @RequestBody BreedPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -87,7 +87,7 @@ public class BreedController {
     @Operation(summary = "Partially update a breed", description = "Applies a partial update to a breed by ID.")
     @PatchMapping(value = "/{id}")
     public ResponseEntity<IamResponse<BreedDTO>> updateById(
-            @Parameter(description = "Breed identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Breed identifier", example = "42") @PathVariable(name = "id") Long id,
             @Valid @RequestBody BreedPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -105,7 +105,7 @@ public class BreedController {
     @Operation(summary = "Delete a breed", description = "Deletes a breed by ID.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(
-            @Parameter(description = "Breed identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Breed identifier", example = "42") @PathVariable(name = "id") Long id,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,
@@ -117,7 +117,7 @@ public class BreedController {
         return ResponseEntity.noContent().build();
     }
 
-    public static URI buildLocationUri(Integer id) {
+    public static URI buildLocationUri(Long id) {
         return ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri();
     }
 }

@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 public record RowsDetailedDTO(
-        Integer id,
+        Long id,
         Integer rowNumber,
         Integer workshopNumber,
         List<Cage> cages,

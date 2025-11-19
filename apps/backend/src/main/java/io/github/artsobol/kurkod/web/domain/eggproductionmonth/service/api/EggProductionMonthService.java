@@ -9,19 +9,19 @@ import java.util.List;
 
 public interface EggProductionMonthService {
 
-    EggProductionMonthDTO get(int chickenId, int month, int year);
+    EggProductionMonthDTO get(Long chickenId, int month, int year);
 
-    List<EggProductionMonthDTO> getAllByChicken(int chickenId);
+    List<EggProductionMonthDTO> getAllByChicken(Long chickenId);
 
-    List<EggProductionMonthDTO> getAllByChickenAndYear(int chickenId, int year);
+    List<EggProductionMonthDTO> getAllByChickenAndYear(Long chickenId, int year);
 
-    EggProductionMonthDTO create(int chickenId, int month, int year, EggProductionMonthPostRequest request);
+    EggProductionMonthDTO create(Long chickenId, int month, int year, EggProductionMonthPostRequest request);
 
-    EggProductionMonthDTO replace(int chickenId, int month, int year, EggProductionMonthPutRequest request, Long version);
+    EggProductionMonthDTO replace(Long chickenId, int month, int year, EggProductionMonthPutRequest request, Long version);
 
-    EggProductionMonthDTO update(int chickenId, int month, int year, EggProductionMonthPatchRequest request, Long version);
+    EggProductionMonthDTO update(Long chickenId, int month, int year, EggProductionMonthPatchRequest request, Long version);
 
-    void delete(int chickenId, int month, int year, Long version);
+    void delete(Long chickenId, int month, int year, Long version);
 
     Long countEggsByMonthAndYear(int month, int year);
 }

@@ -23,7 +23,7 @@ public class ChickenPatchRequest {
     @Past
     private LocalDate birthDate;
 
-    private Integer breedId;
+    private Long breedId;
 
-    private Integer cageId;
+    private Long cageId;
 }

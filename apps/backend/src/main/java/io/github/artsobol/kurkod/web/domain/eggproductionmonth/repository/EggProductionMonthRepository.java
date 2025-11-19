@@ -8,15 +8,15 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface EggProductionMonthRepository extends JpaRepository<EggProductionMonth, Integer> {
+public interface EggProductionMonthRepository extends JpaRepository<EggProductionMonth, Long> {
 
-    List<EggProductionMonth> findAllByChicken_IdAndIsActiveTrue(int chickenId);
+    List<EggProductionMonth> findAllByChicken_IdAndIsActiveTrue(Long chickenId);
 
-    List<EggProductionMonth> findAllByChicken_IdAndYearAndIsActiveTrue(int chickenId, int year);
+    List<EggProductionMonth> findAllByChicken_IdAndYearAndIsActiveTrue(Long chickenId, int year);
 
-    Optional<EggProductionMonth> findByChicken_IdAndMonthAndYearAndIsActiveTrue(int chickenId, int month, int year);
+    Optional<EggProductionMonth> findByChicken_IdAndMonthAndYearAndIsActiveTrue(Long chickenId, int month, int year);
 
-    boolean existsByChicken_IdAndMonthAndYearAndIsActiveTrue(int chickenId, int month, int year);
+    boolean existsByChicken_IdAndMonthAndYearAndIsActiveTrue(Long chickenId, int month, int year);
 
     @Query("""
         SELECT COALESCE(SUM(e.count), 0)

@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO getById(@NotNull Integer userId) {
+    public UserDTO getById(@NotNull Long userId) {
         return userMapper.toDto(getUserById(userId));
     }
 
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO replace(@NotNull Integer userId, UserPutRequest request, Long version) {
+    public UserDTO replace(@NotNull Long userId, UserPutRequest request, Long version) {
         User user = getUserById(userId);
         checkVersion(user.getVersion(), version);
         userMapper.updateFully(user, request);
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO update(@NotNull Integer userId, UserPatchRequest request,Long version) {
+    public UserDTO update(@NotNull Long userId, UserPatchRequest request,Long version) {
         User user = getUserById(userId);
         checkVersion(user.getVersion(), version);
         userMapper.updatePartially(user, request);
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void deleteById(@NotNull Integer userId, Long version) {
+    public void deleteById(@NotNull Long userId, Long version) {
         User user = getUserById(userId);
         checkVersion(user.getVersion(), version);
         user.setActive(false);
@@ -127,7 +127,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_USERNAME, username));
     }
 
-    protected User getUserById(Integer id) {
+    protected User getUserById(Long id) {
         return userRepository.findByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_ID, id));
     }

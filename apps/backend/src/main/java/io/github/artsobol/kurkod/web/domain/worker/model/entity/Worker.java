@@ -8,8 +8,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -32,12 +31,6 @@ public class Worker extends BaseEntity {
     @Size(max = 30, message = "Patronymic should be less than 30 characters")
     private String patronymic;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name="worker_cage",
-            joinColumns = @JoinColumn(name = "worker_id", foreignKey = @ForeignKey(name = "fk_worker_cage_worker_id")),
-            inverseJoinColumns = @JoinColumn(name = "cage_id", foreignKey = @ForeignKey(name = "fk_worker_cage_cage_id")),
-            uniqueConstraints = @UniqueConstraint(name = "uq_worker_cage", columnNames = {"worker_id", "cage_id"})
-    )
-    private Set<Cage> cages;
+    @OneToMany(mappedBy = "worker", fetch = FetchType.LAZY)
+    private Set<WorkerCage> workerCages = new HashSet<>();
 }

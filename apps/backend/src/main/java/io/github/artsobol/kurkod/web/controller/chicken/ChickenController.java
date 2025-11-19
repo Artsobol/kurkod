@@ -54,7 +54,7 @@ public class ChickenController {
     @Operation(summary = "Get chicken by ID", description = "Returns a single chicken by its unique identifier.")
     @GetMapping("/{id}")
     public ResponseEntity<IamResponse<ChickenDTO>> get(
-            @Parameter(description = "Chicken identifier", example = "42") @PathVariable(name = "id") Integer id) {
+            @Parameter(description = "Chicken identifier", example = "42") @PathVariable(name = "id") Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         ChickenDTO response = chickenService.get(id);
         return ResponseEntity.status(HttpStatus.OK)
@@ -66,7 +66,7 @@ public class ChickenController {
     @Operation(summary = "Replace a chicken", description = "Fully replaces a chicken by ID.")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<ChickenDTO>> replace(
-            @Parameter(description = "Chicken identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Chicken identifier", example = "42") @PathVariable(name = "id") Long id,
             @Valid @RequestBody ChickenPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -84,7 +84,7 @@ public class ChickenController {
     @Operation(summary = "Partially update a chicken", description = "Applies a partial update to a chicken by ID.")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<ChickenDTO>> update(
-            @Parameter(description = "Chicken identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Chicken identifier", example = "42") @PathVariable(name = "id") Long id,
             @Valid @RequestBody ChickenPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -102,7 +102,7 @@ public class ChickenController {
     @Operation(summary = "Delete a chicken", description = "Deletes a chicken by its unique identifier.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Chicken identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Chicken identifier", example = "42") @PathVariable(name = "id") Long id,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,

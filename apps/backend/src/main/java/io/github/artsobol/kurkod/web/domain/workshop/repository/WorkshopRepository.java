@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface WorkshopRepository extends JpaRepository<Workshop, Integer> {
+public interface WorkshopRepository extends JpaRepository<Workshop, Long> {
 
-    Optional<Workshop> findWorkshopByIdAndIsActiveTrue(int id);
+    Optional<Workshop> findWorkshopByIdAndIsActiveTrue(Long id);
+
+    Optional<Workshop> findWorkshopByWorkshopNumberAndIsActiveTrue(Integer number);
 
     List<Workshop> findAllByIsActiveTrue();
 
-    boolean existsByIdAndIsActiveTrue(int id);
+    boolean existsByWorkshopNumberAndIsActiveTrue(Integer number);
 }

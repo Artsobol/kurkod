@@ -19,7 +19,7 @@ public class EmploymentContractPatchRequest {
     @Positive
     private Integer salary;
 
-    private Integer staffId;
+    private Long staffId;
 
     private LocalDate startDate;
 

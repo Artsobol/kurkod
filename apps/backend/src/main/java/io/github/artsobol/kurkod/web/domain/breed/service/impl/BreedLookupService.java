@@ -13,8 +13,8 @@ public class BreedLookupService {
 
     private final BreedRepository breedRepository;
 
-    public Breed getBreedByIdOrThrow(Integer id) {
-        return breedRepository.findById(id)
+    public Breed getBreedByIdOrThrow(Long id) {
+        return breedRepository.findBreedByIdAndIsActiveTrue(id)
                 .orElseThrow(() -> new NotFoundException(BreedError.NOT_FOUND_BY_ID, id));
     }
 }

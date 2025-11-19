@@ -21,12 +21,12 @@ public class SecurityContextFacade {
         return (authentication == null) ? null : authentication.getName();
     }
 
-    public Integer getCurrentUserId(){
+    public Long getCurrentUserId(){
         Authentication authentication = getAuthentication();
         if (authentication == null || authentication.getCredentials() == null) {
             return null;
         }
         String token = authentication.getCredentials().toString();
-        return Integer.parseInt(jwtTokenProvider.getUserId(token));
+        return Long.parseLong(jwtTokenProvider.getUserId(token));
     }
 }

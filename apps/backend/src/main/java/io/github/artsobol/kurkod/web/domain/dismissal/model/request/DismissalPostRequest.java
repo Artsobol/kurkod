@@ -23,5 +23,5 @@ public class DismissalPostRequest {
 
     @NotNull
     @Positive
-    private Integer workerId;
+    private Long workerId;
 }

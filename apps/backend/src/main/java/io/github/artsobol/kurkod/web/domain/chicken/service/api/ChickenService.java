@@ -11,13 +11,13 @@ public interface ChickenService {
 
     ChickenDTO create(ChickenPostRequest request);
 
-    ChickenDTO get(Integer id);
+    ChickenDTO get(Long id);
 
     List<ChickenDTO> getAll();
 
-    void delete(Integer id, Long version);
+    void delete(Long id, Long version);
 
-    ChickenDTO replace(Integer id, ChickenPutRequest request, Long version);
+    ChickenDTO replace(Long id, ChickenPutRequest request, Long version);
 
-    ChickenDTO update(Integer id, ChickenPatchRequest request, Long version);
+    ChickenDTO update(Long id, ChickenPatchRequest request, Long version);
 }

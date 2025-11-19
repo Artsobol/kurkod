@@ -37,7 +37,7 @@ public class WorkerController {
     @Operation(summary = "Get worker by ID", description = "Returns a single worker by its unique identifier.")
     @GetMapping("/{id}")
     public ResponseEntity<IamResponse<WorkerDTO>> get(
-            @Parameter(description = "Worker identifier", example = "42") @PathVariable(name = "id") Integer id) {
+            @Parameter(description = "Worker identifier", example = "42") @PathVariable(name = "id") Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         WorkerDTO response = workerService.get(id);
         return ResponseEntity.status(HttpStatus.OK)
@@ -65,7 +65,7 @@ public class WorkerController {
     @Operation(summary = "Replace a worker", description = "Fully replaces a worker by ID.")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<WorkerDTO>> replace(
-            @Parameter(description = "Worker identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Worker identifier", example = "42") @PathVariable(name = "id") Long id,
             @RequestBody @Valid WorkerPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -82,7 +82,7 @@ public class WorkerController {
     @Operation(summary = "Partially update a worker", description = "Applies a partial update to a worker by ID.")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<WorkerDTO>> update(
-            @Parameter(description = "Worker identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Worker identifier", example = "42") @PathVariable(name = "id") Long id,
             @RequestBody @Valid WorkerPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -99,7 +99,7 @@ public class WorkerController {
     @Operation(summary = "Delete a worker", description = "Deletes a worker by its unique identifier.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Worker identifier", example = "42") @PathVariable(name = "id") Integer id,
+            @Parameter(description = "Worker identifier", example = "42") @PathVariable(name = "id") Long id,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,

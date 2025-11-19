@@ -11,13 +11,13 @@ public interface BreedService {
 
     BreedDTO create(BreedPostRequest breedPostRequest);
 
-    BreedDTO get(Integer id);
+    BreedDTO get(Long id);
 
     List<BreedDTO> getAll();
 
-    BreedDTO replace(Integer id, BreedPutRequest breedPutRequest, Long version);
+    BreedDTO replace(Long id, BreedPutRequest breedPutRequest, Long version);
 
-    BreedDTO update(Integer id, BreedPatchRequest breedPatchRequest, Long version);
+    BreedDTO update(Long id, BreedPatchRequest breedPatchRequest, Long version);
 
-    void delete(Integer id, Long version);
+    void delete(Long id, Long version);
 }

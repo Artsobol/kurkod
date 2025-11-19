@@ -22,8 +22,8 @@ public class ChickenPutRequest {
     private LocalDate birthDate;
 
     @NotNull
-    private Integer breedId;
+    private Long breedId;
 
     @NotNull
-    private Integer cageId;
+    private Long cageId;
 }

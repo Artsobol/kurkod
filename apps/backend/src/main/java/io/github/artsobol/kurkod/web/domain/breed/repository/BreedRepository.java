@@ -6,11 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface BreedRepository extends JpaRepository<Breed, Integer> {
+public interface BreedRepository extends JpaRepository<Breed, Long> {
 
-    Optional<Breed> findBreedById(Integer id);
+    Optional<Breed> findBreedByIdAndIsActiveTrue(Long id);
 
-    List<Breed> findAll();
+    List<Breed> findAllByIsActiveTrue();
 
-    boolean existsByName(String name);
+    boolean existsByNameAndIsActiveTrue(String name);
 }

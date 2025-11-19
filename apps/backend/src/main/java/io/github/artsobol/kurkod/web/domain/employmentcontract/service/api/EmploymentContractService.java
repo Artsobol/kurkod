@@ -7,13 +7,13 @@ import io.github.artsobol.kurkod.web.domain.employmentcontract.model.request.Emp
 
 public interface EmploymentContractService {
 
-    EmploymentContractDTO get(Integer workerId);
+    EmploymentContractDTO get(Long workerId);
 
-    EmploymentContractDTO create(Integer workerId, EmploymentContractPostRequest request);
+    EmploymentContractDTO create(Long workerId, EmploymentContractPostRequest request);
 
-    EmploymentContractDTO replace(Integer workerId, EmploymentContractPutRequest request, Long expectedVersion);
+    EmploymentContractDTO replace(Long workerId, EmploymentContractPutRequest request, Long expectedVersion);
 
-    EmploymentContractDTO update(Integer workerId, EmploymentContractPatchRequest request, Long expectedVersion);
+    EmploymentContractDTO update(Long workerId, EmploymentContractPatchRequest request, Long expectedVersion);
 
-    void delete(Integer workerId, Long expectedVersion);
+    void delete(Long workerId, Long expectedVersion);
 }

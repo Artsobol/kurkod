@@ -31,7 +31,7 @@ public class AdminUserController {
                description = "Updates the role of a specific user. Requires ETag for optimistic locking.")
     @PatchMapping("/role")
     public ResponseEntity<IamResponse<UserDTO>> changeRole(
-            @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Integer userId,
+            @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Long userId,
 
             @Valid @RequestBody ChangeRoleRequest request,
 
@@ -51,7 +51,7 @@ public class AdminUserController {
     @Operation(summary = "Activate user", description = "Sets user status to ACTIVE. Requires ETag.")
     @PostMapping("/activate")
     public ResponseEntity<IamResponse<UserDTO>> activateUser(
-            @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Integer userId,
+            @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Long userId,
 
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -69,7 +69,7 @@ public class AdminUserController {
     @Operation(summary = "Deactivate user", description = "Sets user status to INACTIVE. Requires ETag.")
     @PostMapping("/deactivate")
     public ResponseEntity<IamResponse<UserDTO>> deactivateUser(
-            @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Integer userId,
+            @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Long userId,
 
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,

@@ -36,7 +36,7 @@ public class UserController {
     @Operation(summary = "Get user by ID", description = "Returns user information by unique identifier.")
     @GetMapping("/id/{userId}")
     public ResponseEntity<IamResponse<UserDTO>> getById(
-            @Parameter(description = "User identifier", example = "5") @PathVariable(name = "userId") Integer userId) {
+            @Parameter(description = "User identifier", example = "5") @PathVariable(name = "userId") Long userId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         UserDTO response = userService.getById(userId);
         return ResponseEntity.status(HttpStatus.OK)
@@ -68,7 +68,7 @@ public class UserController {
     @Operation(summary = "Partially update user", description = "Applies a partial update to the user account.")
     @PatchMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<UserDTO>> updatePartiallyUser(
-            @Parameter(description = "User identifier", example = "5") @PathVariable(name = "userId") Integer userId,
+            @Parameter(description = "User identifier", example = "5") @PathVariable(name = "userId") Long userId,
             @RequestBody @Valid UserPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -85,7 +85,7 @@ public class UserController {
     @Operation(summary = "Fully update user", description = "Fully replaces user data by ID.")
     @PutMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<UserDTO>> updateFullyUser(
-            @Parameter(description = "User identifier", example = "5") @PathVariable(name = "userId") Integer userId,
+            @Parameter(description = "User identifier", example = "5") @PathVariable(name = "userId") Long userId,
             @RequestBody @Valid UserPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -102,7 +102,7 @@ public class UserController {
     @Operation(summary = "Delete user", description = "Deletes the user account by ID.")
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteById(
-            @Parameter(description = "User identifier", example = "5") @PathVariable(name = "userId") Integer userId,
+            @Parameter(description = "User identifier", example = "5") @PathVariable(name = "userId") Long userId,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,

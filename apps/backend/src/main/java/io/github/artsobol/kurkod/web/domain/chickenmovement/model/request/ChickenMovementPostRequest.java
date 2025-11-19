@@ -16,8 +16,8 @@ public class ChickenMovementPostRequest {
 
     private OffsetDateTime movedAt;
 
-    private Integer fromCageId;
+    private Long fromCageId;
 
     @NotNull
-    private Integer toCageId;
+    private Long toCageId;
 }
