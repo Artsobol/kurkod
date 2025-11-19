@@ -50,7 +50,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(ChickenMovement.class), chickenId);
         return chickenMovementMapper.toDto(chickenMovementRepository
                 .findTopByChicken_IdOrderByMovedAtDesc(chickenId)
-                .orElseThrow( () -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID.format(chickenId))));
+                .orElseThrow( () -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID, chickenId)));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
         Cage toCage = findCageById(request.getToCageId());
         ChickenMovement chickenMovement = chickenMovementMapper.toEntity(request);
         chickenMovement.setChicken(chickenRepository.findById(chickenId)
-                .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID.format(chickenId))));
+                .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID, chickenId)));
         chickenMovement.setFromCage(fromCage);
         chickenMovement.setToCage(toCage);
         chickenMovement.setMovedAt(OffsetDateTime.now());
@@ -78,7 +78,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
 
     protected ChickenMovement findChickenMovementById(Integer movementId) {
         return chickenMovementRepository.findById(movementId)
-                .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID.format(movementId)));
+                .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID, movementId));
     }
 
     protected Cage findFromCageById(Integer cageId) {

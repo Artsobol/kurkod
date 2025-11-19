@@ -78,8 +78,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         ensureNotExistsByIdMonthYear(chickenId, month, year);
         EggProductionMonth eggProductionMonth = eggProductionMonthMapper.toEntity(request);
         Chicken chicken = chickenRepository.findById(chickenId)
-                                           .orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID.format(
-                                                   chickenId)));
+                                           .orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenId));
         eggProductionMonth.setChicken(chicken);
 
         eggProductionMonthRepository.save(eggProductionMonth);
@@ -136,6 +135,11 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
                  LogHelper.getEntityName(EggProductionMonth.class),
                  chickenId);
         eggProductionMonthRepository.save(eggProductionMonth);
+    }
+
+    @Override
+    public Long countEggsByMonthAndYear(int month, int year) {
+        return eggProductionMonthRepository.countEggsByMonth(month, year);
     }
 
     protected EggProductionMonth findByIdMonthYear(int chickenId, int month, int year) {

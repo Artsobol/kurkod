@@ -103,6 +103,6 @@ public class StaffServiceImpl implements StaffService {
 
     protected Staff getStaffById(Integer id) {
         return staffRepository.findStaffByIdAndIsActiveTrue(id).orElseThrow(() ->
-                new NotFoundException(StaffError.NOT_FOUND_BY_ID.format(id)));
+                new NotFoundException(StaffError.NOT_FOUND_BY_ID, id));
     }
 }

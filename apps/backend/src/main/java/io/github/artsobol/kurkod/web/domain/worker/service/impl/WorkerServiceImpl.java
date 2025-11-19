@@ -98,6 +98,6 @@ public class WorkerServiceImpl implements WorkerService {
 
     protected Worker getWorkerById(Integer id) {
         return workerRepository.findWorkerByIdAndIsActiveTrue(id).orElseThrow(() ->
-                new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(id)));
+                new NotFoundException(WorkerError.NOT_FOUND_BY_ID, id));
     }
 }

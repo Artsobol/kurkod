@@ -14,7 +14,6 @@ import io.github.artsobol.kurkod.web.domain.diet.model.request.DietPostRequest;
 import io.github.artsobol.kurkod.web.domain.diet.model.request.DietPutRequest;
 import io.github.artsobol.kurkod.web.domain.diet.repository.DietRepository;
 import io.github.artsobol.kurkod.web.domain.diet.service.api.DietService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -103,7 +102,7 @@ public class DietServiceImpl implements DietService {
     protected void ensureNotExists(String code) {
         if (existsByCode(code)){
             log.info(DietError.ALREADY_EXISTS.format(code));
-            throw new DataExistException(DietError.ALREADY_EXISTS.format(code));
+            throw new DataExistException(DietError.ALREADY_EXISTS, code);
         }
     }
 
@@ -112,6 +111,6 @@ public class DietServiceImpl implements DietService {
     }
 
     protected Diet getDietById(Integer id){
-        return dietRepository.findById(id).orElseThrow(() -> new NotFoundException(DietError.NOT_FOUND_BY_ID.format(id)));
+        return dietRepository.findById(id).orElseThrow(() -> new NotFoundException(DietError.NOT_FOUND_BY_ID, id));
     }
 }

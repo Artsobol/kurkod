@@ -22,4 +22,6 @@ public interface EggProductionMonthService {
     EggProductionMonthDTO update(int chickenId, int month, int year, EggProductionMonthPatchRequest request, Long version);
 
     void delete(int chickenId, int month, int year, Long version);
+
+    Long countEggsByMonthAndYear(int month, int year);
 }

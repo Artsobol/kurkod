@@ -42,8 +42,16 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeset/1.0/021-create-report-chicken-eggs-stats-view.yaml
   - include:
-      file: db/changelog/changeset/1.0/022-create-report-chicken-by-month-view.yaml
+      file: db/changelog/changeset/1.0/022-add-cage-field-by-chicken.yaml
   - include:
       file: db/changelog/changeset/1.0/023-create-chicken-cage-check-function.yaml
   - include:
       file: db/changelog/changeset/1.0/024-create-chicken-cage-check-trigger.yaml
+  - include:
+      file: db/changelog/changeset/1.0/025-create-worker-cage.yaml
+  - include:
+      file: db/changelog/changeset/1.0/026-create-diet.yaml
+  - include:
+      file: db/changelog/changeset/1.0/027-create-breed-diet.yaml
+  - include:
+      file: db/changelog/changeset/1.0/028-create-breed-egg-diff-report.yaml

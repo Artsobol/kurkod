@@ -22,23 +22,12 @@ public class IamError {
     private final LocalDateTime time = LocalDateTime.now();
     private List<String> details;
 
-    // TODO: сократить количество аргументов
     public static IamError createError(HttpStatus status, String code, String message, String path) {
         return IamError.builder()
                 .status(status.value())
                 .code(code)
                 .error(status.getReasonPhrase())
                 .message(message)
-                .path(path)
-                .build();
-    }
-
-    public static IamError validationError(List<String> fieldErrors, String path) {
-        return IamError.builder()
-                .status(HttpStatus.BAD_REQUEST.value())
-                .error(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                .message("Validation failed")
-                .details(fieldErrors)
                 .path(path)
                 .build();
     }

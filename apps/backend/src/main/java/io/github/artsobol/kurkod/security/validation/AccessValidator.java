@@ -18,19 +18,19 @@ public class AccessValidator {
 
     public void validateNewUser(String username, String email, String password, String confirmPassword) {
         userRepository.findByUsernameAndIsActiveTrue(username).ifPresent(u -> {
-            throw new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS.format(username));
+            throw new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS, username);
         });
 
         userRepository.findByEmailAndIsActiveTrue(email).ifPresent(u -> {
-            throw new DataExistException(UserError.WITH_EMAIL_ALREADY_EXISTS.format(email));
+            throw new DataExistException(UserError.WITH_EMAIL_ALREADY_EXISTS, email);
         });
 
         if(!password.equals(confirmPassword)) {
-            throw new InvalidPasswordException(AuthError.MISMATCH_PASSWORDS.format());
+            throw new InvalidPasswordException(AuthError.MISMATCH_PASSWORDS, confirmPassword);
         }
 
         if (PasswordUtils.isNotValidPassword(password) ) {
-            throw new InvalidPasswordException(AuthError.INVALID_PASSWORD.format());
+            throw new InvalidPasswordException(AuthError.INVALID_PASSWORD, password);
         }
     }
 }

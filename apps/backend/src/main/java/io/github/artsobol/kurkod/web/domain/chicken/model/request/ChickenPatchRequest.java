@@ -2,7 +2,6 @@ package io.github.artsobol.kurkod.web.domain.chicken.model.request;
 
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ChickenPatchRequest {
 
-    // TODO запретить пустую строку
     private String name;
 
     @Positive

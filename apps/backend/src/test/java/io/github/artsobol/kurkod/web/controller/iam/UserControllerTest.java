@@ -67,7 +67,6 @@ class UserControllerTest {
     @MockitoBean JwtTokenProvider jwtTokenProvider;
     @MockitoBean JwtRequestFilter jwtRequestFilter;
 
-    // ---------- GET BY ID ----------
     @Nested
     class GetById {
         @Test
@@ -97,15 +96,13 @@ class UserControllerTest {
             mvc.perform(get(API + "/id/{userId}", USER_ID).accept(JSON).locale(locale))
                .andExpect(status().isNotFound())
                .andExpect(content().contentTypeCompatibleWith(JSON))
-               .andExpect(jsonPath("$.message").value(createMessage(
-                       locale,
-                       "User with ID=%d not found",
-                       "Пользователь с ID=%d не найден",
-                       USER_ID)));
+               .andExpect(jsonPath("$.message").value(createMessage(locale,
+                                                                    "User with ID=%d not found",
+                                                                    "Пользователь с ID=%d не найден",
+                                                                    USER_ID)));
         }
     }
 
-    // ---------- GET BY USERNAME ----------
     @Nested
     class GetByUsername {
         @Test
@@ -130,20 +127,18 @@ class UserControllerTest {
         @DisplayName("404 Not Found")
         void returns404(Locale locale) throws Exception {
             String username = "ghost";
-            when(userService.getByUsername(username))
-                    .thenThrow(new NotFoundException(UserError.NOT_FOUND_BY_USERNAME, username));
+            when(userService.getByUsername(username)).thenThrow(new NotFoundException(UserError.NOT_FOUND_BY_USERNAME,
+                                                                                      username));
 
             mvc.perform(get(API + "/username/{username}", username).accept(JSON).locale(locale))
                .andExpect(status().isNotFound())
-               .andExpect(jsonPath("$.message").value(createMessage(
-                       locale,
-                       "User with username=%s not found",
-                       "Пользователь с именем=%s не найден",
-                       username)));
+               .andExpect(jsonPath("$.message").value(createMessage(locale,
+                                                                    "User with username=%s not found",
+                                                                    "Пользователь с именем=%s не найден",
+                                                                    username)));
         }
     }
 
-    // ---------- CREATE ----------
     @Nested
     class CreateOne {
         @Test
@@ -169,17 +164,16 @@ class UserControllerTest {
         @MethodSource("io.github.artsobol.kurkod.web.controller.iam.UserControllerTest#locales")
         @DisplayName("409 Conflict: username already exists")
         void returns409(Locale locale) throws Exception {
-            UserPostRequest req = new UserPostRequest("john","secret","john@example.com");
-            when(userService.create(any(UserPostRequest.class)))
-                    .thenThrow(new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS, "john"));
+            UserPostRequest req = new UserPostRequest("john", "secret", "john@example.com");
+            when(userService.create(any(UserPostRequest.class))).thenThrow(new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS,
+                                                                                                  "john"));
 
             mvc.perform(post(API).accept(JSON).locale(locale).contentType(JSON).content(asJson(req)))
                .andExpect(status().isConflict())
-               .andExpect(jsonPath("$.message").value(createMessage(
-                       locale,
-                       "Username %s already exists",
-                       "Имя пользователя %s уже занято",
-                       "john")));
+               .andExpect(jsonPath("$.message").value(createMessage(locale,
+                                                                    "Username %s already exists",
+                                                                    "Имя пользователя %s уже занято",
+                                                                    "john")));
         }
 
         @Test
@@ -205,8 +199,7 @@ class UserControllerTest {
         @Test
         @DisplayName("400 Bad Request: malformed JSON")
         void returns400_when_malformed_json() throws Exception {
-            mvc.perform(post(API).accept(JSON).contentType(JSON).content("{"))
-               .andExpect(status().isBadRequest());
+            mvc.perform(post(API).accept(JSON).contentType(JSON).content("{")).andExpect(status().isBadRequest());
 
             verifyNoInteractions(userService);
         }
@@ -221,14 +214,13 @@ class UserControllerTest {
         }
     }
 
-    // ---------- REPLACE ----------
     @Nested
     class ReplaceOne {
         @Test
         @DisplayName("200 OK: body + new ETag")
         void returns200_with_new_etag() throws Exception {
             long current = 5L, next = 6L;
-            UserPutRequest req = new UserPutRequest("johnny","secret2","johnny@example.com");
+            UserPutRequest req = new UserPutRequest("johnny", "secret2", "johnny@example.com");
             UserDTO dto = createUserDto(USER_ID, "johnny", "johnny@example.com", next);
             when(userService.replace(eq(USER_ID), any(UserPutRequest.class), eq(current))).thenReturn(dto);
 
@@ -245,24 +237,31 @@ class UserControllerTest {
         @MethodSource("io.github.artsobol.kurkod.web.controller.iam.UserControllerTest#locales")
         @DisplayName("428 Precondition Required: missing If-Match")
         void returns428_when_etag_missing(Locale locale) throws Exception {
-            UserPutRequest req = new UserPutRequest("johnny","secret2","johnny@example.com");
+            UserPutRequest req = new UserPutRequest("johnny", "secret2", "johnny@example.com");
 
-            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON).locale(locale).contentType(JSON).content(asJson(req)))
+            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON)
+                                                       .locale(locale)
+                                                       .contentType(JSON)
+                                                       .content(asJson(req)))
                .andExpect(status().isPreconditionRequired());
         }
 
         @Test
         @DisplayName("400 Bad Request: invalid If-Match")
         void returns400_when_invalid_etag() throws Exception {
-            UserPutRequest req = new UserPutRequest("johnny","secret2","johnny@example.com");
-            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON).contentType(JSON).header("If-Match","trash").content(asJson(req)))
-               .andExpect(status().isBadRequest());
+            UserPutRequest req = new UserPutRequest("johnny", "secret2", "johnny@example.com");
+            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON)
+                                                       .contentType(JSON)
+                                                       .header("If-Match", "trash")
+                                                       .content(asJson(req))).andExpect(status().isBadRequest());
         }
 
         @Test
         @DisplayName("400 Bad Request: empty body")
         void returns400_when_empty_body() throws Exception {
-            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON).contentType(JSON).header("If-Match", convertToEtag(5L)))
+            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON)
+                                                       .contentType(JSON)
+                                                       .header("If-Match", convertToEtag(5L)))
                .andExpect(status().isBadRequest());
 
             verifyNoInteractions(userService);
@@ -272,8 +271,10 @@ class UserControllerTest {
         @DisplayName("400 Bad Request: invalid body")
         void returns400_when_invalid_body() throws Exception {
             UserPutRequest bad = new UserPutRequest("", null, "bad");
-            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON).contentType(JSON).header("If-Match", convertToEtag(5L)).content(asJson(bad)))
-               .andExpect(status().isBadRequest());
+            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON)
+                                                       .contentType(JSON)
+                                                       .header("If-Match", convertToEtag(5L))
+                                                       .content(asJson(bad))).andExpect(status().isBadRequest());
 
             verifyNoInteractions(userService);
         }
@@ -283,12 +284,18 @@ class UserControllerTest {
         @DisplayName("412 Precondition Failed: version mismatch")
         void returns412_when_etag_mismatch(Locale locale) throws Exception {
             long current = 5L, expected = 10L;
-            when(userService.replace(eq(USER_ID), any(UserPutRequest.class), eq(current)))
-                    .thenThrow(new MatchFailedException(RequiredHeaderError.MATCH_FAILED, current, expected));
+            when(userService.replace(eq(USER_ID),
+                                     any(UserPutRequest.class),
+                                     eq(current))).thenThrow(new MatchFailedException(RequiredHeaderError.MATCH_FAILED,
+                                                                                      current,
+                                                                                      expected));
 
-            UserPutRequest req = new UserPutRequest("johnny","secret2","johnny@example.com");
-            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON).locale(locale).contentType(JSON)
-                                                       .header("If-Match", convertToEtag(current)).content(asJson(req)))
+            UserPutRequest req = new UserPutRequest("johnny", "secret2", "johnny@example.com");
+            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON)
+                                                       .locale(locale)
+                                                       .contentType(JSON)
+                                                       .header("If-Match", convertToEtag(current))
+                                                       .content(asJson(req)))
                .andExpect(status().isPreconditionFailed());
         }
 
@@ -297,22 +304,24 @@ class UserControllerTest {
         @DisplayName("404 Not Found")
         void returns404(Locale locale) throws Exception {
             long current = 5L;
-            when(userService.replace(eq(USER_ID), any(UserPutRequest.class), eq(current)))
-                    .thenThrow(new NotFoundException(UserError.NOT_FOUND_BY_ID, USER_ID));
+            when(userService.replace(eq(USER_ID),
+                                     any(UserPutRequest.class),
+                                     eq(current))).thenThrow(new NotFoundException(UserError.NOT_FOUND_BY_ID, USER_ID));
 
-            UserPutRequest req = new UserPutRequest("johnny","secret2","johnny@example.com");
-            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON).locale(locale).contentType(JSON)
-                                                       .header("If-Match", convertToEtag(current)).content(asJson(req)))
+            UserPutRequest req = new UserPutRequest("johnny", "secret2", "johnny@example.com");
+            mvc.perform(put(API + "/{userId}", USER_ID).accept(JSON)
+                                                       .locale(locale)
+                                                       .contentType(JSON)
+                                                       .header("If-Match", convertToEtag(current))
+                                                       .content(asJson(req)))
                .andExpect(status().isNotFound())
-               .andExpect(jsonPath("$.message").value(createMessage(
-                       locale,
-                       "User with ID=%s not found",
-                       "Пользователь с ID=%s не найден",
-                       USER_ID)));
+               .andExpect(jsonPath("$.message").value(createMessage(locale,
+                                                                    "User with ID=%s not found",
+                                                                    "Пользователь с ID=%s не найден",
+                                                                    USER_ID)));
         }
     }
 
-    // ---------- PATCH ----------
     @Nested
     class UpdatePartially {
         @Test
@@ -323,8 +332,10 @@ class UserControllerTest {
             UserDTO dto = createUserDto(USER_ID, "johnny", "john@example.com", next);
             when(userService.update(eq(USER_ID), any(UserPatchRequest.class), eq(current))).thenReturn(dto);
 
-            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON).contentType(JSON)
-                                                         .header("If-Match", convertToEtag(current)).content(asJson(req)))
+            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON)
+                                                         .contentType(JSON)
+                                                         .header("If-Match", convertToEtag(current))
+                                                         .content(asJson(req)))
                .andExpect(status().isOk())
                .andExpect(header().string("ETag", convertToEtag(next)))
                .andExpect(jsonPath("$.payload.version").value((int) next));
@@ -336,7 +347,10 @@ class UserControllerTest {
         void returns428(Locale locale) throws Exception {
             UserPatchRequest req = new UserPatchRequest("johnny", null, null);
 
-            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON).locale(locale).contentType(JSON).content(asJson(req)))
+            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON)
+                                                         .locale(locale)
+                                                         .contentType(JSON)
+                                                         .content(asJson(req)))
                .andExpect(status().isPreconditionRequired());
         }
 
@@ -344,14 +358,18 @@ class UserControllerTest {
         @DisplayName("400 Bad Request: invalid If-Match")
         void returns400_when_invalid_etag() throws Exception {
             UserPatchRequest req = new UserPatchRequest("johnny", null, null);
-            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON).contentType(JSON).header("If-Match","bad").content(asJson(req)))
-               .andExpect(status().isBadRequest());
+            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON)
+                                                         .contentType(JSON)
+                                                         .header("If-Match", "bad")
+                                                         .content(asJson(req))).andExpect(status().isBadRequest());
         }
 
         @Test
         @DisplayName("400 Bad Request: empty body")
         void returns400_when_empty_body() throws Exception {
-            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON).contentType(JSON).header("If-Match", convertToEtag(5L)))
+            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON)
+                                                         .contentType(JSON)
+                                                         .header("If-Match", convertToEtag(5L)))
                .andExpect(status().isBadRequest());
 
             verifyNoInteractions(userService);
@@ -361,8 +379,10 @@ class UserControllerTest {
         @DisplayName("400 Bad Request: invalid body")
         void returns400_when_invalid_body() throws Exception {
             UserPatchRequest bad = new UserPatchRequest("x".repeat(100), "p", "bad");
-            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON).contentType(JSON).header("If-Match", convertToEtag(5L)).content(asJson(bad)))
-               .andExpect(status().isBadRequest());
+            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON)
+                                                         .contentType(JSON)
+                                                         .header("If-Match", convertToEtag(5L))
+                                                         .content(asJson(bad))).andExpect(status().isBadRequest());
         }
 
         @ParameterizedTest(name = "[{index}] locale={0}")
@@ -370,12 +390,18 @@ class UserControllerTest {
         @DisplayName("412 Precondition Failed: version mismatch")
         void returns412(Locale locale) throws Exception {
             long current = 5L, expected = 10L;
-            when(userService.update(eq(USER_ID), any(UserPatchRequest.class), eq(current)))
-                    .thenThrow(new MatchFailedException(RequiredHeaderError.MATCH_FAILED, current, expected));
+            when(userService.update(eq(USER_ID),
+                                    any(UserPatchRequest.class),
+                                    eq(current))).thenThrow(new MatchFailedException(RequiredHeaderError.MATCH_FAILED,
+                                                                                     current,
+                                                                                     expected));
 
             UserPatchRequest req = new UserPatchRequest("johnny", null, null);
-            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON).locale(locale).contentType(JSON)
-                                                         .header("If-Match", convertToEtag(current)).content(asJson(req)))
+            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON)
+                                                         .locale(locale)
+                                                         .contentType(JSON)
+                                                         .header("If-Match", convertToEtag(current))
+                                                         .content(asJson(req)))
                .andExpect(status().isPreconditionFailed());
         }
 
@@ -384,22 +410,24 @@ class UserControllerTest {
         @DisplayName("404 Not Found")
         void returns404(Locale locale) throws Exception {
             long current = 5L;
-            when(userService.update(eq(USER_ID), any(UserPatchRequest.class), eq(current)))
-                    .thenThrow(new NotFoundException(UserError.NOT_FOUND_BY_ID, USER_ID));
+            when(userService.update(eq(USER_ID),
+                                    any(UserPatchRequest.class),
+                                    eq(current))).thenThrow(new NotFoundException(UserError.NOT_FOUND_BY_ID, USER_ID));
 
             UserPatchRequest req = new UserPatchRequest("johnny", null, null);
-            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON).locale(locale).contentType(JSON)
-                                                         .header("If-Match", convertToEtag(current)).content(asJson(req)))
+            mvc.perform(patch(API + "/{userId}", USER_ID).accept(JSON)
+                                                         .locale(locale)
+                                                         .contentType(JSON)
+                                                         .header("If-Match", convertToEtag(current))
+                                                         .content(asJson(req)))
                .andExpect(status().isNotFound())
-               .andExpect(jsonPath("$.message").value(createMessage(
-                       locale,
-                       "User with ID=%s not found",
-                       "Пользователь с ID=%s не найден",
-                       USER_ID)));
+               .andExpect(jsonPath("$.message").value(createMessage(locale,
+                                                                    "User with ID=%s not found",
+                                                                    "Пользователь с ID=%s не найден",
+                                                                    USER_ID)));
         }
     }
 
-    // ---------- DELETE ----------
     @Nested
     class DeleteOne {
         @Test
@@ -408,10 +436,8 @@ class UserControllerTest {
             long v = 9L;
             doNothing().when(userService).deleteById(USER_ID, v);
 
-            mvc.perform(delete(API + "/{userId}", USER_ID).accept(JSON).header("If-Match", convertToEtag(v)))
-               .andExpect(status().isNoContent())
-               .andExpect(header().doesNotExist("ETag"))
-               .andExpect(content().string(""));
+            mvc.perform(delete(API + "/{userId}", USER_ID).accept(JSON).header("If-Match", convertToEtag(v))).andExpect(
+                    status().isNoContent()).andExpect(header().doesNotExist("ETag")).andExpect(content().string(""));
         }
 
         @ParameterizedTest(name = "[{index}] locale={0}")
@@ -434,10 +460,13 @@ class UserControllerTest {
         @DisplayName("412 Precondition Failed: version mismatch")
         void returns412(Locale locale) throws Exception {
             long current = 5L, expected = 10L;
-            doThrow(new MatchFailedException(RequiredHeaderError.MATCH_FAILED, current, expected))
-                    .when(userService).deleteById(USER_ID, current);
+            doThrow(new MatchFailedException(RequiredHeaderError.MATCH_FAILED, current, expected)).when(userService)
+                                                                                                  .deleteById(USER_ID,
+                                                                                                              current);
 
-            mvc.perform(delete(API + "/{userId}", USER_ID).accept(JSON).locale(locale).header("If-Match", convertToEtag(current)))
+            mvc.perform(delete(API + "/{userId}", USER_ID).accept(JSON)
+                                                          .locale(locale)
+                                                          .header("If-Match", convertToEtag(current)))
                .andExpect(status().isPreconditionFailed());
         }
 
@@ -448,30 +477,27 @@ class UserControllerTest {
             long v = 9L;
             doThrow(new NotFoundException(UserError.NOT_FOUND_BY_ID, USER_ID)).when(userService).deleteById(USER_ID, v);
 
-            mvc.perform(delete(API + "/{userId}", USER_ID).accept(JSON).locale(locale).header("If-Match", convertToEtag(v)))
+            mvc.perform(delete(API + "/{userId}", USER_ID).accept(JSON)
+                                                          .locale(locale)
+                                                          .header("If-Match", convertToEtag(v)))
                .andExpect(status().isNotFound())
-               .andExpect(jsonPath("$.message").value(createMessage(
-                       locale,
-                       "User with ID=%s not found",
-                       "Пользователь с ID=%s не найден",
-                       USER_ID)));
+               .andExpect(jsonPath("$.message").value(createMessage(locale,
+                                                                    "User with ID=%s not found",
+                                                                    "Пользователь с ID=%s не найден",
+                                                                    USER_ID)));
         }
     }
 
-    // -------- helpers --------
-
     private UserDTO createUserDto(Integer id, String username, String email, Long version) {
-        return new UserDTO(
-                id,
-                username,
-                email,
-                new UserRole(),
-                RegistrationStatus.ACTIVE,
-                List.of(new RoleDTO(1L, "USER")),
-                OffsetDateTime.now(),
-                OffsetDateTime.now(),
-                version
-        );
+        return new UserDTO(id,
+                           username,
+                           email,
+                           new UserRole(),
+                           RegistrationStatus.ACTIVE,
+                           List.of(new RoleDTO(1L, "USER")),
+                           OffsetDateTime.now(),
+                           OffsetDateTime.now(),
+                           version);
     }
 
     private String asJson(Object o) throws Exception {

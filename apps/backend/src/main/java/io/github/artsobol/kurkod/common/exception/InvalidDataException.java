@@ -1,14 +1,10 @@
 package io.github.artsobol.kurkod.common.exception;
 
-import org.springframework.http.HttpStatus;
+import io.github.artsobol.kurkod.common.error.ErrorDescriptor;
 
-/**
- * Thrown when the provided data is invalid or does not meet validation rules.
- * Example: missing required fields, invalid email format, etc.
- */
 public class InvalidDataException extends BaseException{
 
-    public InvalidDataException(String message) {
-        super(message, HttpStatus.BAD_REQUEST);
+    public InvalidDataException(ErrorDescriptor error, Object... args) {
+        super(error.getCode(), error.getMessageKey(), args, error.getStatus());
     }
 }

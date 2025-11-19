@@ -57,8 +57,7 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public EmploymentContractDTO create(Integer workerId, EmploymentContractPostRequest request) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId)
-                                        .orElseThrow(() -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(
-                                                workerId)));
+                                        .orElseThrow(() -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, workerId));
 
         Integer staffId = request.getStaffId();
         Staff staff = getStaffByStaffId(staffId);
@@ -137,6 +136,6 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
 
     protected Staff getStaffByStaffId(Integer staffId) {
         return staffRepository.findStaffByIdAndIsActiveTrue(staffId)
-                              .orElseThrow(() -> new NotFoundException(StaffError.NOT_FOUND_BY_ID.format(staffId)));
+                              .orElseThrow(() -> new NotFoundException(StaffError.NOT_FOUND_BY_ID, staffId));
     }
 }

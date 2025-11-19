@@ -1,8 +1,6 @@
 package io.github.artsobol.kurkod.web.advice;
 
-import io.github.artsobol.kurkod.common.constants.CommonConstants;
 import io.github.artsobol.kurkod.common.exception.*;
-import io.github.artsobol.kurkod.common.logging.constants.AnsiColor;
 import io.github.artsobol.kurkod.web.domain.common.error.CommonError;
 import io.github.artsobol.kurkod.web.domain.iam.user.error.UserError;
 import io.github.artsobol.kurkod.web.response.IamError;
@@ -11,6 +9,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.Objects;
+import java.util.Locale;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -35,90 +34,78 @@ public class CommonControllerAdvice {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<IamError> handleBaseException(BaseException ex, HttpServletRequest request) {
-        logStackTrace(ex);
-        IamError error = createError(ex, request);
-        return ResponseEntity.status(ex.getStatus()).contentType(MediaType.APPLICATION_JSON).body(error);
+        logBusinessError(ex, request);
+        return buildResponse(ex, request);
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<IamError> handleMissingParameter(MissingServletRequestParameterException ex, HttpServletRequest request) {
-        logStackTrace(ex);
-        return handleBaseException(Exceptions.of(CommonError.BAD_REQUEST), request);
+    public ResponseEntity<IamError> handleMissingParameter(
+            HttpServletRequest request) {
+        return buildResponse(Exceptions.of(CommonError.BAD_REQUEST), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<IamError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpServletRequest req) {
-        logStackTrace(ex);
-        return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
+    public ResponseEntity<IamError> handleMethodArgumentNotValid(
+            HttpServletRequest request) {
+        return buildResponse(Exceptions.of(CommonError.VALIDATION_FAILED), request);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<IamError> handleCve(ConstraintViolationException ex, HttpServletRequest req) {
-        logStackTrace(ex);
-        return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
+    public ResponseEntity<IamError> handleConstraintViolation(
+            HttpServletRequest request) {
+        return buildResponse(Exceptions.of(CommonError.VALIDATION_FAILED), request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<IamError> handleUnreadable(HttpMessageNotReadableException ex, HttpServletRequest req) {
-        logStackTrace(ex);
-        return handleBaseException(Exceptions.of(CommonError.MALFORMED_JSON), req);
+    public ResponseEntity<IamError> handleUnreadableBody(
+            HttpServletRequest request) {
+        return buildResponse(Exceptions.of(CommonError.MALFORMED_JSON), request);
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ResponseEntity<IamError> handle415(HttpMediaTypeNotSupportedException ex, HttpServletRequest req) {
-        logStackTrace(ex);
-        return handleBaseException(Exceptions.of(CommonError.UNSUPPORTED_MEDIA_TYPE), req);
+    public ResponseEntity<IamError> handleUnsupportedMediaType(
+            HttpServletRequest request) {
+        return buildResponse(Exceptions.of(CommonError.UNSUPPORTED_MEDIA_TYPE), request);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<IamError> handle405(HttpRequestMethodNotSupportedException ex, HttpServletRequest req) {
-        logStackTrace(ex);
-        return handleBaseException(Exceptions.of(CommonError.METHOD_NOT_ALLOWED), req);
+    public ResponseEntity<IamError> handleMethodNotAllowed(
+            HttpServletRequest request) {
+        return buildResponse(Exceptions.of(CommonError.METHOD_NOT_ALLOWED), request);
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
-    public ResponseEntity<IamError> handleMissingHeader(MissingRequestHeaderException ex, HttpServletRequest req) {
+    public ResponseEntity<IamError> handleMissingHeader(MissingRequestHeaderException ex, HttpServletRequest request) {
         if ("If-Match".equalsIgnoreCase(ex.getHeaderName())) {
-            return handleBaseException(Exceptions.of(CommonError.MISSING_IF_MATCH), req);
+            return buildResponse(Exceptions.of(CommonError.MISSING_IF_MATCH), request);
         }
-        return handleBaseException(Exceptions.of(CommonError.VALIDATION_FAILED), req);
+        return buildResponse(Exceptions.of(CommonError.VALIDATION_FAILED), request);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<IamError> handleAccessDenied(AccessDeniedException ex, HttpServletRequest req) {
-        logStackTrace(ex);
-        return handleBaseException(Exceptions.of(UserError.HAVE_NO_ACCESS), req);
+    public ResponseEntity<IamError> handleAccessDenied(
+            HttpServletRequest request) {
+        return buildResponse(Exceptions.of(UserError.HAVE_NO_ACCESS), request);
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<IamError> handleAny(Exception ex, HttpServletRequest req) {
-        logStackTrace(ex);
-        return handleBaseException(Exceptions.of(CommonError.INTERNAL_ERROR), req);
+    public ResponseEntity<IamError> handleUnexpected(Exception ex, HttpServletRequest request) {
+        log.error("Unexpected error on path={}", request.getRequestURI(), ex);
+        return buildResponse(Exceptions.of(CommonError.INTERNAL_ERROR), request);
     }
 
-    private void logStackTrace(Exception ex) {
-        StringBuilder stackTrace = new StringBuilder();
+    private void logBusinessError(BaseException ex, HttpServletRequest request) {
+        log.warn("Business error: status={}, code={}, key={}, path={}, args={}",
+                 ex.getStatus(),
+                 ex.getCode(),
+                 ex.getMessageKey(),
+                 request.getRequestURI(),
+                 Arrays.toString(ex.getArgs()));
+    }
 
-        stackTrace.append(AnsiColor.ANSI_RED);
-
-        stackTrace.append(ex.getMessage()).append(CommonConstants.BREAK_LINE);
-
-        if (Objects.nonNull(ex.getCause())) {
-            stackTrace.append(ex.getCause().getMessage()).append(CommonConstants.BREAK_LINE);
-        }
-
-        Arrays.stream(ex.getStackTrace())
-                .filter(st -> st.getClassName().startsWith(CommonConstants.TIME_ZONE_PACKAGE_NAME))
-                .forEach(st -> stackTrace
-                        .append(st.getClassName())
-                        .append(".")
-                        .append(st.getMethodName())
-                        .append(" (")
-                        .append(st.getLineNumber())
-                        .append(") ")
-                );
-
-        log.error(stackTrace.append(AnsiColor.ANSI_WHITE).toString());
+    private ResponseEntity<IamError> buildResponse(BaseException ex, HttpServletRequest request) {
+        IamError error = createError(ex, request);
+        return ResponseEntity.status(error.getStatus()).contentType(MediaType.APPLICATION_JSON).body(error);
     }
 
     protected IamError createError(BaseException ex, HttpServletRequest request) {
@@ -128,6 +115,16 @@ public class CommonControllerAdvice {
     }
 
     protected String getLocalizedMessage(BaseException ex) {
-        return messageSource.getMessage(ex.getMessageKey(), ex.getArgs(), LocaleContextHolder.getLocale());
+        Locale locale = LocaleContextHolder.getLocale();
+        try {
+            return messageSource.getMessage(ex.getMessageKey(), ex.getArgs(), locale);
+        } catch (NoSuchMessageException e) {
+            log.warn("No message found for key={} and locale={}", ex.getMessageKey(), locale);
+            if (ex.getMessage() != null) {
+                return ex.getMessage();
+            }
+            return ex.getMessageKey();
+        }
     }
 }
+

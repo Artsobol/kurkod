@@ -112,14 +112,14 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     protected Workshop getWorkshopById(Integer id) {
         return workshopRepository.findWorkshopByIdAndIsActiveTrue(id).orElseThrow(
-                () -> new NotFoundException(WorkshopError.NOT_FOUND_BY_ID.format(id))
+                () -> new NotFoundException(WorkshopError.NOT_FOUND_BY_ID, id)
         );
     }
 
     protected void ensureNotExists(Integer id) {
         if (existsById(id)){
             log.info(WorkshopError.ALREADY_EXISTS.format(id));
-            throw new DataExistException(WorkshopError.ALREADY_EXISTS.format(id));
+            throw new DataExistException(WorkshopError.ALREADY_EXISTS, id);
         }
     }
 

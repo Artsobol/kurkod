@@ -50,12 +50,6 @@ databaseChangeLog:
                     nullable: false
 
               - column:
-                  name: cage_id
-                  type: bigint
-                  constraints:
-                    nullable: false
-
-              - column:
                   name: created_at
                   type: timestamp with time zone
                   defaultValueComputed: now()
@@ -82,15 +76,6 @@ databaseChangeLog:
                   defaultValueNumeric: "0"
                   constraints:
                     nullable: false
-
-        - addForeignKeyConstraint:
-            baseTableName: chicken
-            baseColumnNames: cage_id
-            constraintName: fk_chicken_cage
-            referencedTableName: cage
-            referencedColumnNames: id
-            onDelete: RESTRICT
-            onUpdate: RESTRICT
 
         - addForeignKeyConstraint:
             baseTableName: chicken

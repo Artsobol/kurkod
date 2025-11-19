@@ -52,7 +52,7 @@ public class PassportServiceImpl implements PassportService {
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public PassportDTO create(Integer workerId, PassportPostRequest passportPostRequest) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(workerId))
+                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, workerId)
         );
 
         passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId)

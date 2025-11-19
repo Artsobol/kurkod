@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import io.swagger.v3.oas.models.tags.Tag;
 import org.springdoc.core.customizers.OpenApiCustomizer;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -21,7 +23,7 @@ import java.util.Objects;
 @OpenAPIDefinition(
         info = @Info(
                 title = "KurKod REST API",
-                version = "0.7"
+                version = "1.0"
         ),
         security = { @SecurityRequirement(name = HttpHeaders.AUTHORIZATION)}
 )
@@ -37,11 +39,26 @@ public class OpenApiConfig {
     private String firstServer;
 
     @Bean
+    public OpenApiCustomizer sortTagsAlphabetically(){
+        return openApi -> {
+            if (openApi.getTags() != null) {
+                openApi.setTags(
+                        openApi.getTags()
+                               .stream()
+                               .sorted(Comparator.comparing(Tag::getName))
+                               .toList()
+                               );
+            }
+        };
+    }
+
+    @Bean
     public GroupedOpenApi publicApi() {
         return GroupedOpenApi.builder()
                 .group("kurkod")
                 .packagesToScan("io.github.artsobol.kurkod")
                 .addOpenApiCustomizer(serverCustomizer())
+                .addOpenApiCustomizer(sortTagsAlphabetically())
                 .build();
     }
 

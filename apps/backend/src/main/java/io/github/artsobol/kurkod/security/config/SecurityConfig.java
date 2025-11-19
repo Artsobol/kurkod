@@ -33,18 +33,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final JwtRequestFilter jwtRequestFilter;
-    private final AccessRestrictionHandler accessRestrictionHandler;
-
-    private static final String[] NOT_SECURED_POST_URLS = {
-            "/auth/login",
-            "/auth/register",
-    };
-
-    private static final String[] NOT_SECURED_GET_URLS = {
-            "/auth/refresh/token",
-    };
-
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
@@ -62,7 +50,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
                 .requestMatchers(HttpMethod.GET, "/auth/refresh/token").permitAll()
                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/staff/**").hasAnyRole(adminAccessSecurityRoles())
+                .requestMatchers(HttpMethod.GET, "/api/v1/staff/**").hasAnyAuthority(adminAccessSecurityRoles())
+                .requestMatchers("/api/v1/admin/**").hasAnyAuthority(adminAccessSecurityRoles())
                 .anyRequest().authenticated()
         );
 
@@ -70,7 +59,7 @@ public class SecurityConfig {
                 .authenticationEntryPoint((req, res, ex1) -> {
                     res.setStatus(HttpStatus.UNAUTHORIZED.value());
                     res.setContentType("application/json");
-                    // TODO
+
                     var body = IamError.createError(HttpStatus.UNAUTHORIZED, "123",
                             "Authentication required", req.getRequestURI());
                     res.getWriter().write(om.writeValueAsString(body));

@@ -107,7 +107,7 @@ public class DismissalServiceImpl implements DismissalService {
 
     protected Worker getWorkerById(Integer id) {
         return workerRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID.format(id))
+                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, id)
         );
     }
 

@@ -12,7 +12,6 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface DietMapper {
 
-    //  @Mapping(target = "breedIds", expression = "java(mapBreedIds(diet.getBreeds()))")
     DietDTO toDTO(Diet diet);
 
     @Mapping(target = "breeds", ignore = true)

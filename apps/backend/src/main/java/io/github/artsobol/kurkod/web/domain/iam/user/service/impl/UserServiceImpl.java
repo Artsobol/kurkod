@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
     static UserDetails getUserDetails(String email, UserRepository userRepository) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException(UserError.WITH_EMAIL_ALREADY_EXISTS.format(email)));
+                .orElseThrow(() -> new NotFoundException(UserError.WITH_EMAIL_ALREADY_EXISTS, email));
 
         user.setLastLogin(OffsetDateTime.now());
         userRepository.save(user);

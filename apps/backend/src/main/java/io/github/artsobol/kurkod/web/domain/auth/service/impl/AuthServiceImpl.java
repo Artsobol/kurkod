@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.auth.service.impl;
 
+import io.github.artsobol.kurkod.web.domain.iam.role.error.RoleError;
 import io.github.artsobol.kurkod.web.domain.iam.user.mapper.UserMapper;
 import io.github.artsobol.kurkod.web.domain.iam.auth.error.AuthError;
 import io.github.artsobol.kurkod.web.domain.iam.role.model.entity.Role;
@@ -32,7 +33,7 @@ import java.util.Set;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
+@Transactional
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
@@ -52,11 +53,11 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
         } catch (BadCredentialsException e) {
-            throw new InvalidDataException(AuthError.INVALID_USER_OR_PASSWORD.format());
+            throw new InvalidDataException(AuthError.INVALID_USER_OR_PASSWORD);
         }
 
         User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
-                .orElseThrow(() -> new InvalidDataException(AuthError.INVALID_USER_OR_PASSWORD.format()));
+                .orElseThrow(() -> new InvalidDataException(AuthError.INVALID_USER_OR_PASSWORD));
 
         RefreshToken refreshToken = refreshTokenService.generateOrUpdateRefreshToken(user);
         String token = jwtTokenProvider.generateToken(user);
@@ -77,7 +78,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Transactional
     public IamResponse<UserProfileDTO> registerUser(@NotNull RegistrationRequest request) {
         accessValidator.validateNewUser(
                 request.getUsername(),
@@ -87,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
         );
 
         Role userRole = roleRepository.findByName(SystemRole.USER.getRole())
-                .orElseThrow(() -> new NotFoundException("Role not found"));
+                .orElseThrow(() -> new NotFoundException(RoleError.NOT_FOUND_BY_SYSTEM_NAME, SystemRole.USER.getRole()));
 
         User newUser = userMapper.fromDto(request);
 
