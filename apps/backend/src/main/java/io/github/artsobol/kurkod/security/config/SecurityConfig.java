@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.security.config;
 
-import io.github.artsobol.kurkod.web.response.IamError;
+import io.github.artsobol.kurkod.security.handler.RestAuthenticationEntryPoint;
 import io.github.artsobol.kurkod.security.filter.JwtRequestFilter;
 import io.github.artsobol.kurkod.security.handler.AccessRestrictionHandler;
 import io.github.artsobol.kurkod.web.domain.iam.user.model.enums.SystemRole;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -36,8 +35,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http,
-            com.fasterxml.jackson.databind.ObjectMapper om,
             AccessRestrictionHandler accessRestrictionHandler,
+            RestAuthenticationEntryPoint restAuthenticationEntryPoint,
             JwtRequestFilter jwtRequestFilter
     ) throws Exception {
 
@@ -56,14 +55,7 @@ public class SecurityConfig {
         );
 
         http.exceptionHandling(ex -> ex
-                .authenticationEntryPoint((req, res, ex1) -> {
-                    res.setStatus(HttpStatus.UNAUTHORIZED.value());
-                    res.setContentType("application/json");
-
-                    var body = IamError.createError(HttpStatus.UNAUTHORIZED, "123",
-                            "Authentication required", req.getRequestURI());
-                    res.getWriter().write(om.writeValueAsString(body));
-                })
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .accessDeniedHandler(accessRestrictionHandler)
         );
 

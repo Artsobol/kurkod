@@ -50,6 +50,11 @@ public class RowsServiceImpl implements RowsService {
     @Override
     public List<RowsDTO> findAll(Long workshopId) {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class));
+
+        if (!workshopRepository.existsById(workshopId)) {
+            throw new NotFoundException(WorkshopError.NOT_FOUND_BY_ID, workshopId);
+        }
+
         return rowsRepository.findAllByWorkshop_IdAndIsActiveTrue(workshopId).stream()
                 .map(rowsMapper::toDto)
                 .toList();

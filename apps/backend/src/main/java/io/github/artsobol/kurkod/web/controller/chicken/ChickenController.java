@@ -62,7 +62,6 @@ public class ChickenController {
                              .body(IamResponse.createSuccessful(response));
     }
 
-
     @Operation(summary = "Replace a chicken", description = "Fully replaces a chicken by ID.")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<IamResponse<ChickenDTO>> replace(

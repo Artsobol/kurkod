@@ -52,6 +52,11 @@ public class CageServiceImpl implements CageService {
     @Override
     public List<CageDTO> findAll(Long rowId) {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class));
+
+        if (!rowsRepository.existsById(rowId)) {
+            throw new NotFoundException(RowsError.NOT_FOUND_BY_ID, rowId);
+        }
+
         return cageRepository.findAllByRow_IdAndIsActiveTrueOrderByCageNumberAsc(rowId).stream()
                              .map(cageMapper::toDto)
                              .toList();

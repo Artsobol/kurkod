@@ -78,7 +78,6 @@ public class WorkerCageServiceImpl implements WorkerCageService {
     @Override
     @Transactional
     public void unassignCageFromWorker(Long workerId, Long cageId) {
-        // Если хочешь кидать ошибку, когда связи нет — сначала сделай existsByWorkerIdAndCageId(...)
         workerCageRepository.deleteByWorkerIdAndCageId(workerId, cageId);
     }
 
