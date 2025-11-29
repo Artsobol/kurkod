@@ -1,10 +1,6 @@
 <template>
   <div class="chickens">
     <div class="chickens__actions">
-      <Input
-          class="chickens__input"
-          labelInput="Найти курицу"
-      />
       <Button
           label="Добавить курицу"
           mode="violet"
@@ -29,7 +25,6 @@
     <ChickensTable
         v-if="loading===false"
         :headers-item="[
-            { key: 'photo', label: 'Фото' },
             { key: 'name', label: 'Имя' },
             { key: 'breedId', label: 'Порода' },
             { key: 'weight', label: 'Вес' },
@@ -47,8 +42,6 @@
 </template>
 
 <script setup>
-
-import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
 import ChickensTable from "@/components/tables/ChickensTable.vue";
 import Loader from "@/components/ui/Loader.vue";

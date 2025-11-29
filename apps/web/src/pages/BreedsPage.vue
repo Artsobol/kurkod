@@ -1,10 +1,6 @@
 <template>
   <div class="breeds">
     <div class="breeds__actions">
-      <Input
-          class="breeds__input"
-          labelInput="Найти породу"
-      />
       <Button
           label="Добавить породу"
           mode="violet"
@@ -32,7 +28,6 @@
             { key: 'name', label: 'Название' },
             { key: 'eggsNumber', label: 'Яиц в месяц' },
             { key: 'weight', label: 'Вес' },
-            { key: 'id', label: 'Ссылка'}
           ]"
         :body-items="breeds"
         :height-size="breeds.length"
@@ -42,12 +37,10 @@
   </div>
 </template>
 <script setup>
-import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
 import Loader from "@/components/ui/Loader.vue";
 import BreedsTable from "@/components/tables/BreedsTable.vue";
 import useBreeds from "@/composables/useBreeds.js";
-import AddDietForm from "@/components/forms/AddDietForm.vue";
 import Modal from "@/components/ui/Modal.vue";
 import {ref} from "vue";
 import AddBreedForm from "@/components/forms/AddBreedForm.vue";

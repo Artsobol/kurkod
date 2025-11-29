@@ -1,10 +1,6 @@
 <template>
   <div class="diets">
     <div class="diets__actions">
-      <Input
-          class="diets__input"
-          labelInput="Найти диету"
-      />
       <Button
           label="Добавить диету"
           mode="violet"
@@ -33,7 +29,6 @@
           { key: 'title', label: 'Название' },
           { key: 'season', label: 'Сезон' },
           { key: 'description', label: 'Описание' },
-          { key: 'id', label: 'Ссылка'}
         ]"
         :body-items="diets"
         :height-size="diets.length"
@@ -45,7 +40,6 @@
 
 <script setup>
 import { ref } from "vue";
-import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
 import DietsTable from "@/components/tables/DietsTable.vue";
 import Loader from "@/components/ui/Loader.vue";

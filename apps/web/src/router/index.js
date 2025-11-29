@@ -13,6 +13,7 @@ import WorkshopsPage from "@/pages/WorkshopsPage.vue";
 import RowsPage from "@/pages/RowsPage.vue";
 import CagesPage from "@/pages/CagesPage.vue";
 import BreedsPage from "@/pages/BreedsPage.vue";
+import RegisterPage from "@/pages/RegisterPage.vue";
 
 const routes = [
   {
@@ -92,6 +93,12 @@ const routes = [
     name: 'Породы',
     component: BreedsPage,
     meta: { title: 'Breeds' }
+  },
+  {
+    path: '/register',
+    name: 'Регистрация',
+    component: RegisterPage,
+    meta: { title: 'Register' }
   }
 ]
 

@@ -1,6 +1,7 @@
-import {onMounted, ref} from "vue";
-import {getChickens} from "@/api/chickens.js";
-import {getAgeFromDate} from "@/utils/age.js";
+import { onMounted, ref } from "vue";
+import { getChickens } from "@/api/chickens.js";
+import { getLastEggProduction } from "@/api/eggProductionMonth.js";
+import { getAgeFromDate } from "@/utils/age.js";
 
 export function useChickens() {
   const chickens = ref([]);
@@ -10,10 +11,17 @@ export function useChickens() {
     loading.value = true;
     try {
       const baseChickens = await getChickens();
-      chickens.value = baseChickens.map(chicken => ({
-        ...chicken,
-        age: getAgeFromDate(chicken.birthDate),
-      }));
+
+      chickens.value = await Promise.all(
+        baseChickens.map(async (chicken) => {
+          const eggs = await getLastEggProduction(chicken.id);
+          return {
+            ...chicken,
+            age: getAgeFromDate(chicken.birthDate),
+            eggs,
+          };
+        })
+      );
     } catch (e) {
       console.error("Ошибка при получении данных:", e);
     } finally {
@@ -23,5 +31,5 @@ export function useChickens() {
 
   onMounted(fetchChickens);
 
-  return {chickens, loading, fetchChickens};
+  return { chickens, loading, fetchChickens };
 }
