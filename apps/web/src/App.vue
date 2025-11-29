@@ -7,7 +7,7 @@ import {uiStore} from "@/stores/ui.js";
 
 const route = useRoute()
 const ui = uiStore()
-const hiddenLayoutRoutes = ['/sign']
+const hiddenLayoutRoutes = ['/sign', '/register']
 </script>
 
 <template>

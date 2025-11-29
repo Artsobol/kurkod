@@ -4,10 +4,6 @@
       :href="href"
       :class="[mode, location, 'button']"
   >
-<!--    <template v-if="specificButton === 'arrow-right'">-->
-<!--      <span v-if="label" class="arrow-right__title">{{ label }}</span>-->
-<!--      <Icon name="arrow-right" width="28" height="28"/>-->
-<!--    </template>-->
     <slot>{{ label }}</slot>
     <template v-if="iconName">
       <Icon :name="iconName" :width="iconWidth" :height="iconHeight"/>
@@ -16,7 +12,7 @@
 
   <button
       v-else
-      type="button"
+      :type="type"
       :class="[mode, location, 'button']"
       @click="handleClick"
   >
@@ -50,6 +46,10 @@ defineProps({
   location: {
     type: String,
     required: false
+  },
+  type: {
+    type: String,
+    default: "button"
   },
   href: {
     type: String,

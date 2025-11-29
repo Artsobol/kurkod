@@ -5,7 +5,6 @@ import './styles/main.scss'
 import router from './router'
 import {uiStore} from "@/stores/ui.js";
 import Icon from '@/components/ui/Icon.vue'
-
 const app = createApp(App)
 const pinia = createPinia()
 

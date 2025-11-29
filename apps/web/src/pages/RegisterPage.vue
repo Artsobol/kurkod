@@ -4,14 +4,14 @@
       <div class="sign-in__window__first-column">
         <Logo :custom-style="true" />
         <p class="sign-in__description-first">
-          Для входа зарегистрируйтесь
+          Уже есть аккаунт?
         </p>
         <Button
-            label="Регистрация"
+            label="Войти"
             mode="white-no-switch"
             location="sign-in-button"
             style="width: 262px;"
-            @click="goToRegister"
+            @click="goToLogin"
         />
         <p class="sign-in__copyright">
           © 2025 КурКод
@@ -28,13 +28,13 @@
         </div>
 
         <h2 class="sign-in__title">
-          Авторизация
+          Регистрация
         </h2>
         <p class="sign-in__text" style="padding-bottom: 10px;">
           Для входа в систему укажите корпоративную почту и пароль.
         </p>
 
-        <form @submit.prevent="login" class="sign-in__form">
+        <form @submit.prevent="register" class="sign-in__form">
           <input
               class="sign-in__input"
               type="email"
@@ -44,9 +44,23 @@
           />
           <input
               class="sign-in__input"
+              type="text"
+              v-model="username"
+              placeholder="Имя пользователя"
+              required
+          />
+          <input
+              class="sign-in__input"
               type="password"
               v-model="password"
               placeholder="Пароль"
+              required
+          />
+          <input
+              class="sign-in__input"
+              type="password"
+              v-model="confirmPassword"
+              placeholder="Повторите пароль"
               required
           />
 
@@ -55,7 +69,7 @@
 
           <Button
               :disabled="loading"
-              label="Войти"
+              label="Создать аккаунт"
               mode="violet-no-switch"
               type="submit"
               location="sign-in-button"
@@ -72,39 +86,50 @@ import { ref } from "vue";
 import Logo from "@/components/ui/Logo.vue";
 import Button from "@/components/ui/Button.vue";
 import { uiStore } from "@/stores/ui.js";
-import { loginUser } from "@/api/auth.js";
+import { registerUser } from "@/api/auth.js";
 
 const ui = uiStore();
 
 const email = ref("");
+const username = ref("");
 const password = ref("");
+const confirmPassword = ref("");
 const errorMessage = ref("");
 const successMessage = ref("");
 const loading = ref(false);
 
-const login = async () => {
+const register = async () => {
   errorMessage.value = "";
   successMessage.value = "";
-  loading.value = true;
 
-  try {
-    const res = await loginUser({ email: email.value, password: password.value });
-    console.log("LOGIN RESPONSE:", res);
-
-    localStorage.setItem("refreshToken", res.refreshToken);
-    ui.accessToken = res.token;
-
-    successMessage.value = "Успешный вход!";
-    setTimeout(() => window.location.href = "/", 500);
-  } catch(err) {
-    console.log("ERROR:", err);
-    errorMessage.value = err.response?.data?.message || "Ошибка авторизации";
+  if (password.value !== confirmPassword.value) {
+    errorMessage.value = "Пароли не совпадают";
+    return;
   }
 
+  loading.value = true;
+  try {
+    await registerUser({
+      username: username.value,
+      email: email.value,
+      password: password.value,
+      confirmPassword: confirmPassword.value,
+    });
+
+    successMessage.value = "Аккаунт успешно создан!";
+
+    setTimeout(() => {
+      window.location.href = "/";
+    }, 800);
+  } catch (err) {
+    errorMessage.value = err.response?.data?.message || "Ошибка регистрации";
+  } finally {
+    loading.value = false;
+  }
 };
 
-const goToRegister = () => {
-  window.location.href = "/register";
+const goToLogin = () => {
+  window.location.href = "/login";
 };
 </script>
 
@@ -181,7 +206,7 @@ const goToRegister = () => {
   &__title {
     font-weight: 700;
     font-size: 24px;
-    padding-bottom: 30px;
+    padding-bottom: 20px;
   }
 
   &__text {

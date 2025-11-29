@@ -6,63 +6,86 @@
       </li>
       <li>
         <RouterLink to="/" class="nav-link" active-class="active">
-          📂 <span class="link-text" :class="{ hidden: isClosed }">Главная</span>
+          <span class="icon-wrapper">
+            <Home class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Главная</span>
         </RouterLink>
       </li>
       <li>
         <RouterLink to="/employees" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Сотрудники</span>
+          <span class="icon-wrapper">
+            <Users class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Сотрудники</span>
         </RouterLink>
       </li>
-<!--      <li>-->
-<!--        <RouterLink to="/cells" class="nav-link" active-class="active">-->
-<!--          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Ячейки</span>-->
-<!--        </RouterLink>-->
-<!--      </li>-->
       <li>
         <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Курицы</span>
       </li>
       <li>
         <RouterLink to="/chickens" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Курицы</span>
+          <span class="icon-wrapper">
+            <Feather class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Курицы</span>
         </RouterLink>
       </li>
       <li>
         <RouterLink to="/breeds" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Породы</span>
+          <span class="icon-wrapper">
+            <Layers class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Породы</span>
         </RouterLink>
       </li>
       <li>
         <RouterLink to="/diets" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Диеты</span>
+          <span class="icon-wrapper">
+            <Clipboard class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Диеты</span>
         </RouterLink>
       </li>
       <li>
-        <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Размещение</span>
+        <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Производство</span>
       </li>
       <li>
         <RouterLink to="/workshops" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Цехи</span>
+          <span class="icon-wrapper">
+            <Factory class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Цехи</span>
         </RouterLink>
       </li>
       <li>
         <RouterLink to="/rows" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Ряды</span>
+          <span class="icon-wrapper">
+            <Columns class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Ряды</span>
         </RouterLink>
       </li>
       <li>
         <RouterLink to="/cages" class="nav-link" active-class="active">
-          ⚙️ <span class="link-text" :class="{ hidden: isClosed }">Клетки</span>
+          <span class="icon-wrapper">
+            <Box class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Клетки</span>
         </RouterLink>
       </li>
     </ul>
   </aside>
 </template>
 
+
 <script setup>
+import {Home, Users, Feather, Layers, Clipboard, Factory, Columns, Box} from 'lucide-vue-next';
+
 defineProps({
   isClosed: Boolean,
 });
+
 </script>
 
 <style scoped>
@@ -127,5 +150,21 @@ defineProps({
   color: inherit;
   text-decoration: none;
   width: 100%;
+}
+
+.icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  color: var(--sidebar-text);
+  transition: color 0.3s ease;
+}
+
+.icon-wrapper {
+  width: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
 }
 </style>

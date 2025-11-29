@@ -1,5 +1,4 @@
 <script setup>
-import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
 import WorkersTable from "@/components/tables/WorkersTable.vue";
 import Loader from "@/components/ui/Loader.vue";
@@ -11,10 +10,7 @@ const {workers, loading} = useWorkers();
 <template>
   <div class="workers">
     <div class="workers__actions">
-      <Input
-          class="workers__input"
-          label-input="Найти сотрудника"
-      />
+
       <Button
           label="Добавить сотрудника"
           mode="violet"
@@ -40,13 +36,12 @@ const {workers, loading} = useWorkers();
     <WorkersTable
         v-if="loading===false"
         :headers-item="[
-          { key: 'photo', label: 'Фото' },
           { key: 'name', label: 'ФИО' },
           { key: 'position', label: 'Должность' },
           { key: 'salary', label: 'Зарплата' },
-          { key: 'phone', label: 'Телефон'},
+          { key: 'phoneNumber', label: 'Телефон'},
           { key: 'email', label: 'Почта'},
-          { key: 'status', label: 'Статус' },
+          { key: 'workersCells', label: 'Клетки' },
           { key: 'id', label: 'Ссылка'}
           ]"
         :body-items="workers"
