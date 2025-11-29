@@ -16,6 +16,8 @@ import io.github.artsobol.kurkod.web.domain.workshop.repository.WorkshopReposito
 import io.github.artsobol.kurkod.web.domain.workshop.service.api.WorkshopService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +53,13 @@ public class WorkshopServiceImpl implements WorkshopService {
         return workshopRepository.findAllByIsActiveTrue().stream()
                 .map(workshopMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public Page<WorkshopDTO> getAllWithPagination(Pageable pageable) {
+        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Workshop.class));
+        return workshopRepository.findAllByIsActiveTrue(pageable)
+                .map(workshopMapper::toDto);
     }
 
     @Override

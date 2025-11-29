@@ -18,6 +18,8 @@ import io.github.artsobol.kurkod.web.domain.chicken.repository.ChickenRepository
 import io.github.artsobol.kurkod.web.domain.chicken.service.api.ChickenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -70,6 +72,11 @@ public class ChickenServiceImpl implements ChickenService {
         return chickenRepository.findAllByIsActiveTrue().stream()
                                 .map(chickenMapper::toDto)
                                 .toList();
+    }
+
+    @Override
+    public Page<ChickenDTO> getAllWithPagination(Pageable pageable) {
+        return chickenRepository.findAllByIsActiveTrue(pageable).map(chickenMapper::toDto);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.web.domain.worker.model.request;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,4 +23,16 @@ public class WorkerPutRequest {
     @NotNull
     @Size(max = 30, message = "Patronymic name should be less then 30 characters")
     private String patronymic;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(
+            regexp = "^[0-9+()\\-\\s]{7,20}$",
+            message = "Phone number format is invalid"
+    )
+    String phoneNumber;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
+    @Size(max = 100, message = "Email must be less than 100 characters")
+    String email;
 }

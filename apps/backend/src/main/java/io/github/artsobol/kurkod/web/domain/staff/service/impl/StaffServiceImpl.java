@@ -15,6 +15,8 @@ import io.github.artsobol.kurkod.web.domain.staff.repository.StaffRepository;
 import io.github.artsobol.kurkod.web.domain.staff.service.api.StaffService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +55,11 @@ public class StaffServiceImpl implements StaffService {
         return staffRepository.findAllByIsActiveTrue().stream()
                 .map(staffMapper::toDto)
                 .toList();
+    }
+
+    @Override
+    public Page<StaffDTO> getAllWithPagination(Pageable pageable) {
+        return staffRepository.findAllByIsActiveTrue(pageable).map(staffMapper::toDto);
     }
 
 

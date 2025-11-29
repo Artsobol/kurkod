@@ -2,6 +2,9 @@ package io.github.artsobol.kurkod.web.domain.chicken.repository;
 
 import io.github.artsobol.kurkod.web.domain.chicken.model.entity.Chicken;
 import io.github.artsobol.kurkod.web.domain.report.farm.projection.BreedWorkshopMonthlyProjection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +16,11 @@ public interface ChickenRepository extends JpaRepository<Chicken, Long> {
 
     Optional<Chicken> findChickenByIdAndIsActiveTrue(Long id);
 
+    @EntityGraph(attributePaths = {"breed", "cage"})
     List<Chicken> findAllByIsActiveTrue();
+
+    @EntityGraph(attributePaths = {"breed", "cage"})
+    Page<Chicken> findAllByIsActiveTrue(Pageable pageable);
 
     @Query("select count(c) from Chicken c where c.isActive = true")
     long countActiveChickens();

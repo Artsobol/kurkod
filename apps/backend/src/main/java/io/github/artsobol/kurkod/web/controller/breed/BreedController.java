@@ -9,6 +9,7 @@ import io.github.artsobol.kurkod.web.domain.breed.model.request.BreedPostRequest
 import io.github.artsobol.kurkod.web.domain.breed.model.request.BreedPutRequest;
 import io.github.artsobol.kurkod.web.response.IamResponse;
 import io.github.artsobol.kurkod.web.domain.breed.service.api.BreedService;
+import io.github.artsobol.kurkod.web.response.PaginationResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -16,11 +17,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.data.domain.Pageable;
 
 import java.net.URI;
 import java.util.List;
@@ -47,12 +51,26 @@ public class BreedController {
 
 
     @Operation(summary = "List all breeds", description = "Returns all breeds.")
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<IamResponse<List<BreedDTO>>> getAll() {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<BreedDTO> response = breedService.getAll();
         return ResponseEntity.ok(IamResponse.createSuccessful(response));
     }
+
+    @Operation(summary = "List all breeds with pagination", description = "Returns all breeds with pagination.")
+    @GetMapping
+    public ResponseEntity<PaginationResponse<BreedDTO>> getAllPaginated(
+            @Parameter(description = "Page number. The first page has index 0", example = "0")
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @Parameter(description = "Number of items per page", example = "10")
+            @RequestParam(name = "limit", defaultValue = "10") int limit) {
+        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+        Pageable pageable = PageRequest.of(page, limit);
+        Page<BreedDTO> response = breedService.getAllWithPagination(pageable);
+        return ResponseEntity.ok(PaginationResponse.fromPage(response));
+    }
+
 
     @Operation(summary = "Create a new breed", description = "Creates a new breed. Name must be unique.")
     @PostMapping

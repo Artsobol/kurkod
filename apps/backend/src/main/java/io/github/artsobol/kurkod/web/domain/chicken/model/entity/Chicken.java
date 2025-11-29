@@ -33,12 +33,12 @@ public class Chicken extends BaseEntity {
     private LocalDate birthDate;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "breed_id", nullable = false)
     private Breed breed;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cage_id", nullable = false)
     private Cage cage;
 }

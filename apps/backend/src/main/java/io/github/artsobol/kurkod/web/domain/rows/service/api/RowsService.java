@@ -1,9 +1,12 @@
 package io.github.artsobol.kurkod.web.domain.rows.service.api;
 
+import io.github.artsobol.kurkod.web.domain.breed.model.dto.BreedDTO;
 import io.github.artsobol.kurkod.web.domain.rows.model.dto.RowsDTO;
 import io.github.artsobol.kurkod.web.domain.rows.model.request.RowsPatchRequest;
 import io.github.artsobol.kurkod.web.domain.rows.model.request.RowsPostRequest;
 import io.github.artsobol.kurkod.web.domain.rows.model.request.RowsPutRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 

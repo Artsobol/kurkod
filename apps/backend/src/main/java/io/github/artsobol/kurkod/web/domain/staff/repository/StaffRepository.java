@@ -1,6 +1,8 @@
 package io.github.artsobol.kurkod.web.domain.staff.repository;
 
 import io.github.artsobol.kurkod.web.domain.staff.model.entity.Staff;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,4 +13,5 @@ public interface StaffRepository extends JpaRepository<Staff, Long> {
     Optional<Staff> findStaffByIdAndIsActiveTrue(Long id);
 
     List<Staff> findAllByIsActiveTrue();
+    Page<Staff> findAllByIsActiveTrue(Pageable pageable);
 }

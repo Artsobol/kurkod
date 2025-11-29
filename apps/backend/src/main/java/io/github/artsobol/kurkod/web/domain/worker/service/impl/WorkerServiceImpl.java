@@ -15,6 +15,8 @@ import io.github.artsobol.kurkod.web.domain.worker.repository.WorkerRepository;
 import io.github.artsobol.kurkod.web.domain.worker.service.api.WorkerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,11 @@ public class WorkerServiceImpl implements WorkerService {
     public List<WorkerDTO> getAll() {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Worker.class));
         return workerRepository.findAllByIsActiveTrue().stream().map(workerMapper::toDto).toList();
+    }
+
+    @Override
+    public Page<WorkerDTO> getAllWithPagination(Pageable pageable) {
+        return workerRepository.findAllByIsActiveTrue(pageable).map(workerMapper::toDto);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package io.github.artsobol.kurkod.web.domain.chicken.mapper;
 
+import io.github.artsobol.kurkod.web.domain.breed.mapper.BreedMapper;
+import io.github.artsobol.kurkod.web.domain.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.web.domain.chicken.model.dto.ChickenDTO;
 import io.github.artsobol.kurkod.web.domain.chicken.model.entity.Chicken;
 import io.github.artsobol.kurkod.web.domain.chicken.model.request.ChickenPatchRequest;
@@ -11,11 +13,10 @@ import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring",
-nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+        uses = {CageMapper.class, BreedMapper.class})
 public interface ChickenMapper {
 
-    @Mapping(source = "cage.id", target = "cageId")
-    @Mapping(source = "breed.id", target = "breedId")
     ChickenDTO toDto(Chicken chicken);
 
     Chicken toEntity(ChickenPostRequest chickenPostRequest);

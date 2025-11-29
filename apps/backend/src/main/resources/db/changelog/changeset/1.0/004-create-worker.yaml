@@ -41,6 +41,18 @@ databaseChangeLog:
                     checkConstraint: "patronymic IS NULL OR (btrim(patronymic) = patronymic AND char_length(patronymic) <= 30)"
 
               - column:
+                  name: phone_number
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: email
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+
+              - column:
                   name: created_at
                   type: timestamp with time zone
                   defaultValueComputed: now()
@@ -67,6 +79,17 @@ databaseChangeLog:
                   defaultValue: "0"
                   constraints:
                     nullable: false
+
+        - addUniqueConstraint:
+            tableName: worker
+            columnNames: phone_number
+            constraintName: uq_worker_phone
+
+        - addUniqueConstraint:
+            tableName: worker
+            columnNames: email
+            constraintName: uq_worker_email
+
 
       rollback:
         - dropTable:

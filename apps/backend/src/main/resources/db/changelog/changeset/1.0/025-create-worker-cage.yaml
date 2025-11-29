@@ -18,6 +18,14 @@ databaseChangeLog:
             tableName: worker_cage
             columns:
               - column:
+                  name: id
+                  type: bigserial
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_worker_cage
+                    nullable: false
+
+              - column:
                   name: worker_id
                   type: bigint
                   constraints:
@@ -47,15 +55,7 @@ databaseChangeLog:
             onDelete: RESTRICT
             onUpdate: RESTRICT
 
-        - addPrimaryKey:
-            columnNames: worker_id, cage_id
-            constraintName: pk_worker_cage
-            tableName: worker_cage
-
       rollback:
-        - dropPrimaryKey:
-            constraintName: pk_worker_cage
-            tableName: worker_cage
         - dropForeignKeyConstraint:
             baseTableName: worker_cage
             constraintName: fk_worker_cage_cage_id

@@ -19,10 +19,11 @@ import io.github.artsobol.kurkod.web.domain.breed.service.api.BreedService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Slf4j
@@ -66,6 +67,11 @@ public class BreedServiceImpl implements BreedService {
     public List<BreedDTO> getAll() {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername());
         return breedRepository.findAllByIsActiveTrue().stream().map(breedMapper::toDto).toList();
+    }
+
+    @Override
+    public Page<BreedDTO> getAllWithPagination(Pageable pageable) {
+        return breedRepository.findAll(pageable).map(breedMapper::toDto);
     }
 
     @Override
