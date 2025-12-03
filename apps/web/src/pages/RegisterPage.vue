@@ -129,7 +129,7 @@ const register = async () => {
 };
 
 const goToLogin = () => {
-  window.location.href = "/login";
+  window.location.href = "/sign";
 };
 </script>
 

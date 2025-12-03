@@ -4,11 +4,10 @@ import InfoGraph from "@/components/ui/InfoGraph.vue";
 import WorkersTable from "@/components/tables/WorkersTable.vue";
 import Button from "@/components/ui/Button.vue";
 import {useWorkers} from "@/composables/useWorkers.js";
-import Loader from "@/components/ui/Loader.vue";
 import useFarmStatistics from "@/composables/useFarmStatistics.js";
 import {computed} from "vue";
 
-const {workers, loading} = useWorkers();
+const {workers, loading: workersLoading} = useWorkers();
 const { statistics, loading: statsLoading, error } = useFarmStatistics();
 
 const isLoading = computed(() => workersLoading || statsLoading);
@@ -26,6 +25,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/chickens"
             subTitle="Общее количество"
             :count="statistics.chickensCount.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
@@ -34,6 +34,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/employees"
             subTitle="Общее количество"
             :count="statistics.workersCount.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
@@ -42,6 +43,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/breeds"
             subTitle="Общее количество"
             :count="statistics.breedsCount.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
@@ -50,6 +52,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/workshops"
             subTitle="Общее количество"
             :count="statistics.workshopsCount.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
@@ -58,6 +61,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/rows"
             subTitle="Общее количество"
             :count="statistics.rowsCount.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
@@ -66,6 +70,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/cages"
             subTitle="Общее количество"
             :count="statistics.cagesCount.toString()"
+            :loading="statsLoading"
         />
       </div>
     </div>
@@ -80,6 +85,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/report-breed-egg-difference"
             subTitle="Средняя"
             :count="statistics.avgEggsPerChicken.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
@@ -88,6 +94,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/report-factory-monthly"
             subTitle="Общее количество"
             :count="statistics.totalEggsThisMonth.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
@@ -96,6 +103,7 @@ const isLoading = computed(() => workersLoading || statsLoading);
             href="/chickens"
             subTitle="Средний"
             :count="`${statistics.avgChickenAge} мес.`"
+            :loading="statsLoading"
         />
       </div>
     </div>
@@ -170,7 +178,6 @@ const isLoading = computed(() => workersLoading || statsLoading);
     transform: scale(1.03);
     transition: 0.15s;
   }
-
 }
 
 .page-graph-block {

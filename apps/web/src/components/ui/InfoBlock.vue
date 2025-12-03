@@ -10,9 +10,12 @@
        <span v-if="subTitle" class="info-block__subtitle">
       {{ subTitle }}
     </span>
-      <span v-if="count" class="info-block__count">
+      <span v-if="count && !loading" class="info-block__count">
       {{ count }}
     </span>
+      <div v-if="loading" class="info-block__loader">
+        <div class="loader"></div>
+      </div>
     </div>
   </a>
 </template>
@@ -34,6 +37,10 @@ defineProps({
   count: {
     type: String,
     required: false
+  },
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -69,6 +76,27 @@ defineProps({
   &__count {
     font-weight: 600;
     font-size: 23px;
+  }
+
+  &__loader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__loader .loader {
+    width: 24px;
+    height: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    border-top-color: var(--color-white);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 </style>
