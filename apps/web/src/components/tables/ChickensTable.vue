@@ -25,6 +25,10 @@
             </router-link>
           </span>
 
+          <span v-else-if="getHeaderKey(headerItem) === 'breedId'">
+            {{ row.breedName || row.breed?.name || 'Не указана' }}
+          </span>
+
           <span v-else>
             {{ formattedCell(row, getHeaderKey(headerItem)) }}
           </span>

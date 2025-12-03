@@ -19,6 +19,8 @@ export function useChickens() {
             ...chicken,
             age: getAgeFromDate(chicken.birthDate),
             eggs,
+            breedId: chicken.breed?.id,
+            breedName: chicken.breed?.name
           };
         })
       );

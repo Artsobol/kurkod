@@ -69,9 +69,17 @@
       <li>
         <RouterLink to="/cages" class="nav-link" active-class="active">
           <span class="icon-wrapper">
-            <Box class="icon"/>
+            <Birdhouse class="icon"/>
           </span>
           <span class="link-text" :class="{ hidden: isClosed }">Клетки</span>
+        </RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/egg-production" class="nav-link" active-class="active">
+          <span class="icon-wrapper">
+            <Egg class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Производство яиц</span>
         </RouterLink>
       </li>
     </ul>
@@ -80,7 +88,7 @@
 
 
 <script setup>
-import {Home, Users, Feather, Layers, Clipboard, Factory, Columns, Box} from 'lucide-vue-next';
+import {Home, Users, Feather, Layers, Clipboard, Factory, Columns, Box, ClipboardList, Birdhouse, Egg} from 'lucide-vue-next';
 
 defineProps({
   isClosed: Boolean,

@@ -35,10 +35,6 @@ defineProps({
     type: String,
     required: false
   },
-  specificButton: {
-    type: String,
-    required: false
-  },
   mode: {
     type: String,
     required: false
