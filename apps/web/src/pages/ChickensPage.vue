@@ -34,13 +34,14 @@
     <ChickensTable
         v-if="loading===false"
         :headers-item="[
+            { key: 'id', label: 'ID' },
             { key: 'name', label: 'Имя' },
             { key: 'breedName', label: 'Порода' },
             { key: 'weight', label: 'Вес' },
             { key: 'eggs', label: 'Яиц в месяц' },
             { key: 'age', label: 'Возраст' },
             { key: 'birthDate', label: 'Дата рождения' },
-            { key: 'id', label: 'Ссылка'}
+            { key: 'link', label: 'Ссылка' }
           ]"
         :body-items="chickens"
         :height-size="chickens.length"

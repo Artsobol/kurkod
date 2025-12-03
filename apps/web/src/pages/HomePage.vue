@@ -10,11 +10,6 @@ const {workers, loading} = useWorkers();
 </script>
 
 <template>
-  <div>
-    <h1>позже допишу главную страницу</h1>
-    <p>пока играйтесь с другими страницами в левом меню</p>
-  </div>
-
   <div class="home">
     <div class="info-blocks">
       <div class="page-block page-info-block">

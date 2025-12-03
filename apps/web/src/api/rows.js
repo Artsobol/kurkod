@@ -1,31 +1,31 @@
 import http from "@/api/http.js";
 
-export async function getRows(workshopId) {
-  try {
-    const { data } = await http.get(`/api/v1/workshops/${workshopId}/rows`);
-    return data.payload || [];
-  } catch (error) {
-    console.error("Ошибка при получении рядов:", error);
-    return [];
-  }
-}
-
-export async function getRow(workshopId, rowNumber) {
-  try {
-    const { data } = await http.get(`/api/v1/workshops/${workshopId}/rows/${rowNumber}`);
-    return data.payload || null;
-  } catch (error) {
-    console.error("Ошибка при получении ряда:", error);
-    return null;
-  }
-}
-
 export async function createRow(workshopId, row) {
   try {
+    console.log("API запрос: создание ряда", {
+      workshopId,
+      row,
+      url: `/api/v1/workshops/${workshopId}/rows`
+    });
+
     const { data } = await http.post(`/api/v1/workshops/${workshopId}/rows`, row);
-    return data;
+
+    console.log("API ответ:", data);
+
+    if (data.success === false) {
+      throw new Error(data.message || "Не удалось создать ряд");
+    }
+
+    return data.payload || data;
   } catch (error) {
-    console.error("Ошибка при создании ряда:", error);
-    return null;
+    console.error("Детальная ошибка API при создании ряда:", {
+      message: error.message,
+      response: error.response?.data,
+      status: error.response?.status,
+      workshopId,
+      row
+    });
+
+    throw error;
   }
 }

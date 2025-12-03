@@ -20,6 +20,10 @@
           />
 
           <span v-else-if="getHeaderKey(headerItem) === 'id'">
+            {{ row[getHeaderKey(headerItem)] }}
+          </span>
+
+          <span v-else-if="getHeaderKey(headerItem) === 'link'">
             <router-link :to="{ name: 'Курица', params: { id: row.id } }">
               <Icon name="arrow-right" style="color: var(--color);" />
             </router-link>
