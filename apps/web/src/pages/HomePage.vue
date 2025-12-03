@@ -4,33 +4,28 @@ import InfoGraph from "@/components/ui/InfoGraph.vue";
 import WorkersTable from "@/components/tables/WorkersTable.vue";
 import Button from "@/components/ui/Button.vue";
 import {useWorkers} from "@/composables/useWorkers.js";
-import Loader from "@/components/ui/Loader.vue";
+import useFarmStatistics from "@/composables/useFarmStatistics.js";
+import {computed} from "vue";
 
-const {workers, loading} = useWorkers();
+const {workers, loading: workersLoading} = useWorkers();
+const { statistics, loading: statsLoading, error } = useFarmStatistics();
+
+const isLoading = computed(() => workersLoading || statsLoading);
 </script>
 
 <template>
-  <div>
-    <h1>позже допишу главную страницу</h1>
-    <p>пока играйтесь с другими страницами в левом меню</p>
-  </div>
-
   <div class="home">
+    <h1>
+      Общая статистика
+    </h1>
     <div class="info-blocks">
       <div class="page-block page-info-block">
         <InfoBlock
             title="Курицы"
             href="/chickens"
             subTitle="Общее количество"
-            count="1086"
-        />
-      </div>
-      <div class="page-block page-info-block">
-        <InfoBlock
-            title="Яиц в месяц"
-            href="#"
-            subTitle="Среднее"
-            count="27000"
+            :count="statistics.chickensCount.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
@@ -38,70 +33,117 @@ const {workers, loading} = useWorkers();
             title="Сотрудники"
             href="/employees"
             subTitle="Общее количество"
-            count="200"
+            :count="statistics.workersCount.toString()"
+            :loading="statsLoading"
         />
       </div>
       <div class="page-block page-info-block">
         <InfoBlock
-            title="Продуктивность курицы"
-            href="#"
-            subTitle="Средняя"
-            count="27"
-        />
-      </div>
-      <div class="page-block page-info-block">
-        <InfoBlock
-            title="Прибыль"
-            href="#"
-            subTitle="В месяц"
-            count="28.9KK"
-        />
-      </div>
-      <div class="page-block page-info-block">
-        <InfoBlock
-            title="Курицы"
-            href="#"
+            title="Породы"
+            href="/breeds"
             subTitle="Общее количество"
-            count="1086"
+            :count="statistics.breedsCount.toString()"
+            :loading="statsLoading"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Цехи"
+            href="/workshops"
+            subTitle="Общее количество"
+            :count="statistics.workshopsCount.toString()"
+            :loading="statsLoading"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Ряды"
+            href="/rows"
+            subTitle="Общее количество"
+            :count="statistics.rowsCount.toString()"
+            :loading="statsLoading"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Клетки"
+            href="/cages"
+            subTitle="Общее количество"
+            :count="statistics.cagesCount.toString()"
+            :loading="statsLoading"
         />
       </div>
     </div>
-    <div class="graph-blocks">
-      <div class="page-block page-graph-block">
-        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>
-      </div>
-      <div class="page-block page-graph-block">
-        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>
-      </div>
-      <div class="page-block page-graph-block">
-        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>
-      </div>
-    </div>
-    <div class="table-employees-block page-block">
-      <div class="table-template__header">
-        <h2 class="table-template__title">
-          Лучшие сотрудники
-        </h2>
-        <Button
-            href="/employees"
-            class="table-template__button"
-            icon-name="arrow-right"
-            :icon-width="28"
-            :icon-height="28"
+
+    <h1>
+      Ключевые метрики куриц
+    </h1>
+    <div class="info-blocks">
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Яйценоскость на курицу"
+            href="/report-breed-egg-difference"
+            subTitle="Средняя"
+            :count="statistics.avgEggsPerChicken.toString()"
+            :loading="statsLoading"
         />
       </div>
-      <Loader v-if="loading===true" />
-      <WorkersTable
-          v-if="loading===false"
-          style="margin-block: 8px"
-          :headersItem="[
-              { key: 'name', label: 'Имя' },
-              { key: 'position', label: 'Должность' }
-              ]"
-          :bodyItems="workers"
-          :height-size="5"
-      />
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Производство яиц за текущий месяц"
+            href="/report-factory-monthly"
+            subTitle="Общее количество"
+            :count="statistics.totalEggsThisMonth.toString()"
+            :loading="statsLoading"
+        />
+      </div>
+      <div class="page-block page-info-block">
+        <InfoBlock
+            title="Возраст куриц"
+            href="/chickens"
+            subTitle="Средний"
+            :count="`${statistics.avgChickenAge} мес.`"
+            :loading="statsLoading"
+        />
+      </div>
     </div>
+
+<!--    <div class="graph-blocks">-->
+<!--      <div class="page-block page-graph-block">-->
+<!--        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>-->
+<!--      </div>-->
+<!--      <div class="page-block page-graph-block">-->
+<!--        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>-->
+<!--      </div>-->
+<!--      <div class="page-block page-graph-block">-->
+<!--        <InfoGraph title="Производство яиц по цехам" image="/images/graph1.png" href="#"/>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="table-employees-block page-block">-->
+<!--      <div class="table-template__header">-->
+<!--        <h2 class="table-template__title">-->
+<!--          Лучшие сотрудники-->
+<!--        </h2>-->
+<!--        <Button-->
+<!--            href="/employees"-->
+<!--            class="table-template__button"-->
+<!--            icon-name="arrow-right"-->
+<!--            :icon-width="28"-->
+<!--            :icon-height="28"-->
+<!--        />-->
+<!--      </div>-->
+<!--      <Loader v-if="loading===true" />-->
+<!--      <WorkersTable-->
+<!--          v-if="loading===false"-->
+<!--          style="margin-block: 8px"-->
+<!--          :headersItem="[-->
+<!--              { key: 'name', label: 'Имя' },-->
+<!--              { key: 'position', label: 'Должность' }-->
+<!--              ]"-->
+<!--          :bodyItems="workers"-->
+<!--          :height-size="5"-->
+<!--      />-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -117,7 +159,7 @@ const {workers, loading} = useWorkers();
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  margin-bottom: 20px;
+  margin-block: 20px;
 }
 
 .graph-blocks {
@@ -136,7 +178,6 @@ const {workers, loading} = useWorkers();
     transform: scale(1.03);
     transition: 0.15s;
   }
-
 }
 
 .page-graph-block {

@@ -4,7 +4,17 @@
       <thead>
       <tr>
         <th v-for="(headerItem, index) in headersItem" :key="index">
-          {{ getHeaderLabel(headerItem) }}
+          <div class="header-cell">
+            <span>{{ getHeaderLabel(headerItem) }}</span>
+            <Button
+                v-if="isSortable(getHeaderKey(headerItem))"
+                mode="sort"
+                :is-active="sortKey === getHeaderKey(headerItem)"
+                @click="$emit('sort', getHeaderKey(headerItem))"
+            >
+              <ArrowDownNarrowWide :size="16" />
+            </Button>
+          </div>
         </th>
       </tr>
       </thead>
@@ -20,6 +30,10 @@
           />
 
           <span v-else-if="getHeaderKey(headerItem) === 'id'">
+            {{ row[getHeaderKey(headerItem)] }}
+          </span>
+
+          <span v-else-if="getHeaderKey(headerItem) === 'link'">
             <router-link :to="{ name: 'Курица', params: { id: row.id } }">
               <Icon name="arrow-right" style="color: var(--color);" />
             </router-link>
@@ -42,7 +56,9 @@
 <script setup>
 import {computed} from "vue";
 import Icon from "@/components/ui/Icon.vue";
+import Button from "@/components/ui/Button.vue";
 import {formatDate} from "@/utils/formatDate.js";
+import { ArrowDownNarrowWide } from 'lucide-vue-next';
 
 const props = defineProps({
   heightSize: {
@@ -56,8 +72,14 @@ const props = defineProps({
   bodyItems: {
     type: Array,
     required: () => [],
+  },
+  sortKey: {
+    type: String,
+    default: null
   }
 })
+
+defineEmits(['sort']);
 
 const bodyRows = computed(() => {
   return props.bodyItems.slice(0, props.heightSize)
@@ -73,6 +95,11 @@ const getHeaderKey = (headerItem) => {
 }
 const getHeaderLabel = (headerItem) => {
   return typeof headerItem === 'object' ? headerItem.label : headerItem
+}
+
+const isSortable = (key) => {
+  const sortableKeys = ['id', 'name', 'breedName', 'weight', 'eggs', 'age', 'birthDate'];
+  return sortableKeys.includes(key);
 }
 </script>
 
@@ -97,5 +124,12 @@ th, td {
   text-align: center;
   vertical-align: middle;
   padding: 8px;
+}
+
+.header-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 </style>

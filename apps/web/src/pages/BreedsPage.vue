@@ -7,11 +7,11 @@
           location="page-action"
           @click="showModal = true"
       />
-      <Button
+      <!-- <Button
           label="Удалить породу"
           mode="violet"
           location="page-action"
-      />
+      /> -->
     </div>
 
     <Modal

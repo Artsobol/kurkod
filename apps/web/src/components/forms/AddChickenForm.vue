@@ -12,6 +12,18 @@
     </label>
 
     <label class="add-form__label">
+      <span class="add-form__label-title">Вес:</span>
+      <input
+          class="add-form__input"
+          type="text"
+          v-model.number="newChicken.weight"
+          placeholder="Введите вес"
+          min="0"
+          required
+      />
+    </label>
+
+    <label class="add-form__label">
       <span class="add-form__label-title">Порода:</span>
       <input
           class="add-form__input"
@@ -23,13 +35,12 @@
     </label>
 
     <label class="add-form__label">
-      <span class="add-form__label-title">Вес:</span>
+      <span class="add-form__label-title">Клетка:</span>
       <input
           class="add-form__input"
           type="text"
-          v-model.number="newChicken.weight"
-          placeholder="Введите вес"
-          min="0"
+          v-model="newChicken.cageId"
+          placeholder="Введите номер клетки:"
           required
       />
     </label>
@@ -69,6 +80,7 @@ const newChicken = ref({
   weight: "",
   birthDate: null,
   breedId: "",
+  cageId: "",
 });
 
 const addChicken = async () => {
@@ -86,6 +98,7 @@ const addChicken = async () => {
       weight: newChicken.value.weight,
       breedId: newChicken.value.breedId,
       birthDate: selectedDate.toISOString().split("T")[0],
+      cageId: newChicken.value.cageId,
     };
 
     await createChicken(chickenToSend);

@@ -22,7 +22,7 @@
               style="width: 40px; height: 40px; object-fit: cover; border-radius: 50%;"
           />
           <span v-else-if="getHeaderKey(headerItem) === 'name'">
-            {{ row.firstName }} {{ row.lastName }} {{ row.patronymic }}
+            {{ row.lastName }} {{ row.firstName }} {{ row.patronymic }}
           </span>
           <span v-else-if="getHeaderKey(headerItem) === 'position'">
             {{ row.position }}

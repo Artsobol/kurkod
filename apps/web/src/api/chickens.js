@@ -7,8 +7,10 @@ export async function getChickens() {
 
 export async function getChicken(id) {
   try {
-    const { data } = await http.get(`/api/v1/chickens/${id}`);
-    return data.payload || [];
+    const response = await http.get(`/api/v1/chickens/${id}`);
+    return {
+      data: response.data.payload || null,
+    };
   } catch (error) {
     console.error(error);
     return null;
