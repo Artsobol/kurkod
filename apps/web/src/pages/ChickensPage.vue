@@ -69,7 +69,6 @@ import Loader from "@/components/ui/Loader.vue";
 import {useChickens} from "@/composables/useChickens.js";
 import Modal from "@/components/ui/Modal.vue";
 import AddChickenForm from "@/components/forms/AddChickenForm.vue";
-import DeleteChickenForm from "@/components/forms/DeleteChickenForm.vue";
 import {ref, computed} from "vue";
 
 const {chickens, loading, fetchChickens} = useChickens();
