@@ -1,5 +1,15 @@
 import http from "@/api/http.js";
 
+export async function getRows(workshopId) {
+  try {
+    const { data } = await http.get(`/api/v1/workshops/${workshopId}/rows`);
+    return data.payload || [];
+  } catch (error) {
+    console.error("Ошибка при получении клеток:", error);
+    return [];
+  }
+}
+
 export async function createRow(workshopId, row) {
   try {
     console.log("API запрос: создание ряда", {
