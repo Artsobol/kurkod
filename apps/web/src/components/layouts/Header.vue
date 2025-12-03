@@ -22,22 +22,23 @@
       />
 <!--      <Button-->
 <!--          class="header__nav-link"-->
-<!--          icon-name="switch-language"-->
+<!--          icon-name="user"-->
+<!--          href="/account"-->
 <!--      />-->
-<!--      <Button-->
-<!--          class="header__nav-link"-->
-<!--          icon-name="notifications"-->
-<!--      />-->
-<!--      <Button-->
-<!--          class="header__nav-link"-->
-<!--          icon-name="settings"-->
-<!--      />-->
+
+
       <Button
-          class="header__nav-link"
-          icon-name="user"
-          href="/account"
+          label="Выйти"
+          mode="violet"
+          location="logout"
+          @click="showLogoutModal = true"
       />
 
+      <LogoutConfirmModal
+          v-if="showLogoutModal"
+          @close="showLogoutModal = false"
+          @confirm="onLogoutConfirmed"
+      />
     </div>
   </header>
 </template>
@@ -46,13 +47,34 @@
 import Logo from "@/components/ui/Logo.vue";
 import Button from "@/components/ui/Button.vue";
 import {uiStore} from "@/stores/ui.js";
-import {computed} from "vue";
-import {useRoute} from "vue-router";
+import { logoutUser } from "@/api/auth.js";
+import {computed, ref} from "vue";
+import {useRoute, useRouter} from "vue-router";
+import LogoutConfirmModal from "@/components/ui/LogoutConfirmModal.vue";
 
 const ui = uiStore()
 const route = useRoute();
+const showLogoutModal = ref(false);
 
 const pageTitle = computed(() => route.name || "");
+
+const router = useRouter();
+
+const onLogoutConfirmed = () => {
+  handleLogout();
+};
+
+const handleLogout = async () => {
+  try {
+    logoutUser();
+
+    await router.push('/sign');
+
+  } catch (error) {
+    console.error("Ошибка при выходе:", error);
+    await router.push('/sign');
+  }
+};
 </script>
 
 <style lang="scss">

@@ -12,6 +12,15 @@
           mode="violet"
           location="page-action"
       />
+      <Button
+          style="margin-left: auto;"
+          href="/cages"
+          class="table-template__button"
+          label="Клетки"
+          icon-name="arrow-right"
+          :icon-width="28"
+          :icon-height="28"
+      />
     </div>
 
     <Modal

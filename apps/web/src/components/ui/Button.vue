@@ -93,6 +93,11 @@ defineProps({
   color: var(--color-white);
 }
 
+.transparent {
+  background-color: transparent;
+  color: var(--contrast);
+}
+
 //Locations
 
 .page-action {
@@ -111,6 +116,23 @@ defineProps({
   padding-block: 8px;
 }
 
+.report-switcher {
+  font-weight: 700;
+  font-size: 16px;
+  padding-block: 16px;
+  border-radius: 8px;
+  padding-inline: 22px;
+  min-width: 507px;
+}
+
+.report-form {
+  font-weight: 500;
+  font-size: 16px;
+  width: 248px;
+  padding-block: 9px;
+  border-radius: 4px;
+}
+
 .sign-in-button {
   border-radius: 8px;
   // width: 262px;
@@ -124,4 +146,10 @@ defineProps({
   height: 24px;
 }
 
+.logout {
+  padding-inline: 28px;
+  border-radius: 8px;
+  padding-block: 10px;
+  font-weight: 500;
+}
 </style>

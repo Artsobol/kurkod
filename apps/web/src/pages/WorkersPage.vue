@@ -23,7 +23,7 @@ const {workers, loading} = useWorkers();
       />
       <Button
           style="margin-left: auto;"
-          href="/cells"
+          href="/cages"
           class="table-template__button"
           label="Закрепленные клетки"
           icon-name="arrow-right"
