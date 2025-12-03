@@ -12,6 +12,15 @@
           mode="violet"
           location="page-action"
       />
+      <Button
+          style="margin-left: auto;"
+          href="/rows"
+          class="table-template__button"
+          label="Ряды"
+          icon-name="arrow-right"
+          :icon-width="28"
+          :icon-height="28"
+      />
     </div>
 
     <Modal
@@ -56,12 +65,6 @@ const handleSubmit = async () => {
 
 <style lang="scss" scoped>
 .workshops {
-  &__header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
   &__title {
     margin-bottom: 16px;
   }

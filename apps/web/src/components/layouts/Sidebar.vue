@@ -82,6 +82,25 @@
           <span class="link-text" :class="{ hidden: isClosed }">Производство яиц</span>
         </RouterLink>
       </li>
+      <li>
+        <span class="link-text" :class="[{ hidden: isClosed }, 'link-text-contrast']">Отчеты</span>
+      </li>
+      <li>
+        <RouterLink to="/report-factory-monthly" class="nav-link" active-class="active">
+          <span class="icon-wrapper">
+            <ClipboardList class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Ежемесячный отчет</span>
+        </RouterLink>
+      </li>
+      <li>
+        <RouterLink to="/report-breed-egg-difference" class="nav-link" active-class="active">
+          <span class="icon-wrapper">
+            <ClipboardList class="icon"/>
+          </span>
+          <span class="link-text" :class="{ hidden: isClosed }">Яйценоскость</span>
+        </RouterLink>
+      </li>
     </ul>
   </aside>
 </template>

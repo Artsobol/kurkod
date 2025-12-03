@@ -12,6 +12,15 @@
           mode="violet"
           location="page-action"
       />
+      <Button
+          style="margin-left: auto;"
+          href="/breeds"
+          class="table-template__button"
+          label="Породы куриц"
+          icon-name="arrow-right"
+          :icon-width="28"
+          :icon-height="28"
+      />
     </div>
 
     <Modal

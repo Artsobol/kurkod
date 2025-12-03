@@ -15,6 +15,8 @@ import CagesPage from "@/pages/CagesPage.vue";
 import BreedsPage from "@/pages/BreedsPage.vue";
 import RegisterPage from "@/pages/RegisterPage.vue";
 import EggProductionsPage from "@/pages/EggProductionsPage.vue";
+import ReportFactoryMonthlyPage from "@/pages/ReportFactoryMonthlyPage.vue";
+import ReportBreedEggDifferencePage from "@/pages/ReportBreedEggDifferencePage.vue";
 
 const routes = [
   {
@@ -106,6 +108,18 @@ const routes = [
     name: 'Производство яиц',
     component: EggProductionsPage,
     meta: { title: 'Egg Production' }
+  },
+  {
+    path: '/report-factory-monthly',
+    name: 'Ежемесячный отчет',
+    component: ReportFactoryMonthlyPage,
+    meta: { title: 'Factory Monthly Report' }
+  },
+  {
+    path: '/report-breed-egg-difference',
+    name: 'Яйценоскость',
+    component: ReportBreedEggDifferencePage,
+    meta: { title: 'Breed egg difference report' }
   }
 ]
 

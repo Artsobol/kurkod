@@ -3,16 +3,26 @@ import axios from "axios";
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
+
 let accessToken = null;
+
+const savedToken = localStorage.getItem("token");
+if (savedToken) {
+  accessToken = savedToken;
+}
 
 export function setTokens({ token, refreshToken }) {
   accessToken = token;
   localStorage.setItem("refreshToken", refreshToken);
+  localStorage.setItem("token", token);
 }
 
 export function clearTokens() {
   accessToken = null;
   localStorage.removeItem("refreshToken");
+  localStorage.removeItem("token");
+  sessionStorage.removeItem("refreshToken");
+  sessionStorage.removeItem("token");
 }
 
 http.interceptors.request.use(cfg => {
@@ -36,6 +46,7 @@ http.interceptors.response.use(
 
     const refreshToken = localStorage.getItem("refreshToken");
     if (!refreshToken) {
+      clearTokens();
       return Promise.reject(err);
     }
 
@@ -60,10 +71,16 @@ http.interceptors.response.use(
 
       queue.forEach(cb => cb());
       queue = [];
+
       return http(original);
 
     } catch (e) {
       clearTokens();
+
+      if (!window.location.pathname.includes('/sign')) {
+        window.location.href = '/sign';
+      }
+
       return Promise.reject(e);
     } finally {
       isRefreshing = false;
