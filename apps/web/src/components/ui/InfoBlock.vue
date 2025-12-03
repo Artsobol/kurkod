@@ -13,14 +13,14 @@
       <span v-if="count && !loading" class="info-block__count">
       {{ count }}
     </span>
-      <div v-if="loading" class="info-block__loader">
-        <div class="loader"></div>
-      </div>
+      <Loader v-if="loading" :width="28" :height="28" color="var(--color-white)" />
     </div>
   </a>
 </template>
 
 <script setup>
+import Loader from "@/components/ui/Loader.vue";
+
 defineProps({
   title: {
     type: String,
@@ -76,27 +76,6 @@ defineProps({
   &__count {
     font-weight: 600;
     font-size: 23px;
-  }
-
-  &__loader {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &__loader .loader {
-    width: 24px;
-    height: 24px;
-    border: 3px solid rgba(255, 255, 255, 0.2);
-    border-top-color: var(--color-white);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
   }
 }
 </style>

@@ -6,11 +6,11 @@
           mode="violet"
           location="page-action"
       />
-      <Button
+      <!-- <Button
           label="Удалить ячейку"
           mode="violet"
           location="page-action"
-      />
+      /> -->
     </div>
 
   </div>

@@ -16,11 +16,11 @@ const {workers, loading} = useWorkers();
           mode="violet"
           location="page-action"
       />
-      <Button
+      <!-- <Button
           label="Удалить сотрудника"
           mode="violet"
           location="page-action"
-      />
+      /> -->
       <Button
           style="margin-left: auto;"
           href="/cages"

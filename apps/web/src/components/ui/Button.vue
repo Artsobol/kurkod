@@ -2,7 +2,7 @@
   <a
       v-if="href"
       :href="href"
-      :class="[mode, location, 'button']"
+      :class="[mode, location, 'button', { active: isActive }]"
   >
     <slot>{{ label }}</slot>
     <template v-if="iconName">
@@ -13,7 +13,7 @@
   <button
       v-else
       :type="type"
-      :class="[mode, location, 'button']"
+      :class="[mode, location, 'button', { active: isActive }]"
       @click="handleClick"
   >
     <slot>{{ label }}</slot>
@@ -62,6 +62,10 @@ defineProps({
   iconHeight: {
     type: Number,
     default: 28
+  },
+  isActive: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -95,6 +99,34 @@ defineProps({
 
 .transparent {
   background-color: transparent;
+  color: var(--contrast);
+}
+
+.sort {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color);
+  opacity: 0.6;
+  transition: opacity 0.2s, color 0.2s;
+  border-radius: 4px;
+  gap: 0;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+.sort:hover {
+  opacity: 1;
+  background: var(--section-bg);
+}
+
+.sort.active {
+  opacity: 1;
   color: var(--contrast);
 }
 

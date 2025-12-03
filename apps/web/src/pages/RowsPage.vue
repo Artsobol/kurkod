@@ -7,11 +7,11 @@
           location="page-action"
           @click="showModal = true"
       />
-      <Button
+      <!-- <Button
           label="Удалить ряд"
           mode="violet"
           location="page-action"
-      />
+      /> -->
       <Button
           style="margin-left: auto;"
           href="/cages"
