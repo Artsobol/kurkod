@@ -14,6 +14,7 @@ import RowsPage from "@/pages/RowsPage.vue";
 import CagesPage from "@/pages/CagesPage.vue";
 import BreedsPage from "@/pages/BreedsPage.vue";
 import RegisterPage from "@/pages/RegisterPage.vue";
+import EggProductionsPage from "@/pages/EggProductionsPage.vue";
 
 const routes = [
   {
@@ -99,6 +100,12 @@ const routes = [
     name: 'Регистрация',
     component: RegisterPage,
     meta: { title: 'Register' }
+  },
+  {
+    path: '/egg-production',
+    name: 'Производство яиц',
+    component: EggProductionsPage,
+    meta: { title: 'Egg Production' }
   }
 ]
 

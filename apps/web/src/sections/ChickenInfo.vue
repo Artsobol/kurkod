@@ -1,8 +1,8 @@
 <template>
   <div class="chicken page-block">
-    <div class="chicken__img-container">
-      <img class="chicken__img" :src="photo" alt="Chicken photo"/>
-    </div>
+<!--    <div class="chicken__img-container">-->
+<!--      <img class="chicken__img" :src="photo" alt="Chicken photo"/>-->
+<!--    </div>-->
 
     <div class="chicken__container">
       <div class="chicken__info">
@@ -22,7 +22,7 @@
       <div class="chicken__info">
         <h2>Данные</h2>
         <h3 class="h2">Вес</h3>
-        <span>{{ weight }} kg</span>
+        <span>{{ weight }} g</span>
 
         <h3 class="h2">Яиц в месяц</h3>
         <span>Яйца</span>

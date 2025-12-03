@@ -2,7 +2,7 @@
   <div class="sign-in">
     <div class="sign-in__window">
       <div class="sign-in__window__first-column">
-        <Logo :custom-style="true" />
+        <Logo :custom-style="true"/>
         <p class="sign-in__description-first">
           Для входа зарегистрируйтесь
         </p>
@@ -68,11 +68,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import {ref} from "vue";
 import Logo from "@/components/ui/Logo.vue";
 import Button from "@/components/ui/Button.vue";
-import { uiStore } from "@/stores/ui.js";
-import { loginUser } from "@/api/auth.js";
+import {uiStore} from "@/stores/ui.js";
+import {loginUser} from "@/api/auth.js";
 
 const ui = uiStore();
 
@@ -88,7 +88,7 @@ const login = async () => {
   loading.value = true;
 
   try {
-    const res = await loginUser({ email: email.value, password: password.value });
+    const res = await loginUser({email: email.value, password: password.value});
     console.log("LOGIN RESPONSE:", res);
 
     localStorage.setItem("refreshToken", res.refreshToken);
@@ -96,11 +96,10 @@ const login = async () => {
 
     successMessage.value = "Успешный вход!";
     setTimeout(() => window.location.href = "/", 500);
-  } catch(err) {
+  } catch (err) {
     console.log("ERROR:", err);
     errorMessage.value = err.response?.data?.message || "Ошибка авторизации";
   }
-
 };
 
 const goToRegister = () => {

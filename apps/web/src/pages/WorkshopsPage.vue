@@ -26,7 +26,7 @@
         v-if="loading===false"
         :headers-item="[
             { key: 'workshopNumber', label: 'Номер цеха' },
-            { key: 'id', label: 'ID' }
+            { key: 'id', label: 'ID' },
           ]"
         :body-items="workshops"
         :height-size="workshops.length"

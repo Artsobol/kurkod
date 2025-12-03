@@ -1,7 +1,7 @@
 import http from "@/api/http.js";
 
 export async function getBreeds() {
-  const { data } = await http.get(`/api/v1/breeds`);
+  const { data } = await http.get(`/api/v1/breeds/all`);
   return data.payload || [];
 }
 

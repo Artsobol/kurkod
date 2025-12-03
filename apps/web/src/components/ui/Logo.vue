@@ -20,7 +20,7 @@ defineProps({
 </script>
 <style lang="scss" scoped>
 .logo {
-  font-family: var(--font-family-logo);
+  font-family: var(--font-family-logo), sans-serif;
   font-weight: 400;
   font-size: 32px;
 }

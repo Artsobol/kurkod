@@ -4,7 +4,6 @@
 
     <ChickenInfo
         v-else-if="chicken"
-        :photo="chicken.photo"
         :name="chicken.name"
         :weight="chicken.weight"
         :birth-date="chicken.birthDate"

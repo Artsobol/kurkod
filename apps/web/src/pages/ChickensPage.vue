@@ -26,7 +26,7 @@
         v-if="loading===false"
         :headers-item="[
             { key: 'name', label: 'Имя' },
-            { key: 'breedId', label: 'Порода' },
+            { key: 'breedName', label: 'Порода' },
             { key: 'weight', label: 'Вес' },
             { key: 'eggs', label: 'Яиц в месяц' },
             { key: 'age', label: 'Возраст' },
