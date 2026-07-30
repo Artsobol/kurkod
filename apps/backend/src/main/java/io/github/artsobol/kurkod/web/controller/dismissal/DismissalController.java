@@ -10,7 +10,6 @@ import io.github.artsobol.kurkod.web.domain.dismissal.model.request.DismissalPat
 import io.github.artsobol.kurkod.web.domain.dismissal.model.request.DismissalPostRequest;
 import io.github.artsobol.kurkod.web.domain.dismissal.model.request.DismissalPutRequest;
 import io.github.artsobol.kurkod.web.domain.dismissal.service.api.DismissalService;
-import io.github.artsobol.kurkod.web.response.IamResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -37,49 +36,49 @@ public class DismissalController {
     @GetMapping("/workers/{workerId}/dismissed/{dismissedId}")
     @Operation(summary = "Get dismissal by worker and dismissed",
                description = "Returns a single dismissal by worker and dismissed.")
-    public ResponseEntity<IamResponse<DismissalDTO>> getByWorkerAndDismissed(
-            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Long workerId,
-            @Parameter(name = "dismissed id", example = "1") @PathVariable(name = "dismissedId") Long dismissedId) {
+    public ResponseEntity<DismissalDTO> getByWorkerAndDismissed(
+            @PathVariable @Parameter(name = "worker id", example = "1") Long workerId,
+            @PathVariable @Parameter(name = "dismissed id", example = "1") Long dismissedId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         DismissalDTO response = dismissalService.getByWorkerAndDismissed(workerId, dismissedId);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @GetMapping("/dismissed/{dismissedId}")
     @Operation(summary = "Get dismissals by dismissed", description = "Returns all dismissals by dismissed.")
-    public ResponseEntity<IamResponse<List<DismissalDTO>>> getAllByDismissed(
-            @Parameter(name = "dismissed id", example = "1") @PathVariable(name = "dismissedId") Long dismissedId) {
+    public ResponseEntity<List<DismissalDTO>> getAllByDismissed(
+            @PathVariable @Parameter(name = "dismissed id", example = "1") Long dismissedId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<DismissalDTO> response = dismissalService.getAllByDismissed(dismissedId);
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/workers/{workerId}")
     @Operation(summary = "Get dismissals by worker", description = "Returns all dismissals by worker.")
-    public ResponseEntity<IamResponse<List<DismissalDTO>>> getAllByWorker(
-            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Long workerId) {
+    public ResponseEntity<List<DismissalDTO>> getAllByWorker(
+            @PathVariable @Parameter(name = "worker id", example = "1") Long workerId) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<DismissalDTO> response = dismissalService.getAllByWorker(workerId);
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
     @Operation(summary = "Create a dismissal", description = "Creates a new dismissal.")
-    public ResponseEntity<IamResponse<DismissalDTO>> create(
+    public ResponseEntity<DismissalDTO> create(
             @RequestBody @Valid DismissalPostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         DismissalDTO response = dismissalService.create(request);
         return ResponseEntity.created(LocationUtils.buildLocation(request.getWorkerId(),
                                                                   securityContextFacade.getCurrentUserId())).eTag(
-                EtagUtils.toEtag(response.version())).body(IamResponse.createSuccessful(response));
+                EtagUtils.toEtag(response.version())).body(response);
     }
 
     @PutMapping("/{workerId}")
     @Operation(summary = "Replace dismissal by worker id", description = "Replace an existing dismissal with new data.")
-    public ResponseEntity<IamResponse<DismissalDTO>> replace(
-            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Long workerId,
+    public ResponseEntity<DismissalDTO> replace(
+            @PathVariable @Parameter(name = "worker id", example = "1") Long workerId,
             @RequestBody @Valid DismissalPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -90,13 +89,13 @@ public class DismissalController {
         DismissalDTO response = dismissalService.replace(workerId, request, expected);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @PatchMapping("/{workerId}")
     @Operation(summary = "Update dismissal by worker id", description = "Update an existing dismissal with new data.")
-    public ResponseEntity<IamResponse<DismissalDTO>> update(
-            @Parameter(name = "worker id", example = "1") @PathVariable(name = "workerId") Long workerId,
+    public ResponseEntity<DismissalDTO> update(
+            @PathVariable @Parameter(name = "worker id", example = "1") Long workerId,
             @RequestBody @Valid DismissalPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -107,7 +106,7 @@ public class DismissalController {
         DismissalDTO response = dismissalService.update(workerId, request, expected);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
 }

@@ -9,7 +9,6 @@ import io.github.artsobol.kurkod.web.domain.passport.model.request.PassportPatch
 import io.github.artsobol.kurkod.web.domain.passport.model.request.PassportPostRequest;
 import io.github.artsobol.kurkod.web.domain.passport.model.request.PassportPutRequest;
 import io.github.artsobol.kurkod.web.domain.passport.service.api.PassportService;
-import io.github.artsobol.kurkod.web.response.IamResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -34,30 +33,30 @@ public class PassportController {
     @Operation(summary = "Get passport by worker ID",
                description = "Returns the passport information for a specific worker.")
     @GetMapping
-    public ResponseEntity<IamResponse<PassportDTO>> get(
+    public ResponseEntity<PassportDTO> get(
             @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         PassportDTO response = passportService.get(id);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @Operation(summary = "Create a passport for a worker",
                description = "Creates a new passport for the specified worker. Each worker can have only one passport.")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<PassportDTO>> create(
+    public ResponseEntity<PassportDTO> create(
             @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportPostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         PassportDTO response = passportService.create(id, request);
-        return ResponseEntity.created(LocationUtils.buildLocation()).body(IamResponse.createSuccessful(response));
+        return ResponseEntity.created(LocationUtils.buildLocation()).body(response);
     }
 
     @Operation(summary = "Replace a worker’s passport",
                description = "Fully replaces the passport data for the specified worker.")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<PassportDTO>> replace(
+    public ResponseEntity<PassportDTO> replace(
             @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportPutRequest request,
             @Parameter(name = "If-Match",
@@ -70,13 +69,13 @@ public class PassportController {
         PassportDTO response = passportService.replace(id, request, expected);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @Operation(summary = "Partially update a worker’s passport",
                description = "Applies a partial update to the passport data for the specified worker.")
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<PassportDTO>> update(
+    public ResponseEntity<PassportDTO> update(
             @Parameter(description = "Worker identifier", example = "5") @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportPatchRequest request,
             @Parameter(name = "If-Match",
@@ -89,7 +88,7 @@ public class PassportController {
         PassportDTO response = passportService.update(id, request, expected);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @Operation(summary = "Delete a worker’s passport",

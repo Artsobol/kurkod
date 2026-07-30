@@ -11,7 +11,6 @@ import io.github.artsobol.kurkod.web.domain.refreshtoken.model.entity.RefreshTok
 import io.github.artsobol.kurkod.web.domain.iam.user.model.entity.User;
 import io.github.artsobol.kurkod.common.exception.InvalidDataException;
 import io.github.artsobol.kurkod.web.domain.iam.auth.model.request.RegistrationRequest;
-import io.github.artsobol.kurkod.web.response.IamResponse;
 import io.github.artsobol.kurkod.web.domain.iam.role.repository.RoleRepository;
 import io.github.artsobol.kurkod.web.domain.iam.user.repository.UserRepository;
 import io.github.artsobol.kurkod.security.jwt.JwtTokenProvider;
@@ -47,7 +46,7 @@ public class AuthServiceImpl implements AuthService {
     private final AccessValidator accessValidator;
 
     @Override
-    public IamResponse<UserProfileDTO> login(LoginRequest request) {
+    public UserProfileDTO login(LoginRequest request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -64,21 +63,21 @@ public class AuthServiceImpl implements AuthService {
         UserProfileDTO userProfileDTO = userMapper.toUserProfileDto(user, token, refreshToken.getToken());
         userProfileDTO.setToken(token);
 
-        return IamResponse.createSuccessful(userProfileDTO);
+        return userProfileDTO;
     }
 
     @Override
-    public IamResponse<UserProfileDTO> refreshAccessToken(String refreshTokenValue) {
+    public UserProfileDTO refreshAccessToken(String refreshTokenValue) {
         RefreshToken refreshToken = refreshTokenService.validateAndRefreshToken(refreshTokenValue);
         User user = refreshToken.getUser();
         String accessToken = jwtTokenProvider.generateToken(user);
-        return IamResponse.createSuccessfulWithNewToken(userMapper.toUserProfileDto(user,
+        return userMapper.toUserProfileDto(user,
                 accessToken,
-                refreshToken.getToken()));
+                refreshToken.getToken());
     }
 
     @Override
-    public IamResponse<UserProfileDTO> registerUser(@NotNull RegistrationRequest request) {
+    public UserProfileDTO registerUser(@NotNull RegistrationRequest request) {
         accessValidator.validateNewUser(
                 request.getUsername(),
                 request.getEmail(),
@@ -99,9 +98,7 @@ public class AuthServiceImpl implements AuthService {
         RefreshToken refreshToken = refreshTokenService.generateOrUpdateRefreshToken(newUser);
         String token = jwtTokenProvider.generateToken(newUser);
 
-        return IamResponse.createSuccessfulWithNewToken(
-                userMapper.toUserProfileDto(newUser, token, refreshToken.getToken())
-        );
+        return userMapper.toUserProfileDto(newUser, token, refreshToken.getToken());
     }
 
 }

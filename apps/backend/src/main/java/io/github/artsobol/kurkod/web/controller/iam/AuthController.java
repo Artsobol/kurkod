@@ -6,7 +6,6 @@ import io.github.artsobol.kurkod.web.cookie.CookieFactory;
 import io.github.artsobol.kurkod.web.domain.iam.auth.model.request.LoginRequest;
 import io.github.artsobol.kurkod.web.domain.iam.user.model.dto.UserProfileDTO;
 import io.github.artsobol.kurkod.web.domain.iam.auth.model.request.RegistrationRequest;
-import io.github.artsobol.kurkod.web.response.IamResponse;
 import io.github.artsobol.kurkod.web.domain.auth.service.api.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,14 +30,14 @@ public class AuthController {
     @Operation(summary = "Authenticate user",
                description = "Authenticates the user using email and password. Returns an access token and sets it in a cookie.")
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<UserProfileDTO>> login(
+    public ResponseEntity<UserProfileDTO> login(
             @RequestBody @Valid LoginRequest loginRequest,
             HttpServletResponse response) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
-        IamResponse<UserProfileDTO> result = authService.login(loginRequest);
+        UserProfileDTO result = authService.login(loginRequest);
 
-        Cookie authorizationCookie = CookieFactory.createAuthCookie(result.getPayload().getToken());
+        Cookie authorizationCookie = CookieFactory.createAuthCookie(result.getToken());
         response.addCookie(authorizationCookie);
 
         return ResponseEntity.ok(result);
@@ -47,13 +46,13 @@ public class AuthController {
     @Operation(summary = "Refresh access token",
                description = "Generates a new access token using a valid refresh token. The new token is also set in a cookie.")
     @GetMapping("/refresh/token")
-    public ResponseEntity<IamResponse<UserProfileDTO>> refreshToken(
+    public ResponseEntity<UserProfileDTO> refreshToken(
             @RequestParam(name = "token") String refreshToken,
             HttpServletResponse response) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
-        IamResponse<UserProfileDTO> result = authService.refreshAccessToken(refreshToken);
-        Cookie authorizationCookie = CookieFactory.createAuthCookie(result.getPayload().getToken());
+        UserProfileDTO result = authService.refreshAccessToken(refreshToken);
+        Cookie authorizationCookie = CookieFactory.createAuthCookie(result.getToken());
         response.addCookie(authorizationCookie);
         return ResponseEntity.ok(result);
     }
@@ -61,13 +60,13 @@ public class AuthController {
     @Operation(summary = "Register new user",
                description = "Registers a new user account and immediately returns an access token set in a cookie.")
     @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<IamResponse<UserProfileDTO>> register(
+    public ResponseEntity<UserProfileDTO> register(
             @RequestBody @Valid RegistrationRequest registrationRequest,
             HttpServletResponse response) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
-        IamResponse<UserProfileDTO> result = authService.registerUser(registrationRequest);
-        Cookie authorizationCookie = CookieFactory.createAuthCookie(result.getPayload().getToken());
+        UserProfileDTO result = authService.registerUser(registrationRequest);
+        Cookie authorizationCookie = CookieFactory.createAuthCookie(result.getToken());
         response.addCookie(authorizationCookie);
         return ResponseEntity.ok(result);
     }

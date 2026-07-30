@@ -6,7 +6,6 @@ import io.github.artsobol.kurkod.common.util.LogUtils;
 import io.github.artsobol.kurkod.web.domain.iam.admin.model.dto.ChangeRoleRequest;
 import io.github.artsobol.kurkod.web.domain.iam.admin.service.api.AdminUserService;
 import io.github.artsobol.kurkod.web.domain.iam.user.model.dto.UserDTO;
-import io.github.artsobol.kurkod.web.response.IamResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -30,7 +29,7 @@ public class AdminUserController {
     @Operation(summary = "Change user role",
                description = "Updates the role of a specific user. Requires ETag for optimistic locking.")
     @PatchMapping("/role")
-    public ResponseEntity<IamResponse<UserDTO>> changeRole(
+    public ResponseEntity<UserDTO> changeRole(
             @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Long userId,
 
             @Valid @RequestBody ChangeRoleRequest request,
@@ -45,12 +44,12 @@ public class AdminUserController {
 
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @Operation(summary = "Activate user", description = "Sets user status to ACTIVE. Requires ETag.")
     @PostMapping("/activate")
-    public ResponseEntity<IamResponse<UserDTO>> activateUser(
+    public ResponseEntity<UserDTO> activateUser(
             @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Long userId,
 
             @Parameter(name = "If-Match",
@@ -63,12 +62,12 @@ public class AdminUserController {
 
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @Operation(summary = "Deactivate user", description = "Sets user status to INACTIVE. Requires ETag.")
     @PostMapping("/deactivate")
-    public ResponseEntity<IamResponse<UserDTO>> deactivateUser(
+    public ResponseEntity<UserDTO> deactivateUser(
             @Parameter(description = "User identifier", example = "10") @PathVariable(name = "id") Long userId,
 
             @Parameter(name = "If-Match",
@@ -81,6 +80,6 @@ public class AdminUserController {
 
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 }

@@ -80,7 +80,8 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         Chicken chicken = chickenRepository.findById(chickenId)
                                            .orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenId));
         eggProductionMonth.setChicken(chicken);
-
+        eggProductionMonth.setYear(year);
+        eggProductionMonth.setMonth(month);
         eggProductionMonthRepository.save(eggProductionMonth);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
                  getCurrentUsername(),

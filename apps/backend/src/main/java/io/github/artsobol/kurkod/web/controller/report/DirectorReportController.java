@@ -12,7 +12,6 @@ import io.github.artsobol.kurkod.web.domain.report.chicken.model.dto.WorkshopBre
 import io.github.artsobol.kurkod.web.domain.report.chicken.service.api.ChickenReportService;
 import io.github.artsobol.kurkod.web.domain.report.worker.model.dto.WorkerReportDailyEggsDTO;
 import io.github.artsobol.kurkod.web.domain.report.worker.service.api.WorkerReportService;
-import io.github.artsobol.kurkod.web.response.IamResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -45,13 +44,13 @@ public class DirectorReportController {
             description = "Returns aggregated monthly metrics for the entire factory."
     )
     @GetMapping("/factory/monthly")
-    public ResponseEntity<IamResponse<FarmMonthlyReportDTO>> getFactoryMonthly(
+    public ResponseEntity<FarmMonthlyReportDTO> getFactoryMonthly(
             @Parameter(description = "Target year", example = "2025") @RequestParam int year,
             @Parameter(description = "Target month (1–12)", example = "3") @RequestParam int month
                                                                               ) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         FarmMonthlyReportDTO response = farmReportService.getMonthlyReport(year, month);
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -59,10 +58,10 @@ public class DirectorReportController {
             description = "Shows difference between each breed’s metrics and factory averages."
     )
     @GetMapping("/breeds/egg-diff")
-    public ResponseEntity<IamResponse<List<BreedEggDiffReportDTO>>> getBreedEggDiff() {
+    public ResponseEntity<List<BreedEggDiffReportDTO>> getBreedEggDiff() {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<BreedEggDiffReportDTO> response = breedReportService.getEggDiff();
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -70,10 +69,10 @@ public class DirectorReportController {
             description = "Returns how many chickens of each breed are located in each workshop."
     )
     @GetMapping("/chickens/by-workshop-and-breed")
-    public ResponseEntity<IamResponse<List<ChickensByWorkshopAndBreedDTO>>> getChickensByWorkshopAndBreed() {
+    public ResponseEntity<List<ChickensByWorkshopAndBreedDTO>> getChickensByWorkshopAndBreed() {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<ChickensByWorkshopAndBreedDTO> response = chickenReportService.getChickensByWorkshopAndBreed();
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -81,12 +80,12 @@ public class DirectorReportController {
             description = "Returns the workshop with the highest number of chickens of the specified breed."
     )
     @GetMapping("/chickens/top-workshop-by-breed")
-    public ResponseEntity<IamResponse<WorkshopBreedTopDTO>> getTopWorkshopByBreed(
+    public ResponseEntity<WorkshopBreedTopDTO> getTopWorkshopByBreed(
             @Parameter(description = "Breed identifier", example = "7") @RequestParam Long breedId
                                                                                  ) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         WorkshopBreedTopDTO response = chickenReportService.getTopWorkshopByBreed(breedId);
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -94,14 +93,14 @@ public class DirectorReportController {
             description = "Returns egg statistics for each chicken, filtered by weight, breed or birth date."
     )
     @GetMapping("/chickens/egg-stats")
-    public ResponseEntity<IamResponse<List<ChickenEggStatsDTO>>> getChickenEggStats(
+    public ResponseEntity<List<ChickenEggStatsDTO>> getChickenEggStats(
             @Parameter(description = "Chicken weight filter", example = "200") @RequestParam(required = false) Integer weight,
             @Parameter(description = "Breed ID filter", example = "5") @RequestParam(required = false) Long breedId,
             @Parameter(description = "Birth date filter", example = "2024-01-15") @RequestParam(required = false) LocalDate birthDate
                                                                                    ) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<ChickenEggStatsDTO> response = chickenReportService.getEggStats(weight, breedId, birthDate);
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 
     @Operation(
@@ -109,12 +108,12 @@ public class DirectorReportController {
             description = "Returns how many eggs per day each worker collects on average for the given month."
     )
     @GetMapping("/workers/daily-avg-eggs")
-    public ResponseEntity<IamResponse<List<WorkerReportDailyEggsDTO>>> getWorkerDailyEggs(
+    public ResponseEntity<List<WorkerReportDailyEggsDTO>> getWorkerDailyEggs(
             @Parameter(description = "Target year", example = "2025") @RequestParam int year,
             @Parameter(description = "Target month (1–12)", example = "4") @RequestParam int month
                                                                                          ) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<WorkerReportDailyEggsDTO> response = workerReportService.getWorkerDailyEggs(year, month);
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 }

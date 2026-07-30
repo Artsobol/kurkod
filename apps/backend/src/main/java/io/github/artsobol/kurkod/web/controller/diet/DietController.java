@@ -9,7 +9,6 @@ import io.github.artsobol.kurkod.web.domain.diet.model.request.DietPatchRequest;
 import io.github.artsobol.kurkod.web.domain.diet.model.request.DietPostRequest;
 import io.github.artsobol.kurkod.web.domain.diet.model.request.DietPutRequest;
 import io.github.artsobol.kurkod.web.domain.diet.service.api.DietService;
-import io.github.artsobol.kurkod.web.response.IamResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -32,37 +31,37 @@ public class DietController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get diet by ID", description = "Returns a single diet by its unique identifier.")
-    public ResponseEntity<IamResponse<DietDTO>> get(
-            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Long id) {
+    public ResponseEntity<DietDTO> get(
+            @PathVariable @Parameter(name = "Id", example = "1") Long id) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         DietDTO response = dietService.get(id);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @GetMapping
     @Operation(summary = "List all diets", description = "Returns all diets available in the system.")
-    public ResponseEntity<IamResponse<Iterable<DietDTO>>> getAll() {
+    public ResponseEntity<Iterable<DietDTO>> getAll() {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         Iterable<DietDTO> response = dietService.getAll();
-        return ResponseEntity.ok(IamResponse.createSuccessful(response));
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping
     @Operation(summary = "Create a new diet", description = "Creates a new diet with the provided data.")
-    public ResponseEntity<IamResponse<DietDTO>> create(@RequestBody @Valid DietPostRequest request) {
+    public ResponseEntity<DietDTO> create(@RequestBody @Valid DietPostRequest request) {
         log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         DietDTO response = dietService.create(request);
         return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Replace diet by ID", description = "Replaces an existing diet with new data.")
-    public ResponseEntity<IamResponse<DietDTO>> replace(
-            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Long id,
+    public ResponseEntity<DietDTO> replace(
+            @PathVariable @Parameter(name = "Id", example = "1") Long id,
             @RequestBody @Valid DietPutRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -73,14 +72,14 @@ public class DietController {
         DietDTO response = dietService.replace(id, request, expected);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update diet by ID",
                description = "Applies a partial update to an existing diet by ID.")
-    public ResponseEntity<IamResponse<DietDTO>> update(
-            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Long id,
+    public ResponseEntity<DietDTO> update(
+            @PathVariable @Parameter(name = "Id", example = "1") Long id,
             @RequestBody @Valid DietPatchRequest request,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
@@ -91,13 +90,13 @@ public class DietController {
         DietDTO response = dietService.update(id, request, expected);
         return ResponseEntity.status(HttpStatus.OK)
                              .eTag(EtagUtils.toEtag(response.version()))
-                             .body(IamResponse.createSuccessful(response));
+                             .body(response);
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete diet by ID", description = "Deletes an existing diet by its unique identifier.")
     public ResponseEntity<Void> delete(
-            @Parameter(name = "Id", example = "1") @PathVariable(name = "id") Long id,
+            @PathVariable @Parameter(name = "Id", example = "1") Long id,
             @Parameter(name = "If-Match",
                        in = ParameterIn.HEADER,
                        required = true,
