@@ -1,27 +1,21 @@
 package io.github.artsobol.kurkod.web.controller.employmentcontract;
 
-import io.github.artsobol.kurkod.common.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.common.util.EtagUtils;
 import io.github.artsobol.kurkod.common.util.LocationUtils;
-import io.github.artsobol.kurkod.common.util.LogUtils;
 import io.github.artsobol.kurkod.web.domain.employmentcontract.model.dto.EmploymentContractDTO;
 import io.github.artsobol.kurkod.web.domain.employmentcontract.model.request.EmploymentContractPatchRequest;
 import io.github.artsobol.kurkod.web.domain.employmentcontract.model.request.EmploymentContractPostRequest;
 import io.github.artsobol.kurkod.web.domain.employmentcontract.model.request.EmploymentContractPutRequest;
 import io.github.artsobol.kurkod.web.domain.employmentcontract.service.api.EmploymentContractService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1/workers/{workerId}/contract", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -30,86 +24,62 @@ public class EmploymentContractController {
 
     private final EmploymentContractService employmentContractService;
 
-    @Operation(summary = "Get employment contract by worker ID",
-               description = "Returns the employment contract information for the specified worker.")
+    @Operation(summary = "Get employment contract by worker ID")
     @GetMapping
     public ResponseEntity<EmploymentContractDTO> get(
-            @PathVariable @Parameter(description = "Worker identifier", example = "12")
-            Long workerId) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @PathVariable Long workerId) {
 
         EmploymentContractDTO response = employmentContractService.get(workerId);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "Create an employment contract for a worker",
-               description = "Creates a new employment contract for the specified worker. Each worker can have only one active contract.")
+    @Operation(summary = "Create employment contract for a worker")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmploymentContractDTO> create(
             @PathVariable Long workerId,
             @RequestBody @Valid EmploymentContractPostRequest request) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
 
         EmploymentContractDTO response = employmentContractService.create(workerId, request);
         return ResponseEntity.created(LocationUtils.buildLocation()).eTag(EtagUtils.toEtag(response.version())).body(
                 response);
     }
 
-
-    @Operation(summary = "Replace an employment contract",
-               description = "Fully replaces the employment contract data for the specified worker.")
+    @Operation(summary = "Replace employment contract")
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmploymentContractDTO> replace(
-            @PathVariable @Parameter(description = "Worker identifier", example = "12")
-            Long workerId,
+            @PathVariable Long workerId,
             @RequestBody @Valid EmploymentContractPutRequest request,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false)
-            String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         EmploymentContractDTO response = employmentContractService.replace(workerId, request, expected);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "Partially update an employment contract",
-               description = "Applies a partial update to the employment contract for the specified worker.")
+    @Operation(summary = "Partially update employment contract")
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmploymentContractDTO> update(
-            @PathVariable @Parameter(description = "Worker identifier", example = "12")
-            Long workerId,
+            @PathVariable Long workerId,
             @RequestBody @Valid EmploymentContractPatchRequest request,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false)
-            String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         EmploymentContractDTO response = employmentContractService.update(workerId, request, expected);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "Delete an employment contract",
-               description = "Deletes the employment contract associated with the specified worker.")
+    @Operation(summary = "Delete employment contract")
     @DeleteMapping
     public ResponseEntity<Void> delete(
-            @PathVariable @Parameter(description = "Worker identifier", example = "12")
-            Long workerId,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false)
-            String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @PathVariable Long workerId,
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         employmentContractService.delete(workerId, expected);
         return ResponseEntity.noContent().build();

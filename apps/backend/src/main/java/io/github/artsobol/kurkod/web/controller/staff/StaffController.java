@@ -1,31 +1,23 @@
 package io.github.artsobol.kurkod.web.controller.staff;
 
-import io.github.artsobol.kurkod.common.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.common.util.EtagUtils;
-import io.github.artsobol.kurkod.common.util.LogUtils;
+import io.github.artsobol.kurkod.common.util.LocationUtils;
 import io.github.artsobol.kurkod.web.domain.staff.model.dto.StaffDTO;
 import io.github.artsobol.kurkod.web.domain.staff.model.request.StaffPatchRequest;
 import io.github.artsobol.kurkod.web.domain.staff.model.request.StaffPostRequest;
 import io.github.artsobol.kurkod.web.domain.staff.model.request.StaffPutRequest;
 import io.github.artsobol.kurkod.web.domain.staff.service.api.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
-import static io.github.artsobol.kurkod.web.controller.breed.BreedController.buildLocationUri;
-
-@Slf4j
 @RestController
 @RequestMapping(value = "/api/v1/staff", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -34,84 +26,69 @@ public class StaffController {
 
     private final StaffService staffService;
 
-    @Operation(summary = "Get staff by ID", description = "Returns a single staff member by their unique identifier.")
+    @Operation(summary = "Get staff by ID")
     @GetMapping("/{id}")
     public ResponseEntity<StaffDTO> get(
-            @Parameter(description = "Staff identifier", example = "7") @PathVariable Long id) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @PathVariable Long id) {
+
         StaffDTO response = staffService.get(id);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "List all staff", description = "Returns all staff positions available in the system.")
+    @Operation(summary = "Get all staff")
     @GetMapping
     public ResponseEntity<List<StaffDTO>> getAll() {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+
         List<StaffDTO> response = staffService.getAll();
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "Create a new staff position",
-               description = "Creates a new staff position. Name must be unique.")
+    @Operation(summary = "Create staff position")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StaffDTO> create(@Valid @RequestBody StaffPostRequest staffPostRequest) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+
         StaffDTO response = staffService.create(staffPostRequest);
-        URI location = buildLocationUri(response.id());
-        return ResponseEntity.created(location)
+        return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "Replace a staff position", description = "Fully replaces an existing staff position by ID.")
+    @Operation(summary = "Replace staff position")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StaffDTO> replace(
-            @Parameter(description = "Staff identifier", example = "7") @PathVariable Long id,
+            @PathVariable Long id,
             @Valid @RequestBody StaffPutRequest staffPutRequest,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false)
-            String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         StaffDTO response = staffService.replace(id, staffPutRequest, expected);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "Partially update a staff position",
-               description = "Applies a partial update to a staff position by ID.")
+    @Operation(summary = "Partially update staff position")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StaffDTO> update(
-            @Parameter(description = "Staff identifier", example = "7") @PathVariable Long id,
+            @PathVariable Long id,
             @Valid @RequestBody StaffPatchRequest staffPatchRequest,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false)
-            String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         StaffDTO response = staffService.update(id, staffPatchRequest, expected);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "Delete a staff position", description = "Deletes a staff position by its unique identifier.")
+    @Operation(summary = "Delete staff position")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @Parameter(description = "Staff identifier", example = "7") @PathVariable Long id,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false)
-            String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @PathVariable Long id,
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         staffService.delete(id, expected);
         return ResponseEntity.noContent().build();

@@ -1,28 +1,22 @@
 package io.github.artsobol.kurkod.web.controller.rows;
 
-import io.github.artsobol.kurkod.common.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.common.util.EtagUtils;
 import io.github.artsobol.kurkod.common.util.LocationUtils;
-import io.github.artsobol.kurkod.common.util.LogUtils;
 import io.github.artsobol.kurkod.web.domain.rows.model.dto.RowsDTO;
 import io.github.artsobol.kurkod.web.domain.rows.model.request.RowsPatchRequest;
 import io.github.artsobol.kurkod.web.domain.rows.model.request.RowsPostRequest;
 import io.github.artsobol.kurkod.web.domain.rows.model.request.RowsPutRequest;
 import io.github.artsobol.kurkod.web.domain.rows.service.api.RowsService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Rows", description = "Rows operations")
@@ -32,35 +26,32 @@ public class RowsController {
     private final RowsService rowsService;
 
     @GetMapping("/{rowNumber}")
-    @Operation(summary = "Get row by ID", description = "Returns a single row by its unique identifier.")
+    @Operation(summary = "Get row by ID")
     public ResponseEntity<RowsDTO> get(
-            @PathVariable @Parameter(description = "Workshop identifier", example = "1")
-            Long workshopId,
-            @Parameter(description = "Row identifier", example = "2") @PathVariable(name = "rowNumber")
+            @PathVariable Long workshopId,
+            @PathVariable(name = "rowNumber")
             Integer rowsNumber) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+
         RowsDTO response = rowsService.find(workshopId, rowsNumber);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
     @GetMapping
-    @Operation(summary = "Get all rows", description = "Returns all rows available in the system.")
+    @Operation(summary = "Get all rows")
     public ResponseEntity<List<RowsDTO>> getAll(
-            @PathVariable @Parameter(description = "Workshop identifier", example = "1")
-            Long workshopId) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @PathVariable Long workshopId) {
+
         List<RowsDTO> response = rowsService.findAll(workshopId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
-    @Operation(summary = "Create a new row", description = "Creates a new row in the system.")
+    @Operation(summary = "Create row")
     public ResponseEntity<RowsDTO> create(
-            @PathVariable @Parameter(description = "Workshop identifier", example = "1")
-            Long workshopId, @RequestBody @Valid RowsPostRequest request) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @PathVariable Long workshopId, @RequestBody @Valid RowsPostRequest request) {
+
         RowsDTO response = rowsService.create(workshopId, request);
         return ResponseEntity.created(LocationUtils.buildLocation(response.rowNumber()))
                              .eTag(EtagUtils.toEtag(response.version()))
@@ -68,58 +59,45 @@ public class RowsController {
     }
 
     @PutMapping("/{rowNumber}")
-    @Operation(summary = "Replace row by ID", description = "Replaces an existing row with new data.")
+    @Operation(summary = "Replace row")
     public ResponseEntity<RowsDTO> replace(
-            @PathVariable @Parameter(description = "Workshop identifier", example = "1")
-            Long workshopId,
-            @Parameter(description = "Row identifier", example = "2") @PathVariable(name = "rowNumber")
+            @PathVariable Long workshopId,
+            @PathVariable(name = "rowNumber")
             Integer rowsNumber,
             @RequestBody @Valid RowsPutRequest request,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match") String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         RowsDTO response = rowsService.replace(workshopId, rowsNumber, request, expected);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
     @PatchMapping("/{rowNumber}")
-    @Operation(summary = "Partially update row by ID",
-               description = "Applies a partial update to an existing row by ID.")
+    @Operation(summary = "Partially update row")
     public ResponseEntity<RowsDTO> update(
-            @PathVariable @Parameter(description = "Workshop identifier", example = "1")
-            Long workshopId,
-            @Parameter(description = "Row identifier", example = "2") @PathVariable(name = "rowNumber")
+            @PathVariable Long workshopId,
+            @PathVariable(name = "rowNumber")
             Integer rowsNumber,
             @RequestBody @Valid RowsPatchRequest request,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match") String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         RowsDTO response = rowsService.update(workshopId, rowsNumber, request, expected);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
     @DeleteMapping("/{rowNumber}")
-    @Operation(summary = "Delete row by ID", description = "Deletes a row by its unique identifier.")
+    @Operation(summary = "Delete row")
     public ResponseEntity<Void> delete(
-            @PathVariable @Parameter(description = "Workshop identifier", example = "1")
-            Long workshopId,
-            @Parameter(description = "Row identifier", example = "2") @PathVariable(name = "rowNumber")
+            @PathVariable Long workshopId,
+            @PathVariable(name = "rowNumber")
             Integer rowsNumber,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match") String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
         long expected = EtagUtils.parseIfMatch(ifMatch);
         rowsService.delete(workshopId, rowsNumber, expected);
         return ResponseEntity.noContent().build();
