@@ -1,32 +1,31 @@
 package io.github.artsobol.kurkod.web.controller.breed;
 
-import io.github.artsobol.kurkod.common.constants.ApiLogMessage;
+import io.github.artsobol.kurkod.api.common.PageResponse;
 import io.github.artsobol.kurkod.common.util.EtagUtils;
-import io.github.artsobol.kurkod.common.util.LogUtils;
+import io.github.artsobol.kurkod.common.util.LocationUtils;
 import io.github.artsobol.kurkod.web.domain.breed.model.dto.BreedDTO;
 import io.github.artsobol.kurkod.web.domain.breed.model.request.BreedPatchRequest;
 import io.github.artsobol.kurkod.web.domain.breed.model.request.BreedPostRequest;
 import io.github.artsobol.kurkod.web.domain.breed.model.request.BreedPutRequest;
 import io.github.artsobol.kurkod.web.domain.breed.service.api.BreedService;
-import io.github.artsobol.kurkod.web.response.PaginationResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.net.URI;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@Slf4j
+@Validated
 @RestController
 @RequestMapping(value = "/api/v1/breeds", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -35,114 +34,62 @@ public class BreedController {
 
   private final BreedService breedService;
 
-  @Operation(
-      summary = "Get breed by ID",
-      description = "Returns a single breed by its unique identifier.")
-  @GetMapping("/{id}")
-  public ResponseEntity<BreedDTO> getById(
-      @PathVariable @Parameter(description = "Breed identifier", example = "42")
-      Long id) {
-    log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
-    BreedDTO response = breedService.get(id);
+  @Operation(summary = "Get breed by ID")
+  @GetMapping("/{breedId}")
+  public ResponseEntity<BreedDTO> getById(@PathVariable Long breedId) {
+    BreedDTO response = breedService.get(breedId);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
-  @Operation(
-      summary = "List all breeds with pagination",
-      description = "Returns all breeds with pagination.")
+  @Operation(summary = "Get a page of breeds")
   @GetMapping
-  public PaginationResponse<BreedDTO> getAllPaginated(
-      @Parameter(description = "Page number. The first page has index 0", example = "0")
-          @RequestParam(name = "page", defaultValue = "0")
-          int page,
-      @Parameter(description = "Number of items per page", example = "10")
-          @RequestParam(name = "limit", defaultValue = "10")
-          int limit) {
-    log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
-    Pageable pageable = PageRequest.of(page, limit);
-    Page<BreedDTO> response = breedService.getAllWithPagination(pageable);
-    return PaginationResponse.fromPage(response);
+  public PageResponse<BreedDTO> getPage(
+      @RequestParam(defaultValue = "0") @PositiveOrZero int page,
+      @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
+    Pageable pageable =
+        PageRequest.of(page, size, Sort.by(Sort.Order.asc("name"), Sort.Order.asc("id")));
+
+    Page<BreedDTO> response = breedService.getPage(pageable);
+    return PageResponse.from(response);
   }
 
-  @Operation(
-      summary = "Create a new breed",
-      description = "Creates a new breed. Name must be unique.")
+  @Operation(summary = "Create breed")
   @PostMapping
   public ResponseEntity<BreedDTO> createBreed(@Valid @RequestBody BreedPostRequest request) {
-    log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
     BreedDTO response = breedService.create(request);
-    URI location = buildLocationUri(response.id());
-    return ResponseEntity.created(location)
+    return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
         .eTag(EtagUtils.toEtag(response.version()))
         .body(response);
   }
 
-  @Operation(summary = "Replace a breed", description = "Fully replaces a breed by ID.")
-  @PutMapping("/{id}")
+  @Operation(summary = "Replace breed")
+  @PutMapping("/{breedId}")
   public ResponseEntity<BreedDTO> replaceById(
-      @PathVariable @Parameter(description = "Breed identifier", example = "42")
-      Long id,
+      @PathVariable Long breedId,
       @Valid @RequestBody BreedPutRequest request,
-      @Parameter(
-              name = "If-Match",
-              in = ParameterIn.HEADER,
-              required = true,
-              description = "ETag of the resource")
-          @RequestHeader(value = "If-Match")
-          String ifMatch) {
-    log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
-    BreedDTO response = breedService.replace(id, request, expected);
-    return ResponseEntity.status(HttpStatus.OK)
-        .eTag(EtagUtils.toEtag(response.version()))
-        .body(response);
+    BreedDTO response = breedService.replace(breedId, request, expected);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
-  @Operation(
-      summary = "Partially update a breed",
-      description = "Applies a partial update to a breed by ID.")
-  @PatchMapping(value = "/{id}")
+  @Operation(summary = "Partially update breed")
+  @PatchMapping("/{breedId}")
   public ResponseEntity<BreedDTO> updateById(
-      @PathVariable @Parameter(description = "Breed identifier", example = "42")
-      Long id,
+      @PathVariable Long breedId,
       @Valid @RequestBody BreedPatchRequest request,
-      @Parameter(
-              name = "If-Match",
-              in = ParameterIn.HEADER,
-              required = true,
-              description = "ETag of the resource")
-          @RequestHeader(value = "If-Match", required = false)
-          String ifMatch) {
-    log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
-    BreedDTO response = breedService.update(id, request, expected);
-    return ResponseEntity.status(HttpStatus.OK)
-        .eTag(EtagUtils.toEtag(response.version()))
-        .body(response);
+    BreedDTO response = breedService.update(breedId, request, expected);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
-  @Operation(summary = "Delete a breed", description = "Deletes a breed by ID.")
-  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete breed")
+  @DeleteMapping("/{breedId}")
   public ResponseEntity<Void> deleteById(
-      @PathVariable @Parameter(description = "Breed identifier", example = "42")
-      Long id,
-      @Parameter(
-              name = "If-Match",
-              in = ParameterIn.HEADER,
-              required = true,
-              description = "ETag of the resource")
-          @RequestHeader(value = "If-Match", required = false)
-          String ifMatch) {
-    log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+      @PathVariable Long breedId, @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
-    breedService.delete(id, expected);
+    breedService.delete(breedId, expected);
     return ResponseEntity.noContent().build();
-  }
-
-  public static URI buildLocationUri(Long id) {
-    return ServletUriComponentsBuilder.fromCurrentRequest()
-        .path("/{id}")
-        .buildAndExpand(id)
-        .toUri();
   }
 }
