@@ -21,7 +21,7 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
 
   messages:
-    basename: messages,validation,errors
+    basename: messages,validation,i18n/errors/errors
     encoding: UTF-8
 
 server:
