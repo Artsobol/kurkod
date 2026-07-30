@@ -16,7 +16,7 @@ public interface BreedService {
 
     List<BreedDTO> getAll();
 
-    Page<BreedDTO> getAllWithPagination(Pageable pageable);
+    Page<BreedDTO> getPage(Pageable pageable);
 
     BreedDTO replace(Long id, BreedPutRequest breedPutRequest, Long version);
 

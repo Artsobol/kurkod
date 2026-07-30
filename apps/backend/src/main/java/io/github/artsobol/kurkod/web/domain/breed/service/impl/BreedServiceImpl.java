@@ -70,8 +70,8 @@ public class BreedServiceImpl implements BreedService {
     }
 
     @Override
-    public Page<BreedDTO> getAllWithPagination(Pageable pageable) {
-        return breedRepository.findAll(pageable).map(breedMapper::toDto);
+    public Page<BreedDTO> getPage(Pageable pageable) {
+        return breedRepository.findAllByIsActiveTrue(pageable).map(breedMapper::toDto);
     }
 
     @Override
