@@ -1,34 +1,34 @@
 package io.github.artsobol.kurkod.web.controller.worker;
 
-import io.github.artsobol.kurkod.common.constants.ApiLogMessage;
+import io.github.artsobol.kurkod.api.common.PageResponse;
 import io.github.artsobol.kurkod.common.util.EtagUtils;
-import io.github.artsobol.kurkod.common.util.LogUtils;
 import io.github.artsobol.kurkod.web.domain.worker.model.dto.WorkerDTO;
 import io.github.artsobol.kurkod.web.domain.worker.model.request.WorkerPatchRequest;
 import io.github.artsobol.kurkod.web.domain.worker.model.request.WorkerPostRequest;
 import io.github.artsobol.kurkod.web.domain.worker.model.request.WorkerPutRequest;
 import io.github.artsobol.kurkod.web.domain.worker.service.api.WorkerService;
-import io.github.artsobol.kurkod.web.response.PaginationResponse;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 import static io.github.artsobol.kurkod.common.util.LocationUtils.buildLocation;
 
-@Slf4j
+@Validated
 @RestController
 @RequestMapping(value = "/api/v1/workers", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -37,90 +37,72 @@ public class WorkerController {
 
     private final WorkerService workerService;
 
-    @Operation(summary = "Get worker by ID", description = "Returns a single worker by its unique identifier.")
+    @Operation(summary = "Get worker by ID")
     @GetMapping("/{id}")
     public ResponseEntity<WorkerDTO> get(
-            @PathVariable @Parameter(description = "Worker identifier", example = "42") Long id) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @PathVariable Long id) {
         WorkerDTO response = workerService.get(id);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "List all workers", description = "Returns all workers.")
+    @Operation(summary = "Get all workers")
     @GetMapping("/all")
     public ResponseEntity<List<WorkerDTO>> getAll() {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         List<WorkerDTO> response = workerService.getAll();
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "List all breeds with pagination", description = "Returns all breeds with pagination.")
+    @Operation(summary = "Get a page of workers")
     @GetMapping
-    public ResponseEntity<PaginationResponse<WorkerDTO>> getAllPaginated(
-            @Parameter(description = "Page number. The first page has index 0", example = "0")
-            @RequestParam(name = "page", defaultValue = "0") int page,
-            @Parameter(description = "Number of items per page", example = "10")
-            @RequestParam(name = "limit", defaultValue = "10") int limit) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
-        Pageable pageable = PageRequest.of(page, limit);
-        Page<WorkerDTO> response = workerService.getAllWithPagination(pageable);
-        return ResponseEntity.ok(PaginationResponse.fromPage(response));
+    public PageResponse<WorkerDTO> getPage(
+            @RequestParam(defaultValue = "0") @PositiveOrZero int page,
+            @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("id")));
+        Page<WorkerDTO> response = workerService.getPage(pageable);
+        return PageResponse.from(response);
     }
 
-    @Operation(summary = "Create a worker", description = "Creates a new worker entity.")
+    @Operation(summary = "Create worker")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerDTO> create(@RequestBody @Valid WorkerPostRequest request) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
         WorkerDTO response = workerService.create(request);
         return ResponseEntity.created(buildLocation(response.id())).eTag(EtagUtils.toEtag(response.version())).body(
                 response);
     }
 
-    @Operation(summary = "Replace a worker", description = "Fully replaces a worker by ID.")
+    @Operation(summary = "Replace worker")
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerDTO> replace(
-            @PathVariable @Parameter(description = "Worker identifier", example = "42") Long id,
+            @PathVariable Long id,
             @RequestBody @Valid WorkerPutRequest request,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false) String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         WorkerDTO response = workerService.replace(id, request, expected);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "Partially update a worker", description = "Applies a partial update to a worker by ID.")
+    @Operation(summary = "Partially update worker")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerDTO> update(
-            @PathVariable @Parameter(description = "Worker identifier", example = "42") Long id,
+            @PathVariable Long id,
             @RequestBody @Valid WorkerPatchRequest request,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false) String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         WorkerDTO response = workerService.update(id, request, expected);
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
 
-    @Operation(summary = "Delete a worker", description = "Deletes a worker by its unique identifier.")
+    @Operation(summary = "Delete worker")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
-            @PathVariable @Parameter(description = "Worker identifier", example = "42") Long id,
-            @Parameter(name = "If-Match",
-                       in = ParameterIn.HEADER,
-                       required = true,
-                       description = "ETag of the resource") @RequestHeader(value = "If-Match", required = false) String ifMatch) {
-        log.trace(ApiLogMessage.NAME_OF_CURRENT_METHOD.getValue(), LogUtils.getMethodName());
+            @PathVariable Long id,
+            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         workerService.delete(id, expected);
         return ResponseEntity.noContent().build();

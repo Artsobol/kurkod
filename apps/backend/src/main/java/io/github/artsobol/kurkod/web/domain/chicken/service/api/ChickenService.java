@@ -17,7 +17,7 @@ public interface ChickenService {
 
     List<ChickenDTO> getAll();
 
-    Page<ChickenDTO> getAllWithPagination(Pageable pageable);
+    Page<ChickenDTO> getPage(Pageable pageable);
 
     void delete(Long id, Long version);
 

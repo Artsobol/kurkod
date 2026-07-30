@@ -15,7 +15,7 @@ public interface WorkerService {
 
     List<WorkerDTO> getAll();
 
-    Page<WorkerDTO> getAllWithPagination(Pageable pageable);
+    Page<WorkerDTO> getPage(Pageable pageable);
 
     WorkerDTO create(WorkerPostRequest request);
 

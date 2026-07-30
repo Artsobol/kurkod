@@ -75,7 +75,7 @@ public class ChickenServiceImpl implements ChickenService {
     }
 
     @Override
-    public Page<ChickenDTO> getAllWithPagination(Pageable pageable) {
+    public Page<ChickenDTO> getPage(Pageable pageable) {
         return chickenRepository.findAllByIsActiveTrue(pageable).map(chickenMapper::toDto);
     }
 

@@ -54,7 +54,7 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public Page<WorkerDTO> getAllWithPagination(Pageable pageable) {
+    public Page<WorkerDTO> getPage(Pageable pageable) {
         return workerRepository.findAllByIsActiveTrue(pageable).map(workerMapper::toDto);
     }
 
