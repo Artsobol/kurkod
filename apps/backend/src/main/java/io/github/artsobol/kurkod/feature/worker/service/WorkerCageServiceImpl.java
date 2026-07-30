@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.worker.service;
 
-import io.github.artsobol.kurkod.exception.http.DataExistException;
+import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.cage.error.CageError;
 import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
@@ -62,11 +62,11 @@ public class WorkerCageServiceImpl implements WorkerCageService {
             return;
         }
 
-        Worker worker = workerRepository.findById(workerId).orElseThrow(() -> new DataExistException(WorkerError.NOT_FOUND_BY_ID, workerId));
+        Worker worker = workerRepository.findById(workerId)
+                .orElseThrow(() -> new NotFoundException("worker.not.found", workerId));
 
         Cage cage = cageRepository.findById(cageId)
-                                  .orElseThrow(() -> new DataExistException(CageError.NOT_FOUND_BY_ID, cageId) {
-                                  });
+                .orElseThrow(() -> new NotFoundException("cage.not.found", cageId));
 
         WorkerCage workerCage = new WorkerCage();
         workerCage.setWorker(worker);

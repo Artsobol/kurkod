@@ -43,7 +43,7 @@ public class RefreshTokenImpl implements RefreshTokenService {
     public RefreshToken validateAndRefreshToken(String requestRefreshToken) {
         RefreshToken refreshToken = refreshTokenRepository.findByToken(requestRefreshToken)
                 .orElseThrow(
-                        () -> new NotFoundException(JwtError.NOT_FOUND_REFRESH_TOKEN, requestRefreshToken)
+                        () -> new NotFoundException("jwt.refresh.token.not.found", requestRefreshToken)
                 );
 
         refreshToken.setCreatedAt(OffsetDateTime.now());

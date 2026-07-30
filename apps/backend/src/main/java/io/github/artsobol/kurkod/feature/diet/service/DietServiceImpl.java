@@ -102,7 +102,7 @@ public class DietServiceImpl implements DietService {
     protected void ensureNotExists(String code) {
         if (existsByCode(code)){
             log.info(DietError.ALREADY_EXISTS.format(code));
-            throw new DataExistException(DietError.ALREADY_EXISTS, code);
+            throw new DataExistException("diet.already.exists", code);
         }
     }
 
@@ -111,6 +111,6 @@ public class DietServiceImpl implements DietService {
     }
 
     protected Diet getDietById(Long id){
-        return dietRepository.findById(id).orElseThrow(() -> new NotFoundException(DietError.NOT_FOUND_BY_ID, id));
+        return dietRepository.findById(id).orElseThrow(() -> new NotFoundException("diet.not.found", id));
     }
 }

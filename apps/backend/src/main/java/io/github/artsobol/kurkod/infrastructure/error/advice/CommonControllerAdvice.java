@@ -1,10 +1,8 @@
 package io.github.artsobol.kurkod.infrastructure.error.advice;
 
 import io.github.artsobol.kurkod.exception.base.BaseException;
-import io.github.artsobol.kurkod.exception.base.Exceptions;
-import io.github.artsobol.kurkod.exception.http.*;
-import io.github.artsobol.kurkod.infrastructure.error.descriptor.CommonError;
-import io.github.artsobol.kurkod.feature.iam.error.UserError;
+import io.github.artsobol.kurkod.exception.http.HttpException;
+import io.github.artsobol.kurkod.exception.http.MissingIfMatchException;
 import io.github.artsobol.kurkod.infrastructure.error.dto.IamError;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -14,6 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
@@ -43,66 +42,72 @@ public class CommonControllerAdvice {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<IamError> handleMissingParameter(
             HttpServletRequest request) {
-        return buildResponse(Exceptions.of(CommonError.BAD_REQUEST), request);
+        return buildResponse(new HttpException("common.bad.request", HttpStatus.BAD_REQUEST), request);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<IamError> handleMethodArgumentNotValid(
             HttpServletRequest request) {
-        return buildResponse(Exceptions.of(CommonError.VALIDATION_FAILED), request);
+        return buildResponse(new HttpException("common.validation.failed", HttpStatus.BAD_REQUEST), request);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<IamError> handleConstraintViolation(
             HttpServletRequest request) {
-        return buildResponse(Exceptions.of(CommonError.VALIDATION_FAILED), request);
+        return buildResponse(new HttpException("common.validation.failed", HttpStatus.BAD_REQUEST), request);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<IamError> handleUnreadableBody(
             HttpServletRequest request) {
-        return buildResponse(Exceptions.of(CommonError.MALFORMED_JSON), request);
+        return buildResponse(new HttpException("common.json.malformed", HttpStatus.BAD_REQUEST), request);
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<IamError> handleUnsupportedMediaType(
             HttpServletRequest request) {
-        return buildResponse(Exceptions.of(CommonError.UNSUPPORTED_MEDIA_TYPE), request);
+        return buildResponse(
+                new HttpException("common.media.type.unsupported", HttpStatus.UNSUPPORTED_MEDIA_TYPE),
+                request);
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<IamError> handleMethodNotAllowed(
             HttpServletRequest request) {
-        return buildResponse(Exceptions.of(CommonError.METHOD_NOT_ALLOWED), request);
+        return buildResponse(
+                new HttpException("common.method.not.allowed", HttpStatus.METHOD_NOT_ALLOWED),
+                request);
     }
 
     @ExceptionHandler(MissingRequestHeaderException.class)
     public ResponseEntity<IamError> handleMissingHeader(MissingRequestHeaderException ex, HttpServletRequest request) {
         if ("If-Match".equalsIgnoreCase(ex.getHeaderName())) {
-            return buildResponse(Exceptions.of(CommonError.MISSING_IF_MATCH), request);
+            return buildResponse(new MissingIfMatchException("common.if.match.missing"), request);
         }
-        return buildResponse(Exceptions.of(CommonError.VALIDATION_FAILED), request);
+        return buildResponse(new HttpException("common.validation.failed", HttpStatus.BAD_REQUEST), request);
     }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<IamError> handleAccessDenied(
             HttpServletRequest request) {
-        return buildResponse(Exceptions.of(UserError.HAVE_NO_ACCESS), request);
+        return buildResponse(new HttpException("user.access.denied", HttpStatus.FORBIDDEN), request);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<IamError> handleUnexpected(Exception ex, HttpServletRequest request) {
         log.error("Unexpected error on path={}", request.getRequestURI(), ex);
-        return buildResponse(Exceptions.of(CommonError.INTERNAL_ERROR), request);
+        return buildResponse(
+                new HttpException("common.internal.error", HttpStatus.INTERNAL_SERVER_ERROR),
+                request);
     }
 
     private void logBusinessError(BaseException ex, HttpServletRequest request) {
         log.warn("Business error: status={}, code={}, key={}, path={}, args={}",
                  ex.getStatus(),
-                 ex.getCode(),
+                 ex.getErrorCode(),
                  ex.getMessageKey(),
                  request.getRequestURI(),
-                 Arrays.toString(ex.getArgs()));
+                 Arrays.toString(ex.getMessageArgs()));
     }
 
     private ResponseEntity<IamError> buildResponse(BaseException ex, HttpServletRequest request) {
@@ -113,13 +118,13 @@ public class CommonControllerAdvice {
     protected IamError createError(BaseException ex, HttpServletRequest request) {
         String message = getLocalizedMessage(ex);
         String path = request.getRequestURI();
-        return IamError.createError(ex.getStatus(), ex.getCode(), message, path);
+        return IamError.createError(ex.getStatus(), ex.getErrorCode(), message, path);
     }
 
     protected String getLocalizedMessage(BaseException ex) {
         Locale locale = LocaleContextHolder.getLocale();
         try {
-            return messageSource.getMessage(ex.getMessageKey(), ex.getArgs(), locale);
+            return messageSource.getMessage(ex.getMessageKey(), ex.getMessageArgs(), locale);
         } catch (NoSuchMessageException e) {
             log.warn("No message found for key={} and locale={}", ex.getMessageKey(), locale);
             if (ex.getMessage() != null) {

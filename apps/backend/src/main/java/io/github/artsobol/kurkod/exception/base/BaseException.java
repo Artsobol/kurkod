@@ -1,29 +1,30 @@
 package io.github.artsobol.kurkod.exception.base;
 
+import java.util.Map;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public abstract class BaseException extends RuntimeException {
+public class BaseException extends RuntimeException {
 
-    private final String code;
-    private final String messageKey;
-    private final Object[] args;
-    private final HttpStatus status;
+  private final String errorCode;
+  private final String messageKey;
+  private final HttpStatus status;
+  private final transient Map<String, Object> details;
+  private final transient Object[] messageArgs;
 
-    protected BaseException(String message, HttpStatus status) {
-        super(message);
-        this.status = status;
-        this.code = null;
-        this.messageKey = null;
-        this.args = new Object[0];
-    }
-
-    protected BaseException(String code, String messageKey, Object[] args, HttpStatus status) {
-        super(messageKey);
-        this.code = code;
-        this.messageKey = messageKey;
-        this.args = args == null ? new Object[0] : args;
-        this.status = status;
-    }
+  protected BaseException(
+          String errorCode,
+          String messageKey,
+          HttpStatus status,
+          Map<String, Object> details,
+          Throwable cause,
+          Object... messageArgs) {
+    super(messageKey, cause);
+    this.errorCode = errorCode;
+    this.messageKey = messageKey;
+    this.status = status;
+    this.details = details == null ? Map.of() : Map.copyOf(details);
+    this.messageArgs = messageArgs;
+  }
 }

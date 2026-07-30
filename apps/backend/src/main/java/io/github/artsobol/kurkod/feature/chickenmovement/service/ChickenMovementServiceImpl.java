@@ -50,7 +50,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
         log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(ChickenMovement.class), chickenId);
         return chickenMovementMapper.toDto(chickenMovementRepository
                 .findTopByChicken_IdOrderByMovedAtDesc(chickenId)
-                .orElseThrow( () -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID, chickenId)));
+                .orElseThrow(() -> new NotFoundException("chicken.movement.not.found.by.chicken", chickenId)));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
         Cage toCage = findCageById(request.getToCageId());
         ChickenMovement chickenMovement = chickenMovementMapper.toEntity(request);
         chickenMovement.setChicken(chickenRepository.findById(chickenId)
-                .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID, chickenId)));
+                .orElseThrow(() -> new NotFoundException("chicken.not.found", chickenId)));
         chickenMovement.setFromCage(fromCage);
         chickenMovement.setToCage(toCage);
         chickenMovement.setMovedAt(OffsetDateTime.now());
@@ -78,7 +78,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
 
     protected ChickenMovement findChickenMovementById(Long movementId) {
         return chickenMovementRepository.findById(movementId)
-                .orElseThrow(() -> new NotFoundException(ChickenMovementError.NOT_FOUND_BY_ID, movementId));
+                .orElseThrow(() -> new NotFoundException("chicken.movement.not.found", movementId));
     }
 
     protected Cage findFromCageById(Long cageId) {
@@ -87,6 +87,6 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
 
     protected Cage findCageById(Long cageId) {
         return cageRepository.findById(cageId)
-                .orElseThrow(() -> new NotFoundException(CageError.NOT_FOUND_BY_KEYS, cageId));
+                .orElseThrow(() -> new NotFoundException("cage.not.found", cageId));
     }
 }

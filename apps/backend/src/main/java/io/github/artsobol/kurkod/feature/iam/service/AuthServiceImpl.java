@@ -9,14 +9,12 @@ import io.github.artsobol.kurkod.feature.iam.dto.request.LoginRequest;
 import io.github.artsobol.kurkod.feature.iam.dto.response.UserProfileDTO;
 import io.github.artsobol.kurkod.feature.iam.entity.RefreshToken;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
-import io.github.artsobol.kurkod.exception.http.InvalidDataException;
+import io.github.artsobol.kurkod.exception.business.InvalidDataException;
 import io.github.artsobol.kurkod.feature.iam.dto.request.RegistrationRequest;
 import io.github.artsobol.kurkod.feature.iam.repository.RoleRepository;
 import io.github.artsobol.kurkod.feature.iam.repository.UserRepository;
 import io.github.artsobol.kurkod.infrastructure.security.jwt.JwtTokenProvider;
 import io.github.artsobol.kurkod.infrastructure.security.validation.AccessValidator;
-import io.github.artsobol.kurkod.feature.iam.service.AuthService;
-import io.github.artsobol.kurkod.feature.iam.service.RefreshTokenService;
 import io.github.artsobol.kurkod.feature.iam.entity.SystemRole;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -52,11 +50,11 @@ public class AuthServiceImpl implements AuthService {
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
             );
         } catch (BadCredentialsException e) {
-            throw new InvalidDataException(AuthError.INVALID_USER_OR_PASSWORD);
+            throw new InvalidDataException("auth.credentials.invalid");
         }
 
         User user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
-                .orElseThrow(() -> new InvalidDataException(AuthError.INVALID_USER_OR_PASSWORD));
+                .orElseThrow(() -> new InvalidDataException("auth.credentials.invalid"));
 
         RefreshToken refreshToken = refreshTokenService.generateOrUpdateRefreshToken(user);
         String token = jwtTokenProvider.generateToken(user);
@@ -86,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
         );
 
         Role userRole = roleRepository.findByName(SystemRole.USER.getRole())
-                .orElseThrow(() -> new NotFoundException(RoleError.NOT_FOUND_BY_SYSTEM_NAME, SystemRole.USER.getRole()));
+                .orElseThrow(() -> new NotFoundException("role.not.found", SystemRole.USER.getRole()));
 
         User newUser = userMapper.fromDto(request);
 

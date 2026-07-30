@@ -111,7 +111,7 @@ public class UserServiceImpl implements UserService {
 
     static UserDetails getUserDetails(String email, UserRepository userRepository) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException(UserError.WITH_EMAIL_ALREADY_EXISTS, email));
+                .orElseThrow(() -> new NotFoundException("user.not.found.by.email", email));
 
         user.setLastLogin(OffsetDateTime.now());
         userRepository.save(user);
@@ -124,23 +124,23 @@ public class UserServiceImpl implements UserService {
 
     protected User getUserByUsername(String username) {
         return userRepository.findByUsernameAndIsActiveTrue(username)
-                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_USERNAME, username));
+                .orElseThrow(() -> new NotFoundException("user.not.found.by.username", username));
     }
 
     protected User getUserById(Long id) {
         return userRepository.findByIdAndIsActiveTrue(id)
-                .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_ID, id));
+                .orElseThrow(() -> new NotFoundException("user.not.found.by.id", id));
     }
 
     protected void ensureNotExistsByUsername(String username) {
         if (userRepository.existsByUsername(username)) {
-            throw new DataExistException(UserError.WITH_USERNAME_ALREADY_EXISTS, username);
+            throw new DataExistException("user.username.already.exists", username);
         }
     }
 
     protected void ensureNotExistsByEmail(String email) {
         if (userRepository.existsByEmail(email)) {
-            throw new DataExistException(UserError.WITH_EMAIL_ALREADY_EXISTS, email);
+            throw new DataExistException("user.email.already.exists", email);
         }
     }
 }

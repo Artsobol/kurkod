@@ -107,18 +107,18 @@ public class DismissalServiceImpl implements DismissalService {
 
     protected Worker getWorkerById(Long id) {
         return workerRepository.findById(id).orElseThrow(
-                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, id)
+                () -> new NotFoundException("worker.not.found", id)
         );
     }
 
     protected Dismissal getDismissalByWorkerId(Long id) {
         return dismissalRepository.findDismissalByWorker_Id(id)
-                .orElseThrow(() -> new NotFoundException(DismissalError.NOT_FOUND_BY_WORKER_ID, id));
+                .orElseThrow(() -> new NotFoundException("dismissal.not.found.by.worker", id));
     }
 
     protected Dismissal getDismissalByWorkerAndDismissed(Long workerId, Long dismissId) {
         return dismissalRepository.findDismissalByWorker_IdAndWhoDismiss_Id(workerId, dismissId)
-                .orElseThrow(() -> new NotFoundException(DismissalError.NOT_FOUND_BY_WORKER_AND_DISMISSED, workerId, dismissId));
+                .orElseThrow(() -> new NotFoundException("dismissal.not.found.by.worker.and.user", workerId, dismissId));
     }
 
 

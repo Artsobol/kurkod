@@ -8,12 +8,12 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum UserError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("USR-404", "user.not_found_by_id", HttpStatus.NOT_FOUND),
-    NOT_FOUND_BY_USERNAME("USR-404", "user.not_found_by_username", HttpStatus.NOT_FOUND),
-    NOT_FOUND_BY_EMAIL("USR-404", "user.not_found_by_email", HttpStatus.NOT_FOUND),
-    WITH_USERNAME_ALREADY_EXISTS("USR-409", "user.with_username_already_exists", HttpStatus.CONFLICT),
-    WITH_EMAIL_ALREADY_EXISTS("USR-409","user.with_email_already_exists", HttpStatus.CONFLICT),
-    HAVE_NO_ACCESS("USR-403", "user.no_have_access", HttpStatus.FORBIDDEN),
+    NOT_FOUND_BY_ID("USR-404", "user.not.found.by.id", HttpStatus.NOT_FOUND),
+    NOT_FOUND_BY_USERNAME("USR-404", "user.not.found.by.username", HttpStatus.NOT_FOUND),
+    NOT_FOUND_BY_EMAIL("USR-404", "user.not.found.by.email", HttpStatus.NOT_FOUND),
+    WITH_USERNAME_ALREADY_EXISTS("USR-409", "user.username.already.exists", HttpStatus.CONFLICT),
+    WITH_EMAIL_ALREADY_EXISTS("USR-409","user.email.already.exists", HttpStatus.CONFLICT),
+    HAVE_NO_ACCESS("USR-403", "user.access.denied", HttpStatus.FORBIDDEN),
     ;
 
     private final String code;

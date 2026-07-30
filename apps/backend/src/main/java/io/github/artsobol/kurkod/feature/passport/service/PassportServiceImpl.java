@@ -11,6 +11,7 @@ import io.github.artsobol.kurkod.feature.worker.error.WorkerError;
 import io.github.artsobol.kurkod.feature.passport.dto.response.PassportDTO;
 import io.github.artsobol.kurkod.feature.passport.entity.Passport;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
+import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.passport.dto.request.PassportPatchRequest;
 import io.github.artsobol.kurkod.feature.passport.dto.request.PassportPostRequest;
@@ -52,12 +53,12 @@ public class PassportServiceImpl implements PassportService {
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public PassportDTO create(Long workerId, PassportPostRequest passportPostRequest) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, workerId)
+                () -> new NotFoundException("worker.not.found", workerId)
         );
 
         passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId)
                 .ifPresent(p -> {
-                    throw new IllegalStateException("Worker already has an active passport");
+                    throw new DataExistException("passport.already.exists", workerId);
                 });
 
         Passport passport = passportMapper.toEntity(passportPostRequest);
@@ -105,7 +106,7 @@ public class PassportServiceImpl implements PassportService {
 
     protected Passport getPassportByWorkerId(Long workerId) {
         return passportRepository.findPassportByWorkerIdAndIsActiveTrue(workerId).orElseThrow(
-                () -> new NotFoundException(PassportError.NOT_FOUND_BY_WORKER_ID, workerId)
+                () -> new NotFoundException("passport.not.found.by.worker", workerId)
         );
     }
 }

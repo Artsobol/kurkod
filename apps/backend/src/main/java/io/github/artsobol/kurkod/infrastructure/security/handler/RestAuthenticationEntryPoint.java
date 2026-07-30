@@ -32,7 +32,7 @@ public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
         Locale locale = RequestContextUtils.getLocale(request);
 
         String message = messageSource.getMessage(
-                "auth.authentication_required",
+                "auth.authentication.required",
                 null,
                 "Authentication required",
                 locale

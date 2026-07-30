@@ -1,7 +1,5 @@
 package io.github.artsobol.kurkod.infrastructure.util;
 
-import io.github.artsobol.kurkod.exception.base.BaseException;
-import io.github.artsobol.kurkod.exception.base.Exceptions;
 import io.github.artsobol.kurkod.exception.http.*;
 import io.github.artsobol.kurkod.infrastructure.error.descriptor.RequiredHeaderError;
 
@@ -21,13 +19,13 @@ public final class EtagUtils {
         try {
             return parseValue(ifMatchHeader.trim());
         } catch (NumberFormatException e) {
-            throw new InvalidIfMatchException(RequiredHeaderError.MATCH_INVALID, ifMatchHeader);
+            throw new InvalidIfMatchException("common.if.match.invalid", ifMatchHeader);
         }
     }
 
     private static void checkIfMatch(String ifMatchHeader) {
         if (ifMatchHeader == null || ifMatchHeader.isBlank()) {
-            throw new MissingIfMatchException(RequiredHeaderError.IF_MATCH, ifMatchHeader);
+            throw new MissingIfMatchException("common.if.match.missing", ifMatchHeader);
         }
     }
 

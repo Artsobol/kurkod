@@ -54,7 +54,7 @@ public class CageServiceImpl implements CageService {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class));
 
         if (!rowsRepository.existsById(rowId)) {
-            throw new NotFoundException(RowsError.NOT_FOUND_BY_ID, rowId);
+            throw new NotFoundException("row.not.found", rowId);
         }
 
         return cageRepository.findAllByRow_IdAndIsActiveTrueOrderByCageNumberAsc(rowId).stream()
@@ -69,7 +69,7 @@ public class CageServiceImpl implements CageService {
         ensureNotExists(rowId, cagePostRequest.getCageNumber());
         Cage cage = cageMapper.toEntity(cagePostRequest);
         Rows rows = rowsRepository.findById(rowId).orElseThrow(
-                () -> new NotFoundException(RowsError.NOT_FOUND_BY_ID, rowId)
+                () -> new NotFoundException("row.not.found", rowId)
         );
         cage.setRow(rows);
         cageRepository.save(cage);
@@ -124,21 +124,21 @@ public class CageServiceImpl implements CageService {
 
     protected Cage findCageByRowIdAndCageNumber(Long rowId, Integer cageNumber){
         return cageRepository.findByRow_IdAndCageNumberAndIsActiveTrue(rowId, cageNumber).orElseThrow(
-                () -> new NotFoundException(CageError.NOT_FOUND_BY_KEYS, rowId, cageNumber)
+                () -> new NotFoundException("cage.not.found.by.keys", rowId, cageNumber)
                                                                                                      );
     }
 
     protected void ensureExists(Long rowId, Integer cageNumber){
         if(!existsByRowIdAndCageNumber(rowId, cageNumber)){
             log.info(CageError.NOT_FOUND_BY_KEYS.format(rowId, cageNumber));
-            throw new NotFoundException(CageError.NOT_FOUND_BY_KEYS, rowId, cageNumber);
+            throw new NotFoundException("cage.not.found.by.keys", rowId, cageNumber);
         }
     }
 
     protected void ensureNotExists(Long rowId, Integer cageNumber){
         if(existsByRowIdAndCageNumber(rowId, cageNumber)){
             log.info(CageError.ALREADY_EXISTS.format(rowId, cageNumber));
-            throw new DataExistException(CageError.ALREADY_EXISTS, rowId, cageNumber);
+            throw new DataExistException("cage.already.exists", rowId, cageNumber);
         }
     }
 

@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum WorkshopError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("WE-404", "workshop.not_found_by_id", HttpStatus.NOT_FOUND),
-    ALREADY_EXISTS("WE-409", "workshop.already_exists", HttpStatus.CONFLICT),
+    NOT_FOUND_BY_ID("WE-404", "workshop.not.found", HttpStatus.NOT_FOUND),
+    ALREADY_EXISTS("WE-409", "workshop.already.exists", HttpStatus.CONFLICT),
     ;
 
     private final String code;

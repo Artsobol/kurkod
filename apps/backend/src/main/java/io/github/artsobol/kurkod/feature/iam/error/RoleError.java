@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum RoleError implements ErrorDescriptor {
-    NOT_FOUND_BY_SYSTEM_NAME("ROL-404", "role.not_found_by_system_name", HttpStatus.NOT_FOUND),
+    NOT_FOUND_BY_SYSTEM_NAME("ROL-404", "role.not.found", HttpStatus.NOT_FOUND),
     ;
 
     private final String code;

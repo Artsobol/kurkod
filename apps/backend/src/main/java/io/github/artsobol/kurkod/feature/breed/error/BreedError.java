@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum BreedError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("BRD-404", "breed.not_found_by_id", HttpStatus.NOT_FOUND),
-    ALREADY_EXISTS("BRD-409", "breed.already_exists", HttpStatus.CONFLICT);
+    NOT_FOUND_BY_ID("BRD-404", "breed.not.found", HttpStatus.NOT_FOUND),
+    ALREADY_EXISTS("BRD-409", "breed.already.exists", HttpStatus.CONFLICT);
 
     private final String code;
     private final String messageKey;

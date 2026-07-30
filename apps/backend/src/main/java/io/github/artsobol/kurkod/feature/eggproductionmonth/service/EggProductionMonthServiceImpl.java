@@ -78,7 +78,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         ensureNotExistsByIdMonthYear(chickenId, month, year);
         EggProductionMonth eggProductionMonth = eggProductionMonthMapper.toEntity(request);
         Chicken chicken = chickenRepository.findById(chickenId)
-                                           .orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenId));
+                                           .orElseThrow(() -> new NotFoundException("chicken.not.found", chickenId));
         eggProductionMonth.setChicken(chicken);
         eggProductionMonth.setYear(year);
         eggProductionMonth.setMonth(month);
@@ -146,7 +146,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
 
     protected EggProductionMonth findByIdMonthYear(Long chickenId, int month, int year) {
         return eggProductionMonthRepository.findByChicken_IdAndMonthAndYearAndIsActiveTrue(chickenId, month, year)
-                                           .orElseThrow(() -> new NotFoundException(EggProductionMonthError.NOT_FOUND_BY_KEYS,
+                                           .orElseThrow(() -> new NotFoundException("egg.production.not.found",
                                                                                     chickenId,
                                                                                     month,
                                                                                     year));
@@ -155,7 +155,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     protected void ensureNotExistsByIdMonthYear(Long chickenId, int month, int year) {
         if (existsByIdMonthYear(chickenId, month, year)) {
             log.info(EggProductionMonthError.ALREADY_EXISTS.format(chickenId, month, year));
-            throw new DataExistException(EggProductionMonthError.ALREADY_EXISTS, chickenId, month, year);
+            throw new DataExistException("egg.production.already.exists", chickenId, month, year);
         }
     }
 

@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum DietError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("DT-404", "diet.not_found_by_id", HttpStatus.NOT_FOUND),
-    ALREADY_EXISTS("DT-409", "diet.already_exists", HttpStatus.CONFLICT),
+    NOT_FOUND_BY_ID("DT-404", "diet.not.found", HttpStatus.NOT_FOUND),
+    ALREADY_EXISTS("DT-409", "diet.already.exists", HttpStatus.CONFLICT),
     ;
 
     private final String code;

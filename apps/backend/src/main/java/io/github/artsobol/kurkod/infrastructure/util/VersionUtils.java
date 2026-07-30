@@ -14,7 +14,7 @@ public final class VersionUtils {
     public static void checkVersion(Long entityVersion, Long requestVersion) {
         if (!Objects.equals(entityVersion, requestVersion)) {
             log.info(VersionError.VERSION_NOT_EQUALS.format(entityVersion, requestVersion));
-            throw new VersionConflictException(VersionError.VERSION_NOT_EQUALS, requestVersion, entityVersion);
+            throw new VersionConflictException("common.version.mismatch", entityVersion, requestVersion);
         }
     }
 }

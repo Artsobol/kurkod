@@ -1,12 +1,12 @@
-package io.github.artsobol.kurkod.exception.http;
+package io.github.artsobol.kurkod.exception.business;
 
 import io.github.artsobol.kurkod.exception.base.BaseException;
 import java.util.Map;
 import org.springframework.http.HttpStatus;
 
-public class InvalidIfMatchException extends BaseException {
+public class InvalidDataException extends BaseException {
 
-    public InvalidIfMatchException(String messageKey, Object... args) {
+    public InvalidDataException(String messageKey, Object... args) {
         super(messageKey, messageKey, HttpStatus.BAD_REQUEST, Map.of(), null, args);
     }
 }

@@ -105,6 +105,6 @@ public class WorkerServiceImpl implements WorkerService {
 
     protected Worker getWorkerById(Long id) {
         return workerRepository.findWorkerByIdAndIsActiveTrue(id).orElseThrow(() ->
-                new NotFoundException(WorkerError.NOT_FOUND_BY_ID, id));
+                new NotFoundException("worker.not.found", id));
     }
 }

@@ -50,7 +50,7 @@ public class ChickenServiceImpl implements ChickenService {
     public ChickenDTO create(ChickenPostRequest chickenPostRequest) {
         Chicken chicken = chickenMapper.toEntity(chickenPostRequest);
         chicken.setBreed(getBreedById(chickenPostRequest.getBreedId()));
-        chicken.setCage(cageRepository.findById(chickenPostRequest.getCageId()).orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenPostRequest.getCageId())));
+        chicken.setCage(cageRepository.findById(chickenPostRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenPostRequest.getCageId())));
         chicken = chickenRepository.save(chicken);
 
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
@@ -99,7 +99,7 @@ public class ChickenServiceImpl implements ChickenService {
         chickenMapper.updateFully(chicken, chickenPutRequest);
         Breed breed = getBreedById(chickenPutRequest.getBreedId());
         chicken.setBreed(breed);
-        chicken.setCage(cageRepository.findById(chickenPutRequest.getCageId()).orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenPutRequest.getCageId())));
+        chicken.setCage(cageRepository.findById(chickenPutRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenPutRequest.getCageId())));
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
         return chickenMapper.toDto(chickenRepository.save(chicken));
     }
@@ -116,7 +116,7 @@ public class ChickenServiceImpl implements ChickenService {
             chicken.setBreed(breed);
         }
         if (chickenPatchRequest.getCageId() != null) {
-            chicken.setCage(cageRepository.findById(chickenPatchRequest.getCageId()).orElseThrow(() -> new NotFoundException(ChickenError.NOT_FOUND_BY_ID, chickenPatchRequest.getCageId())));
+            chicken.setCage(cageRepository.findById(chickenPatchRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenPatchRequest.getCageId())));
         }
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
         return chickenMapper.toDto(chickenRepository.save(chicken));
@@ -128,6 +128,6 @@ public class ChickenServiceImpl implements ChickenService {
 
     protected Chicken getChickenById(Long id) {
         return chickenRepository.findChickenByIdAndIsActiveTrue(id).orElseThrow(() ->
-                new NotFoundException(ChickenError.NOT_FOUND_BY_ID, id));
+                new NotFoundException("chicken.not.found", id));
     }
 }

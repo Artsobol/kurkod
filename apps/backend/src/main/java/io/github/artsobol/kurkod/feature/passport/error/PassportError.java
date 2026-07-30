@@ -8,8 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum PassportError implements ErrorDescriptor {
-    NOT_FOUND_BY_WORKER_ID("PAS-404", "passport.not_found_by_worker_id", HttpStatus.NOT_FOUND),
-    ALREADY_EXISTS("PAS-409", "passport.already_exists", HttpStatus.CONFLICT),
+    NOT_FOUND_BY_WORKER_ID("PAS-404", "passport.not.found.by.worker", HttpStatus.NOT_FOUND),
+    ALREADY_EXISTS("PAS-409", "passport.already.exists", HttpStatus.CONFLICT),
     ;
 
     private final String code;

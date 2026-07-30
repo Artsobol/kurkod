@@ -79,11 +79,11 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     protected User getUserById(Long id) {
         return userRepository.findByIdAndIsActiveTrue(id)
-                             .orElseThrow(() -> new NotFoundException(UserError.NOT_FOUND_BY_ID, id));
+                             .orElseThrow(() -> new NotFoundException("user.not.found.by.id", id));
     }
 
     protected Role getRoleBySystemRole(SystemRole role) {
         return roleRepository.findByUserSystemRole(role)
-                .orElseThrow(() -> new NotFoundException(RoleError.NOT_FOUND_BY_SYSTEM_NAME, role.name()));
+                .orElseThrow(() -> new NotFoundException("role.not.found", role.name()));
     }
 }

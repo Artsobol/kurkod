@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum VersionError implements ErrorDescriptor {
-    VERSION_NOT_EQUALS("VNQ-409", "error.version_not_equals", HttpStatus.CONFLICT),
+    VERSION_NOT_EQUALS("VNQ-409", "common.version.mismatch", HttpStatus.CONFLICT),
     ;
 
     private final String code;

@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 @AllArgsConstructor
 public enum ChickenError implements ErrorDescriptor {
-    NOT_FOUND_BY_ID("CHK-404", "chicken.chicken_not_found_by_id", HttpStatus.NOT_FOUND),
+    NOT_FOUND_BY_ID("CHK-404", "chicken.not.found", HttpStatus.NOT_FOUND),
     ;
 
     private final String code;

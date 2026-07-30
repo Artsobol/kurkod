@@ -115,7 +115,7 @@ public class BreedServiceImpl implements BreedService {
     protected void ensureNotExists(String name) {
         if (existsByName(name)) {
             log.info(BreedError.ALREADY_EXISTS.format(name));
-            throw new DataExistException(BreedError.ALREADY_EXISTS, name);
+            throw new DataExistException("breed.already.exists", name);
         }
     }
 

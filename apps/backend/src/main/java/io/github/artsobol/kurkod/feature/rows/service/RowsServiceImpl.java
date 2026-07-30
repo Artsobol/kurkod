@@ -52,7 +52,7 @@ public class RowsServiceImpl implements RowsService {
         log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class));
 
         if (!workshopRepository.existsById(workshopId)) {
-            throw new NotFoundException(WorkshopError.NOT_FOUND_BY_ID, workshopId);
+            throw new NotFoundException("workshop.not.found", workshopId);
         }
 
         return rowsRepository.findAllByWorkshop_IdAndIsActiveTrue(workshopId).stream()
@@ -69,7 +69,7 @@ public class RowsServiceImpl implements RowsService {
 
         Rows rows = rowsMapper.toEntity(request);
         rows.setWorkshop(workshopRepository.findById(workshopId).orElseThrow(
-                () -> new NotFoundException(WorkshopError.NOT_FOUND_BY_ID, workshopId)
+                () -> new NotFoundException("workshop.not.found", workshopId)
         ));
         rowsRepository.save(rows);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class), workshopId);
@@ -123,14 +123,14 @@ public class RowsServiceImpl implements RowsService {
 
     protected Rows getRowsById(Long workshopId, Integer rowHumber) {
         return rowsRepository.findByWorkshop_IdAndRowNumberAndIsActiveTrue(workshopId, rowHumber).orElseThrow(
-                () -> new NotFoundException(RowsError.NOT_FOUND_BY_KEYS, workshopId, rowHumber)
+                () -> new NotFoundException("row.not.found.by.keys", workshopId, rowHumber)
         );
     }
 
     protected void ensureNotExists(Long workshopId, Integer rowNumber) {
         if (existsByWorkshopIdAndRowNumber(workshopId, rowNumber)) {
             log.info(RowsError.ALREADY_EXISTS.format(workshopId, rowNumber));
-            throw new DataExistException(RowsError.ALREADY_EXISTS, workshopId, rowNumber);
+            throw new DataExistException("row.already.exists", workshopId, rowNumber);
         }
     }
 

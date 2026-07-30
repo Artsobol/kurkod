@@ -57,7 +57,7 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public EmploymentContractDTO create(Long workerId, EmploymentContractPostRequest request) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId)
-                                        .orElseThrow(() -> new NotFoundException(WorkerError.NOT_FOUND_BY_ID, workerId));
+                                        .orElseThrow(() -> new NotFoundException("worker.not.found", workerId));
 
         Long staffId = request.getStaffId();
         Staff staff = getStaffByStaffId(staffId);
@@ -131,11 +131,11 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
 
     protected EmploymentContract getContractByWorkerId(Long workerId) {
         return employmentContractRepository.findEmploymentContractByWorkerIdAndIsActiveTrue(workerId)
-                                           .orElseThrow(() -> new NotFoundException(EmploymentContractError.NOT_FOUND_BY_WORKER_ID, workerId));
+                                           .orElseThrow(() -> new NotFoundException("employment.contract.not.found.by.worker", workerId));
     }
 
     protected Staff getStaffByStaffId(Long staffId) {
         return staffRepository.findStaffByIdAndIsActiveTrue(staffId)
-                              .orElseThrow(() -> new NotFoundException(StaffError.NOT_FOUND_BY_ID, staffId));
+                              .orElseThrow(() -> new NotFoundException("staff.not.found", staffId));
     }
 }
