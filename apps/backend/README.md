@@ -214,78 +214,48 @@ src/
 │   ├── java/io/github/artsobol/kurkod/
 │   │   ├── KurkodApplication.java          # Точка входа Spring Boot
 │   │   │
-│   │   ├── common/                          # Общие утилиты и константы
-│   │   │   ├── constants/                   # Константы приложения
-│   │   │   ├── enum_converter/              # Конвертеры enum
-│   │   │   ├── error/                       # Обработка ошибок
-│   │   │   ├── exception/                   # Кастомные исключения
-│   │   │   ├── logging/                     # Утилиты логирования
-│   │   │   ├── util/                        # Вспомогательные утилиты
-│   │   │   └── validation/                  # Валидаторы
+│   │   ├── config/                          # Конфигурация приложения
+│   │   │   ├── i18n/
+│   │   │   ├── openapi/
+│   │   │   └── security/
 │   │   │
-│   │   ├── security/                        # Безопасность и JWT
-│   │   │   ├── config/                      # Конфигурация Security
-│   │   │   ├── error/                       # Ошибки безопасности
-│   │   │   ├── facade/                      # Фасады безопасности
-│   │   │   ├── filter/                      # JWT фильтры
-│   │   │   ├── handler/                     # Обработчики безопасности
-│   │   │   ├── jwt/                         # JWT утилиты
-│   │   │   └── validation/                  # Валидаторы доступа
+│   │   ├── exception/                       # Общие исключения
+│   │   │   ├── base/
+│   │   │   └── http/
 │   │   │
-│   │   └── web/                             # Web слой
-│   │       ├── advice/                      # Глобальные обработчики исключений
-│   │       ├── config/                      # Конфигурация web
-│   │       ├── controller/                  # REST контроллеры
-│   │       │   ├── iam/                     # Аутентификация и пользователи
-│   │       │   ├── breed/                   # Породы кур
-│   │       │   ├── chicken/                 # Куры
-│   │       │   ├── chickenmovement/         # Перемещения кур
-│   │       │   ├── worker/                  # Работники
-│   │       │   ├── passport/                # Паспорта
-│   │       │   ├── employmentcontract/      # Трудовые договоры
-│   │       │   ├── staff/                   # Штат
-│   │       │   ├── workshop/                # Цеха
-│   │       │   ├── rows/                    # Ряды
-│   │       │   ├── cage/                    # Клетки
-│   │       │   ├── diet/                    # Рационы
-│   │       │   ├── eggproductionmonth/      # Производство яиц
-│   │       │   ├── dismissal/               # Увольнения
-│   │       │   └── report/                  # Отчеты
+│   │   ├── feature/                         # Бизнес-функции
+│   │   │   ├── breed/
+│   │   │   ├── cage/
+│   │   │   ├── chicken/
+│   │   │   ├── chickenmovement/
+│   │   │   ├── diet/
+│   │   │   ├── dismissal/
+│   │   │   ├── eggproductionmonth/
+│   │   │   ├── employmentcontract/
+│   │   │   ├── iam/                         # Аутентификация и пользователи
+│   │   │   ├── passport/
+│   │   │   ├── report/
+│   │   │   ├── rows/
+│   │   │   ├── staff/
+│   │   │   ├── worker/
+│   │   │   └── workshop/
 │   │       │
-│   │       ├── cookie/                      # Работа с cookies
-│   │       ├── response/                    # Стандартные ответы API
-│   │       │
-│   │       └── domain/                      # Доменная модель
-│   │           ├── auth/                    # Аутентификация
-│   │           ├── iam/                     # Identity & Access Management
-│   │           │   ├── user/                # Пользователи
-│   │           │   ├── role/                # Роли
-│   │           │   ├── admin/               # Административные операции
-│   │           │   └── refreshtoken/       # Refresh токены
-│   │           │
-│   │           ├── breed/                   # Породы
-│   │           ├── chicken/                 # Куры
-│   │           ├── chickenmovement/          # Перемещения кур
-│   │           ├── worker/                  # Работники
-│   │           ├── passport/                # Паспорта
-│   │           ├── employmentcontract/      # Трудовые договоры
-│   │           ├── staff/                   # Штат
-│   │           ├── workshop/                # Цеха
-│   │           ├── rows/                    # Ряды
-│   │           ├── cage/                    # Клетки
-│   │           ├── diet/                   # Рационы
-│   │           ├── eggproductionmonth/      # Производство яиц
-│   │           ├── dismissal/               # Увольнения
-│   │           └── report/                  # Отчеты
-│   │               ├── farm/                # Отчеты по ферме
-│   │               ├── breed/                # Отчеты по породам
-│   │               ├── chicken/             # Отчеты по курам
-│   │               └── worker/              # Отчеты по работникам
+│   │   └── infrastructure/                  # Общая техническая инфраструктура
+│   │       ├── constants/
+│   │       ├── error/                       # Advice, DTO и описания ошибок
+│   │       ├── logging/
+│   │       ├── persistence/                 # Общие entity и конвертеры
+│   │       ├── security/                    # JWT, фильтры и обработчики
+│   │       ├── util/
+│   │       ├── validation/
+│   │       └── web/                         # Общие web DTO и cookies
 │   │
 │   └── resources/
 │       ├── application.yml                  # Основная конфигурация
-│       ├── errors_en.properties            # Сообщения об ошибках (EN)
-│       ├── errors_ru.properties            # Сообщения об ошибках (RU)
+│       ├── i18n/
+│       │   └── errors/
+│       │       ├── errors_en.properties     # Сообщения об ошибках (EN)
+│       │       └── errors_ru.properties     # Сообщения об ошибках (RU)
 │       └── db/
 │           └── changelog/                  # Миграции Liquibase
 │               ├── db.changelog-master.yaml
@@ -300,23 +270,22 @@ src/
     └── java/io/github/artsobol/kurkod/
 ```
 
-### Архитектура доменов
+### Архитектура бизнес-функций
 
-Каждый домен (breed, chicken, worker и т.д.) следует единой структуре:
+Каждая бизнес-функция (breed, chicken, worker и т.д.) следует единой структуре:
 
 ```
-domain/
-└── {domain}/
-    ├── error/                    # Специфичные ошибки домена
-    ├── mapper/                   # MapStruct мапперы (Entity <-> DTO)
-    ├── model/
-    │   ├── dto/                  # Data Transfer Objects
-    │   ├── entity/                # JPA сущности
-    │   └── request/               # Request модели (Post, Put, Patch)
+feature/
+└── {feature}/
+    ├── dto/
+    │   ├── request/               # Входные DTO
+    │   └── response/              # Выходные DTO
+    ├── entity/                    # JPA сущности
+    ├── error/                     # Специфичные ошибки
+    ├── mapper/                    # MapStruct мапперы
     ├── repository/                # JPA репозитории
-    └── service/
-        ├── api/                   # Интерфейсы сервисов
-        └── impl/                  # Реализации сервисов
+    ├── service/                   # Интерфейсы и реализации сервисов
+    └── web/                       # REST контроллеры
 ```
 
 ## Конфигурация
