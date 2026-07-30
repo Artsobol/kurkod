@@ -1,5 +1,5 @@
 import {onMounted, ref} from "vue";
-import {getWorkerContract, getWorkers} from "@/api/workers.js";
+import {getWorker, getWorkerContract, getWorkers} from "@/api/workers.js";
 
 export function useWorkers() {
   const workers = ref([]);
@@ -11,10 +11,12 @@ export function useWorkers() {
       workers.value = await Promise.all(
         baseWorkers.map(async (worker) => {
           const contract = await getWorkerContract(worker.id);
+          const fullWorker = await getWorker(worker.id);
           return {
             ...worker,
             position: contract?.position || "-",
             salary: contract?.salary || "-",
+            workersCells: fullWorker?.cages?.map(c => c.cageNumber).join(", ") || "-"
           };
         })
       );

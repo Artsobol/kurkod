@@ -1,9 +1,30 @@
 <script setup>
+const props = defineProps({
+  width: {
+    type: Number,
+    default: 50
+  },
+  height: {
+    type: Number,
+    default: 50
+  },
+  color: {
+    type: String,
+    default: 'var(--contrast)'
+  }
+})
 </script>
 
 <template>
   <div class="loader-wrapper">
-    <div class="loader"></div>
+    <div 
+      class="loader" 
+      :style="{ 
+        width: `${width}px`, 
+        height: `${height}px`,
+        borderTopColor: color
+      }"
+    ></div>
   </div>
 </template>
 
@@ -19,8 +40,6 @@
 }
 
 .loader {
-  width: 50px;
-  height: 50px;
   border: 4px solid rgba(#726DAF, 0.2);
   border-top-color: var(--contrast);
   border-radius: 50%;

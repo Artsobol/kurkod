@@ -10,14 +10,17 @@
        <span v-if="subTitle" class="info-block__subtitle">
       {{ subTitle }}
     </span>
-      <span v-if="count" class="info-block__count">
+      <span v-if="count && !loading" class="info-block__count">
       {{ count }}
     </span>
+      <Loader v-if="loading" :width="28" :height="28" color="var(--color-white)" />
     </div>
   </a>
 </template>
 
 <script setup>
+import Loader from "@/components/ui/Loader.vue";
+
 defineProps({
   title: {
     type: String,
@@ -34,6 +37,10 @@ defineProps({
   count: {
     type: String,
     required: false
+  },
+  loading: {
+    type: Boolean,
+    default: false
   }
 })
 </script>

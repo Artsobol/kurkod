@@ -17,6 +17,7 @@
           class="add-form__input"
           type="text"
           v-model="newDiet.code"
+          minLength="2"
           placeholder="Введите код диеты"
           required
       />

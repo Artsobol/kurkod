@@ -1,5 +1,5 @@
 <script setup>
-import { useRoute } from 'vue-router'
+import {useRoute} from 'vue-router'
 import Header from './components/layouts/Header.vue'
 import Sidebar from "@/components/layouts/Sidebar.vue";
 import Content from "@/components/layouts/Content.vue";
@@ -7,7 +7,7 @@ import {uiStore} from "@/stores/ui.js";
 
 const route = useRoute()
 const ui = uiStore()
-const hiddenLayoutRoutes = ['/sign']
+const hiddenLayoutRoutes = ['/sign', '/register']
 </script>
 
 <template>
@@ -20,11 +20,11 @@ const hiddenLayoutRoutes = ['/sign']
       :class="{ 'no-layout': hiddenLayoutRoutes.includes(route.path) }"
   >
     <Sidebar
-      :isClosed="ui.isSidebarClosed"
-      v-if="!hiddenLayoutRoutes.includes(route.path)"
+        :isClosed="ui.isSidebarClosed"
+        v-if="!hiddenLayoutRoutes.includes(route.path)"
     />
     <Content>
-      <RouterView />
+      <RouterView/>
     </Content>
   </div>
 </template>
@@ -42,6 +42,4 @@ const hiddenLayoutRoutes = ['/sign']
     height: 100vh;
   }
 }
-
-
 </style>

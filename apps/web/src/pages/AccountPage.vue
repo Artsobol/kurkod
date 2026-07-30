@@ -13,11 +13,7 @@
 
         <div class="account__content page-block">
           <div class="account__img-container">
-            <img
-                src="/images/user-photo.jpg"
-                alt="user-photo"
-                class="account__img"
-            />
+
           </div>
 
           <div class="account__info">

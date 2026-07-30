@@ -1,27 +1,22 @@
 <template>
   <div class="cells">
     <div class="cells__actions">
-      <Input
-          class="cells__input"
-          labelInput="Найти ячейку"
-      />
       <Button
           label="Добавить ячейку"
           mode="violet"
           location="page-action"
       />
-      <Button
+      <!-- <Button
           label="Удалить ячейку"
           mode="violet"
           location="page-action"
-      />
+      /> -->
     </div>
 
   </div>
 </template>
 
 <script setup>
-import Input from "@/components/ui/Input.vue";
 import Button from "@/components/ui/Button.vue";
 </script>
 

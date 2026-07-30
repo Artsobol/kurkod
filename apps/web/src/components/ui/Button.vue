@@ -2,12 +2,8 @@
   <a
       v-if="href"
       :href="href"
-      :class="[mode, location, 'button']"
+      :class="[mode, location, 'button', { active: isActive }]"
   >
-<!--    <template v-if="specificButton === 'arrow-right'">-->
-<!--      <span v-if="label" class="arrow-right__title">{{ label }}</span>-->
-<!--      <Icon name="arrow-right" width="28" height="28"/>-->
-<!--    </template>-->
     <slot>{{ label }}</slot>
     <template v-if="iconName">
       <Icon :name="iconName" :width="iconWidth" :height="iconHeight"/>
@@ -16,8 +12,8 @@
 
   <button
       v-else
-      type="button"
-      :class="[mode, location, 'button']"
+      :type="type"
+      :class="[mode, location, 'button', { active: isActive }]"
       @click="handleClick"
   >
     <slot>{{ label }}</slot>
@@ -39,10 +35,6 @@ defineProps({
     type: String,
     required: false
   },
-  specificButton: {
-    type: String,
-    required: false
-  },
   mode: {
     type: String,
     required: false
@@ -50,6 +42,10 @@ defineProps({
   location: {
     type: String,
     required: false
+  },
+  type: {
+    type: String,
+    default: "button"
   },
   href: {
     type: String,
@@ -66,6 +62,10 @@ defineProps({
   iconHeight: {
     type: Number,
     default: 28
+  },
+  isActive: {
+    type: Boolean,
+    default: false
   }
 })
 </script>
@@ -97,6 +97,39 @@ defineProps({
   color: var(--color-white);
 }
 
+.transparent {
+  background-color: transparent;
+  color: var(--contrast);
+}
+
+.sort {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color);
+  opacity: 0.6;
+  transition: opacity 0.2s, color 0.2s;
+  border-radius: 4px;
+  gap: 0;
+  min-width: auto;
+  width: auto;
+  height: auto;
+}
+
+.sort:hover {
+  opacity: 1;
+  background: var(--section-bg);
+}
+
+.sort.active {
+  opacity: 1;
+  color: var(--contrast);
+}
+
 //Locations
 
 .page-action {
@@ -115,6 +148,23 @@ defineProps({
   padding-block: 8px;
 }
 
+.report-switcher {
+  font-weight: 700;
+  font-size: 16px;
+  padding-block: 16px;
+  border-radius: 8px;
+  padding-inline: 22px;
+  min-width: 507px;
+}
+
+.report-form {
+  font-weight: 500;
+  font-size: 16px;
+  width: 248px;
+  padding-block: 9px;
+  border-radius: 4px;
+}
+
 .sign-in-button {
   border-radius: 8px;
   // width: 262px;
@@ -128,4 +178,10 @@ defineProps({
   height: 24px;
 }
 
+.logout {
+  padding-inline: 28px;
+  border-radius: 8px;
+  padding-block: 10px;
+  font-weight: 500;
+}
 </style>
