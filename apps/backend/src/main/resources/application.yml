@@ -43,3 +43,10 @@ logging:
     org.hibernate.SQL: ${LOG_LEVEL_SQL:DEBUG}
     org.hibernate.type.descriptor.sql.BasicBinder: ${LOG_LEVEL_BINDER:TRACE}
     org.springframework.web.servlet.DispatcherServlet: ${LOG_LEVEL_DISPATCHER:DEBUG}
+
+app:
+  i18n:
+    basename: classpath:i18n/messages/messages,classpath:i18n/errors/errors,classpath:i18n/validations/validations
+    encoding: UTF-8
+    fallback-to-system-locale: false
+    cache-seconds: 0
