@@ -1,12 +1,10 @@
 package io.github.artsobol.kurkod.feature.worker.service;
 
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.cage.error.CageError;
 import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
-import io.github.artsobol.kurkod.feature.worker.error.WorkerError;
 import io.github.artsobol.kurkod.feature.worker.mapper.WorkerMapper;
 import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;

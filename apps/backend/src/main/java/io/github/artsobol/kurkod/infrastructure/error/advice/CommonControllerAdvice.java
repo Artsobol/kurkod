@@ -7,7 +7,6 @@ import io.github.artsobol.kurkod.infrastructure.error.dto.IamError;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -23,10 +22,8 @@ import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Locale;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class CommonControllerAdvice {
@@ -35,7 +32,6 @@ public class CommonControllerAdvice {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<IamError> handleBaseException(BaseException ex, HttpServletRequest request) {
-        logBusinessError(ex, request);
         return buildResponse(ex, request);
     }
 
@@ -95,19 +91,9 @@ public class CommonControllerAdvice {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<IamError> handleUnexpected(Exception ex, HttpServletRequest request) {
-        log.error("Unexpected error on path={}", request.getRequestURI(), ex);
         return buildResponse(
                 new HttpException("common.internal.error", HttpStatus.INTERNAL_SERVER_ERROR),
                 request);
-    }
-
-    private void logBusinessError(BaseException ex, HttpServletRequest request) {
-        log.warn("Business error: status={}, code={}, key={}, path={}, args={}",
-                 ex.getStatus(),
-                 ex.getErrorCode(),
-                 ex.getMessageKey(),
-                 request.getRequestURI(),
-                 Arrays.toString(ex.getMessageArgs()));
     }
 
     private ResponseEntity<IamError> buildResponse(BaseException ex, HttpServletRequest request) {
@@ -126,7 +112,6 @@ public class CommonControllerAdvice {
         try {
             return messageSource.getMessage(ex.getMessageKey(), ex.getMessageArgs(), locale);
         } catch (NoSuchMessageException e) {
-            log.warn("No message found for key={} and locale={}", ex.getMessageKey(), locale);
             if (ex.getMessage() != null) {
                 return ex.getMessage();
             }
@@ -134,4 +119,3 @@ public class CommonControllerAdvice {
         }
     }
 }
-

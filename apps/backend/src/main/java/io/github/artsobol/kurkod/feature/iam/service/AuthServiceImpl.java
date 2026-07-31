@@ -1,8 +1,6 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
-import io.github.artsobol.kurkod.feature.iam.error.RoleError;
 import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
-import io.github.artsobol.kurkod.feature.iam.error.AuthError;
 import io.github.artsobol.kurkod.feature.iam.entity.Role;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.iam.dto.request.LoginRequest;
@@ -18,7 +16,6 @@ import io.github.artsobol.kurkod.infrastructure.security.validation.AccessValida
 import io.github.artsobol.kurkod.feature.iam.entity.SystemRole;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
-@Slf4j
 @Service
 @Transactional
 @AllArgsConstructor

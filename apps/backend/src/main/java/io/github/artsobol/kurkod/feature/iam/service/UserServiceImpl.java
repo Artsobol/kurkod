@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
 import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
-import io.github.artsobol.kurkod.feature.iam.error.UserError;
 import io.github.artsobol.kurkod.feature.iam.dto.response.UserDTO;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.exception.http.DataExistException;

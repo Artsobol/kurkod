@@ -1,7 +1,5 @@
 package io.github.artsobol.kurkod.infrastructure.security.validation;
 
-import io.github.artsobol.kurkod.feature.iam.error.AuthError;
-import io.github.artsobol.kurkod.feature.iam.error.UserError;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.business.InvalidPasswordException;
 import io.github.artsobol.kurkod.feature.iam.repository.UserRepository;

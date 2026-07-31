@@ -1,19 +1,16 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
 import io.github.artsobol.kurkod.infrastructure.util.UuidUtils;
-import io.github.artsobol.kurkod.infrastructure.security.error.JwtError;
 import io.github.artsobol.kurkod.feature.iam.entity.RefreshToken;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.iam.repository.RefreshTokenRepository;
 import io.github.artsobol.kurkod.feature.iam.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenImpl implements RefreshTokenService {

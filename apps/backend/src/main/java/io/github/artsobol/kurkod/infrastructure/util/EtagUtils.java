@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.infrastructure.util;
 
 import io.github.artsobol.kurkod.exception.http.*;
-import io.github.artsobol.kurkod.infrastructure.error.descriptor.RequiredHeaderError;
 
 public final class EtagUtils {
 

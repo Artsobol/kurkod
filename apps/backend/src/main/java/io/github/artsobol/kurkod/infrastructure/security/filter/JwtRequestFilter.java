@@ -1,6 +1,5 @@
 package io.github.artsobol.kurkod.infrastructure.security.filter;
 
-import io.github.artsobol.kurkod.infrastructure.security.error.JwtError;
 import io.github.artsobol.kurkod.infrastructure.security.jwt.JwtTokenProvider;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -11,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,7 +21,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -31,6 +28,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
     private static final String LOGIN_PATH = "/auth/login";
     private static final String REGISTER_PATH = "/auth/register";
+    private static final String TOKEN_EXPIRED_MESSAGE = "[JWT-401] jwt.token.expired";
+    private static final String INVALID_SIGNATURE_MESSAGE = "[JWT-401] jwt.signature.invalid";
+    private static final String UNEXPECTED_ERROR_MESSAGE = "[JWT-500] jwt.unexpected.error";
 
     private final JwtTokenProvider jwtTokenProvider;
 
@@ -48,7 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String jwt = authHeader.get().substring(BEARER_PREFIX.length());
             try {
                 if (!jwtTokenProvider.validateToken(jwt)) {
-                    throw new ExpiredJwtException(null, null, JwtError.TOKEN_EXPIRED.format());
+                    throw new ExpiredJwtException(null, null, TOKEN_EXPIRED_MESSAGE);
                 }
 
                 Optional<String> emailOpt = Optional.ofNullable(jwtTokenProvider.getUsername(jwt));
@@ -76,7 +76,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 handleSignatureException(response);
                 return;
             } catch (Exception e) {
-                handleUnexpectedException(response, e);
+                handleUnexpectedException(response);
                 return;
             }
         }
@@ -88,17 +88,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             String refreshedToken = jwtTokenProvider.refreshToken(jwt);
             response.setHeader(AUTHORIZATION_HEADER, BEARER_PREFIX + refreshedToken);
         } else {
-            sendErrorResponse(response, HttpStatus.UNAUTHORIZED, JwtError.TOKEN_EXPIRED.format());
+            sendErrorResponse(response, HttpStatus.UNAUTHORIZED, TOKEN_EXPIRED_MESSAGE);
         }
     }
 
     private void handleSignatureException(HttpServletResponse response) throws IOException {
-        sendErrorResponse(response, HttpStatus.UNAUTHORIZED, JwtError.INVALID_TOKEN_SIGNATURE.format());
+        sendErrorResponse(response, HttpStatus.UNAUTHORIZED, INVALID_SIGNATURE_MESSAGE);
     }
 
-    private void handleUnexpectedException(HttpServletResponse response, Exception e) throws IOException {
-        log.error(JwtError.ERROR_DURING_JWT_PROCESSING.format(), e);
-        sendErrorResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, JwtError.UNEXPECTED_ERROR_OCCURRED.format());
+    private void handleUnexpectedException(HttpServletResponse response) throws IOException {
+        sendErrorResponse(response, HttpStatus.INTERNAL_SERVER_ERROR, UNEXPECTED_ERROR_MESSAGE);
     }
 
     private void sendErrorResponse(HttpServletResponse response, HttpStatus status, String message) throws IOException {

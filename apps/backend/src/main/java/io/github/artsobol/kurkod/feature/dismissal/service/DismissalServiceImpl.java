@@ -1,10 +1,7 @@
 package io.github.artsobol.kurkod.feature.dismissal.service;
 
-import io.github.artsobol.kurkod.infrastructure.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.infrastructure.logging.LogHelper;
 import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
-import io.github.artsobol.kurkod.feature.dismissal.error.DismissalError;
 import io.github.artsobol.kurkod.feature.dismissal.mapper.DismissalMapper;
 import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalDTO;
 import io.github.artsobol.kurkod.feature.dismissal.entity.Dismissal;
@@ -12,11 +9,9 @@ import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRe
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
 import io.github.artsobol.kurkod.feature.dismissal.repository.DismissalRepository;
 import io.github.artsobol.kurkod.feature.dismissal.service.DismissalService;
-import io.github.artsobol.kurkod.feature.worker.error.WorkerError;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +20,6 @@ import java.util.List;
 
 import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -37,9 +31,6 @@ public class DismissalServiceImpl implements DismissalService {
     private final SecurityContextFacade securityContextFacade;
     private final WorkerRepository workerRepository;
 
-    private String getCurrentUsername() {
-        return securityContextFacade.getCurrentUsername();
-    }
 
     private Long getCurrentUserId() {
         return securityContextFacade.getCurrentUserId();
@@ -47,13 +38,11 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     public DismissalDTO getByWorkerAndDismissed(Long workerId, Long dismissedId) {
-        log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Dismissal.class), workerId, dismissedId);
         return dismissalMapper.toDTO(getDismissalByWorkerAndDismissed(workerId, dismissedId));
     }
 
     @Override
     public List<DismissalDTO> getAllByWorker(Long workerId) {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Dismissal.class));
         return dismissalRepository.findAllByWorker_Id(workerId)
                 .stream()
                 .map(dismissalMapper::toDTO)
@@ -62,7 +51,6 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     public List<DismissalDTO> getAllByDismissed(Long dismissedId) {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Dismissal.class));
         return dismissalRepository.findAllByWhoDismiss_Id(dismissedId)
                 .stream()
                 .map(dismissalMapper::toDTO)
@@ -78,7 +66,6 @@ public class DismissalServiceImpl implements DismissalService {
         dismissal.setWorker(worker);
         dismissal.setWhoDismiss(whoDismiss);
         dismissalRepository.save(dismissal);
-        log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(dismissal), dismissal.getId());
         return dismissalMapper.toDTO(dismissal);
     }
     @Override
@@ -88,7 +75,6 @@ public class DismissalServiceImpl implements DismissalService {
         checkVersion(dismissal.getVersion(), version);
         dismissalMapper.update(dismissal, request);
         dismissal = dismissalRepository.save(dismissal);
-        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(dismissal), dismissal.getId());
         return dismissalMapper.toDTO(dismissal);
     }
 

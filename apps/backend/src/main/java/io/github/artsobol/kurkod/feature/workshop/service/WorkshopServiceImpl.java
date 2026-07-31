@@ -1,11 +1,7 @@
 package io.github.artsobol.kurkod.feature.workshop.service;
 
-import io.github.artsobol.kurkod.infrastructure.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.infrastructure.logging.LogHelper;
-import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
-import io.github.artsobol.kurkod.feature.workshop.error.WorkshopError;
 import io.github.artsobol.kurkod.feature.workshop.mapper.WorkshopMapper;
 import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopDTO;
 import io.github.artsobol.kurkod.feature.workshop.entity.Workshop;
@@ -14,7 +10,6 @@ import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequ
 import io.github.artsobol.kurkod.feature.workshop.repository.WorkshopRepository;
 import io.github.artsobol.kurkod.feature.workshop.service.WorkshopService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,30 +20,23 @@ import java.util.List;
 
 import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class WorkshopServiceImpl implements WorkshopService {
 
     private final WorkshopRepository workshopRepository;
-    private final SecurityContextFacade securityContextFacade;
     private final WorkshopMapper workshopMapper;
 
-    private String getCurrentUsername() {
-        return securityContextFacade.getCurrentUsername();
-    }
 
 
     @Override
     public WorkshopDTO get(Long id) {
-        log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Workshop.class), id);
         return workshopMapper.toDto(getWorkshopById(id));
     }
 
     @Override
     public List<WorkshopDTO> getAll() {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Workshop.class));
         return workshopRepository.findAllByIsActiveTrue().stream()
                 .map(workshopMapper::toDto)
                 .toList();
@@ -56,7 +44,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     @Override
     public Page<WorkshopDTO> getAllWithPagination(Pageable pageable) {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Workshop.class));
         return workshopRepository.findAllByIsActiveTrue(pageable)
                 .map(workshopMapper::toDto);
     }
@@ -70,7 +57,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 
         Workshop workshop = workshopMapper.toEntity(request);
         workshopRepository.save(workshop);
-        log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(workshop), workshop.getId());
         return workshopMapper.toDto(workshop);
     }
 
@@ -88,7 +74,6 @@ public class WorkshopServiceImpl implements WorkshopService {
         workshopMapper.update(workshop, request);
         workshopRepository.save(workshop);
 
-        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(workshop), id);
         return workshopMapper.toDto(workshop);
     }
     @Override
@@ -97,7 +82,6 @@ public class WorkshopServiceImpl implements WorkshopService {
     public void delete(Long id, Long version) {
         Workshop workshop = getWorkshopById(id);
         checkVersion(workshop.getVersion(), version);
-        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Workshop.class), id);
         workshop.setActive(false);
     }
 
@@ -109,7 +93,6 @@ public class WorkshopServiceImpl implements WorkshopService {
 
     protected void ensureNotExists(Integer id) {
         if (existsById(id)){
-            log.info(WorkshopError.ALREADY_EXISTS.format(id));
             throw new DataExistException("workshop.already.exists", id);
         }
     }

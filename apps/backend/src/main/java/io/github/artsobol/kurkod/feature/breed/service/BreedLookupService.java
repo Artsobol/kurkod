@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.feature.breed.service;
 
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.breed.error.BreedError;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
 import io.github.artsobol.kurkod.feature.breed.repository.BreedRepository;
 import lombok.RequiredArgsConstructor;

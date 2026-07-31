@@ -2,21 +2,16 @@ package io.github.artsobol.kurkod.feature.breed.service;
 
 import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
 import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
-import io.github.artsobol.kurkod.infrastructure.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 
 import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
-import io.github.artsobol.kurkod.infrastructure.logging.LogHelper;
-import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
 import io.github.artsobol.kurkod.feature.breed.mapper.BreedMapper;
-import io.github.artsobol.kurkod.feature.breed.error.BreedError;
 import io.github.artsobol.kurkod.feature.breed.dto.response.BreedDTO;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
 import io.github.artsobol.kurkod.feature.breed.repository.BreedRepository;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -24,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -33,11 +27,7 @@ public class BreedServiceImpl implements BreedService {
     private final BreedRepository breedRepository;
     private final BreedLookupService breedLookupService;
     private final BreedMapper breedMapper;
-    private final SecurityContextFacade securityContextFacade;
 
-    private String getCurrentUsername() {
-        return securityContextFacade.getCurrentUsername();
-    }
 
     @Override
     @Transactional
@@ -48,22 +38,16 @@ public class BreedServiceImpl implements BreedService {
         Breed breed = breedMapper.toEntity(breedCreateRequest);
         breed = breedRepository.save(breed);
 
-        log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
-                 getCurrentUsername(),
-                 LogHelper.getEntityName(breed),
-                 breed.getId());
         return breedMapper.toDto(breed);
     }
 
     @Override
     public BreedDTO get(@NotNull Long id) {
-        log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Breed.class), id);
         return breedMapper.toDto(breedLookupService.getBreedByIdOrThrow(id));
     }
 
     @Override
     public List<BreedDTO> getAll() {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername());
         return breedRepository.findAllByIsActiveTrue().stream().map(breedMapper::toDto).toList();
     }
 
@@ -80,7 +64,6 @@ public class BreedServiceImpl implements BreedService {
         breedMapper.updatePartially(breed, breedUpdateRequest);
         breed = breedRepository.save(breed);
 
-        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed), id);
         return breedMapper.toDto(breed);
     }
 
@@ -92,13 +75,11 @@ public class BreedServiceImpl implements BreedService {
         checkVersion(breed.getVersion(), version);
         breed.setActive(false);
 
-        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed), id);
         breedRepository.save(breed);
     }
 
     protected void ensureNotExists(String name) {
         if (existsByName(name)) {
-            log.info(BreedError.ALREADY_EXISTS.format(name));
             throw new DataExistException("breed.already.exists", name);
         }
     }

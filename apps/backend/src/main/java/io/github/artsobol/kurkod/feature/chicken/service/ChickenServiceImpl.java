@@ -1,12 +1,8 @@
 package io.github.artsobol.kurkod.feature.chicken.service;
 
-import io.github.artsobol.kurkod.infrastructure.constants.ApiLogMessage;
-import io.github.artsobol.kurkod.infrastructure.logging.LogHelper;
-import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
 import io.github.artsobol.kurkod.feature.breed.service.BreedLookupService;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
 import io.github.artsobol.kurkod.feature.chicken.mapper.ChickenMapper;
-import io.github.artsobol.kurkod.feature.chicken.error.ChickenError;
 import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenDTO;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
@@ -16,7 +12,6 @@ import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateReques
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
 import io.github.artsobol.kurkod.feature.chicken.service.ChickenService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,7 +22,6 @@ import java.util.List;
 
 import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
-@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -36,12 +30,8 @@ public class ChickenServiceImpl implements ChickenService {
     private final CageRepository cageRepository;
     private final ChickenRepository chickenRepository;
     private final ChickenMapper chickenMapper;
-    private final SecurityContextFacade securityContextFacade;
     private final BreedLookupService breedLookupService;
 
-    private String getCurrentUsername() {
-        return securityContextFacade.getCurrentUsername();
-    }
 
     @Override
     @Transactional
@@ -52,22 +42,16 @@ public class ChickenServiceImpl implements ChickenService {
         chicken.setCage(cageRepository.findById(chickenCreateRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenCreateRequest.getCageId())));
         chicken = chickenRepository.save(chicken);
 
-        log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
-                getCurrentUsername(),
-                LogHelper.getEntityName(chicken),
-                chicken.getId());
         return chickenMapper.toDto(chicken);
     }
 
     @Override
     public ChickenDTO get(Long id) {
-        log.debug(ApiLogMessage.GET_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Chicken.class), id);
         return chickenMapper.toDto(getChickenById(id));
     }
 
     @Override
     public List<ChickenDTO> getAll() {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(), getCurrentUsername(), LogHelper.getEntityName(Chicken.class));
         return chickenRepository.findAllByIsActiveTrue().stream()
                                 .map(chickenMapper::toDto)
                                 .toList();
@@ -86,7 +70,6 @@ public class ChickenServiceImpl implements ChickenService {
         checkVersion(chicken.getVersion(), version);
         chicken.setActive(false);
         chickenRepository.save(chicken);
-        log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
     }
     @Override
     @Transactional
@@ -102,7 +85,6 @@ public class ChickenServiceImpl implements ChickenService {
         if (chickenUpdateRequest.getCageId() != null) {
             chicken.setCage(cageRepository.findById(chickenUpdateRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenUpdateRequest.getCageId())));
         }
-        log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
         return chickenMapper.toDto(chickenRepository.save(chicken));
     }
 

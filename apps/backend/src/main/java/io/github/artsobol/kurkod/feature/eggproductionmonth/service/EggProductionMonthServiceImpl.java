@@ -1,14 +1,9 @@
 package io.github.artsobol.kurkod.feature.eggproductionmonth.service;
 
-import io.github.artsobol.kurkod.infrastructure.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.infrastructure.logging.LogHelper;
-import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
-import io.github.artsobol.kurkod.feature.chicken.error.ChickenError;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.error.EggProductionMonthError;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.mapper.EggProductionMonthMapper;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthDTO;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.entity.EggProductionMonth;
@@ -17,7 +12,6 @@ import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProdu
 import io.github.artsobol.kurkod.feature.eggproductionmonth.repository.EggProductionMonthRepository;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.service.EggProductionMonthService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +20,6 @@ import java.util.List;
 
 import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -35,37 +28,21 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     private final EggProductionMonthRepository eggProductionMonthRepository;
     private final EggProductionMonthMapper eggProductionMonthMapper;
     private final ChickenRepository chickenRepository;
-    private final SecurityContextFacade securityContextFacade;
 
-    private String getCurrentUsername() {
-        return securityContextFacade.getCurrentUsername();
-    }
 
     @Override
     public EggProductionMonthDTO get(Long chickenId, int month, int year) {
-        log.debug(ApiLogMessage.GET_ENTITY.getValue(),
-                  getCurrentUsername(),
-                  LogHelper.getEntityName(EggProductionMonth.class),
-                  chickenId,
-                  month,
-                  year);
         return eggProductionMonthMapper.toDto(findByIdMonthYear(chickenId, month, year));
     }
 
     @Override
     public List<EggProductionMonthDTO> getAllByChicken(Long chickenId) {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(),
-                  getCurrentUsername(),
-                  LogHelper.getEntityName(EggProductionMonth.class));
         return eggProductionMonthRepository.findAllByChicken_IdAndIsActiveTrue(chickenId).stream().map(
                 eggProductionMonthMapper::toDto).toList();
     }
 
     @Override
     public List<EggProductionMonthDTO> getAllByChickenAndYear(Long chickenId, int year) {
-        log.debug(ApiLogMessage.GET_ALL_ENTITIES.getValue(),
-                  getCurrentUsername(),
-                  LogHelper.getEntityName(EggProductionMonth.class));
         return eggProductionMonthRepository.findAllByChicken_IdAndYearAndIsActiveTrue(chickenId, year).stream().map(
                 eggProductionMonthMapper::toDto).toList();
     }
@@ -82,10 +59,6 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         eggProductionMonth.setYear(year);
         eggProductionMonth.setMonth(month);
         eggProductionMonthRepository.save(eggProductionMonth);
-        log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
-                 getCurrentUsername(),
-                 LogHelper.getEntityName(EggProductionMonth.class),
-                 chickenId);
         return eggProductionMonthMapper.toDto(eggProductionMonth);
     }
 
@@ -100,10 +73,6 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         checkVersion(eggProductionMonth.getVersion(), version);
         eggProductionMonthMapper.update(eggProductionMonth, request);
 
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(),
-                 getCurrentUsername(),
-                 LogHelper.getEntityName(EggProductionMonth.class),
-                 chickenId);
         return eggProductionMonthMapper.toDto(eggProductionMonthRepository.save(eggProductionMonth));
     }
 
@@ -113,10 +82,6 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         checkVersion(eggProductionMonth.getVersion(), version);
         eggProductionMonth.setActive(false);
 
-        log.info(ApiLogMessage.DELETE_ENTITY.getValue(),
-                 getCurrentUsername(),
-                 LogHelper.getEntityName(EggProductionMonth.class),
-                 chickenId);
         eggProductionMonthRepository.save(eggProductionMonth);
     }
 
@@ -135,7 +100,6 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
 
     protected void ensureNotExistsByIdMonthYear(Long chickenId, int month, int year) {
         if (existsByIdMonthYear(chickenId, month, year)) {
-            log.info(EggProductionMonthError.ALREADY_EXISTS.format(chickenId, month, year));
             throw new DataExistException("egg.production.already.exists", chickenId, month, year);
         }
     }
