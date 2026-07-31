@@ -12,6 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EggProductionMonthUpdateRequest {
 
-    @Positive
-    private Integer count;
+  @Positive private Integer count;
 }

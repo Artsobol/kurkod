@@ -6,8 +6,8 @@ databaseChangeLog:
         - onFail: HALT
           and:
             - not:
-              - viewExists:
-                  viewName: report_chicken_egg_stats
+                - viewExists:
+                    viewName: report_chicken_egg_stats
             - tableExists:
                 tableName: breed
             - tableExists:

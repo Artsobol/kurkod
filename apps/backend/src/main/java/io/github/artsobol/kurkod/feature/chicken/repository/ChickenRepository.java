@@ -14,18 +14,20 @@ import java.util.Optional;
 
 public interface ChickenRepository extends JpaRepository<Chicken, Long> {
 
-    Optional<Chicken> findChickenByIdAndIsActiveTrue(Long id);
+  Optional<Chicken> findChickenByIdAndIsActiveTrue(Long id);
 
-    @EntityGraph(attributePaths = {"breed", "cage"})
-    List<Chicken> findAllByIsActiveTrue();
+  @EntityGraph(attributePaths = {"breed", "cage"})
+  List<Chicken> findAllByIsActiveTrue();
 
-    @EntityGraph(attributePaths = {"breed", "cage"})
-    Page<Chicken> findAllByIsActiveTrue(Pageable pageable);
+  @EntityGraph(attributePaths = {"breed", "cage"})
+  Page<Chicken> findAllByIsActiveTrue(Pageable pageable);
 
-    @Query("select count(c) from Chicken c where c.isActive = true")
-    long countActiveChickens();
+  @Query("select count(c) from Chicken c where c.isActive = true")
+  long countActiveChickens();
 
-    @Query(value = """
+  @Query(
+      value =
+          """
                    SELECT
                        w.id               AS workshop_id,
                        w.workshop_number  AS workshop_number,
@@ -60,8 +62,8 @@ public interface ChickenRepository extends JpaRepository<Chicken, Long> {
                    ORDER BY
                        w.workshop_number,
                        b.name
-                   """, nativeQuery = true)
-    java.util.List<BreedWorkshopMonthlyProjection> findBreedWorkshopMonthlyStats(
-            @Param("year") int year,
-            @Param("month") int month);
+                   """,
+      nativeQuery = true)
+  java.util.List<BreedWorkshopMonthlyProjection> findBreedWorkshopMonthlyStats(
+      @Param("year") int year, @Param("month") int month);
 }

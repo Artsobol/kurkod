@@ -1,9 +1,9 @@
 package io.github.artsobol.kurkod.feature.dismissal.mapper;
 
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
 import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalResponse;
 import io.github.artsobol.kurkod.feature.dismissal.entity.Dismissal;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

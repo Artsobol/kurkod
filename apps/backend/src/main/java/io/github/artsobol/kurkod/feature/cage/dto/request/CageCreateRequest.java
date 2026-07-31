@@ -13,7 +13,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CageCreateRequest {
 
-    @Positive
-    @NotNull
-    private Integer cageNumber;
+  @Positive @NotNull private Integer cageNumber;
 }

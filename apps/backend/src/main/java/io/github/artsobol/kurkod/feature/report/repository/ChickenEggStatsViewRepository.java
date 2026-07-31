@@ -2,7 +2,6 @@ package io.github.artsobol.kurkod.feature.report.repository;
 
 import io.github.artsobol.kurkod.feature.report.entity.ChickenEggStatsView;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,14 +11,16 @@ import java.util.List;
 
 public interface ChickenEggStatsViewRepository extends JpaRepository<ChickenEggStatsView, Long> {
 
-    @Query("""
+  @Query(
+      """
         SELECT v
         FROM ChickenEggStatsView v
         WHERE (:weight IS NULL OR v.weight = :weight)
           AND (:breedId IS NULL OR v.breedId = :breedId)
           AND (:birthDate IS NULL OR v.birthDate = :birthDate)
         """)
-    List<ChickenEggStatsView> findByFilters(@Param("weight") Integer weight,
-                                            @Param("breedId") Long breedId,
-                                            @Param("birthDate") LocalDate birthDate);
+  List<ChickenEggStatsView> findByFilters(
+      @Param("weight") Integer weight,
+      @Param("breedId") Long breedId,
+      @Param("birthDate") LocalDate birthDate);
 }

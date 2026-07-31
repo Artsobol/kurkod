@@ -1,21 +1,20 @@
 package io.github.artsobol.kurkod.feature.workshop.web;
 
-import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
-import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
-import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
+import static io.github.artsobol.kurkod.infrastructure.util.LocationUtils.buildLocation;
+
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequest;
+import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
+import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
 import io.github.artsobol.kurkod.feature.workshop.service.WorkshopService;
+import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-import static io.github.artsobol.kurkod.infrastructure.util.LocationUtils.buildLocation;
 
 @RestController
 @RequiredArgsConstructor

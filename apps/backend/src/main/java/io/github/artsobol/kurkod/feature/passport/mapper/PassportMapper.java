@@ -10,8 +10,10 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface PassportMapper {
 
-    PassportResponse toResponse(Passport passport);
+  PassportResponse toResponse(Passport passport);
 
-    Passport toEntity(PassportCreateRequest passportCreateRequest);
-    void updatePartially(@MappingTarget Passport passport, PassportUpdateRequest passportUpdateRequest);
+  Passport toEntity(PassportCreateRequest passportCreateRequest);
+
+  void updatePartially(
+      @MappingTarget Passport passport, PassportUpdateRequest passportUpdateRequest);
 }

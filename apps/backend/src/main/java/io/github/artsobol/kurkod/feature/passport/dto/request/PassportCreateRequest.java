@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PassportCreateRequest {
 
-    @NotBlank
-    @Column(length = 4, nullable = false)
-    @Pattern(regexp = "^[0-9]{4}$", message = "Invalid passport series")
-    private String series;
+  @NotBlank
+  @Column(length = 4, nullable = false)
+  @Pattern(regexp = "^[0-9]{4}$", message = "Invalid passport series")
+  private String series;
 
-    @NotBlank
-    @Column(length = 6, nullable = false)
-    @Pattern(regexp = "^[0-9]{6}$", message = "Invalid passport number")
-    private String number;
+  @NotBlank
+  @Column(length = 6, nullable = false)
+  @Pattern(regexp = "^[0-9]{6}$", message = "Invalid passport number")
+  private String number;
 }

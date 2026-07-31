@@ -1,20 +1,21 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
-import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
-import io.github.artsobol.kurkod.feature.iam.entity.Role;
+import io.github.artsobol.kurkod.exception.business.InvalidDataException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.iam.dto.request.LoginRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.RegistrationRequest;
 import io.github.artsobol.kurkod.feature.iam.dto.response.UserProfileResponse;
 import io.github.artsobol.kurkod.feature.iam.entity.RefreshToken;
+import io.github.artsobol.kurkod.feature.iam.entity.Role;
+import io.github.artsobol.kurkod.feature.iam.entity.SystemRole;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
-import io.github.artsobol.kurkod.exception.business.InvalidDataException;
-import io.github.artsobol.kurkod.feature.iam.dto.request.RegistrationRequest;
+import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
 import io.github.artsobol.kurkod.feature.iam.repository.RoleRepository;
 import io.github.artsobol.kurkod.feature.iam.repository.UserRepository;
 import io.github.artsobol.kurkod.infrastructure.security.jwt.JwtTokenProvider;
 import io.github.artsobol.kurkod.infrastructure.security.validation.AccessValidator;
-import io.github.artsobol.kurkod.feature.iam.entity.SystemRole;
 import jakarta.validation.constraints.NotNull;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -22,8 +23,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Set;
 
 @Service
 @Transactional

@@ -5,7 +5,7 @@ import io.github.artsobol.kurkod.feature.iam.entity.User;
 
 public interface RefreshTokenService {
 
-    RefreshToken generateOrUpdateRefreshToken(User user);
+  RefreshToken generateOrUpdateRefreshToken(User user);
 
-    RefreshToken validateAndRefreshToken(String refreshToken);
+  RefreshToken validateAndRefreshToken(String refreshToken);
 }

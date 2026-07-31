@@ -14,11 +14,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class BreedUpdateRequest implements Serializable {
 
-    private String name;
+  private String name;
 
-    @Positive
-    private Integer eggsNumber;
+  @Positive private Integer eggsNumber;
 
-    @Positive
-    private Integer weight;
+  @Positive private Integer weight;
 }

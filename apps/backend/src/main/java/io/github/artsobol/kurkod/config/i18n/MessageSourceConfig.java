@@ -13,7 +13,7 @@ public class MessageSourceConfig {
   @Bean
   MessageSource messageSource(I18nProperties properties) {
     ReloadableResourceBundleMessageSource messageSource =
-            new ReloadableResourceBundleMessageSource();
+        new ReloadableResourceBundleMessageSource();
 
     messageSource.setBasenames(properties.basename().split("\\s*,\\s*"));
     messageSource.setDefaultEncoding(properties.encoding());

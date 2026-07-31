@@ -1,10 +1,7 @@
 package io.github.artsobol.kurkod.feature.chickenmovement.service;
 
-import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementResponse;
-import io.github.artsobol.kurkod.feature.chickenmovement.entity.ChickenMovement;
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
-
-import java.time.LocalDateTime;
+import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementResponse;
 import java.util.List;
 
 public interface ChickenMovementService {

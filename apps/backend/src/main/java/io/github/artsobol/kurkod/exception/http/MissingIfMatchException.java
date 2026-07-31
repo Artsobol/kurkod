@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 public class MissingIfMatchException extends BaseException {
 
-    public MissingIfMatchException(String messageKey, Object... args) {
-        super(messageKey, messageKey, HttpStatus.PRECONDITION_REQUIRED, Map.of(), null, args);
-    }
+  public MissingIfMatchException(String messageKey, Object... args) {
+    super(messageKey, messageKey, HttpStatus.PRECONDITION_REQUIRED, Map.of(), null, args);
+  }
 }

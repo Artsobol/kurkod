@@ -1,12 +1,11 @@
 package io.github.artsobol.kurkod.feature.eggproductionmonth.repository;
 
 import io.github.artsobol.kurkod.feature.eggproductionmonth.entity.EggProductionMonth;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface EggProductionMonthRepository extends JpaRepository<EggProductionMonth, Long> {
 

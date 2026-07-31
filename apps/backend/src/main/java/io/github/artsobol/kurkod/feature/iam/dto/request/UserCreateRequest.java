@@ -15,16 +15,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserCreateRequest {
 
-    @NotBlank
-    @Size(max = 30, message = "Username should be less than 30 characters")
-    private String username;
+  @NotBlank
+  @Size(max = 30, message = "Username should be less than 30 characters")
+  private String username;
 
-    @NotNull
-    @Size(max = 255)
-    private String password;
+  @NotNull
+  @Size(max = 255)
+  private String password;
 
-    @Email
-    @NotNull
-    @Size(max = 80)
-    private String email;
+  @Email
+  @NotNull
+  @Size(max = 80)
+  private String email;
 }

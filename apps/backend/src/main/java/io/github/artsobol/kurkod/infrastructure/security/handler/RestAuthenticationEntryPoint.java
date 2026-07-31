@@ -2,6 +2,11 @@ package io.github.artsobol.kurkod.infrastructure.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.artsobol.kurkod.infrastructure.error.dto.IamError;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -10,12 +15,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContextUtils;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Locale;
 
 @Component
 @RequiredArgsConstructor

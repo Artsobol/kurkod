@@ -14,9 +14,8 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class DismissalUpdateRequest {
 
-    @PastOrPresent
-    private LocalDate dismissalDate;
+  @PastOrPresent private LocalDate dismissalDate;
 
-    @Size(max=200)
-    private String reason;
+  @Size(max = 200)
+  private String reason;
 }

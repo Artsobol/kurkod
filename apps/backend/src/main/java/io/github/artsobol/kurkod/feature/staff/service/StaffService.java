@@ -10,14 +10,15 @@ import java.util.List;
 
 public interface StaffService {
 
-    StaffResponse get(Long id);
+  StaffResponse get(Long id);
 
-    List<StaffResponse> getAll();
+  List<StaffResponse> getAll();
 
-    Page<StaffResponse> getAllWithPagination(Pageable pageable);
+  Page<StaffResponse> getAllWithPagination(Pageable pageable);
 
-    StaffResponse create(StaffCreateRequest request);
-    StaffResponse update(Long id, StaffUpdateRequest request, Long version);
+  StaffResponse create(StaffCreateRequest request);
 
-    void delete(Long id, Long version);
+  StaffResponse update(Long id, StaffUpdateRequest request, Long version);
+
+  void delete(Long id, Long version);
 }

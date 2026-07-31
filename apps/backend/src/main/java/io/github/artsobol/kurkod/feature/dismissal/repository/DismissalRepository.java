@@ -1,10 +1,9 @@
 package io.github.artsobol.kurkod.feature.dismissal.repository;
 
 import io.github.artsobol.kurkod.feature.dismissal.entity.Dismissal;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DismissalRepository extends JpaRepository<Dismissal, Long> {
 

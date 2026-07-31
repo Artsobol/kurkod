@@ -12,6 +12,5 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class WorkshopUpdateRequest {
 
-    @Positive
-    private Integer workshopNumber;
+  @Positive private Integer workshopNumber;
 }

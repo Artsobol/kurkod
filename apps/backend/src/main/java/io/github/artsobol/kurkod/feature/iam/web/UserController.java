@@ -1,11 +1,11 @@
 package io.github.artsobol.kurkod.feature.iam.web;
 
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
+import io.github.artsobol.kurkod.feature.iam.service.UserService;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
-import io.github.artsobol.kurkod.feature.iam.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

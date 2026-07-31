@@ -2,17 +2,17 @@ package io.github.artsobol.kurkod.feature.report.projection;
 
 public interface BreedWorkshopMonthlyProjection {
 
-    Long getWorkshopId();
+  Long getWorkshopId();
 
-    Integer getWorkshopNumber();
+  Integer getWorkshopNumber();
 
-    Long getBreedId();
+  Long getBreedId();
 
-    String getBreedName();
+  String getBreedName();
 
-    Long getChickensCount();
+  Long getChickensCount();
 
-    Long getEggsTotal();
+  Long getEggsTotal();
 
-    java.math.BigDecimal getAvgEggsPerChicken();
+  java.math.BigDecimal getAvgEggsPerChicken();
 }

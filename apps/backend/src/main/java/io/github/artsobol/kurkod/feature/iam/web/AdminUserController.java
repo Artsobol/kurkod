@@ -1,9 +1,9 @@
 package io.github.artsobol.kurkod.feature.iam.web;
 
-import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.feature.iam.dto.request.ChangeRoleRequest;
-import io.github.artsobol.kurkod.feature.iam.service.AdminUserService;
 import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
+import io.github.artsobol.kurkod.feature.iam.service.AdminUserService;
+import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

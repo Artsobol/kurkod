@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public interface BreedRepository extends JpaRepository<Breed, Long> {
 
-    Optional<Breed> findBreedByIdAndIsActiveTrue(Long id);
+  Optional<Breed> findBreedByIdAndIsActiveTrue(Long id);
 
-    List<Breed> findAllByIsActiveTrue();
+  List<Breed> findAllByIsActiveTrue();
 
-    Page<Breed> findAllByIsActiveTrue(Pageable pageable);
+  Page<Breed> findAllByIsActiveTrue(Pageable pageable);
 
-    boolean existsByNameAndIsActiveTrue(String name);
+  boolean existsByNameAndIsActiveTrue(String name);
 }

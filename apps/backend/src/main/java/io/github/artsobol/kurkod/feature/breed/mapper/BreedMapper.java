@@ -8,12 +8,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-@Mapper(componentModel = "spring",
-        nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+@Mapper(
+    componentModel = "spring",
+    nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface BreedMapper {
 
-    BreedResponse toResponse(Breed breed);
+  BreedResponse toResponse(Breed breed);
 
-    Breed toEntity(BreedCreateRequest breedCreateRequest);
-    void updatePartially(@MappingTarget Breed breed, BreedUpdateRequest breedUpdateRequest);
+  Breed toEntity(BreedCreateRequest breedCreateRequest);
+
+  void updatePartially(@MappingTarget Breed breed, BreedUpdateRequest breedUpdateRequest);
 }

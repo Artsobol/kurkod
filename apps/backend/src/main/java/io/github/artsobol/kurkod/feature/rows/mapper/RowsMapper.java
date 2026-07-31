@@ -1,9 +1,9 @@
 package io.github.artsobol.kurkod.feature.rows.mapper;
 
+import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
+import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
 import io.github.artsobol.kurkod.feature.rows.dto.response.RowsResponse;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

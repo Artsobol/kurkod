@@ -17,19 +17,19 @@ import java.math.BigDecimal;
 @Setter
 public class BreedEggDiffReport {
 
-    @Id
-    @Column(name = "breed_id")
-    private Long breedId;
+  @Id
+  @Column(name = "breed_id")
+  private Long breedId;
 
-    @Column(name = "breed_name")
-    private String breedName;
+  @Column(name = "breed_name")
+  private String breedName;
 
-    @Column(name = "breed_avg_eggs")
-    private BigDecimal breedAvgEggs;
+  @Column(name = "breed_avg_eggs")
+  private BigDecimal breedAvgEggs;
 
-    @Column(name = "farm_avg_eggs")
-    private BigDecimal farmAvgEggs;
+  @Column(name = "farm_avg_eggs")
+  private BigDecimal farmAvgEggs;
 
-    @Column(name = "diff_eggs")
-    private BigDecimal diffEggs;
+  @Column(name = "diff_eggs")
+  private BigDecimal diffEggs;
 }

@@ -30,7 +30,7 @@ databaseChangeLog:
                   name: moved_at
                   type: date
                   constraints:
-                      nullable: false
+                    nullable: false
 
               - column:
                   name: chicken_id

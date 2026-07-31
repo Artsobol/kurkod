@@ -15,19 +15,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WorkerUpdateRequest {
 
-    private String firstName;
-
-    private String lastName;
-
-    private String patronymic;
-
-    @Pattern(
-            regexp = "^[0-9+()\\-\\s]{7,20}$",
-            message = "Phone number format is invalid"
-    )
-    String phoneNumber;
-
-    @Email(message = "Invalid email format")
-    @Size(max = 100, message = "Email must be less than 100 characters")
-    String email;
+  @Pattern(regexp = "^[0-9+()\\-\\s]{7,20}$", message = "Phone number format is invalid")
+  String phoneNumber;
+  @Email(message = "Invalid email format")
+  @Size(max = 100, message = "Email must be less than 100 characters")
+  String email;
+  private String firstName;
+  private String lastName;
+  private String patronymic;
 }

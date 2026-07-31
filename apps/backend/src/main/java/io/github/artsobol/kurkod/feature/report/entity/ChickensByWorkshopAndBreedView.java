@@ -12,19 +12,19 @@ import org.hibernate.annotations.Immutable;
 @Immutable
 @Getter
 public class ChickensByWorkshopAndBreedView {
-    @Id
-    @Column(name = "workshop_id")
-    private Long workshopId;
+  @Id
+  @Column(name = "workshop_id")
+  private Long workshopId;
 
-    @Column(name = "workshop_number")
-    private Long workshopNumber;
+  @Column(name = "workshop_number")
+  private Long workshopNumber;
 
-    @Column(name = "breed_id")
-    private Long breedId;
+  @Column(name = "breed_id")
+  private Long breedId;
 
-    @Column(name = "breed_name")
-    private String breedName;
+  @Column(name = "breed_name")
+  private String breedName;
 
-    @Column(name = "chickens_count")
-    private Long chickensCount;
+  @Column(name = "chickens_count")
+  private Long chickensCount;
 }

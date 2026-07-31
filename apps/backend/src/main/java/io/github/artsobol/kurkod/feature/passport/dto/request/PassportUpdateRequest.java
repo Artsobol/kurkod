@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PassportUpdateRequest {
 
-    @Pattern(regexp = "^[0-9]{4}$", message = "Invalid passport series")
-    private String series;
+  @Pattern(regexp = "^[0-9]{4}$", message = "Invalid passport series")
+  private String series;
 
-    @Pattern(regexp = "^[0-9]{6}$", message = "Invalid passport number")
-    private String number;
+  @Pattern(regexp = "^[0-9]{6}$", message = "Invalid passport number")
+  private String number;
 }

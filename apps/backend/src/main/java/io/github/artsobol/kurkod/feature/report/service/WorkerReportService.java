@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface WorkerReportService {
 
-    List<WorkerReportDailyEggsResponse> getWorkerDailyEggs(int year, int month);
+  List<WorkerReportDailyEggsResponse> getWorkerDailyEggs(int year, int month);
 }

@@ -1,11 +1,10 @@
 package io.github.artsobol.kurkod.feature.employmentcontract.dto.request;
 
 import jakarta.validation.constraints.*;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor

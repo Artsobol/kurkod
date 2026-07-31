@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.infrastructure.util;
 
 import io.github.artsobol.kurkod.exception.http.VersionConflictException;
-
 import java.util.Objects;
 
 public final class VersionUtils {

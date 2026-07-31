@@ -14,12 +14,12 @@ public class BaseException extends RuntimeException {
   private final transient Object[] messageArgs;
 
   protected BaseException(
-          String errorCode,
-          String messageKey,
-          HttpStatus status,
-          Map<String, Object> details,
-          Throwable cause,
-          Object... messageArgs) {
+      String errorCode,
+      String messageKey,
+      HttpStatus status,
+      Map<String, Object> details,
+      Throwable cause,
+      Object... messageArgs) {
     super(messageKey, cause);
     this.errorCode = errorCode;
     this.messageKey = messageKey;

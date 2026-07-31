@@ -5,9 +5,9 @@ import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
 
 public interface AdminUserService {
 
-    UserResponse changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion);
+  UserResponse changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion);
 
-    UserResponse activateUser(Long userId, Long expectedVersion);
+  UserResponse activateUser(Long userId, Long expectedVersion);
 
-    UserResponse deactivateUser(Long userId, Long expectedVersion);
+  UserResponse deactivateUser(Long userId, Long expectedVersion);
 }

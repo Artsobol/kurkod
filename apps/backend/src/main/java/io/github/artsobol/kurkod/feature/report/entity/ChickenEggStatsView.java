@@ -2,10 +2,9 @@ package io.github.artsobol.kurkod.feature.report.entity;
 
 
 import jakarta.persistence.*;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Getter
 @Setter

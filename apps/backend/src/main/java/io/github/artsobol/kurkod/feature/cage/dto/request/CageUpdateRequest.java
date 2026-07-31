@@ -12,6 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CageUpdateRequest {
 
-    @Positive
-    private Integer cageNumber;
+  @Positive private Integer cageNumber;
 }

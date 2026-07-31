@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.dismissal.service;
 
-import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalResponse;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
-
+import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalResponse;
 import java.util.List;
 
 public interface DismissalService {

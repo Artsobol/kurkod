@@ -1,8 +1,8 @@
 package io.github.artsobol.kurkod.feature.chickenmovement.mapper;
 
+import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementResponse;
 import io.github.artsobol.kurkod.feature.chickenmovement.entity.ChickenMovement;
-import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

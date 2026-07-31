@@ -9,14 +9,15 @@ import java.util.List;
 
 public interface BreedService {
 
-    BreedResponse create(BreedCreateRequest breedCreateRequest);
+  BreedResponse create(BreedCreateRequest breedCreateRequest);
 
-    BreedResponse get(Long id);
+  BreedResponse get(Long id);
 
-    List<BreedResponse> getAll();
+  List<BreedResponse> getAll();
 
-    Page<BreedResponse> getPage(Pageable pageable);
-    BreedResponse update(Long id, BreedUpdateRequest breedUpdateRequest, Long version);
+  Page<BreedResponse> getPage(Pageable pageable);
 
-    void delete(Long id, Long version);
+  BreedResponse update(Long id, BreedUpdateRequest breedUpdateRequest, Long version);
+
+  void delete(Long id, Long version);
 }

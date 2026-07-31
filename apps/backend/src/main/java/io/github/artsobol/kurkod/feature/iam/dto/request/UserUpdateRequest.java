@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserUpdateRequest {
-    @Size(max = 30, message = "Username should be less than 30 characters")
-    private String username;
+  @Size(max = 30, message = "Username should be less than 30 characters")
+  private String username;
 
-    @Size(max = 255)
-    private String password;
+  @Size(max = 255)
+  private String password;
 
-    @Email
-    @Size(max = 80)
-    private String email;
+  @Email
+  @Size(max = 80)
+  private String email;
 }

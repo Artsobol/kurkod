@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 public class DataExistException extends BaseException {
 
-    public DataExistException(String messageKey, Object... args) {
-        super(messageKey, messageKey, HttpStatus.CONFLICT, Map.of(), null, args);
-    }
+  public DataExistException(String messageKey, Object... args) {
+    super(messageKey, messageKey, HttpStatus.CONFLICT, Map.of(), null, args);
+  }
 }

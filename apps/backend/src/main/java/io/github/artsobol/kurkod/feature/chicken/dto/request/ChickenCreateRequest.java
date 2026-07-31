@@ -13,17 +13,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ChickenCreateRequest implements Serializable {
 
-    private String name;
+  private String name;
 
-    @NotNull
-    private Integer weight;
+  @NotNull private Integer weight;
 
-    @NotNull
-    private LocalDate birthDate;
+  @NotNull private LocalDate birthDate;
 
-    @NotNull
-    private Long breedId;
+  @NotNull private Long breedId;
 
-    @NotNull
-    private Long cageId;
+  @NotNull private Long cageId;
 }

@@ -15,15 +15,15 @@ import lombok.Setter;
 @AllArgsConstructor
 public class WorkerCage {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "worker_id", nullable = false)
-    private Worker worker;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "worker_id", nullable = false)
+  private Worker worker;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "cage_id", nullable = false)
-    private Cage cage;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "cage_id", nullable = false)
+  private Cage cage;
 }

@@ -12,6 +12,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class StaffUpdateRequest {
 
-    @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
-    private String position;
+  @Size(min = 2, max = 50, message = "Name should be between 2 and 50 characters")
+  private String position;
 }

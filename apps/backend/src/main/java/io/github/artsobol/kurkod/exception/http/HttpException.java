@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 public class HttpException extends BaseException {
 
-    public HttpException(String messageKey, HttpStatus status, Object... args) {
-        super(messageKey, messageKey, status, Map.of(), null, args);
-    }
+  public HttpException(String messageKey, HttpStatus status, Object... args) {
+    super(messageKey, messageKey, status, Map.of(), null, args);
+  }
 }

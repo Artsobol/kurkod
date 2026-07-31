@@ -1,9 +1,9 @@
 package io.github.artsobol.kurkod.feature.employmentcontract.mapper;
 
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractCreateRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractUpdateRequest;
 import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.EmploymentContractResponse;
 import io.github.artsobol.kurkod.feature.employmentcontract.entity.EmploymentContract;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractUpdateRequest;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

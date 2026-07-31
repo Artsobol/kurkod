@@ -10,14 +10,15 @@ import java.util.List;
 
 public interface ChickenService {
 
-    ChickenResponse create(ChickenCreateRequest request);
+  ChickenResponse create(ChickenCreateRequest request);
 
-    ChickenResponse get(Long id);
+  ChickenResponse get(Long id);
 
-    List<ChickenResponse> getAll();
+  List<ChickenResponse> getAll();
 
-    Page<ChickenResponse> getPage(Pageable pageable);
+  Page<ChickenResponse> getPage(Pageable pageable);
 
-    void delete(Long id, Long version);
-    ChickenResponse update(Long id, ChickenUpdateRequest request, Long version);
+  void delete(Long id, Long version);
+
+  ChickenResponse update(Long id, ChickenUpdateRequest request, Long version);
 }

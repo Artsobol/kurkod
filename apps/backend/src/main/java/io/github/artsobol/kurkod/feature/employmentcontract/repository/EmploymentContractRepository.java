@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface EmploymentContractRepository extends JpaRepository<EmploymentContract, Long> {
-    Optional<EmploymentContract> findEmploymentContractByWorkerIdAndIsActiveTrue(Long workerId);
+  Optional<EmploymentContract> findEmploymentContractByWorkerIdAndIsActiveTrue(Long workerId);
 }

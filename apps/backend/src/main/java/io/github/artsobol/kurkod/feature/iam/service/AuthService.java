@@ -6,9 +6,9 @@ import io.github.artsobol.kurkod.feature.iam.dto.request.RegistrationRequest;
 
 public interface AuthService {
 
-    UserProfileResponse login(LoginRequest request);
+  UserProfileResponse login(LoginRequest request);
 
-    UserProfileResponse refreshAccessToken(String refreshToken);
+  UserProfileResponse refreshAccessToken(String refreshToken);
 
-    UserProfileResponse registerUser(RegistrationRequest registrationRequest);
+  UserProfileResponse registerUser(RegistrationRequest registrationRequest);
 }

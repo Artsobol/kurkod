@@ -9,14 +9,15 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    UserResponse getById(Long userId);
+  UserResponse getById(Long userId);
 
-    List<UserResponse> getAll();
+  List<UserResponse> getAll();
 
-    UserResponse getByUsername(String username);
+  UserResponse getByUsername(String username);
 
-    UserResponse create(UserCreateRequest request);
-    UserResponse update(Long userId, UserUpdateRequest request, Long version);
+  UserResponse create(UserCreateRequest request);
 
-    void deleteById(Long userId, Long expectedVersion);
+  UserResponse update(Long userId, UserUpdateRequest request, Long version);
+
+  void deleteById(Long userId, Long expectedVersion);
 }

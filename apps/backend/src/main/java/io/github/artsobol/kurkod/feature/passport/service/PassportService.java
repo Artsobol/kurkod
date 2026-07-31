@@ -6,10 +6,11 @@ import io.github.artsobol.kurkod.feature.passport.dto.request.PassportUpdateRequ
 
 public interface PassportService {
 
-    PassportResponse get(Long workerId);
+  PassportResponse get(Long workerId);
 
-    PassportResponse create(Long workerId, PassportCreateRequest request);
-    PassportResponse update(Long workerId, PassportUpdateRequest request, Long version);
+  PassportResponse create(Long workerId, PassportCreateRequest request);
 
-    void delete(Long workerId, Long version);
+  PassportResponse update(Long workerId, PassportUpdateRequest request, Long version);
+
+  void delete(Long workerId, Long version);
 }

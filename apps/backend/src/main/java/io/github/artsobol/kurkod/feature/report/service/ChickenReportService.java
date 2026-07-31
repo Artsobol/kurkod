@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface ChickenReportService {
 
-    List<ChickensByWorkshopAndBreedResponse> getChickensByWorkshopAndBreed();
+  List<ChickensByWorkshopAndBreedResponse> getChickensByWorkshopAndBreed();
 
-    WorkshopBreedTopResponse getTopWorkshopByBreed(Long breedId);
+  WorkshopBreedTopResponse getTopWorkshopByBreed(Long breedId);
 
-    List<ChickenEggStatsResponse> getEggStats(Integer weight, Long breedId, LocalDate birthDate);
+  List<ChickenEggStatsResponse> getEggStats(Integer weight, Long breedId, LocalDate birthDate);
 }

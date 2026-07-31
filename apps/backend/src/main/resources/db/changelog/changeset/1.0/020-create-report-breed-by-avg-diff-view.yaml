@@ -6,8 +6,8 @@ databaseChangeLog:
         - onFail: HALT
           and:
             - not:
-              - viewExists:
-                  viewName: report_breed_by_avg_diff
+                - viewExists:
+                    viewName: report_breed_by_avg_diff
             - tableExists:
                 tableName: breed
             - tableExists:

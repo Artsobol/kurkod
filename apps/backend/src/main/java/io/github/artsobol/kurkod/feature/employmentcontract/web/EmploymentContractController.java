@@ -21,51 +21,47 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Employment Contract", description = "Employment Contract operations")
 public class EmploymentContractController {
 
-    private final EmploymentContractService employmentContractService;
+  private final EmploymentContractService employmentContractService;
 
-    @Operation(summary = "Get employment contract by worker ID")
-    @GetMapping
-    public ResponseEntity<EmploymentContractResponse> get(
-            @PathVariable Long workerId) {
+  @Operation(summary = "Get employment contract by worker ID")
+  @GetMapping
+  public ResponseEntity<EmploymentContractResponse> get(@PathVariable Long workerId) {
 
-        EmploymentContractResponse response = employmentContractService.get(workerId);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    EmploymentContractResponse response = employmentContractService.get(workerId);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-    @Operation(summary = "Create employment contract for a worker")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmploymentContractResponse> create(
-            @PathVariable Long workerId,
-            @RequestBody @Valid EmploymentContractCreateRequest request) {
+  @Operation(summary = "Create employment contract for a worker")
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<EmploymentContractResponse> create(
+      @PathVariable Long workerId, @RequestBody @Valid EmploymentContractCreateRequest request) {
 
-        EmploymentContractResponse response = employmentContractService.create(workerId, request);
-        return ResponseEntity.created(LocationUtils.buildLocation()).eTag(EtagUtils.toEtag(response.version())).body(
-                response);
-    }
-    @Operation(summary = "Partially update employment contract")
-    @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmploymentContractResponse> update(
-            @PathVariable Long workerId,
-            @RequestBody @Valid EmploymentContractUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+    EmploymentContractResponse response = employmentContractService.create(workerId, request);
+    return ResponseEntity.created(LocationUtils.buildLocation())
+        .eTag(EtagUtils.toEtag(response.version()))
+        .body(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        EmploymentContractResponse response = employmentContractService.update(workerId, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+  @Operation(summary = "Partially update employment contract")
+  @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<EmploymentContractResponse> update(
+      @PathVariable Long workerId,
+      @RequestBody @Valid EmploymentContractUpdateRequest request,
+      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
-    @Operation(summary = "Delete employment contract")
-    @DeleteMapping
-    public ResponseEntity<Void> delete(
-            @PathVariable Long workerId,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    EmploymentContractResponse response =
+        employmentContractService.update(workerId, request, expected);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        employmentContractService.delete(workerId, expected);
-        return ResponseEntity.noContent().build();
-    }
+  @Operation(summary = "Delete employment contract")
+  @DeleteMapping
+  public ResponseEntity<Void> delete(
+      @PathVariable Long workerId, @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    employmentContractService.delete(workerId, expected);
+    return ResponseEntity.noContent().build();
+  }
 }

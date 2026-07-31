@@ -18,29 +18,29 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Authentication", description = "Authentication operations")
 public class AuthController {
 
-    private final AuthService authService;
+  private final AuthService authService;
 
-    @Operation(summary = "Authenticate user")
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserProfileResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
-        UserProfileResponse result = authService.login(loginRequest);
-        return ResponseEntity.ok(result);
-    }
+  @Operation(summary = "Authenticate user")
+  @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<UserProfileResponse> login(@RequestBody @Valid LoginRequest loginRequest) {
+    UserProfileResponse result = authService.login(loginRequest);
+    return ResponseEntity.ok(result);
+  }
 
-    @Operation(summary = "Refresh access token")
-    @GetMapping("/refresh/token")
-    public ResponseEntity<UserProfileResponse> refreshToken(
-            @RequestParam(name = "token") String refreshToken) {
+  @Operation(summary = "Refresh access token")
+  @GetMapping("/refresh/token")
+  public ResponseEntity<UserProfileResponse> refreshToken(
+      @RequestParam(name = "token") String refreshToken) {
 
-        UserProfileResponse result = authService.refreshAccessToken(refreshToken);
-        return ResponseEntity.ok(result);
-    }
+    UserProfileResponse result = authService.refreshAccessToken(refreshToken);
+    return ResponseEntity.ok(result);
+  }
 
-    @Operation(summary = "Register new user")
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserProfileResponse> register(
-            @RequestBody @Valid RegistrationRequest registrationRequest) {
-        UserProfileResponse result = authService.registerUser(registrationRequest);
-        return ResponseEntity.ok(result);
-    }
+  @Operation(summary = "Register new user")
+  @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<UserProfileResponse> register(
+      @RequestBody @Valid RegistrationRequest registrationRequest) {
+    UserProfileResponse result = authService.registerUser(registrationRequest);
+    return ResponseEntity.ok(result);
+  }
 }

@@ -8,12 +8,13 @@ import java.util.List;
 
 public interface DietService {
 
-    DietResponse get(Long id);
+  DietResponse get(Long id);
 
-    List<DietResponse> getAll();
+  List<DietResponse> getAll();
 
-    DietResponse create(DietCreateRequest request);
+  DietResponse create(DietCreateRequest request);
 
-    DietResponse update(Long id, DietUpdateRequest request, Long version);
-    void delete(Long id, Long expectedVersion);
+  DietResponse update(Long id, DietUpdateRequest request, Long version);
+
+  void delete(Long id, Long expectedVersion);
 }

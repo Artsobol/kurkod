@@ -1,18 +1,19 @@
 package io.github.artsobol.kurkod.feature.chicken.web;
 
-import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
+import io.github.artsobol.kurkod.feature.chicken.service.ChickenService;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
-import io.github.artsobol.kurkod.feature.chicken.service.ChickenService;
+import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,8 +24,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Validated
 @RestController

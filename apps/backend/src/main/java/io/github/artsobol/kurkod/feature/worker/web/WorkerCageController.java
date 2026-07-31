@@ -5,13 +5,12 @@ import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 import io.github.artsobol.kurkod.feature.worker.service.WorkerCageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/workers", produces = MediaType.APPLICATION_JSON_VALUE)

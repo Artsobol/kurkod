@@ -1,11 +1,11 @@
 package io.github.artsobol.kurkod.feature.diet.web;
 
+import io.github.artsobol.kurkod.feature.diet.dto.request.DietCreateRequest;
+import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
+import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
+import io.github.artsobol.kurkod.feature.diet.service.DietService;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
-import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
-import io.github.artsobol.kurkod.feature.diet.dto.request.DietCreateRequest;
-import io.github.artsobol.kurkod.feature.diet.service.DietService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface BreedReportService {
 
-    List<BreedEggDiffReportResponse> getEggDiff();
+  List<BreedEggDiffReportResponse> getEggDiff();
 }

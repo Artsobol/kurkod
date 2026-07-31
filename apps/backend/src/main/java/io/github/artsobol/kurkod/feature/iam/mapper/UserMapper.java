@@ -1,19 +1,18 @@
 package io.github.artsobol.kurkod.feature.iam.mapper;
 
+import io.github.artsobol.kurkod.feature.iam.dto.request.RegistrationRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
 import io.github.artsobol.kurkod.feature.iam.dto.response.RoleResponse;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
 import io.github.artsobol.kurkod.feature.iam.dto.response.UserProfileResponse;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
 import io.github.artsobol.kurkod.feature.iam.entity.Role;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
-import io.github.artsobol.kurkod.feature.iam.dto.request.RegistrationRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
+import java.util.Collection;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-
-import java.util.Collection;
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {

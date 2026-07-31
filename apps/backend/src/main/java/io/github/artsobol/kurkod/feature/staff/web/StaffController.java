@@ -1,21 +1,20 @@
 package io.github.artsobol.kurkod.feature.staff.web;
 
+import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;
+import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
+import io.github.artsobol.kurkod.feature.staff.dto.response.StaffResponse;
+import io.github.artsobol.kurkod.feature.staff.service.StaffService;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.staff.dto.response.StaffResponse;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;
-import io.github.artsobol.kurkod.feature.staff.service.StaffService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/staff", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -14,14 +14,10 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class DismissalCreateRequest {
 
-    @NotNull
-    @PastOrPresent
-    private LocalDate dismissalDate;
+  @NotNull @PastOrPresent private LocalDate dismissalDate;
 
-    @Size(max=200)
-    private String reason;
+  @Size(max = 200)
+  private String reason;
 
-    @NotNull
-    @Positive
-    private Long workerId;
+  @NotNull @Positive private Long workerId;
 }

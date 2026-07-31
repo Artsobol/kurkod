@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface PassportRepository extends JpaRepository<Passport, Long> {
 
-    Optional<Passport> findPassportByWorkerIdAndIsActiveTrue(Long workerId);
+  Optional<Passport> findPassportByWorkerIdAndIsActiveTrue(Long workerId);
 
-    void deletePassportByWorkerId(Long workerId);
+  void deletePassportByWorkerId(Long workerId);
 }

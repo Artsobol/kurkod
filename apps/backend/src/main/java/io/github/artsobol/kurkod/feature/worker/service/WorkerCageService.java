@@ -7,15 +7,15 @@ import java.util.List;
 
 public interface WorkerCageService {
 
-    List<CageResponse> getWorkerCages(Long workerId);
+  List<CageResponse> getWorkerCages(Long workerId);
 
-    List<WorkerResponse> getCageWorkers(Long cageId);
+  List<WorkerResponse> getCageWorkers(Long cageId);
 
-    void assignCageToWorker(Long workerId, Long cageId);
+  void assignCageToWorker(Long workerId, Long cageId);
 
-    void unassignCageFromWorker(Long workerId, Long cageId);
+  void unassignCageFromWorker(Long workerId, Long cageId);
 
-    boolean hasWorkerAnyCages(Long workerId);
+  boolean hasWorkerAnyCages(Long workerId);
 
-    boolean isCageServedByAnyWorker(Long cageId);
+  boolean isCageServedByAnyWorker(Long cageId);
 }

@@ -11,7 +11,5 @@ import lombok.*;
 @RequiredArgsConstructor
 public class WorkshopCreateRequest {
 
-    @NotNull
-    @Positive
-    private Integer workshopNumber;
+  @NotNull @Positive private Integer workshopNumber;
 }

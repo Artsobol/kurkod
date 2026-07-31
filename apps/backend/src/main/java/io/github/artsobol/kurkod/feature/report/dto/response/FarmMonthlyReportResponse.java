@@ -5,9 +5,8 @@ import io.github.artsobol.kurkod.feature.report.dto.response.BreedWorkshopMonthl
 import java.util.List;
 
 public record FarmMonthlyReportResponse(
-        int year,
-        int month,
-        List<BreedWorkshopMonthlyReportResponse> stats,
-        long totalChickens,
-        long totalEggs
-) {}
+    int year,
+    int month,
+    List<BreedWorkshopMonthlyReportResponse> stats,
+    long totalChickens,
+    long totalEggs) {}

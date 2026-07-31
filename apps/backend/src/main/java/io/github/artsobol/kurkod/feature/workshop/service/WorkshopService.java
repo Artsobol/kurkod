@@ -10,14 +10,15 @@ import java.util.List;
 
 public interface WorkshopService {
 
-    WorkshopResponse get(Long id);
+  WorkshopResponse get(Long id);
 
-    List<WorkshopResponse> getAll();
+  List<WorkshopResponse> getAll();
 
-    Page<WorkshopResponse> getAllWithPagination(Pageable pageable);
+  Page<WorkshopResponse> getAllWithPagination(Pageable pageable);
 
-    WorkshopResponse create(WorkshopCreateRequest request);
+  WorkshopResponse create(WorkshopCreateRequest request);
 
-    WorkshopResponse update(Long id, WorkshopUpdateRequest request, Long version);
-    void delete(Long id, Long version);
+  WorkshopResponse update(Long id, WorkshopUpdateRequest request, Long version);
+
+  void delete(Long id, Long version);
 }

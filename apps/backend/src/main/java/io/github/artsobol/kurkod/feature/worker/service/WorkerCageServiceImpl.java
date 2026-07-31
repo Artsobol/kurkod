@@ -26,68 +26,70 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class WorkerCageServiceImpl implements WorkerCageService {
 
-    private final WorkerRepository workerRepository;
-    private final CageRepository cageRepository;
-    private final WorkerCageRepository workerCageRepository;
-    private final CageMapper cageMapper;
-    private final WorkerMapper workerMapper;
+  private final WorkerRepository workerRepository;
+  private final CageRepository cageRepository;
+  private final WorkerCageRepository workerCageRepository;
+  private final CageMapper cageMapper;
+  private final WorkerMapper workerMapper;
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<CageResponse> getWorkerCages(Long workerId) {
-        return workerCageRepository.findAllByWorkerId(workerId)
-                                   .stream()
-                                   .map(WorkerCage::getCage)
-                                   .map(cageMapper::toResponse)
-                                   .collect(Collectors.toList());
+  @Override
+  @Transactional(readOnly = true)
+  public List<CageResponse> getWorkerCages(Long workerId) {
+    return workerCageRepository.findAllByWorkerId(workerId).stream()
+        .map(WorkerCage::getCage)
+        .map(cageMapper::toResponse)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public List<WorkerResponse> getCageWorkers(Long cageId) {
+
+    return workerCageRepository.findAllByCageId(cageId).stream()
+        .map(WorkerCage::getWorker)
+        .map(workerMapper::toResponse)
+        .collect(Collectors.toList());
+  }
+
+  @Override
+  @Transactional
+  public void assignCageToWorker(Long workerId, Long cageId) {
+    if (workerCageRepository.existsByWorkerIdAndCageId(workerId, cageId)) {
+      return;
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<WorkerResponse> getCageWorkers(Long cageId) {
+    Worker worker =
+        workerRepository
+            .findById(workerId)
+            .orElseThrow(() -> new NotFoundException("worker.not.found", workerId));
 
-        return workerCageRepository.findAllByCageId(cageId)
-                                   .stream()
-                                   .map(WorkerCage::getWorker)
-                                   .map(workerMapper::toResponse)
-                                   .collect(Collectors.toList());
-    }
+    Cage cage =
+        cageRepository
+            .findById(cageId)
+            .orElseThrow(() -> new NotFoundException("cage.not.found", cageId));
 
-    @Override
-    @Transactional
-    public void assignCageToWorker(Long workerId, Long cageId) {
-        if (workerCageRepository.existsByWorkerIdAndCageId(workerId, cageId)) {
-            return;
-        }
+    WorkerCage workerCage = new WorkerCage();
+    workerCage.setWorker(worker);
+    workerCage.setCage(cage);
 
-        Worker worker = workerRepository.findById(workerId)
-                .orElseThrow(() -> new NotFoundException("worker.not.found", workerId));
+    workerCageRepository.save(workerCage);
+  }
 
-        Cage cage = cageRepository.findById(cageId)
-                .orElseThrow(() -> new NotFoundException("cage.not.found", cageId));
+  @Override
+  @Transactional
+  public void unassignCageFromWorker(Long workerId, Long cageId) {
+    workerCageRepository.deleteByWorkerIdAndCageId(workerId, cageId);
+  }
 
-        WorkerCage workerCage = new WorkerCage();
-        workerCage.setWorker(worker);
-        workerCage.setCage(cage);
+  @Override
+  @Transactional(readOnly = true)
+  public boolean hasWorkerAnyCages(Long workerId) {
+    return workerCageRepository.existsByWorkerId(workerId);
+  }
 
-        workerCageRepository.save(workerCage);
-    }
-
-    @Override
-    @Transactional
-    public void unassignCageFromWorker(Long workerId, Long cageId) {
-        workerCageRepository.deleteByWorkerIdAndCageId(workerId, cageId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean hasWorkerAnyCages(Long workerId) {
-        return workerCageRepository.existsByWorkerId(workerId);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public boolean isCageServedByAnyWorker(Long cageId) {
-        return workerCageRepository.existsByCageId(cageId);
-    }
+  @Override
+  @Transactional(readOnly = true)
+  public boolean isCageServedByAnyWorker(Long cageId) {
+    return workerCageRepository.existsByCageId(cageId);
+  }
 }

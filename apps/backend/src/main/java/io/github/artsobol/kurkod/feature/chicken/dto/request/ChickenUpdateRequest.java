@@ -15,15 +15,13 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ChickenUpdateRequest {
 
-    private String name;
+  private String name;
 
-    @Positive
-    private Integer weight;
+  @Positive private Integer weight;
 
-    @Past
-    private LocalDate birthDate;
+  @Past private LocalDate birthDate;
 
-    private Long breedId;
+  private Long breedId;
 
-    private Long cageId;
+  private Long cageId;
 }

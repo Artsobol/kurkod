@@ -8,12 +8,14 @@ import java.util.List;
 
 public interface CageService {
 
-    CageResponse find(Long rowId, Integer cageNumber);
+  CageResponse find(Long rowId, Integer cageNumber);
 
-    List<CageResponse> findAll(Long rowId);
+  List<CageResponse> findAll(Long rowId);
 
-    CageResponse create(Long rowId, CageCreateRequest request);
-    CageResponse update(Long rowId, Integer cageNumber, CageUpdateRequest request, Long expectedVersion);
+  CageResponse create(Long rowId, CageCreateRequest request);
 
-    void delete(Long rowId, Integer cageNumber, Long expectedVersion);
+  CageResponse update(
+      Long rowId, Integer cageNumber, CageUpdateRequest request, Long expectedVersion);
+
+  void delete(Long rowId, Integer cageNumber, Long expectedVersion);
 }

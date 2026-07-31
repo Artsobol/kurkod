@@ -63,4 +63,4 @@ databaseChangeLog:
 
       rollback:
         - dropTable:
-              tableName: role
+            tableName: role

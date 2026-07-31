@@ -3,13 +3,11 @@ package io.github.artsobol.kurkod.feature.report.service;
 import io.github.artsobol.kurkod.feature.report.dto.response.BreedEggDiffReportResponse;
 import io.github.artsobol.kurkod.feature.report.entity.BreedEggDiffReport;
 import io.github.artsobol.kurkod.feature.report.repository.BreedEggDiffReportRepository;
-import io.github.artsobol.kurkod.feature.report.service.BreedReportService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -13,16 +13,16 @@ import org.hibernate.annotations.Immutable;
 @Getter
 public class CurrentChickenPosition {
 
-    @Id
-    @Column(name = "chicken_id")
-    private Long chickenId;
+  @Id
+  @Column(name = "chicken_id")
+  private Long chickenId;
 
-    @Column(name = "cage_id")
-    private Long cageId;
+  @Column(name = "cage_id")
+  private Long cageId;
 
-    @Column(name = "row_id")
-    private Long rowId;
+  @Column(name = "row_id")
+  private Long rowId;
 
-    @Column(name = "workshop_id")
-    private Long workshopId;
+  @Column(name = "workshop_id")
+  private Long workshopId;
 }

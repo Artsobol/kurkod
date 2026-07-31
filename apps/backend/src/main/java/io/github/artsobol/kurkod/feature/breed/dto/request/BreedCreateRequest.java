@@ -11,14 +11,9 @@ import lombok.*;
 @NoArgsConstructor
 public class BreedCreateRequest {
 
-    @NotBlank
-    private String name;
+  @NotBlank private String name;
 
-    @NotNull
-    @Positive
-    private Integer eggsNumber;
+  @NotNull @Positive private Integer eggsNumber;
 
-    @NotNull
-    @Positive
-    private Integer weight;
+  @NotNull @Positive private Integer weight;
 }

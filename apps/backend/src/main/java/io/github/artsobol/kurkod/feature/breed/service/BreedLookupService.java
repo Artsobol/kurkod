@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BreedLookupService {
 
-    private final BreedRepository breedRepository;
+  private final BreedRepository breedRepository;
 
-    public Breed getBreedByIdOrThrow(Long breedId) {
-        return breedRepository.findBreedByIdAndIsActiveTrue(breedId)
-                .orElseThrow(() -> new NotFoundException("breed.not.found", breedId));
-    }
+  public Breed getBreedByIdOrThrow(Long breedId) {
+    return breedRepository
+        .findBreedByIdAndIsActiveTrue(breedId)
+        .orElseThrow(() -> new NotFoundException("breed.not.found", breedId));
+  }
 }

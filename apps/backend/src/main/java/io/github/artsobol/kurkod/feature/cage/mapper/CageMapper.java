@@ -11,11 +11,12 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface CageMapper {
 
-    @Mapping(target = "rowId", source = "row.id")
-    CageResponse toResponse(Cage cage);
+  @Mapping(target = "rowId", source = "row.id")
+  CageResponse toResponse(Cage cage);
 
-    @Mapping(target = "row", ignore = true)
-    Cage toEntity(CageCreateRequest cageCreateRequest);
-    @Mapping(target = "row", ignore = true)
-    void update(@MappingTarget Cage cage, CageUpdateRequest cageUpdateRequest);
+  @Mapping(target = "row", ignore = true)
+  Cage toEntity(CageCreateRequest cageCreateRequest);
+
+  @Mapping(target = "row", ignore = true)
+  void update(@MappingTarget Cage cage, CageUpdateRequest cageUpdateRequest);
 }

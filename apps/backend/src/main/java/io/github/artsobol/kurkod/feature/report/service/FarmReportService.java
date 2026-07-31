@@ -4,5 +4,5 @@ import io.github.artsobol.kurkod.feature.report.dto.response.FarmMonthlyReportRe
 
 public interface FarmReportService {
 
-    FarmMonthlyReportResponse getMonthlyReport(int year, int month);
+  FarmMonthlyReportResponse getMonthlyReport(int year, int month);
 }

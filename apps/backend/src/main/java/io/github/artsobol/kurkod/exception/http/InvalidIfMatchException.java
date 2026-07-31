@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 public class InvalidIfMatchException extends BaseException {
 
-    public InvalidIfMatchException(String messageKey, Object... args) {
-        super(messageKey, messageKey, HttpStatus.BAD_REQUEST, Map.of(), null, args);
-    }
+  public InvalidIfMatchException(String messageKey, Object... args) {
+    super(messageKey, messageKey, HttpStatus.BAD_REQUEST, Map.of(), null, args);
+  }
 }

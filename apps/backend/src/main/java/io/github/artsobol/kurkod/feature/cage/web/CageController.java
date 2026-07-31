@@ -1,11 +1,11 @@
 package io.github.artsobol.kurkod.feature.cage.web;
 
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
+import io.github.artsobol.kurkod.feature.cage.service.CageService;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
-import io.github.artsobol.kurkod.feature.cage.service.CageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

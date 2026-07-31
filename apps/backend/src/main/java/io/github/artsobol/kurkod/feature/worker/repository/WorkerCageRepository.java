@@ -7,24 +7,23 @@ import java.util.List;
 
 public interface WorkerCageRepository extends JpaRepository<WorkerCage, Long> {
 
-    List<WorkerCage> findAllByWorkerId(Long workerId);
+  List<WorkerCage> findAllByWorkerId(Long workerId);
 
-    List<WorkerCage> findAllByCageId(Long cageId);
+  List<WorkerCage> findAllByCageId(Long cageId);
 
-    boolean existsByWorkerIdAndCageId(Long workerId, Long cageId);
+  boolean existsByWorkerIdAndCageId(Long workerId, Long cageId);
 
-    boolean existsByWorkerId(Long workerId);
+  boolean existsByWorkerId(Long workerId);
 
-    boolean existsByCageId(Long cageId);
+  boolean existsByCageId(Long cageId);
 
-    void deleteByWorkerIdAndCageId(Long workerId, Long cageId);
+  void deleteByWorkerIdAndCageId(Long workerId, Long cageId);
 
-    void deleteAllByWorkerId(Long workerId);
+  void deleteAllByWorkerId(Long workerId);
 
-    void deleteAllByCageId(Long cageId);
+  void deleteAllByCageId(Long cageId);
 
-    long countByWorkerId(Long workerId);
+  long countByWorkerId(Long workerId);
 
-    long countByCageId(Long cageId);
+  long countByCageId(Long cageId);
 }
-

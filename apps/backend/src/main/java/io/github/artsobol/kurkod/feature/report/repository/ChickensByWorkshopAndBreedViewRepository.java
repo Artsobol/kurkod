@@ -6,7 +6,8 @@ import io.github.artsobol.kurkod.feature.report.entity.ChickensByWorkshopAndBree
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChickensByWorkshopAndBreedViewRepository
-        extends JpaRepository<ChickensByWorkshopAndBreedView, Long> {
+    extends JpaRepository<ChickensByWorkshopAndBreedView, Long> {
 
-    java.util.List<ChickensByWorkshopAndBreedView> findByBreedIdOrderByChickensCountDesc(Long breedId);
+  java.util.List<ChickensByWorkshopAndBreedView> findByBreedIdOrderByChickensCountDesc(
+      Long breedId);
 }

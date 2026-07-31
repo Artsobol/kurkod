@@ -2,10 +2,10 @@ package io.github.artsobol.kurkod.feature.chicken.mapper;
 
 import io.github.artsobol.kurkod.feature.breed.mapper.BreedMapper;
 import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
 import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

@@ -13,7 +13,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RowsCreateRequest {
 
-    @NotNull
-    @Positive
-    private Integer rowNumber;
+  @NotNull @Positive private Integer rowNumber;
 }

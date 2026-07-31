@@ -1,8 +1,8 @@
 package io.github.artsobol.kurkod.feature.employmentcontract.service;
 
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.EmploymentContractResponse;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractUpdateRequest;
 import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractCreateRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractUpdateRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.EmploymentContractResponse;
 
 public interface EmploymentContractService {
 
