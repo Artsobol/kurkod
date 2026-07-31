@@ -1,22 +1,13 @@
 package io.github.artsobol.kurkod.infrastructure.util;
 
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 public final class LocationUtils {
 
     private LocationUtils() {}
 
-    public static URI buildLocation(int id) {
-        return ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(id)
-                .toUri();
-    }
-
-    public static URI buildLocation(Long id) {
+    public static URI buildLocation(long id) {
         return ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -28,14 +19,6 @@ public final class LocationUtils {
         return ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .build()
-                .toUri();
-    }
-
-    public static URI buildLocation(Long workerId, Long dismissedId) {
-        return ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/dismissals/workers/{workerId}/dismissed/{dismissedId}")
-                .buildAndExpand(workerId, dismissedId)
                 .toUri();
     }
 

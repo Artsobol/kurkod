@@ -1,18 +1,17 @@
 package io.github.artsobol.kurkod.feature.chickenmovement.web;
 
-import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementResponse;
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
+import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementResponse;
 import io.github.artsobol.kurkod.feature.chickenmovement.service.ChickenMovementService;
+import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,6 +55,7 @@ public class ChickenMovementController {
             @Valid @RequestBody ChickenMovementCreateRequest request) {
 
         ChickenMovementResponse response = chickenMovementService.create(chickenId, request);
-        return ResponseEntity.created(LocationUtils.buildLocation()).body(response);
+        return ResponseEntity.created(
+                LocationUtils.buildLocation("/chicken-movements/{id}", response.id())).body(response);
     }
 }

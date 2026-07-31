@@ -1,14 +1,17 @@
 package io.github.artsobol.kurkod.infrastructure.util;
 
-import io.github.artsobol.kurkod.exception.http.*;
+import io.github.artsobol.kurkod.exception.http.InvalidIfMatchException;
+import io.github.artsobol.kurkod.exception.http.MissingIfMatchException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public final class EtagUtils {
 
-    private EtagUtils(){
+    private static final Pattern ETAG_PATTERN = Pattern.compile("\"(\\d+)\"");
 
-    }
+    private EtagUtils() {}
 
-    public static String toEtag(long version){
+    public static String toEtag(long version) {
         return "\"" + version + "\"";
     }
 
@@ -28,17 +31,11 @@ public final class EtagUtils {
         }
     }
 
-    private static long parseValue(String headerValue) throws NumberFormatException{
-        if (headerValue.startsWith("W/")) {
-            headerValue = headerValue.substring(2);
+    private static long parseValue(String headerValue) throws NumberFormatException {
+        Matcher matcher = ETAG_PATTERN.matcher(headerValue);
+        if (!matcher.matches()) {
+            throw new NumberFormatException("Invalid ETag format");
         }
-        headerValue = headerValue.replace("\"", "");
-        return Long.parseLong(headerValue);
+        return Long.parseLong(matcher.group(1));
     }
-
-    public static boolean matches(String ifMatchHeader, long currentVersion) {
-        return ifMatchHeader != null && ifMatchHeader.equals(toEtag(currentVersion));
-    }
-
-
 }
