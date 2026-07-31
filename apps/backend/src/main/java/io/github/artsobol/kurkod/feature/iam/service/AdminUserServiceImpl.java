@@ -1,24 +1,22 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.infrastructure.util.VersionUtils;
 import io.github.artsobol.kurkod.feature.iam.dto.request.ChangeRoleRequest;
-import io.github.artsobol.kurkod.feature.iam.service.AdminUserService;
-import io.github.artsobol.kurkod.feature.iam.entity.Role;
-import io.github.artsobol.kurkod.feature.iam.repository.RoleRepository;
-import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
 import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
-import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.feature.iam.entity.RegistrationStatus;
+import io.github.artsobol.kurkod.feature.iam.entity.Role;
 import io.github.artsobol.kurkod.feature.iam.entity.SystemRole;
+import io.github.artsobol.kurkod.feature.iam.entity.User;
+import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
+import io.github.artsobol.kurkod.feature.iam.repository.RoleRepository;
 import io.github.artsobol.kurkod.feature.iam.repository.UserRepository;
+import io.github.artsobol.kurkod.infrastructure.util.VersionUtils;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @Transactional
@@ -33,8 +31,8 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public UserResponse changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion) {
-        VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
         User user = getUserById(userId);
+        VersionUtils.checkVersion(user.getVersion(), expectedVersion);
         Role role = getRoleBySystemRole(request.role());
 
         Set<Role> roles = new HashSet<>();
@@ -46,15 +44,17 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     @Override
     public UserResponse activateUser(Long userId, Long expectedVersion) {
-        VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
-        User user = changeStatus(getUserById(userId), RegistrationStatus.ACTIVE);
+        User user = getUserById(userId);
+        VersionUtils.checkVersion(user.getVersion(), expectedVersion);
+        user = changeStatus(user, RegistrationStatus.ACTIVE);
         return userMapper.toResponse(user);
     }
 
     @Override
     public UserResponse deactivateUser(Long userId, Long expectedVersion) {
-        VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
-        User user = changeStatus(getUserById(userId), RegistrationStatus.INACTIVE);
+        User user = getUserById(userId);
+        VersionUtils.checkVersion(user.getVersion(), expectedVersion);
+        user = changeStatus(user, RegistrationStatus.INACTIVE);
         return userMapper.toResponse(user);
     }
 
