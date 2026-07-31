@@ -24,11 +24,15 @@ import java.util.Map;
 @Component
 public class JwtTokenProvider {
     private final SecretKey secretKey;
+    private final JwtParser jwtParser;
     private final Long jwtValidityInMilliseconds;
 
     public JwtTokenProvider(@Value("${jwt.secret}") String secret,
                             @Value("${jwt.expiration:3600000}") long jwtValidityInMilliseconds) {
         this.secretKey = getKey(secret);
+        this.jwtParser = Jwts.parser()
+                .verifyWith(secretKey)
+                .build();
         this.jwtValidityInMilliseconds = jwtValidityInMilliseconds;
     }
 
@@ -55,11 +59,8 @@ public class JwtTokenProvider {
 
     public boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token);
-            return !claims.getBody().getExpiration().before(new Date());
+            Jws<Claims> claims = jwtParser.parseSignedClaims(token);
+            return !claims.getPayload().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
@@ -81,11 +82,7 @@ public class JwtTokenProvider {
 
     private Claims getAllClaimsFromToken(String token) {
         try {
-            return Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
+            return jwtParser.parseSignedClaims(token).getPayload();
         } catch (ExpiredJwtException e) {
             return e.getClaims();
         }
@@ -98,11 +95,11 @@ public class JwtTokenProvider {
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + jwtValidityInMilliseconds))
-                .signWith(secretKey, SignatureAlgorithm.HS512)
+                .claims(claims)
+                .subject(subject)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + jwtValidityInMilliseconds))
+                .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
     }
 }
