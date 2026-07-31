@@ -1,15 +1,13 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
-import io.github.artsobol.kurkod.infrastructure.util.UuidUtils;
+import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.iam.entity.RefreshToken;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
-import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.iam.repository.RefreshTokenRepository;
-import io.github.artsobol.kurkod.feature.iam.service.RefreshTokenService;
+import java.time.Instant;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.OffsetDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -21,16 +19,16 @@ public class RefreshTokenImpl implements RefreshTokenService {
     public RefreshToken generateOrUpdateRefreshToken(User user) {
         return refreshTokenRepository.findByUserId(user.getId())
                 .map(refreshToken -> {
-                    refreshToken.setCreatedAt(OffsetDateTime.now());
-                    refreshToken.setToken(UuidUtils.generateUuidWithoutDash());
+                    refreshToken.setCreatedAt(Instant.now());
+                    refreshToken.setToken(generateRefreshToken());
                     return refreshTokenRepository.save(refreshToken);
                 })
                 .orElseGet(
                         () -> {
                             RefreshToken newToken = new RefreshToken();
                             newToken.setUser(user);
-                            newToken.setCreatedAt(OffsetDateTime.now());
-                            newToken.setToken(UuidUtils.generateUuidWithoutDash());
+                            newToken.setCreatedAt(Instant.now());
+                            newToken.setToken(generateRefreshToken());
                             return refreshTokenRepository.save(newToken);
                         }
                 );
@@ -43,8 +41,12 @@ public class RefreshTokenImpl implements RefreshTokenService {
                         () -> new NotFoundException("jwt.refresh.token.not.found", requestRefreshToken)
                 );
 
-        refreshToken.setCreatedAt(OffsetDateTime.now());
-        refreshToken.setToken(UuidUtils.generateUuidWithoutDash());
+        refreshToken.setCreatedAt(Instant.now());
+        refreshToken.setToken(generateRefreshToken());
         return refreshTokenRepository.save(refreshToken);
+    }
+
+    private String generateRefreshToken() {
+        return UUID.randomUUID().toString().replace("-", "");
     }
 }
