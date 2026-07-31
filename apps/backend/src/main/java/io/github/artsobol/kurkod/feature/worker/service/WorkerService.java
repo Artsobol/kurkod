@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.worker.service;
 
 import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPatchRequest;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPostRequest;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPutRequest;
+import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerUpdateRequest;
+import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerCreateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,11 +16,8 @@ public interface WorkerService {
 
     Page<WorkerDTO> getPage(Pageable pageable);
 
-    WorkerDTO create(WorkerPostRequest request);
-
-    WorkerDTO replace(Long id, WorkerPutRequest request, Long version);
-
-    WorkerDTO update(Long id, WorkerPatchRequest request, Long version);
+    WorkerDTO create(WorkerCreateRequest request);
+    WorkerDTO update(Long id, WorkerUpdateRequest request, Long version);
 
     void delete(Long id, Long version);
 }

@@ -1,26 +1,22 @@
 package io.github.artsobol.kurkod.feature.breed.service;
 
 import io.github.artsobol.kurkod.feature.breed.dto.response.BreedDTO;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPatchRequest;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPostRequest;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPutRequest;
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface BreedService {
 
-    BreedDTO create(BreedPostRequest breedPostRequest);
+    BreedDTO create(BreedCreateRequest breedCreateRequest);
 
     BreedDTO get(Long id);
 
     List<BreedDTO> getAll();
 
     Page<BreedDTO> getPage(Pageable pageable);
-
-    BreedDTO replace(Long id, BreedPutRequest breedPutRequest, Long version);
-
-    BreedDTO update(Long id, BreedPatchRequest breedPatchRequest, Long version);
+    BreedDTO update(Long id, BreedUpdateRequest breedUpdateRequest, Long version);
 
     void delete(Long id, Long version);
 }

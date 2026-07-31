@@ -9,9 +9,8 @@ import io.github.artsobol.kurkod.feature.diet.error.DietError;
 import io.github.artsobol.kurkod.feature.diet.mapper.DietMapper;
 import io.github.artsobol.kurkod.feature.diet.dto.response.DietDTO;
 import io.github.artsobol.kurkod.feature.diet.entity.Diet;
-import io.github.artsobol.kurkod.feature.diet.dto.request.DietPatchRequest;
-import io.github.artsobol.kurkod.feature.diet.dto.request.DietPostRequest;
-import io.github.artsobol.kurkod.feature.diet.dto.request.DietPutRequest;
+import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
+import io.github.artsobol.kurkod.feature.diet.dto.request.DietCreateRequest;
 import io.github.artsobol.kurkod.feature.diet.repository.DietRepository;
 import io.github.artsobol.kurkod.feature.diet.service.DietService;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +55,7 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO create(DietPostRequest request) {
+    public DietDTO create(DietCreateRequest request) {
         ensureNotExists(request.getCode());
         Diet diet = dietMapper.toEntity(request);
         dietRepository.save(diet);
@@ -67,7 +66,7 @@ public class DietServiceImpl implements DietService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO update(Long id, DietPatchRequest request, Long version) {
+    public DietDTO update(Long id, DietUpdateRequest request, Long version) {
         Diet diet = getDietById(id);
         checkVersion(diet.getVersion(), version);
         dietMapper.update(diet, request);
@@ -75,19 +74,6 @@ public class DietServiceImpl implements DietService {
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(diet), id);
         return dietMapper.toDTO(diet);
     }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO replace(Long id, DietPutRequest request, Long version) {
-        Diet diet = getDietById(id);
-        checkVersion(diet.getVersion(), version);
-        dietMapper.replace(diet, request);
-        diet = dietRepository.save(diet);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(diet), id);
-        return dietMapper.toDTO(diet);
-    }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")

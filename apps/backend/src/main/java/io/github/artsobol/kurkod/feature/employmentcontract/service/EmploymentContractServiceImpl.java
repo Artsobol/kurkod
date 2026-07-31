@@ -12,9 +12,8 @@ import io.github.artsobol.kurkod.feature.employmentcontract.entity.EmploymentCon
 import io.github.artsobol.kurkod.feature.staff.entity.Staff;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPatchRequest;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPostRequest;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPutRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractUpdateRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractCreateRequest;
 import io.github.artsobol.kurkod.feature.employmentcontract.repository.EmploymentContractRepository;
 import io.github.artsobol.kurkod.feature.staff.repository.StaffRepository;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerRepository;
@@ -55,7 +54,7 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO create(Long workerId, EmploymentContractPostRequest request) {
+    public EmploymentContractDTO create(Long workerId, EmploymentContractCreateRequest request) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId)
                                         .orElseThrow(() -> new NotFoundException("worker.not.found", workerId));
 
@@ -72,32 +71,12 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
                  workerId);
         return employmentContractMapper.toDto(employmentContract);
     }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO replace(Long workerId, EmploymentContractPutRequest request, Long expectedVersion) {
-        Long staffId = request.getStaffId();
-        Staff staff = getStaffByStaffId(staffId);
-
-        EmploymentContract employmentContract = getContractByWorkerId(workerId);
-
-        employmentContractMapper.updateFully(employmentContract, request);
-        employmentContract.setStaff(staff);
-        employmentContract = employmentContractRepository.save(employmentContract);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(),
-                 getCurrentUsername(),
-                 LogHelper.getEntityName(EmploymentContract.class),
-                 workerId);
-        return employmentContractMapper.toDto(employmentContract);
-    }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
     public EmploymentContractDTO update(
             Long workerId,
-            EmploymentContractPatchRequest request,
+            EmploymentContractUpdateRequest request,
             Long expectedVersion) {
         EmploymentContract employmentContract = getContractByWorkerId(workerId);
         employmentContractMapper.updatePartially(employmentContract, request);

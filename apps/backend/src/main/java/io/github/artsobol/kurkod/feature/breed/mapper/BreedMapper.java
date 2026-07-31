@@ -2,9 +2,8 @@ package io.github.artsobol.kurkod.feature.breed.mapper;
 
 import io.github.artsobol.kurkod.feature.breed.dto.response.BreedDTO;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPatchRequest;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPostRequest;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPutRequest;
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -15,9 +14,6 @@ public interface BreedMapper {
 
     BreedDTO toDto(Breed breed);
 
-    Breed toEntity(BreedPostRequest breedPostRequest);
-
-    void updateFully(@MappingTarget Breed breed, BreedPutRequest breedPutRequest);
-
-    void updatePartially(@MappingTarget Breed breed, BreedPatchRequest breedPatchRequest);
+    Breed toEntity(BreedCreateRequest breedCreateRequest);
+    void updatePartially(@MappingTarget Breed breed, BreedUpdateRequest breedUpdateRequest);
 }

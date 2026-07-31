@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.chickenmovement.mapper;
 
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementDTO;
 import io.github.artsobol.kurkod.feature.chickenmovement.entity.ChickenMovement;
-import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementPostRequest;
+import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -17,5 +17,5 @@ public interface ChickenMovementMapper {
     @Mapping(target = "chicken", ignore = true)
     @Mapping(target = "fromCage", ignore = true)
     @Mapping(target = "toCage", ignore = true)
-    ChickenMovement toEntity(ChickenMovementPostRequest chickenMovementPostRequest);
+    ChickenMovement toEntity(ChickenMovementCreateRequest chickenMovementCreateRequest);
 }

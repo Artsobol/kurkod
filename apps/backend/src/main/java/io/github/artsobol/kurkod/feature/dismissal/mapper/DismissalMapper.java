@@ -2,9 +2,8 @@ package io.github.artsobol.kurkod.feature.dismissal.mapper;
 
 import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalDTO;
 import io.github.artsobol.kurkod.feature.dismissal.entity.Dismissal;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPatchRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPostRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPutRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,12 +18,9 @@ public interface DismissalMapper {
 
     @Mapping(target = "worker", ignore = true)
     @Mapping(target = "whoDismiss", ignore = true)
-    Dismissal toEntity(DismissalPostRequest dismissalPostRequest);
+    Dismissal toEntity(DismissalCreateRequest dismissalCreateRequest);
 
-    void  update(@MappingTarget Dismissal dismissal, DismissalPatchRequest dismissalPatchRequest);
-
-    void replace(@MappingTarget Dismissal dismissal, DismissalPutRequest dismissalPutRequest);
-
+    void  update(@MappingTarget Dismissal dismissal, DismissalUpdateRequest dismissalUpdateRequest);
     default String getFullName(Worker worker) {
         if (worker == null) return null;
         return worker.getFirstName() + " " + worker.getLastName();

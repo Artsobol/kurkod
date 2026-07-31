@@ -2,9 +2,8 @@ package io.github.artsobol.kurkod.feature.rows.service;
 
 import io.github.artsobol.kurkod.feature.breed.dto.response.BreedDTO;
 import io.github.artsobol.kurkod.feature.rows.dto.response.RowsDTO;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsPatchRequest;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsPostRequest;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsPutRequest;
+import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
+import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,11 +15,8 @@ public interface RowsService {
 
     List<RowsDTO> findAll(Long workshopId);
 
-    RowsDTO create(Long workshopId, RowsPostRequest request);
+    RowsDTO create(Long workshopId, RowsCreateRequest request);
 
-    RowsDTO update(Long workshopId, Integer rowHumber, RowsPatchRequest request, Long version);
-
-    RowsDTO replace(Long workshopId, Integer rowHumber, RowsPutRequest request, Long version);
-
+    RowsDTO update(Long workshopId, Integer rowHumber, RowsUpdateRequest request, Long version);
     void delete(Long workshopId, Integer rowHumber, Long version);
 }

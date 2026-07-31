@@ -2,9 +2,8 @@ package io.github.artsobol.kurkod.feature.employmentcontract.mapper;
 
 import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.EmploymentContractDTO;
 import io.github.artsobol.kurkod.feature.employmentcontract.entity.EmploymentContract;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPatchRequest;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPostRequest;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPutRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractUpdateRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -18,11 +17,7 @@ public interface EmploymentContractMapper {
     EmploymentContractDTO toDto(EmploymentContract employmentContract);
 
     @Mapping(target = "staff", ignore = true)
-    EmploymentContract toEntity(EmploymentContractPostRequest employmentContractPostRequest);
-
+    EmploymentContract toEntity(EmploymentContractCreateRequest employmentContractCreateRequest);
     @Mapping(target = "staff", ignore = true)
-    void updateFully(@MappingTarget EmploymentContract employmentContract, EmploymentContractPutRequest employmentContractPutRequest);
-
-    @Mapping(target = "staff", ignore = true)
-    void updatePartially(@MappingTarget EmploymentContract employmentContract, EmploymentContractPatchRequest employmentContractPatchRequest);
+    void updatePartially(@MappingTarget EmploymentContract employmentContract, EmploymentContractUpdateRequest employmentContractUpdateRequest);
 }

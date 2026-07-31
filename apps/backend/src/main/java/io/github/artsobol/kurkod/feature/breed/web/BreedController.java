@@ -1,12 +1,11 @@
 package io.github.artsobol.kurkod.feature.breed.web;
 
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
 import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
 import io.github.artsobol.kurkod.feature.breed.dto.response.BreedDTO;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPatchRequest;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPostRequest;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPutRequest;
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
 import io.github.artsobol.kurkod.feature.breed.service.BreedService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,29 +54,18 @@ public class BreedController {
 
   @Operation(summary = "Create breed")
   @PostMapping
-  public ResponseEntity<BreedDTO> createBreed(@Valid @RequestBody BreedPostRequest request) {
+  public ResponseEntity<BreedDTO> createBreed(@Valid @RequestBody BreedCreateRequest request) {
     BreedDTO response = breedService.create(request);
     return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
         .eTag(EtagUtils.toEtag(response.version()))
         .body(response);
   }
 
-  @Operation(summary = "Replace breed")
-  @PutMapping("/{breedId}")
-  public ResponseEntity<BreedDTO> replaceById(
-      @PathVariable Long breedId,
-      @Valid @RequestBody BreedPutRequest request,
-      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
-    long expected = EtagUtils.parseIfMatch(ifMatch);
-    BreedDTO response = breedService.replace(breedId, request, expected);
-    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
-  }
-
   @Operation(summary = "Partially update breed")
   @PatchMapping("/{breedId}")
   public ResponseEntity<BreedDTO> updateById(
       @PathVariable Long breedId,
-      @Valid @RequestBody BreedPatchRequest request,
+      @Valid @RequestBody BreedUpdateRequest request,
       @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
     BreedDTO response = breedService.update(breedId, request, expected);

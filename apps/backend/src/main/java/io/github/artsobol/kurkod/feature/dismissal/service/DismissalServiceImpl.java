@@ -8,9 +8,8 @@ import io.github.artsobol.kurkod.feature.dismissal.error.DismissalError;
 import io.github.artsobol.kurkod.feature.dismissal.mapper.DismissalMapper;
 import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalDTO;
 import io.github.artsobol.kurkod.feature.dismissal.entity.Dismissal;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPatchRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPostRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPutRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
 import io.github.artsobol.kurkod.feature.dismissal.repository.DismissalRepository;
 import io.github.artsobol.kurkod.feature.dismissal.service.DismissalService;
 import io.github.artsobol.kurkod.feature.worker.error.WorkerError;
@@ -72,7 +71,7 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     @Transactional
-    public DismissalDTO create(DismissalPostRequest request) {
+    public DismissalDTO create(DismissalCreateRequest request) {
         Dismissal dismissal = dismissalMapper.toEntity(request);
         Worker worker = getWorkerById(request.getWorkerId());
         Worker whoDismiss = getWorkerById(getCurrentUserId());
@@ -82,21 +81,9 @@ public class DismissalServiceImpl implements DismissalService {
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(dismissal), dismissal.getId());
         return dismissalMapper.toDTO(dismissal);
     }
-
     @Override
     @Transactional
-    public DismissalDTO replace(Long workerId, DismissalPutRequest request, Long version) {
-        Dismissal dismissal = getDismissalByWorkerId(workerId);
-        checkVersion(dismissal.getVersion(), version);
-        dismissalMapper.replace(dismissal, request);
-        dismissal = dismissalRepository.save(dismissal);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(dismissal), dismissal.getId());
-        return dismissalMapper.toDTO(dismissal);
-    }
-
-    @Override
-    @Transactional
-    public DismissalDTO update(Long workerId, DismissalPatchRequest request, Long version) {
+    public DismissalDTO update(Long workerId, DismissalUpdateRequest request, Long version) {
         Dismissal dismissal = getDismissalByWorkerId(workerId);
         checkVersion(dismissal.getVersion(), version);
         dismissalMapper.update(dismissal, request);

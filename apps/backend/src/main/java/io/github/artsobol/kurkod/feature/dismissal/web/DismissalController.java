@@ -4,9 +4,8 @@ import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
 import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
 import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalDTO;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPatchRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPostRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPutRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
 import io.github.artsobol.kurkod.feature.dismissal.service.DismissalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -60,33 +59,18 @@ public class DismissalController {
     @PostMapping
     @Operation(summary = "Create dismissal")
     public ResponseEntity<DismissalDTO> create(
-            @RequestBody @Valid DismissalPostRequest request) {
+            @RequestBody @Valid DismissalCreateRequest request) {
 
         DismissalDTO response = dismissalService.create(request);
         return ResponseEntity.created(LocationUtils.buildLocation(request.getWorkerId(),
                                                                   securityContextFacade.getCurrentUserId())).eTag(
                 EtagUtils.toEtag(response.version())).body(response);
     }
-
-    @PutMapping("/{workerId}")
-    @Operation(summary = "Replace dismissal by worker id")
-    public ResponseEntity<DismissalDTO> replace(
-            @PathVariable Long workerId,
-            @RequestBody @Valid DismissalPutRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
-
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        DismissalDTO response = dismissalService.replace(workerId, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
-
     @PatchMapping("/{workerId}")
     @Operation(summary = "Update dismissal by worker id")
     public ResponseEntity<DismissalDTO> update(
             @PathVariable Long workerId,
-            @RequestBody @Valid DismissalPatchRequest request,
+            @RequestBody @Valid DismissalUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);

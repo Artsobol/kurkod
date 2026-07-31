@@ -12,9 +12,8 @@ import io.github.artsobol.kurkod.feature.eggproductionmonth.error.EggProductionM
 import io.github.artsobol.kurkod.feature.eggproductionmonth.mapper.EggProductionMonthMapper;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthDTO;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.entity.EggProductionMonth;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPatchRequest;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPostRequest;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPutRequest;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthUpdateRequest;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthCreateRequest;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.repository.EggProductionMonthRepository;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.service.EggProductionMonthService;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +73,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EggProductionMonthDTO create(Long chickenId, int month, int year, EggProductionMonthPostRequest request) {
+    public EggProductionMonthDTO create(Long chickenId, int month, int year, EggProductionMonthCreateRequest request) {
         ensureNotExistsByIdMonthYear(chickenId, month, year);
         EggProductionMonth eggProductionMonth = eggProductionMonthMapper.toEntity(request);
         Chicken chicken = chickenRepository.findById(chickenId)
@@ -91,29 +90,11 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     }
 
     @Override
-    public EggProductionMonthDTO replace(
-            Long chickenId,
-            int month,
-            int year,
-            EggProductionMonthPutRequest request,
-            Long version) {
-        EggProductionMonth eggProductionMonth = findByIdMonthYear(chickenId, month, year);
-        checkVersion(eggProductionMonth.getVersion(), version);
-        eggProductionMonthMapper.replace(eggProductionMonth, request);
-
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(),
-                 getCurrentUsername(),
-                 LogHelper.getEntityName(EggProductionMonth.class),
-                 chickenId);
-        return eggProductionMonthMapper.toDto(eggProductionMonthRepository.save(eggProductionMonth));
-    }
-
-    @Override
     public EggProductionMonthDTO update(
             Long chickenId,
             int month,
             int year,
-            EggProductionMonthPatchRequest request,
+            EggProductionMonthUpdateRequest request,
             Long version) {
         EggProductionMonth eggProductionMonth = findByIdMonthYear(chickenId, month, year);
         checkVersion(eggProductionMonth.getVersion(), version);

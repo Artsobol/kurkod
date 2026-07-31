@@ -9,9 +9,8 @@ import io.github.artsobol.kurkod.feature.cage.error.CageError;
 import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePatchRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePostRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePutRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
 import io.github.artsobol.kurkod.feature.cage.service.CageService;
 import io.github.artsobol.kurkod.feature.rows.error.RowsError;
@@ -65,9 +64,9 @@ public class CageServiceImpl implements CageService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO create(Long rowId, CagePostRequest cagePostRequest) {
-        ensureNotExists(rowId, cagePostRequest.getCageNumber());
-        Cage cage = cageMapper.toEntity(cagePostRequest);
+    public CageDTO create(Long rowId, CageCreateRequest cageCreateRequest) {
+        ensureNotExists(rowId, cageCreateRequest.getCageNumber());
+        Cage cage = cageMapper.toEntity(cageCreateRequest);
         Rows rows = rowsRepository.findById(rowId).orElseThrow(
                 () -> new NotFoundException("row.not.found", rowId)
         );
@@ -76,37 +75,19 @@ public class CageServiceImpl implements CageService {
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId);
         return cageMapper.toDto(cage);
     }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO replace(Long rowId, Integer cageNumber, CagePutRequest request, Long version) {
+    public CageDTO update(Long rowId, Integer cageNumber, CageUpdateRequest cageUpdateRequest, Long version) {
         ensureExists(rowId, cageNumber);
-        Integer newCageNumber = request.getCageNumber();
-        if (!newCageNumber.equals(cageNumber)) {
-            ensureNotExists(rowId, newCageNumber);
-        }
-
-        Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
-        checkVersion(cage.getVersion(), version);
-        cageMapper.replace(cage, request);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId);
-        return cageMapper.toDto(cageRepository.save(cage));
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO update(Long rowId, Integer cageNumber, CagePatchRequest cagePatchRequest, Long version) {
-        ensureExists(rowId, cageNumber);
-        Integer newCageNumber = cagePatchRequest.getCageNumber();
+        Integer newCageNumber = cageUpdateRequest.getCageNumber();
         if (newCageNumber != null && !newCageNumber.equals(cageNumber)) {
-            ensureNotExists(rowId, cagePatchRequest.getCageNumber());
+            ensureNotExists(rowId, cageUpdateRequest.getCageNumber());
         }
 
         Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
         checkVersion(cage.getVersion(), version);
-        cageMapper.update(cage, cagePatchRequest);
+        cageMapper.update(cage, cageUpdateRequest);
         log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Cage.class), rowId);
         return cageMapper.toDto(cageRepository.save(cage));
     }

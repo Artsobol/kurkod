@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
 import io.github.artsobol.kurkod.feature.iam.dto.response.UserDTO;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPatchRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPostRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPutRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.util.List;
@@ -16,11 +15,8 @@ public interface UserService extends UserDetailsService {
 
     UserDTO getByUsername(String username);
 
-    UserDTO create(UserPostRequest request);
-
-    UserDTO replace(Long userId, UserPutRequest request, Long version);
-
-    UserDTO update(Long userId, UserPatchRequest request, Long version);
+    UserDTO create(UserCreateRequest request);
+    UserDTO update(Long userId, UserUpdateRequest request, Long version);
 
     void deleteById(Long userId, Long expectedVersion);
 }

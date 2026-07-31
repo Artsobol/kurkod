@@ -6,9 +6,8 @@ import io.github.artsobol.kurkod.feature.iam.dto.response.UserDTO;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPatchRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPostRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPutRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
 import io.github.artsobol.kurkod.feature.iam.repository.UserRepository;
 import io.github.artsobol.kurkod.feature.iam.service.UserService;
 import jakarta.validation.constraints.NotBlank;
@@ -63,7 +62,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO create(@NotNull UserPostRequest request) {
+    public UserDTO create(@NotNull UserCreateRequest request) {
         ensureNotExistsByUsername(request.getUsername());
         ensureNotExistsByEmail(request.getEmail());
         User user = userMapper.toEntity(request);
@@ -71,22 +70,10 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         return userMapper.toDto(user);
     }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO replace(@NotNull Long userId, UserPutRequest request, Long version) {
-        User user = getUserById(userId);
-        checkVersion(user.getVersion(), version);
-        userMapper.updateFully(user, request);
-        user = userRepository.save(user);
-        return userMapper.toDto(user);
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO update(@NotNull Long userId, UserPatchRequest request,Long version) {
+    public UserDTO update(@NotNull Long userId, UserUpdateRequest request,Long version) {
         User user = getUserById(userId);
         checkVersion(user.getVersion(), version);
         userMapper.updatePartially(user, request);

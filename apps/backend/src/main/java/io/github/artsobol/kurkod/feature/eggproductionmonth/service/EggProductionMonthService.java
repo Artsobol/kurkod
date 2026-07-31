@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.eggproductionmonth.service;
 
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthDTO;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPatchRequest;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPostRequest;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPutRequest;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthUpdateRequest;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthCreateRequest;
 
 import java.util.List;
 
@@ -15,11 +14,8 @@ public interface EggProductionMonthService {
 
     List<EggProductionMonthDTO> getAllByChickenAndYear(Long chickenId, int year);
 
-    EggProductionMonthDTO create(Long chickenId, int month, int year, EggProductionMonthPostRequest request);
-
-    EggProductionMonthDTO replace(Long chickenId, int month, int year, EggProductionMonthPutRequest request, Long version);
-
-    EggProductionMonthDTO update(Long chickenId, int month, int year, EggProductionMonthPatchRequest request, Long version);
+    EggProductionMonthDTO create(Long chickenId, int month, int year, EggProductionMonthCreateRequest request);
+    EggProductionMonthDTO update(Long chickenId, int month, int year, EggProductionMonthUpdateRequest request, Long version);
 
     void delete(Long chickenId, int month, int year, Long version);
 

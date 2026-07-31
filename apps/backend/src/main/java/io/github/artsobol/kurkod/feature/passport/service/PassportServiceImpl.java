@@ -13,9 +13,8 @@ import io.github.artsobol.kurkod.feature.passport.entity.Passport;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.passport.dto.request.PassportPatchRequest;
-import io.github.artsobol.kurkod.feature.passport.dto.request.PassportPostRequest;
-import io.github.artsobol.kurkod.feature.passport.dto.request.PassportPutRequest;
+import io.github.artsobol.kurkod.feature.passport.dto.request.PassportUpdateRequest;
+import io.github.artsobol.kurkod.feature.passport.dto.request.PassportCreateRequest;
 import io.github.artsobol.kurkod.feature.passport.repository.PassportRepository;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerRepository;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +50,7 @@ public class PassportServiceImpl implements PassportService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO create(Long workerId, PassportPostRequest passportPostRequest) {
+    public PassportDTO create(Long workerId, PassportCreateRequest passportCreateRequest) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException("worker.not.found", workerId)
         );
@@ -61,30 +60,17 @@ public class PassportServiceImpl implements PassportService {
                     throw new DataExistException("passport.already.exists", workerId);
                 });
 
-        Passport passport = passportMapper.toEntity(passportPostRequest);
+        Passport passport = passportMapper.toEntity(passportCreateRequest);
         passport.setWorker(worker);
         passport.setActive(true);
         passport = passportRepository.save(passport);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(passport), workerId);
         return passportMapper.toDto(passport);
     }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO replace(Long workerId, PassportPutRequest request, Long version) {
-        Passport passport = getPassportByWorkerId(workerId);
-        checkVersion(passport.getVersion(), version);
-        passportMapper.updateFully(passport, request);
-        passport = passportRepository.save(passport);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(passport), workerId);
-        return passportMapper.toDto(passport);
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO update(Long workerId, PassportPatchRequest request, Long version) {
+    public PassportDTO update(Long workerId, PassportUpdateRequest request, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
         checkVersion(passport.getVersion(), version);
         passportMapper.updatePartially(passport, request);

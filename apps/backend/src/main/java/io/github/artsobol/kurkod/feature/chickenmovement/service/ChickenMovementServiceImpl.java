@@ -12,7 +12,7 @@ import io.github.artsobol.kurkod.feature.chickenmovement.error.ChickenMovementEr
 import io.github.artsobol.kurkod.feature.chickenmovement.mapper.ChickenMovementMapper;
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementDTO;
 import io.github.artsobol.kurkod.feature.chickenmovement.entity.ChickenMovement;
-import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementPostRequest;
+import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
 import io.github.artsobol.kurkod.feature.chickenmovement.repository.ChickenMovementRepository;
 import io.github.artsobol.kurkod.feature.chickenmovement.service.ChickenMovementService;
 import lombok.RequiredArgsConstructor;
@@ -63,7 +63,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
 
     @Override
     @Transactional
-    public ChickenMovementDTO create(Long chickenId, ChickenMovementPostRequest request) {
+    public ChickenMovementDTO create(Long chickenId, ChickenMovementCreateRequest request) {
         Cage fromCage = findFromCageById(request.getFromCageId());
         Cage toCage = findCageById(request.getToCageId());
         ChickenMovement chickenMovement = chickenMovementMapper.toEntity(request);

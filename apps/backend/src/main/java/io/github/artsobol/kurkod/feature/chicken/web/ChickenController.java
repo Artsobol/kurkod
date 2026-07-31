@@ -4,9 +4,8 @@ import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
 import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenDTO;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPatchRequest;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPutRequest;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPostRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
 import io.github.artsobol.kurkod.feature.chicken.service.ChickenService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,7 +37,7 @@ public class ChickenController {
 
     @Operation(summary = "Create chicken")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChickenDTO> create(@Valid @RequestBody ChickenPostRequest request) {
+    public ResponseEntity<ChickenDTO> create(@Valid @RequestBody ChickenCreateRequest request) {
         ChickenDTO response = chickenService.create(request);
         return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
                              .eTag(EtagUtils.toEtag(response.version()))
@@ -71,25 +70,11 @@ public class ChickenController {
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
-
-    @Operation(summary = "Replace chicken")
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChickenDTO> replace(
-            @PathVariable Long id,
-            @Valid @RequestBody ChickenPutRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        ChickenDTO response = chickenService.replace(id, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
-
     @Operation(summary = "Partially update chicken")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ChickenDTO> update(
             @PathVariable Long id,
-            @Valid @RequestBody ChickenPatchRequest request,
+            @Valid @RequestBody ChickenUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         ChickenDTO response = chickenService.update(id, request, expected);

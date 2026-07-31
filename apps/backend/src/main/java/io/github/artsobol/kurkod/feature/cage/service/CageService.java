@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.cage.service;
 
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePatchRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePostRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePutRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
 
 import java.util.List;
 
@@ -13,11 +12,8 @@ public interface CageService {
 
     List<CageDTO> findAll(Long rowId);
 
-    CageDTO create(Long rowId, CagePostRequest request);
-
-    CageDTO replace(Long rowId, Integer cageNumber, CagePutRequest request, Long expectedVersion);
-
-    CageDTO update(Long rowId, Integer cageNumber, CagePatchRequest request, Long expectedVersion);
+    CageDTO create(Long rowId, CageCreateRequest request);
+    CageDTO update(Long rowId, Integer cageNumber, CageUpdateRequest request, Long expectedVersion);
 
     void delete(Long rowId, Integer cageNumber, Long expectedVersion);
 }

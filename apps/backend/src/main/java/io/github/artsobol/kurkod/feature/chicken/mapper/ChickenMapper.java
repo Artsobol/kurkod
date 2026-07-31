@@ -4,9 +4,8 @@ import io.github.artsobol.kurkod.feature.breed.mapper.BreedMapper;
 import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenDTO;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPatchRequest;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPostRequest;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPutRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -19,13 +18,8 @@ public interface ChickenMapper {
 
     ChickenDTO toDto(Chicken chicken);
 
-    Chicken toEntity(ChickenPostRequest chickenPostRequest);
-
+    Chicken toEntity(ChickenCreateRequest chickenCreateRequest);
     @Mapping(target = "cage", ignore = true)
     @Mapping(target = "breed", ignore = true)
-    void updateFully(@MappingTarget Chicken chicken, ChickenPutRequest chickenPutRequest);
-
-    @Mapping(target = "cage", ignore = true)
-    @Mapping(target = "breed", ignore = true)
-    void updatePartially(@MappingTarget Chicken chicken, ChickenPatchRequest chickenPatchRequest);
+    void updatePartially(@MappingTarget Chicken chicken, ChickenUpdateRequest chickenUpdateRequest);
 }

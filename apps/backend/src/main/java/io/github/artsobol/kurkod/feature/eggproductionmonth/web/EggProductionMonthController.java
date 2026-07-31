@@ -3,9 +3,8 @@ package io.github.artsobol.kurkod.feature.eggproductionmonth.web;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthDTO;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPatchRequest;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPostRequest;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthPutRequest;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthUpdateRequest;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthCreateRequest;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.service.EggProductionMonthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -31,7 +30,7 @@ public class EggProductionMonthController {
             @PathVariable Long chickenId,
             @PathVariable Integer year,
             @PathVariable Integer month,
-            @Valid @RequestBody EggProductionMonthPostRequest request) {
+            @Valid @RequestBody EggProductionMonthCreateRequest request) {
 
         EggProductionMonthDTO response = eggProductionMonthService.create(chickenId, month, year, request);
         return ResponseEntity.created(LocationUtils.buildLocation()).eTag(EtagUtils.toEtag(response.version())).body(
@@ -69,30 +68,13 @@ public class EggProductionMonthController {
         List<EggProductionMonthDTO> response = eggProductionMonthService.getAllByChickenAndYear(chickenId, year);
         return ResponseEntity.ok(response);
     }
-
-    @PutMapping("/{year}/{month}")
-    @Operation(summary = "Replace egg production month")
-    public ResponseEntity<EggProductionMonthDTO> replace(
-            @PathVariable Long chickenId,
-            @PathVariable Integer year,
-            @PathVariable Integer month,
-            @Valid @RequestBody EggProductionMonthPutRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
-
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        EggProductionMonthDTO response = eggProductionMonthService.replace(chickenId, month, year, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
-
     @PatchMapping("/{year}/{month}")
     @Operation(summary = "Update egg production month")
     public ResponseEntity<EggProductionMonthDTO> update(
             @PathVariable Long chickenId,
             @PathVariable Integer year,
             @PathVariable Integer month,
-            @Valid @RequestBody EggProductionMonthPatchRequest request,
+            @Valid @RequestBody EggProductionMonthUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);

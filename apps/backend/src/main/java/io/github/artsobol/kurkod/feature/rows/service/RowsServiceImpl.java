@@ -9,9 +9,8 @@ import io.github.artsobol.kurkod.feature.rows.error.RowsError;
 import io.github.artsobol.kurkod.feature.rows.mapper.RowsMapper;
 import io.github.artsobol.kurkod.feature.rows.dto.response.RowsDTO;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsPatchRequest;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsPostRequest;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsPutRequest;
+import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
+import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
 import io.github.artsobol.kurkod.feature.rows.repository.RowsRepository;
 import io.github.artsobol.kurkod.feature.rows.service.RowsService;
 import io.github.artsobol.kurkod.feature.workshop.error.WorkshopError;
@@ -63,7 +62,7 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO create(Long workshopId, RowsPostRequest request) {
+    public RowsDTO create(Long workshopId, RowsCreateRequest request) {
         Integer rowNumber = request.getRowNumber();
         ensureNotExists(workshopId, rowNumber);
 
@@ -79,7 +78,7 @@ public class RowsServiceImpl implements RowsService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO update(Long workshopId, Integer rowHumber, RowsPatchRequest request, Long version) {
+    public RowsDTO update(Long workshopId, Integer rowHumber, RowsUpdateRequest request, Long version) {
         Integer updatedRowNumber = request.getRowNumber();
         if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
             ensureNotExists(workshopId, updatedRowNumber);
@@ -92,24 +91,6 @@ public class RowsServiceImpl implements RowsService {
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class), workshopId);
         return rowsMapper.toDto(rows);
     }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO replace(Long workshopId, Integer rowHumber, RowsPutRequest request, Long version) {
-        Integer updatedRowNumber = request.getRowNumber();
-        if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
-            ensureNotExists(workshopId, updatedRowNumber);
-        }
-
-        Rows rows = getRowsById(workshopId, rowHumber);
-        checkVersion(rows.getVersion(), version);
-        rowsMapper.replace(rows, request);
-        rowsRepository.save(rows);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(Rows.class), workshopId);
-        return rowsMapper.toDto(rows);
-    }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")

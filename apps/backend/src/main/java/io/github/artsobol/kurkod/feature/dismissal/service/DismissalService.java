@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.dismissal.service;
 
 import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalDTO;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPostRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPutRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalPatchRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
 
 import java.util.List;
 
@@ -15,9 +14,6 @@ public interface DismissalService {
 
     List<DismissalDTO> getAllByDismissed(Long dismissedId);
 
-    DismissalDTO create(DismissalPostRequest request);
-
-    DismissalDTO replace(Long workerId, DismissalPutRequest request, Long version);
-
-    DismissalDTO update(Long workerId, DismissalPatchRequest request, Long version);
+    DismissalDTO create(DismissalCreateRequest request);
+    DismissalDTO update(Long workerId, DismissalUpdateRequest request, Long version);
 }

@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.staff.service;
 
 import io.github.artsobol.kurkod.feature.staff.dto.response.StaffDTO;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffPatchRequest;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffPostRequest;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffPutRequest;
+import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
+import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,11 +16,8 @@ public interface StaffService {
 
     Page<StaffDTO> getAllWithPagination(Pageable pageable);
 
-    StaffDTO create(StaffPostRequest request);
-
-    StaffDTO replace(Long id, StaffPutRequest request, Long version);
-
-    StaffDTO update(Long id, StaffPatchRequest request, Long version);
+    StaffDTO create(StaffCreateRequest request);
+    StaffDTO update(Long id, StaffUpdateRequest request, Long version);
 
     void delete(Long id, Long version);
 }

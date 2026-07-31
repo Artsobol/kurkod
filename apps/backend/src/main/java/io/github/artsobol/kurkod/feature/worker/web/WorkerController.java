@@ -3,9 +3,8 @@ package io.github.artsobol.kurkod.feature.worker.web;
 import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPatchRequest;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPostRequest;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPutRequest;
+import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerUpdateRequest;
+import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerCreateRequest;
 import io.github.artsobol.kurkod.feature.worker.service.WorkerService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -66,30 +65,16 @@ public class WorkerController {
 
     @Operation(summary = "Create worker")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkerDTO> create(@RequestBody @Valid WorkerPostRequest request) {
+    public ResponseEntity<WorkerDTO> create(@RequestBody @Valid WorkerCreateRequest request) {
         WorkerDTO response = workerService.create(request);
         return ResponseEntity.created(buildLocation(response.id())).eTag(EtagUtils.toEtag(response.version())).body(
                 response);
     }
-
-    @Operation(summary = "Replace worker")
-    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkerDTO> replace(
-            @PathVariable Long id,
-            @RequestBody @Valid WorkerPutRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        WorkerDTO response = workerService.replace(id, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
-
     @Operation(summary = "Partially update worker")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkerDTO> update(
             @PathVariable Long id,
-            @RequestBody @Valid WorkerPatchRequest request,
+            @RequestBody @Valid WorkerUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         WorkerDTO response = workerService.update(id, request, expected);

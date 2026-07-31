@@ -8,9 +8,8 @@ import io.github.artsobol.kurkod.feature.worker.error.WorkerError;
 import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPatchRequest;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPostRequest;
-import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerPutRequest;
+import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerUpdateRequest;
+import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerCreateRequest;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerRepository;
 import io.github.artsobol.kurkod.feature.worker.service.WorkerService;
 import lombok.RequiredArgsConstructor;
@@ -61,29 +60,16 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO create(WorkerPostRequest request) {
+    public WorkerDTO create(WorkerCreateRequest request) {
         Worker worker = workerMapper.toEntity(request);
         worker = workerRepository.save(worker);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(worker), worker.getId());
         return workerMapper.toDto(worker);
     }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO replace(Long id, WorkerPutRequest request, Long version) {
-        Worker worker = getWorkerById(id);
-        checkVersion(worker.getVersion(), version);
-        workerMapper.updateFully(worker, request);
-        worker = workerRepository.save(worker);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(worker), id);
-        return workerMapper.toDto(worker);
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO update(Long id, WorkerPatchRequest request, Long version) {
+    public WorkerDTO update(Long id, WorkerUpdateRequest request, Long version) {
         Worker worker = getWorkerById(id);
         checkVersion(worker.getVersion(), version);
         workerMapper.updatePartially(worker, request);

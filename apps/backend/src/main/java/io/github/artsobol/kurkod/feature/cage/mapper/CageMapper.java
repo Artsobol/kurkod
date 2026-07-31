@@ -2,9 +2,8 @@ package io.github.artsobol.kurkod.feature.cage.mapper;
 
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePatchRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePostRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CagePutRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -16,11 +15,7 @@ public interface CageMapper {
     CageDTO toDto(Cage cage);
 
     @Mapping(target = "row", ignore = true)
-    Cage toEntity(CagePostRequest cagePostRequest);
-
+    Cage toEntity(CageCreateRequest cageCreateRequest);
     @Mapping(target = "row", ignore = true)
-    void replace(@MappingTarget Cage cage, CagePutRequest cagePutRequest);
-
-    @Mapping(target = "row", ignore = true)
-    void update(@MappingTarget Cage cage, CagePatchRequest cagePatchRequest);
+    void update(@MappingTarget Cage cage, CageUpdateRequest cageUpdateRequest);
 }

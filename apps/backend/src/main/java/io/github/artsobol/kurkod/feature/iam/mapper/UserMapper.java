@@ -6,9 +6,8 @@ import io.github.artsobol.kurkod.feature.iam.dto.response.UserProfileDTO;
 import io.github.artsobol.kurkod.feature.iam.entity.Role;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.feature.iam.dto.request.RegistrationRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPatchRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPostRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserPutRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -22,11 +21,8 @@ public interface UserMapper {
     @Mapping(target = "roles", expression = "java(mapRoles(user.getRoles()))")
     UserDTO toDto(User user);
 
-    User toEntity(UserPostRequest userPostRequest);
-
-    void updateFully(@MappingTarget User user, UserPutRequest userPutRequest);
-
-    void updatePartially(@MappingTarget User user, UserPatchRequest userPatchRequest);
+    User toEntity(UserCreateRequest userCreateRequest);
+    void updatePartially(@MappingTarget User user, UserUpdateRequest userUpdateRequest);
 
     @Mapping(target = "roles", expression = "java(mapRoles(user.getRoles()))")
     @Mapping(target = "username", source = "user.username")

@@ -11,9 +11,8 @@ import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenDTO;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPatchRequest;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPutRequest;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenPostRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
 import io.github.artsobol.kurkod.feature.chicken.service.ChickenService;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +46,10 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO create(ChickenPostRequest chickenPostRequest) {
-        Chicken chicken = chickenMapper.toEntity(chickenPostRequest);
-        chicken.setBreed(getBreedById(chickenPostRequest.getBreedId()));
-        chicken.setCage(cageRepository.findById(chickenPostRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenPostRequest.getCageId())));
+    public ChickenDTO create(ChickenCreateRequest chickenCreateRequest) {
+        Chicken chicken = chickenMapper.toEntity(chickenCreateRequest);
+        chicken.setBreed(getBreedById(chickenCreateRequest.getBreedId()));
+        chicken.setCage(cageRepository.findById(chickenCreateRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenCreateRequest.getCageId())));
         chicken = chickenRepository.save(chicken);
 
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
@@ -89,34 +88,19 @@ public class ChickenServiceImpl implements ChickenService {
         chickenRepository.save(chicken);
         log.info(ApiLogMessage.DELETE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
     }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO replace(Long id, ChickenPutRequest chickenPutRequest, Long version) {
+    public ChickenDTO update(Long id, ChickenUpdateRequest chickenUpdateRequest, Long version) {
         Chicken chicken = getChickenById(id);
         checkVersion(chicken.getVersion(), version);
-        chickenMapper.updateFully(chicken, chickenPutRequest);
-        Breed breed = getBreedById(chickenPutRequest.getBreedId());
-        chicken.setBreed(breed);
-        chicken.setCage(cageRepository.findById(chickenPutRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenPutRequest.getCageId())));
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
-        return chickenMapper.toDto(chickenRepository.save(chicken));
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO update(Long id, ChickenPatchRequest chickenPatchRequest, Long version) {
-        Chicken chicken = getChickenById(id);
-        checkVersion(chicken.getVersion(), version);
-        chickenMapper.updatePartially(chicken, chickenPatchRequest);
-        if (chickenPatchRequest.getBreedId() != null) {
-            Breed breed = getBreedById(chickenPatchRequest.getBreedId());
+        chickenMapper.updatePartially(chicken, chickenUpdateRequest);
+        if (chickenUpdateRequest.getBreedId() != null) {
+            Breed breed = getBreedById(chickenUpdateRequest.getBreedId());
             chicken.setBreed(breed);
         }
-        if (chickenPatchRequest.getCageId() != null) {
-            chicken.setCage(cageRepository.findById(chickenPatchRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenPatchRequest.getCageId())));
+        if (chickenUpdateRequest.getCageId() != null) {
+            chicken.setCage(cageRepository.findById(chickenUpdateRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenUpdateRequest.getCageId())));
         }
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), chicken, id);
         return chickenMapper.toDto(chickenRepository.save(chicken));

@@ -3,9 +3,8 @@ package io.github.artsobol.kurkod.feature.employmentcontract.web;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
 import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.EmploymentContractDTO;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPatchRequest;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPostRequest;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractPutRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractUpdateRequest;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractCreateRequest;
 import io.github.artsobol.kurkod.feature.employmentcontract.service.EmploymentContractService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -39,32 +38,17 @@ public class EmploymentContractController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmploymentContractDTO> create(
             @PathVariable Long workerId,
-            @RequestBody @Valid EmploymentContractPostRequest request) {
+            @RequestBody @Valid EmploymentContractCreateRequest request) {
 
         EmploymentContractDTO response = employmentContractService.create(workerId, request);
         return ResponseEntity.created(LocationUtils.buildLocation()).eTag(EtagUtils.toEtag(response.version())).body(
                 response);
     }
-
-    @Operation(summary = "Replace employment contract")
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<EmploymentContractDTO> replace(
-            @PathVariable Long workerId,
-            @RequestBody @Valid EmploymentContractPutRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
-
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        EmploymentContractDTO response = employmentContractService.replace(workerId, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
-
     @Operation(summary = "Partially update employment contract")
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<EmploymentContractDTO> update(
             @PathVariable Long workerId,
-            @RequestBody @Valid EmploymentContractPatchRequest request,
+            @RequestBody @Valid EmploymentContractUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);

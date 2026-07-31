@@ -8,9 +8,8 @@ import io.github.artsobol.kurkod.feature.staff.error.StaffError;
 import io.github.artsobol.kurkod.feature.staff.dto.response.StaffDTO;
 import io.github.artsobol.kurkod.feature.staff.entity.Staff;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffPatchRequest;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffPostRequest;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffPutRequest;
+import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
+import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;
 import io.github.artsobol.kurkod.feature.staff.repository.StaffRepository;
 import io.github.artsobol.kurkod.feature.staff.service.StaffService;
 import lombok.RequiredArgsConstructor;
@@ -66,29 +65,16 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO create(StaffPostRequest request) {
+    public StaffDTO create(StaffCreateRequest request) {
         Staff staff = staffMapper.toEntity(request);
         staff = staffRepository.save(staff);
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(staff));
         return staffMapper.toDto(staff);
     }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO replace(Long id, StaffPutRequest request, Long version) {
-        Staff staff = getStaffById(id);
-        checkVersion(staff.getVersion(), version);
-        staffMapper.updateFully(staff, request);
-        staff = staffRepository.save(staff);
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(staff), id);
-        return staffMapper.toDto(staff);
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO update(Long id, StaffPatchRequest request, Long version) {
+    public StaffDTO update(Long id, StaffUpdateRequest request, Long version) {
         Staff staff = getStaffById(id);
         checkVersion(staff.getVersion(), version);
         staffMapper.updatePartially(staff, request);

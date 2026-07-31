@@ -1,5 +1,7 @@
 package io.github.artsobol.kurkod.feature.breed.service;
 
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
 import io.github.artsobol.kurkod.infrastructure.constants.ApiLogMessage;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 
@@ -11,11 +13,7 @@ import io.github.artsobol.kurkod.feature.breed.mapper.BreedMapper;
 import io.github.artsobol.kurkod.feature.breed.error.BreedError;
 import io.github.artsobol.kurkod.feature.breed.dto.response.BreedDTO;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPatchRequest;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPostRequest;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedPutRequest;
 import io.github.artsobol.kurkod.feature.breed.repository.BreedRepository;
-import io.github.artsobol.kurkod.feature.breed.service.BreedService;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +42,10 @@ public class BreedServiceImpl implements BreedService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO create(BreedPostRequest breedPostRequest) {
-        ensureNotExists(breedPostRequest.getName());
+    public BreedDTO create(BreedCreateRequest breedCreateRequest) {
+        ensureNotExists(breedCreateRequest.getName());
 
-        Breed breed = breedMapper.toEntity(breedPostRequest);
+        Breed breed = breedMapper.toEntity(breedCreateRequest);
         breed = breedRepository.save(breed);
 
         log.info(ApiLogMessage.CREATE_ENTITY.getValue(),
@@ -73,27 +71,13 @@ public class BreedServiceImpl implements BreedService {
     public Page<BreedDTO> getPage(Pageable pageable) {
         return breedRepository.findAllByIsActiveTrue(pageable).map(breedMapper::toDto);
     }
-
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO replace(Long id, BreedPutRequest request, Long version) {
+    public BreedDTO update(Long id, BreedUpdateRequest breedUpdateRequest, Long version) {
         Breed breed = breedLookupService.getBreedByIdOrThrow(id);
         checkVersion(breed.getVersion(), version);
-        breedMapper.updateFully(breed, request);
-        breed = breedRepository.save(breed);
-
-        log.info(ApiLogMessage.REPLACE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed), id);
-        return breedMapper.toDto(breed);
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO update(Long id, BreedPatchRequest breedPatchRequest, Long version) {
-        Breed breed = breedLookupService.getBreedByIdOrThrow(id);
-        checkVersion(breed.getVersion(), version);
-        breedMapper.updatePartially(breed, breedPatchRequest);
+        breedMapper.updatePartially(breed, breedUpdateRequest);
         breed = breedRepository.save(breed);
 
         log.info(ApiLogMessage.UPDATE_ENTITY.getValue(), getCurrentUsername(), LogHelper.getEntityName(breed), id);
