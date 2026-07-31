@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.passport.service;
 
 import io.github.artsobol.kurkod.feature.passport.mapper.PassportMapper;
 import io.github.artsobol.kurkod.feature.passport.service.PassportService;
-import io.github.artsobol.kurkod.feature.passport.dto.response.PassportDTO;
+import io.github.artsobol.kurkod.feature.passport.dto.response.PassportResponse;
 import io.github.artsobol.kurkod.feature.passport.entity.Passport;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
@@ -31,14 +31,14 @@ public class PassportServiceImpl implements PassportService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO get(Long workerId) {
-        return passportMapper.toDto(getPassportByWorkerId(workerId));
+    public PassportResponse get(Long workerId) {
+        return passportMapper.toResponse(getPassportByWorkerId(workerId));
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO create(Long workerId, PassportCreateRequest passportCreateRequest) {
+    public PassportResponse create(Long workerId, PassportCreateRequest passportCreateRequest) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId).orElseThrow(
                 () -> new NotFoundException("worker.not.found", workerId)
         );
@@ -52,17 +52,17 @@ public class PassportServiceImpl implements PassportService {
         passport.setWorker(worker);
         passport.setActive(true);
         passport = passportRepository.save(passport);
-        return passportMapper.toDto(passport);
+        return passportMapper.toResponse(passport);
     }
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public PassportDTO update(Long workerId, PassportUpdateRequest request, Long version) {
+    public PassportResponse update(Long workerId, PassportUpdateRequest request, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
         checkVersion(passport.getVersion(), version);
         passportMapper.updatePartially(passport, request);
         passport = passportRepository.save(passport);
-        return passportMapper.toDto(passport);
+        return passportMapper.toResponse(passport);
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RoleDTO {
+public class RoleResponse {
 
     private Long id;
     private String name;

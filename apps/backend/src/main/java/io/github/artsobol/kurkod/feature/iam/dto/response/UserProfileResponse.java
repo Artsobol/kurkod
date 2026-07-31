@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.iam.dto.response;
 
-import io.github.artsobol.kurkod.feature.iam.dto.response.RoleDTO;
+import io.github.artsobol.kurkod.feature.iam.dto.response.RoleResponse;
 import io.github.artsobol.kurkod.feature.iam.entity.RegistrationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class UserProfileDTO {
+public class UserProfileResponse {
 
     private Integer id;
     private String username;
@@ -24,5 +24,5 @@ public class UserProfileDTO {
 
     private String token;
     private String refreshToken;
-    private List<RoleDTO> roles;
+    private List<RoleResponse> roles;
 }

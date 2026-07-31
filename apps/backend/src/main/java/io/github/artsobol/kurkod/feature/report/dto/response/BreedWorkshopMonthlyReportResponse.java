@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.report.dto.response;
 
 import java.math.BigDecimal;
 
-public record BreedWorkshopMonthlyReportDTO(
+public record BreedWorkshopMonthlyReportResponse(
         Long workshopId,
         Integer workshopNumber,
         Long breedId,

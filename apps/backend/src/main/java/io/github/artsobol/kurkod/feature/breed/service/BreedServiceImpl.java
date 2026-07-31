@@ -7,7 +7,7 @@ import io.github.artsobol.kurkod.exception.http.DataExistException;
 import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 import io.github.artsobol.kurkod.feature.breed.mapper.BreedMapper;
-import io.github.artsobol.kurkod.feature.breed.dto.response.BreedDTO;
+import io.github.artsobol.kurkod.feature.breed.dto.response.BreedResponse;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
 import io.github.artsobol.kurkod.feature.breed.repository.BreedRepository;
 import jakarta.validation.constraints.NotNull;
@@ -32,39 +32,39 @@ public class BreedServiceImpl implements BreedService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO create(BreedCreateRequest breedCreateRequest) {
+    public BreedResponse create(BreedCreateRequest breedCreateRequest) {
         ensureNotExists(breedCreateRequest.getName());
 
         Breed breed = breedMapper.toEntity(breedCreateRequest);
         breed = breedRepository.save(breed);
 
-        return breedMapper.toDto(breed);
+        return breedMapper.toResponse(breed);
     }
 
     @Override
-    public BreedDTO get(@NotNull Long id) {
-        return breedMapper.toDto(breedLookupService.getBreedByIdOrThrow(id));
+    public BreedResponse get(@NotNull Long id) {
+        return breedMapper.toResponse(breedLookupService.getBreedByIdOrThrow(id));
     }
 
     @Override
-    public List<BreedDTO> getAll() {
-        return breedRepository.findAllByIsActiveTrue().stream().map(breedMapper::toDto).toList();
+    public List<BreedResponse> getAll() {
+        return breedRepository.findAllByIsActiveTrue().stream().map(breedMapper::toResponse).toList();
     }
 
     @Override
-    public Page<BreedDTO> getPage(Pageable pageable) {
-        return breedRepository.findAllByIsActiveTrue(pageable).map(breedMapper::toDto);
+    public Page<BreedResponse> getPage(Pageable pageable) {
+        return breedRepository.findAllByIsActiveTrue(pageable).map(breedMapper::toResponse);
     }
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public BreedDTO update(Long id, BreedUpdateRequest breedUpdateRequest, Long version) {
+    public BreedResponse update(Long id, BreedUpdateRequest breedUpdateRequest, Long version) {
         Breed breed = breedLookupService.getBreedByIdOrThrow(id);
         checkVersion(breed.getVersion(), version);
         breedMapper.updatePartially(breed, breedUpdateRequest);
         breed = breedRepository.save(breed);
 
-        return breedMapper.toDto(breed);
+        return breedMapper.toResponse(breed);
     }
 
     @Override

@@ -5,7 +5,7 @@ import io.github.artsobol.kurkod.feature.cage.entity.Cage;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
 import io.github.artsobol.kurkod.feature.chickenmovement.mapper.ChickenMovementMapper;
-import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementDTO;
+import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementResponse;
 import io.github.artsobol.kurkod.feature.chickenmovement.entity.ChickenMovement;
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
 import io.github.artsobol.kurkod.feature.chickenmovement.repository.ChickenMovementRepository;
@@ -29,28 +29,28 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
 
 
     @Override
-    public ChickenMovementDTO get(Long movementId) {
-        return chickenMovementMapper.toDto(findChickenMovementById(movementId));
+    public ChickenMovementResponse get(Long movementId) {
+        return chickenMovementMapper.toResponse(findChickenMovementById(movementId));
     }
 
     @Override
-    public ChickenMovementDTO getCurrentCage(Long chickenId) {
-        return chickenMovementMapper.toDto(chickenMovementRepository
+    public ChickenMovementResponse getCurrentCage(Long chickenId) {
+        return chickenMovementMapper.toResponse(chickenMovementRepository
                 .findTopByChicken_IdOrderByMovedAtDesc(chickenId)
                 .orElseThrow(() -> new NotFoundException("chicken.movement.not.found.by.chicken", chickenId)));
     }
 
     @Override
-    public List<ChickenMovementDTO> getAllByChickenId(Long chickenId) {
+    public List<ChickenMovementResponse> getAllByChickenId(Long chickenId) {
         return chickenMovementRepository.findAllByChicken_IdOrderByMovedAtDesc(chickenId)
                 .stream()
-                .map(chickenMovementMapper::toDto)
+                .map(chickenMovementMapper::toResponse)
                 .toList();
     }
 
     @Override
     @Transactional
-    public ChickenMovementDTO create(Long chickenId, ChickenMovementCreateRequest request) {
+    public ChickenMovementResponse create(Long chickenId, ChickenMovementCreateRequest request) {
         Cage fromCage = findFromCageById(request.getFromCageId());
         Cage toCage = findCageById(request.getToCageId());
         ChickenMovement chickenMovement = chickenMovementMapper.toEntity(request);
@@ -60,7 +60,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
         chickenMovement.setToCage(toCage);
         chickenMovement.setMovedAt(OffsetDateTime.now());
         chickenMovement = chickenMovementRepository.save(chickenMovement);
-        return chickenMovementMapper.toDto(chickenMovement);
+        return chickenMovementMapper.toResponse(chickenMovement);
     }
 
     protected ChickenMovement findChickenMovementById(Long movementId) {

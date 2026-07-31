@@ -4,7 +4,7 @@ import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
 import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.breed.dto.response.BreedDTO;
+import io.github.artsobol.kurkod.feature.breed.dto.response.BreedResponse;
 import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
 import io.github.artsobol.kurkod.feature.breed.service.BreedService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -35,27 +35,27 @@ public class BreedController {
 
   @Operation(summary = "Get breed by ID")
   @GetMapping("/{breedId}")
-  public ResponseEntity<BreedDTO> getById(@PathVariable Long breedId) {
-    BreedDTO response = breedService.get(breedId);
+  public ResponseEntity<BreedResponse> getById(@PathVariable Long breedId) {
+    BreedResponse response = breedService.get(breedId);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
   @Operation(summary = "Get a page of breeds")
   @GetMapping
-  public PageResponse<BreedDTO> getPage(
+  public PageResponse<BreedResponse> getPage(
       @RequestParam(defaultValue = "0") @PositiveOrZero int page,
       @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
     Pageable pageable =
         PageRequest.of(page, size, Sort.by(Sort.Order.asc("name"), Sort.Order.asc("id")));
 
-    Page<BreedDTO> response = breedService.getPage(pageable);
+    Page<BreedResponse> response = breedService.getPage(pageable);
     return PageResponse.from(response);
   }
 
   @Operation(summary = "Create breed")
   @PostMapping
-  public ResponseEntity<BreedDTO> createBreed(@Valid @RequestBody BreedCreateRequest request) {
-    BreedDTO response = breedService.create(request);
+  public ResponseEntity<BreedResponse> createBreed(@Valid @RequestBody BreedCreateRequest request) {
+    BreedResponse response = breedService.create(request);
     return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
         .eTag(EtagUtils.toEtag(response.version()))
         .body(response);
@@ -63,12 +63,12 @@ public class BreedController {
 
   @Operation(summary = "Partially update breed")
   @PatchMapping("/{breedId}")
-  public ResponseEntity<BreedDTO> updateById(
+  public ResponseEntity<BreedResponse> updateById(
       @PathVariable Long breedId,
       @Valid @RequestBody BreedUpdateRequest request,
       @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
-    BreedDTO response = breedService.update(breedId, request, expected);
+    BreedResponse response = breedService.update(breedId, request, expected);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 

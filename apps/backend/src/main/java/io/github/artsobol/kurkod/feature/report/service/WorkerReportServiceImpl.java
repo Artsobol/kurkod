@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.report.service;
 
-import io.github.artsobol.kurkod.feature.report.dto.response.WorkerReportDailyEggsDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.WorkerReportDailyEggsResponse;
 import io.github.artsobol.kurkod.feature.report.repository.WorkerReportRepository;
 import io.github.artsobol.kurkod.feature.report.service.WorkerReportService;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +22,13 @@ public class WorkerReportServiceImpl implements WorkerReportService {
     private final WorkerReportRepository workerRepository;
 
     @Override
-    public List<WorkerReportDailyEggsDTO> getWorkerDailyEggs(int year, int month) {
+    public List<WorkerReportDailyEggsResponse> getWorkerDailyEggs(int year, int month) {
         YearMonth ym = YearMonth.of(year, month);
         int daysInMonth = ym.lengthOfMonth();
 
         return workerRepository.getMonthlyEggsPerWorker(year, month)
                                .stream()
-                               .map(p -> new WorkerReportDailyEggsDTO(
+                               .map(p -> new WorkerReportDailyEggsResponse(
                                        p.getWorkerId(),
                                        p.getFirstName(),
                                        p.getLastName(),

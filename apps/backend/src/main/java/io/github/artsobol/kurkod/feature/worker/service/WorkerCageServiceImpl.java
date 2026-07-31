@@ -2,11 +2,11 @@ package io.github.artsobol.kurkod.feature.worker.service;
 
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
 import io.github.artsobol.kurkod.feature.worker.mapper.WorkerMapper;
-import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
+import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.feature.worker.entity.WorkerCage;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerCageRepository;
@@ -34,22 +34,22 @@ public class WorkerCageServiceImpl implements WorkerCageService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CageDTO> getWorkerCages(Long workerId) {
+    public List<CageResponse> getWorkerCages(Long workerId) {
         return workerCageRepository.findAllByWorkerId(workerId)
                                    .stream()
                                    .map(WorkerCage::getCage)
-                                   .map(cageMapper::toDto)
+                                   .map(cageMapper::toResponse)
                                    .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<WorkerDTO> getCageWorkers(Long cageId) {
+    public List<WorkerResponse> getCageWorkers(Long cageId) {
 
         return workerCageRepository.findAllByCageId(cageId)
                                    .stream()
                                    .map(WorkerCage::getWorker)
-                                   .map(workerMapper::toDto)
+                                   .map(workerMapper::toResponse)
                                    .collect(Collectors.toList());
     }
 

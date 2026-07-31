@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.worker.mapper;
 
 import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
-import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
+import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.feature.worker.entity.WorkerCage;
 import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerUpdateRequest;
@@ -17,7 +17,7 @@ nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrateg
 public interface WorkerMapper {
 
     @Mapping(target = "cages", source = "workerCages")
-    WorkerDTO toDto(Worker worker);
+    WorkerResponse toResponse(Worker worker);
 
     Worker toEntity(WorkerCreateRequest workerCreateRequest);
     void updatePartially(@MappingTarget Worker worker, WorkerUpdateRequest workerUpdateRequest);

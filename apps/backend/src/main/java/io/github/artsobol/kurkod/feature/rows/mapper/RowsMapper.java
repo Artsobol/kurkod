@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.rows.mapper;
 
-import io.github.artsobol.kurkod.feature.rows.dto.response.RowsDTO;
+import io.github.artsobol.kurkod.feature.rows.dto.response.RowsResponse;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
 import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
 import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
@@ -12,7 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface RowsMapper {
 
     @Mapping(target = "workshopId", source = "workshop.id")
-    RowsDTO toDto(Rows rows);
+    RowsResponse toResponse(Rows rows);
 
     @Mapping(target = "workshop", ignore = true)
     Rows toEntity(RowsCreateRequest rowsCreateRequest);

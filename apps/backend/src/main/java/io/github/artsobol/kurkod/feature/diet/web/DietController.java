@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.diet.web;
 
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.diet.dto.response.DietDTO;
+import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
 import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
 import io.github.artsobol.kurkod.feature.diet.dto.request.DietCreateRequest;
 import io.github.artsobol.kurkod.feature.diet.service.DietService;
@@ -24,10 +24,10 @@ public class DietController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get diet by ID")
-    public ResponseEntity<DietDTO> get(
+    public ResponseEntity<DietResponse> get(
             @PathVariable Long id) {
 
-        DietDTO response = dietService.get(id);
+        DietResponse response = dietService.get(id);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -35,30 +35,30 @@ public class DietController {
 
     @GetMapping
     @Operation(summary = "Get all diets")
-    public ResponseEntity<Iterable<DietDTO>> getAll() {
+    public ResponseEntity<Iterable<DietResponse>> getAll() {
 
-        Iterable<DietDTO> response = dietService.getAll();
+        Iterable<DietResponse> response = dietService.getAll();
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     @Operation(summary = "Create diet")
-    public ResponseEntity<DietDTO> create(@RequestBody @Valid DietCreateRequest request) {
+    public ResponseEntity<DietResponse> create(@RequestBody @Valid DietCreateRequest request) {
 
-        DietDTO response = dietService.create(request);
+        DietResponse response = dietService.create(request);
         return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update diet")
-    public ResponseEntity<DietDTO> update(
+    public ResponseEntity<DietResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid DietUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        DietDTO response = dietService.update(id, request, expected);
+        DietResponse response = dietService.update(id, request, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.passport.web;
 
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.passport.dto.response.PassportDTO;
+import io.github.artsobol.kurkod.feature.passport.dto.response.PassportResponse;
 import io.github.artsobol.kurkod.feature.passport.dto.request.PassportUpdateRequest;
 import io.github.artsobol.kurkod.feature.passport.dto.request.PassportCreateRequest;
 import io.github.artsobol.kurkod.feature.passport.service.PassportService;
@@ -25,10 +25,10 @@ public class PassportController {
 
     @Operation(summary = "Get passport by worker ID")
     @GetMapping
-    public ResponseEntity<PassportDTO> get(
+    public ResponseEntity<PassportResponse> get(
             @PathVariable(name = "workerId") Long id) {
 
-        PassportDTO response = passportService.get(id);
+        PassportResponse response = passportService.get(id);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -36,22 +36,22 @@ public class PassportController {
 
     @Operation(summary = "Create passport for a worker")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PassportDTO> create(
+    public ResponseEntity<PassportResponse> create(
             @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportCreateRequest request) {
 
-        PassportDTO response = passportService.create(id, request);
+        PassportResponse response = passportService.create(id, request);
         return ResponseEntity.created(LocationUtils.buildLocation()).body(response);
     }
     @Operation(summary = "Partially update worker’s passport")
     @PatchMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PassportDTO> update(
+    public ResponseEntity<PassportResponse> update(
             @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        PassportDTO response = passportService.update(id, request, expected);
+        PassportResponse response = passportService.update(id, request, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

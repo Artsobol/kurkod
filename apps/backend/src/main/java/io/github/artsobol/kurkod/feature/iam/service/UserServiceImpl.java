@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
 import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserDTO;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
@@ -39,45 +39,45 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO getById(@NotNull Long userId) {
-        return userMapper.toDto(getUserById(userId));
+    public UserResponse getById(@NotNull Long userId) {
+        return userMapper.toResponse(getUserById(userId));
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public List<UserDTO> getAll() {
-        return userRepository.findAllByIsActiveTrue().stream().map(userMapper::toDto).toList();
+    public List<UserResponse> getAll() {
+        return userRepository.findAllByIsActiveTrue().stream().map(userMapper::toResponse).toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO getByUsername(@NotBlank String username) {
+    public UserResponse getByUsername(@NotBlank String username) {
         User response = getUserByUsername(username);
-        return userMapper.toDto(response);
+        return userMapper.toResponse(response);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO create(@NotNull UserCreateRequest request) {
+    public UserResponse create(@NotNull UserCreateRequest request) {
         ensureNotExistsByUsername(request.getUsername());
         ensureNotExistsByEmail(request.getEmail());
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user = userRepository.save(user);
-        return userMapper.toDto(user);
+        return userMapper.toResponse(user);
     }
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public UserDTO update(@NotNull Long userId, UserUpdateRequest request,Long version) {
+    public UserResponse update(@NotNull Long userId, UserUpdateRequest request,Long version) {
         User user = getUserById(userId);
         checkVersion(user.getVersion(), version);
         userMapper.updatePartially(user, request);
         user = userRepository.save(user);
-        return userMapper.toDto(user);
+        return userMapper.toResponse(user);
     }
 
     @Override

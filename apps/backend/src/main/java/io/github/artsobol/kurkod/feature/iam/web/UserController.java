@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.iam.web;
 
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserDTO;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
 import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
 import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
 import io.github.artsobol.kurkod.feature.iam.service.UserService;
@@ -27,10 +27,10 @@ public class UserController {
 
     @Operation(summary = "Get user by ID")
     @GetMapping("/id/{userId}")
-    public ResponseEntity<UserDTO> getById(
+    public ResponseEntity<UserResponse> getById(
             @PathVariable Long userId) {
 
-        UserDTO response = userService.getById(userId);
+        UserResponse response = userService.getById(userId);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -38,10 +38,10 @@ public class UserController {
 
     @Operation(summary = "Get user by username")
     @GetMapping("/username/{username}")
-    public ResponseEntity<UserDTO> getByUsername(
+    public ResponseEntity<UserResponse> getByUsername(
             @PathVariable String username) {
 
-        UserDTO response = userService.getByUsername(username);
+        UserResponse response = userService.getByUsername(username);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -49,9 +49,9 @@ public class UserController {
 
     @Operation(summary = "Create user")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> create(@RequestBody @Valid UserCreateRequest userCreateRequest) {
+    public ResponseEntity<UserResponse> create(@RequestBody @Valid UserCreateRequest userCreateRequest) {
 
-        UserDTO response = userService.create(userCreateRequest);
+        UserResponse response = userService.create(userCreateRequest);
         return ResponseEntity.created(LocationUtils.buildLocation("/users/id/{id}", response.id()))
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -59,13 +59,13 @@ public class UserController {
 
     @Operation(summary = "Partially update user")
     @PatchMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> updatePartiallyUser(
+    public ResponseEntity<UserResponse> updatePartiallyUser(
             @PathVariable Long userId,
             @RequestBody @Valid UserUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        UserDTO response = userService.update(userId, request, expected);
+        UserResponse response = userService.update(userId, request, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

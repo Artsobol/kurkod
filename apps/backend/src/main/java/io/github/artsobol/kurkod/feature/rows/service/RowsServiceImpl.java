@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.rows.service;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.rows.mapper.RowsMapper;
-import io.github.artsobol.kurkod.feature.rows.dto.response.RowsDTO;
+import io.github.artsobol.kurkod.feature.rows.dto.response.RowsResponse;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
 import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
 import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
@@ -30,26 +30,26 @@ public class RowsServiceImpl implements RowsService {
 
 
     @Override
-    public RowsDTO find(Long workshopId, Integer rowHumber) {
-        return rowsMapper.toDto(getRowsById(workshopId, rowHumber));
+    public RowsResponse find(Long workshopId, Integer rowHumber) {
+        return rowsMapper.toResponse(getRowsById(workshopId, rowHumber));
     }
 
     @Override
-    public List<RowsDTO> findAll(Long workshopId) {
+    public List<RowsResponse> findAll(Long workshopId) {
 
         if (!workshopRepository.existsById(workshopId)) {
             throw new NotFoundException("workshop.not.found", workshopId);
         }
 
         return rowsRepository.findAllByWorkshop_IdAndIsActiveTrue(workshopId).stream()
-                .map(rowsMapper::toDto)
+                .map(rowsMapper::toResponse)
                 .toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO create(Long workshopId, RowsCreateRequest request) {
+    public RowsResponse create(Long workshopId, RowsCreateRequest request) {
         Integer rowNumber = request.getRowNumber();
         ensureNotExists(workshopId, rowNumber);
 
@@ -58,13 +58,13 @@ public class RowsServiceImpl implements RowsService {
                 () -> new NotFoundException("workshop.not.found", workshopId)
         ));
         rowsRepository.save(rows);
-        return rowsMapper.toDto(rows);
+        return rowsMapper.toResponse(rows);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsDTO update(Long workshopId, Integer rowHumber, RowsUpdateRequest request, Long version) {
+    public RowsResponse update(Long workshopId, Integer rowHumber, RowsUpdateRequest request, Long version) {
         Integer updatedRowNumber = request.getRowNumber();
         if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
             ensureNotExists(workshopId, updatedRowNumber);
@@ -74,7 +74,7 @@ public class RowsServiceImpl implements RowsService {
         checkVersion(rows.getVersion(), version);
         rowsMapper.update(rows, request);
         rowsRepository.save(rows);
-        return rowsMapper.toDto(rows);
+        return rowsMapper.toResponse(rows);
     }
     @Override
     @Transactional

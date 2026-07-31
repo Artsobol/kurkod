@@ -5,7 +5,7 @@ import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.mapper.EggProductionMonthMapper;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthDTO;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthResponse;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.entity.EggProductionMonth;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthUpdateRequest;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthCreateRequest;
@@ -31,26 +31,26 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
 
 
     @Override
-    public EggProductionMonthDTO get(Long chickenId, int month, int year) {
-        return eggProductionMonthMapper.toDto(findByIdMonthYear(chickenId, month, year));
+    public EggProductionMonthResponse get(Long chickenId, int month, int year) {
+        return eggProductionMonthMapper.toResponse(findByIdMonthYear(chickenId, month, year));
     }
 
     @Override
-    public List<EggProductionMonthDTO> getAllByChicken(Long chickenId) {
+    public List<EggProductionMonthResponse> getAllByChicken(Long chickenId) {
         return eggProductionMonthRepository.findAllByChicken_IdAndIsActiveTrue(chickenId).stream().map(
-                eggProductionMonthMapper::toDto).toList();
+                eggProductionMonthMapper::toResponse).toList();
     }
 
     @Override
-    public List<EggProductionMonthDTO> getAllByChickenAndYear(Long chickenId, int year) {
+    public List<EggProductionMonthResponse> getAllByChickenAndYear(Long chickenId, int year) {
         return eggProductionMonthRepository.findAllByChicken_IdAndYearAndIsActiveTrue(chickenId, year).stream().map(
-                eggProductionMonthMapper::toDto).toList();
+                eggProductionMonthMapper::toResponse).toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EggProductionMonthDTO create(Long chickenId, int month, int year, EggProductionMonthCreateRequest request) {
+    public EggProductionMonthResponse create(Long chickenId, int month, int year, EggProductionMonthCreateRequest request) {
         ensureNotExistsByIdMonthYear(chickenId, month, year);
         EggProductionMonth eggProductionMonth = eggProductionMonthMapper.toEntity(request);
         Chicken chicken = chickenRepository.findById(chickenId)
@@ -59,11 +59,11 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         eggProductionMonth.setYear(year);
         eggProductionMonth.setMonth(month);
         eggProductionMonthRepository.save(eggProductionMonth);
-        return eggProductionMonthMapper.toDto(eggProductionMonth);
+        return eggProductionMonthMapper.toResponse(eggProductionMonth);
     }
 
     @Override
-    public EggProductionMonthDTO update(
+    public EggProductionMonthResponse update(
             Long chickenId,
             int month,
             int year,
@@ -73,7 +73,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
         checkVersion(eggProductionMonth.getVersion(), version);
         eggProductionMonthMapper.update(eggProductionMonth, request);
 
-        return eggProductionMonthMapper.toDto(eggProductionMonthRepository.save(eggProductionMonth));
+        return eggProductionMonthMapper.toResponse(eggProductionMonthRepository.save(eggProductionMonth));
     }
 
     @Override

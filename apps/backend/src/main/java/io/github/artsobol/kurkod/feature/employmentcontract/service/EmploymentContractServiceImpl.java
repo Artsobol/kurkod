@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.employmentcontract.service;
 
 import io.github.artsobol.kurkod.feature.employmentcontract.mapper.EmploymentContractMapper;
-import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.EmploymentContractDTO;
+import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.EmploymentContractResponse;
 import io.github.artsobol.kurkod.feature.employmentcontract.entity.EmploymentContract;
 import io.github.artsobol.kurkod.feature.staff.entity.Staff;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
@@ -31,14 +31,14 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO get(Long workerId) {
-        return employmentContractMapper.toDto(getContractByWorkerId(workerId));
+    public EmploymentContractResponse get(Long workerId) {
+        return employmentContractMapper.toResponse(getContractByWorkerId(workerId));
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO create(Long workerId, EmploymentContractCreateRequest request) {
+    public EmploymentContractResponse create(Long workerId, EmploymentContractCreateRequest request) {
         Worker worker = workerRepository.findWorkerByIdAndIsActiveTrue(workerId)
                                         .orElseThrow(() -> new NotFoundException("worker.not.found", workerId));
 
@@ -49,12 +49,12 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
         employmentContract.setStaff(staff);
         employmentContract.setWorker(worker);
         employmentContract = employmentContractRepository.save(employmentContract);
-        return employmentContractMapper.toDto(employmentContract);
+        return employmentContractMapper.toResponse(employmentContract);
     }
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public EmploymentContractDTO update(
+    public EmploymentContractResponse update(
             Long workerId,
             EmploymentContractUpdateRequest request,
             Long expectedVersion) {
@@ -68,7 +68,7 @@ public class EmploymentContractServiceImpl implements EmploymentContractService 
         }
 
         employmentContract = employmentContractRepository.save(employmentContract);
-        return employmentContractMapper.toDto(employmentContract);
+        return employmentContractMapper.toResponse(employmentContract);
     }
 
     @Override

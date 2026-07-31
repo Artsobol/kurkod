@@ -2,9 +2,9 @@ package io.github.artsobol.kurkod.feature.report.service;
 
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.repository.EggProductionMonthRepository;
-import io.github.artsobol.kurkod.feature.report.dto.response.BreedWorkshopMonthlyReportDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.BreedWorkshopMonthlyReportResponse;
 import io.github.artsobol.kurkod.feature.report.repository.FarmMonthlyStatsRepository;
-import io.github.artsobol.kurkod.feature.report.dto.response.FarmMonthlyReportDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.FarmMonthlyReportResponse;
 import io.github.artsobol.kurkod.feature.report.service.FarmReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,14 +24,14 @@ public class FarmReportServiceImpl implements FarmReportService {
     private final EggProductionMonthRepository eggProductionMonthRepository;
 
     @Override
-    public FarmMonthlyReportDTO getMonthlyReport(int year, int month) {
-        List<BreedWorkshopMonthlyReportDTO> stats = farmMonthlyStatsRepository.findBreedWorkshopMonthlyStats(year,
+    public FarmMonthlyReportResponse getMonthlyReport(int year, int month) {
+        List<BreedWorkshopMonthlyReportResponse> stats = farmMonthlyStatsRepository.findBreedWorkshopMonthlyStats(year,
                                                                                                              month);
 
         long totalChickens = chickenRepository.countActiveChickens();
 
         long totalEggs = eggProductionMonthRepository.countEggsByMonth(year, month);
 
-        return new FarmMonthlyReportDTO(year, month, stats, totalChickens, totalEggs);
+        return new FarmMonthlyReportResponse(year, month, stats, totalChickens, totalEggs);
     }
 }

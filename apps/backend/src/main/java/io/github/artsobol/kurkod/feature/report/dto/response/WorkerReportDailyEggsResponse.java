@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.report.dto.response;
 
 import java.math.BigDecimal;
 
-public record WorkerReportDailyEggsDTO(
+public record WorkerReportDailyEggsResponse(
         Long workerId,
         String firstName,
         String lastName,

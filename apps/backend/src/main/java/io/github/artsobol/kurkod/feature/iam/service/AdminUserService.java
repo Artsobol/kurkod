@@ -1,13 +1,13 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
 import io.github.artsobol.kurkod.feature.iam.dto.request.ChangeRoleRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserDTO;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
 
 public interface AdminUserService {
 
-    UserDTO changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion);
+    UserResponse changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion);
 
-    UserDTO activateUser(Long userId, Long expectedVersion);
+    UserResponse activateUser(Long userId, Long expectedVersion);
 
-    UserDTO deactivateUser(Long userId, Long expectedVersion);
+    UserResponse deactivateUser(Long userId, Long expectedVersion);
 }

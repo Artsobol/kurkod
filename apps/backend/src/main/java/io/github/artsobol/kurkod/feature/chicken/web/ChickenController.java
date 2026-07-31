@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.chicken.web;
 import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenDTO;
+import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
 import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
 import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
 import io.github.artsobol.kurkod.feature.chicken.service.ChickenService;
@@ -37,8 +37,8 @@ public class ChickenController {
 
     @Operation(summary = "Create chicken")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChickenDTO> create(@Valid @RequestBody ChickenCreateRequest request) {
-        ChickenDTO response = chickenService.create(request);
+    public ResponseEntity<ChickenResponse> create(@Valid @RequestBody ChickenCreateRequest request) {
+        ChickenResponse response = chickenService.create(request);
         return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -46,38 +46,38 @@ public class ChickenController {
 
     @Operation(summary = "Get all chickens")
     @GetMapping("/all")
-    public ResponseEntity<List<ChickenDTO>> getAll() {
-        List<ChickenDTO> response = chickenService.getAll();
+    public ResponseEntity<List<ChickenResponse>> getAll() {
+        List<ChickenResponse> response = chickenService.getAll();
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Get a page of chickens")
     @GetMapping
-    public PageResponse<ChickenDTO> getPage(
+    public PageResponse<ChickenResponse> getPage(
             @RequestParam(defaultValue = "0") @PositiveOrZero int page,
             @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("id")));
-        Page<ChickenDTO> response = chickenService.getPage(pageable);
+        Page<ChickenResponse> response = chickenService.getPage(pageable);
         return PageResponse.from(response);
     }
 
     @Operation(summary = "Get chicken by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<ChickenDTO> get(
+    public ResponseEntity<ChickenResponse> get(
             @PathVariable Long id) {
-        ChickenDTO response = chickenService.get(id);
+        ChickenResponse response = chickenService.get(id);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
     @Operation(summary = "Partially update chicken")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChickenDTO> update(
+    public ResponseEntity<ChickenResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody ChickenUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        ChickenDTO response = chickenService.update(id, request, expected);
+        ChickenResponse response = chickenService.update(id, request, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

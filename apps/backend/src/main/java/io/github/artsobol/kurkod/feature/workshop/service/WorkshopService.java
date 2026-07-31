@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.workshop.service;
 
-import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopDTO;
+import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequest;
 import org.springframework.data.domain.Page;
@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface WorkshopService {
 
-    WorkshopDTO get(Long id);
+    WorkshopResponse get(Long id);
 
-    List<WorkshopDTO> getAll();
+    List<WorkshopResponse> getAll();
 
-    Page<WorkshopDTO> getAllWithPagination(Pageable pageable);
+    Page<WorkshopResponse> getAllWithPagination(Pageable pageable);
 
-    WorkshopDTO create(WorkshopCreateRequest request);
+    WorkshopResponse create(WorkshopCreateRequest request);
 
-    WorkshopDTO update(Long id, WorkshopUpdateRequest request, Long version);
+    WorkshopResponse update(Long id, WorkshopUpdateRequest request, Long version);
     void delete(Long id, Long version);
 }

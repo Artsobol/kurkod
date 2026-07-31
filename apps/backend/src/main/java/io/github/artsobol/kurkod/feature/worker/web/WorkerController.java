@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.worker.web;
 
 import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
-import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
+import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerUpdateRequest;
 import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerCreateRequest;
 import io.github.artsobol.kurkod.feature.worker.service.WorkerService;
@@ -38,9 +38,9 @@ public class WorkerController {
 
     @Operation(summary = "Get worker by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<WorkerDTO> get(
+    public ResponseEntity<WorkerResponse> get(
             @PathVariable Long id) {
-        WorkerDTO response = workerService.get(id);
+        WorkerResponse response = workerService.get(id);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -48,36 +48,36 @@ public class WorkerController {
 
     @Operation(summary = "Get all workers")
     @GetMapping("/all")
-    public ResponseEntity<List<WorkerDTO>> getAll() {
-        List<WorkerDTO> response = workerService.getAll();
+    public ResponseEntity<List<WorkerResponse>> getAll() {
+        List<WorkerResponse> response = workerService.getAll();
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Get a page of workers")
     @GetMapping
-    public PageResponse<WorkerDTO> getPage(
+    public PageResponse<WorkerResponse> getPage(
             @RequestParam(defaultValue = "0") @PositiveOrZero int page,
             @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Order.asc("id")));
-        Page<WorkerDTO> response = workerService.getPage(pageable);
+        Page<WorkerResponse> response = workerService.getPage(pageable);
         return PageResponse.from(response);
     }
 
     @Operation(summary = "Create worker")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkerDTO> create(@RequestBody @Valid WorkerCreateRequest request) {
-        WorkerDTO response = workerService.create(request);
+    public ResponseEntity<WorkerResponse> create(@RequestBody @Valid WorkerCreateRequest request) {
+        WorkerResponse response = workerService.create(request);
         return ResponseEntity.created(buildLocation(response.id())).eTag(EtagUtils.toEtag(response.version())).body(
                 response);
     }
     @Operation(summary = "Partially update worker")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<WorkerDTO> update(
+    public ResponseEntity<WorkerResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid WorkerUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        WorkerDTO response = workerService.update(id, request, expected);
+        WorkerResponse response = workerService.update(id, request, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.dismissal.service;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
 import io.github.artsobol.kurkod.feature.dismissal.mapper.DismissalMapper;
-import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalDTO;
+import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalResponse;
 import io.github.artsobol.kurkod.feature.dismissal.entity.Dismissal;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
@@ -37,45 +37,45 @@ public class DismissalServiceImpl implements DismissalService {
     }
 
     @Override
-    public DismissalDTO getByWorkerAndDismissed(Long workerId, Long dismissedId) {
-        return dismissalMapper.toDTO(getDismissalByWorkerAndDismissed(workerId, dismissedId));
+    public DismissalResponse getByWorkerAndDismissed(Long workerId, Long dismissedId) {
+        return dismissalMapper.toResponse(getDismissalByWorkerAndDismissed(workerId, dismissedId));
     }
 
     @Override
-    public List<DismissalDTO> getAllByWorker(Long workerId) {
+    public List<DismissalResponse> getAllByWorker(Long workerId) {
         return dismissalRepository.findAllByWorker_Id(workerId)
                 .stream()
-                .map(dismissalMapper::toDTO)
+                .map(dismissalMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public List<DismissalDTO> getAllByDismissed(Long dismissedId) {
+    public List<DismissalResponse> getAllByDismissed(Long dismissedId) {
         return dismissalRepository.findAllByWhoDismiss_Id(dismissedId)
                 .stream()
-                .map(dismissalMapper::toDTO)
+                .map(dismissalMapper::toResponse)
                 .toList();
     }
 
     @Override
     @Transactional
-    public DismissalDTO create(DismissalCreateRequest request) {
+    public DismissalResponse create(DismissalCreateRequest request) {
         Dismissal dismissal = dismissalMapper.toEntity(request);
         Worker worker = getWorkerById(request.getWorkerId());
         Worker whoDismiss = getWorkerById(getCurrentUserId());
         dismissal.setWorker(worker);
         dismissal.setWhoDismiss(whoDismiss);
         dismissalRepository.save(dismissal);
-        return dismissalMapper.toDTO(dismissal);
+        return dismissalMapper.toResponse(dismissal);
     }
     @Override
     @Transactional
-    public DismissalDTO update(Long workerId, DismissalUpdateRequest request, Long version) {
+    public DismissalResponse update(Long workerId, DismissalUpdateRequest request, Long version) {
         Dismissal dismissal = getDismissalByWorkerId(workerId);
         checkVersion(dismissal.getVersion(), version);
         dismissalMapper.update(dismissal, request);
         dismissal = dismissalRepository.save(dismissal);
-        return dismissalMapper.toDTO(dismissal);
+        return dismissalMapper.toResponse(dismissal);
     }
 
     protected Worker getWorkerById(Long id) {

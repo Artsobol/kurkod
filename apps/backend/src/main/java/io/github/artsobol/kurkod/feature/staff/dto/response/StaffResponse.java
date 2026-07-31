@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.staff.dto.response;
 
 import java.time.OffsetDateTime;
 
-public record StaffDTO(
+public record StaffResponse(
         Long id, String position, OffsetDateTime createdAt, OffsetDateTime updatedAt, Long version
 ) {
 };

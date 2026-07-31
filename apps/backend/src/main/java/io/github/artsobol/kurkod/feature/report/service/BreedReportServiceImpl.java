@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.report.service;
 
-import io.github.artsobol.kurkod.feature.report.dto.response.BreedEggDiffReportDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.BreedEggDiffReportResponse;
 import io.github.artsobol.kurkod.feature.report.entity.BreedEggDiffReport;
 import io.github.artsobol.kurkod.feature.report.repository.BreedEggDiffReportRepository;
 import io.github.artsobol.kurkod.feature.report.service.BreedReportService;
@@ -20,15 +20,15 @@ public class BreedReportServiceImpl implements BreedReportService {
     private final BreedEggDiffReportRepository repository;
 
     @Override
-    public List<BreedEggDiffReportDTO> getEggDiff() {
+    public List<BreedEggDiffReportResponse> getEggDiff() {
         return repository.findAll()
                          .stream()
-                         .map(this::toDto)
+                         .map(this::toResponse)
                          .toList();
     }
 
-    private BreedEggDiffReportDTO toDto(BreedEggDiffReport entity) {
-        return new BreedEggDiffReportDTO(
+    private BreedEggDiffReportResponse toResponse(BreedEggDiffReport entity) {
+        return new BreedEggDiffReportResponse(
                 entity.getBreedId(),
                 entity.getBreedName(),
                 entity.getBreedAvgEggs(),

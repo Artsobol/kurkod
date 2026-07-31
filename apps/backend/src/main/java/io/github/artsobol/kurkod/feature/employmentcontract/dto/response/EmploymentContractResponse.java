@@ -4,7 +4,7 @@ package io.github.artsobol.kurkod.feature.employmentcontract.dto.response;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
-public record EmploymentContractDTO(
+public record EmploymentContractResponse(
         String contractNumber,
         Integer salary,
         String position,

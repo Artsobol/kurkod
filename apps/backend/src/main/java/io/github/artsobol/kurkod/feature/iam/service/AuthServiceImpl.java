@@ -4,7 +4,7 @@ import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
 import io.github.artsobol.kurkod.feature.iam.entity.Role;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.iam.dto.request.LoginRequest;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserProfileDTO;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserProfileResponse;
 import io.github.artsobol.kurkod.feature.iam.entity.RefreshToken;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.exception.business.InvalidDataException;
@@ -40,7 +40,7 @@ public class AuthServiceImpl implements AuthService {
     private final AccessValidator accessValidator;
 
     @Override
-    public UserProfileDTO login(LoginRequest request) {
+    public UserProfileResponse login(LoginRequest request) {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
@@ -54,24 +54,24 @@ public class AuthServiceImpl implements AuthService {
 
         RefreshToken refreshToken = refreshTokenService.generateOrUpdateRefreshToken(user);
         String token = jwtTokenProvider.generateToken(user);
-        UserProfileDTO userProfileDTO = userMapper.toUserProfileDto(user, token, refreshToken.getToken());
-        userProfileDTO.setToken(token);
+        UserProfileResponse userProfileResponse = userMapper.toUserProfileResponse(user, token, refreshToken.getToken());
+        userProfileResponse.setToken(token);
 
-        return userProfileDTO;
+        return userProfileResponse;
     }
 
     @Override
-    public UserProfileDTO refreshAccessToken(String refreshTokenValue) {
+    public UserProfileResponse refreshAccessToken(String refreshTokenValue) {
         RefreshToken refreshToken = refreshTokenService.validateAndRefreshToken(refreshTokenValue);
         User user = refreshToken.getUser();
         String accessToken = jwtTokenProvider.generateToken(user);
-        return userMapper.toUserProfileDto(user,
+        return userMapper.toUserProfileResponse(user,
                 accessToken,
                 refreshToken.getToken());
     }
 
     @Override
-    public UserProfileDTO registerUser(@NotNull RegistrationRequest request) {
+    public UserProfileResponse registerUser(@NotNull RegistrationRequest request) {
         accessValidator.validateNewUser(
                 request.getUsername(),
                 request.getEmail(),
@@ -82,7 +82,7 @@ public class AuthServiceImpl implements AuthService {
         Role userRole = roleRepository.findByName(SystemRole.USER.getRole())
                 .orElseThrow(() -> new NotFoundException("role.not.found", SystemRole.USER.getRole()));
 
-        User newUser = userMapper.fromDto(request);
+        User newUser = userMapper.toEntity(request);
 
         String enc = passwordEncoder.encode(request.getPassword());
         newUser.setPassword(enc);
@@ -92,7 +92,7 @@ public class AuthServiceImpl implements AuthService {
         RefreshToken refreshToken = refreshTokenService.generateOrUpdateRefreshToken(newUser);
         String token = jwtTokenProvider.generateToken(newUser);
 
-        return userMapper.toUserProfileDto(newUser, token, refreshToken.getToken());
+        return userMapper.toUserProfileResponse(newUser, token, refreshToken.getToken());
     }
 
 }

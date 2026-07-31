@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.eggproductionmonth.web;
 
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthDTO;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthResponse;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthUpdateRequest;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthCreateRequest;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.service.EggProductionMonthService;
@@ -26,25 +26,25 @@ public class EggProductionMonthController {
 
     @PostMapping("/{year}/{month}")
     @Operation(summary = "Create egg production month")
-    public ResponseEntity<EggProductionMonthDTO> create(
+    public ResponseEntity<EggProductionMonthResponse> create(
             @PathVariable Long chickenId,
             @PathVariable Integer year,
             @PathVariable Integer month,
             @Valid @RequestBody EggProductionMonthCreateRequest request) {
 
-        EggProductionMonthDTO response = eggProductionMonthService.create(chickenId, month, year, request);
+        EggProductionMonthResponse response = eggProductionMonthService.create(chickenId, month, year, request);
         return ResponseEntity.created(LocationUtils.buildLocation()).eTag(EtagUtils.toEtag(response.version())).body(
                 response);
     }
 
     @GetMapping("/{year}/{month}")
     @Operation(summary = "Get egg production month by chicken ID, year and month")
-    public ResponseEntity<EggProductionMonthDTO> getById(
+    public ResponseEntity<EggProductionMonthResponse> getById(
             @PathVariable Long chickenId,
             @PathVariable Integer year,
             @PathVariable Integer month) {
 
-        EggProductionMonthDTO response = eggProductionMonthService.get(chickenId, month, year);
+        EggProductionMonthResponse response = eggProductionMonthService.get(chickenId, month, year);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -52,25 +52,25 @@ public class EggProductionMonthController {
 
     @GetMapping
     @Operation(summary = "Get all egg production months")
-    public ResponseEntity<List<EggProductionMonthDTO>> getAllByChickenId(
+    public ResponseEntity<List<EggProductionMonthResponse>> getAllByChickenId(
             @PathVariable Long chickenId) {
 
-        List<EggProductionMonthDTO> response = eggProductionMonthService.getAllByChicken(chickenId);
+        List<EggProductionMonthResponse> response = eggProductionMonthService.getAllByChicken(chickenId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/{year}")
     @Operation(summary = "Get all egg production months for year")
-    public ResponseEntity<List<EggProductionMonthDTO>> getAllByChickenIdAndYear(
+    public ResponseEntity<List<EggProductionMonthResponse>> getAllByChickenIdAndYear(
             @PathVariable Long chickenId,
             @PathVariable Integer year) {
 
-        List<EggProductionMonthDTO> response = eggProductionMonthService.getAllByChickenAndYear(chickenId, year);
+        List<EggProductionMonthResponse> response = eggProductionMonthService.getAllByChickenAndYear(chickenId, year);
         return ResponseEntity.ok(response);
     }
     @PatchMapping("/{year}/{month}")
     @Operation(summary = "Update egg production month")
-    public ResponseEntity<EggProductionMonthDTO> update(
+    public ResponseEntity<EggProductionMonthResponse> update(
             @PathVariable Long chickenId,
             @PathVariable Integer year,
             @PathVariable Integer month,
@@ -78,7 +78,7 @@ public class EggProductionMonthController {
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        EggProductionMonthDTO response = eggProductionMonthService.update(chickenId, month, year, request, expected);
+        EggProductionMonthResponse response = eggProductionMonthService.update(chickenId, month, year, request, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

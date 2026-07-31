@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.diet.service;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.diet.mapper.DietMapper;
-import io.github.artsobol.kurkod.feature.diet.dto.response.DietDTO;
+import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
 import io.github.artsobol.kurkod.feature.diet.entity.Diet;
 import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
 import io.github.artsobol.kurkod.feature.diet.dto.request.DietCreateRequest;
@@ -28,37 +28,37 @@ public class DietServiceImpl implements DietService {
 
 
     @Override
-    public DietDTO get(Long id) {
-        return dietMapper.toDTO(getDietById(id));
+    public DietResponse get(Long id) {
+        return dietMapper.toResponse(getDietById(id));
     }
 
     @Override
-    public List<DietDTO> getAll() {
+    public List<DietResponse> getAll() {
         return dietRepository.findAllByIsActiveTrue()
                 .stream()
-                .map(dietMapper::toDTO)
+                .map(dietMapper::toResponse)
                 .toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO create(DietCreateRequest request) {
+    public DietResponse create(DietCreateRequest request) {
         ensureNotExists(request.getCode());
         Diet diet = dietMapper.toEntity(request);
         dietRepository.save(diet);
-        return dietMapper.toDTO(diet);
+        return dietMapper.toResponse(diet);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietDTO update(Long id, DietUpdateRequest request, Long version) {
+    public DietResponse update(Long id, DietUpdateRequest request, Long version) {
         Diet diet = getDietById(id);
         checkVersion(diet.getVersion(), version);
         dietMapper.update(diet, request);
         dietRepository.save(diet);
-        return dietMapper.toDTO(diet);
+        return dietMapper.toResponse(diet);
     }
     @Override
     @Transactional

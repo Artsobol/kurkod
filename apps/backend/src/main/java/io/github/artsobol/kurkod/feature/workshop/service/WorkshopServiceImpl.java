@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.workshop.service;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.workshop.mapper.WorkshopMapper;
-import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopDTO;
+import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
 import io.github.artsobol.kurkod.feature.workshop.entity.Workshop;
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequest;
@@ -31,39 +31,39 @@ public class WorkshopServiceImpl implements WorkshopService {
 
 
     @Override
-    public WorkshopDTO get(Long id) {
-        return workshopMapper.toDto(getWorkshopById(id));
+    public WorkshopResponse get(Long id) {
+        return workshopMapper.toResponse(getWorkshopById(id));
     }
 
     @Override
-    public List<WorkshopDTO> getAll() {
+    public List<WorkshopResponse> getAll() {
         return workshopRepository.findAllByIsActiveTrue().stream()
-                .map(workshopMapper::toDto)
+                .map(workshopMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public Page<WorkshopDTO> getAllWithPagination(Pageable pageable) {
+    public Page<WorkshopResponse> getAllWithPagination(Pageable pageable) {
         return workshopRepository.findAllByIsActiveTrue(pageable)
-                .map(workshopMapper::toDto);
+                .map(workshopMapper::toResponse);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopDTO create(WorkshopCreateRequest request) {
+    public WorkshopResponse create(WorkshopCreateRequest request) {
         Integer workshopNumber = request.getWorkshopNumber();
         ensureNotExists(workshopNumber);
 
         Workshop workshop = workshopMapper.toEntity(request);
         workshopRepository.save(workshop);
-        return workshopMapper.toDto(workshop);
+        return workshopMapper.toResponse(workshop);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopDTO update(Long id, WorkshopUpdateRequest request, Long version) {
+    public WorkshopResponse update(Long id, WorkshopUpdateRequest request, Long version) {
         Workshop workshop = getWorkshopById(id);
         checkVersion(workshop.getVersion(), version);
         Integer newWorkshopNumber = request.getWorkshopNumber();
@@ -74,7 +74,7 @@ public class WorkshopServiceImpl implements WorkshopService {
         workshopMapper.update(workshop, request);
         workshopRepository.save(workshop);
 
-        return workshopMapper.toDto(workshop);
+        return workshopMapper.toResponse(workshop);
     }
     @Override
     @Transactional

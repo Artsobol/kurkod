@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.workshop.dto.response;
 
-public record WorkshopDTO(
+public record WorkshopResponse(
         Long id, Integer workshopNumber, Long version
 ) {
 };

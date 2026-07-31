@@ -1,14 +1,14 @@
 package io.github.artsobol.kurkod.feature.report.web;
 
-import io.github.artsobol.kurkod.feature.report.dto.response.FarmMonthlyReportDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.FarmMonthlyReportResponse;
 import io.github.artsobol.kurkod.feature.report.service.FarmReportService;
-import io.github.artsobol.kurkod.feature.report.dto.response.BreedEggDiffReportDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.BreedEggDiffReportResponse;
 import io.github.artsobol.kurkod.feature.report.service.BreedReportService;
-import io.github.artsobol.kurkod.feature.report.dto.response.ChickenEggStatsDTO;
-import io.github.artsobol.kurkod.feature.report.dto.response.ChickensByWorkshopAndBreedDTO;
-import io.github.artsobol.kurkod.feature.report.dto.response.WorkshopBreedTopDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.ChickenEggStatsResponse;
+import io.github.artsobol.kurkod.feature.report.dto.response.ChickensByWorkshopAndBreedResponse;
+import io.github.artsobol.kurkod.feature.report.dto.response.WorkshopBreedTopResponse;
 import io.github.artsobol.kurkod.feature.report.service.ChickenReportService;
-import io.github.artsobol.kurkod.feature.report.dto.response.WorkerReportDailyEggsDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.WorkerReportDailyEggsResponse;
 import io.github.artsobol.kurkod.feature.report.service.WorkerReportService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,61 +36,61 @@ public class DirectorReportController {
 
     @Operation(summary = "Factory monthly report")
     @GetMapping("/factory/monthly")
-    public ResponseEntity<FarmMonthlyReportDTO> getFactoryMonthly(
+    public ResponseEntity<FarmMonthlyReportResponse> getFactoryMonthly(
             @RequestParam int year,
             @RequestParam int month
                                                                               ) {
 
-        FarmMonthlyReportDTO response = farmReportService.getMonthlyReport(year, month);
+        FarmMonthlyReportResponse response = farmReportService.getMonthlyReport(year, month);
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Breed egg difference report")
     @GetMapping("/breeds/egg-diff")
-    public ResponseEntity<List<BreedEggDiffReportDTO>> getBreedEggDiff() {
+    public ResponseEntity<List<BreedEggDiffReportResponse>> getBreedEggDiff() {
 
-        List<BreedEggDiffReportDTO> response = breedReportService.getEggDiff();
+        List<BreedEggDiffReportResponse> response = breedReportService.getEggDiff();
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Chickens distribution by workshop and breed")
     @GetMapping("/chickens/by-workshop-and-breed")
-    public ResponseEntity<List<ChickensByWorkshopAndBreedDTO>> getChickensByWorkshopAndBreed() {
+    public ResponseEntity<List<ChickensByWorkshopAndBreedResponse>> getChickensByWorkshopAndBreed() {
 
-        List<ChickensByWorkshopAndBreedDTO> response = chickenReportService.getChickensByWorkshopAndBreed();
+        List<ChickensByWorkshopAndBreedResponse> response = chickenReportService.getChickensByWorkshopAndBreed();
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Top workshop for a specific breed")
     @GetMapping("/chickens/top-workshop-by-breed")
-    public ResponseEntity<WorkshopBreedTopDTO> getTopWorkshopByBreed(
+    public ResponseEntity<WorkshopBreedTopResponse> getTopWorkshopByBreed(
             @RequestParam Long breedId
                                                                                  ) {
 
-        WorkshopBreedTopDTO response = chickenReportService.getTopWorkshopByBreed(breedId);
+        WorkshopBreedTopResponse response = chickenReportService.getTopWorkshopByBreed(breedId);
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Egg statistics with filters")
     @GetMapping("/chickens/egg-stats")
-    public ResponseEntity<List<ChickenEggStatsDTO>> getChickenEggStats(
+    public ResponseEntity<List<ChickenEggStatsResponse>> getChickenEggStats(
             @RequestParam(required = false) Integer weight,
             @RequestParam(required = false) Long breedId,
             @RequestParam(required = false) LocalDate birthDate
                                                                                    ) {
 
-        List<ChickenEggStatsDTO> response = chickenReportService.getEggStats(weight, breedId, birthDate);
+        List<ChickenEggStatsResponse> response = chickenReportService.getEggStats(weight, breedId, birthDate);
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Daily average eggs per worker for a month")
     @GetMapping("/workers/daily-avg-eggs")
-    public ResponseEntity<List<WorkerReportDailyEggsDTO>> getWorkerDailyEggs(
+    public ResponseEntity<List<WorkerReportDailyEggsResponse>> getWorkerDailyEggs(
             @RequestParam int year,
             @RequestParam int month
                                                                                          ) {
 
-        List<WorkerReportDailyEggsDTO> response = workerReportService.getWorkerDailyEggs(year, month);
+        List<WorkerReportDailyEggsResponse> response = workerReportService.getWorkerDailyEggs(year, month);
         return ResponseEntity.ok(response);
     }
 }

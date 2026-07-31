@@ -2,9 +2,9 @@ package io.github.artsobol.kurkod.feature.report.service;
 
 import io.github.artsobol.kurkod.feature.report.repository.ChickenEggStatsViewRepository;
 import io.github.artsobol.kurkod.feature.report.repository.ChickensByWorkshopAndBreedViewRepository;
-import io.github.artsobol.kurkod.feature.report.dto.response.ChickenEggStatsDTO;
-import io.github.artsobol.kurkod.feature.report.dto.response.ChickensByWorkshopAndBreedDTO;
-import io.github.artsobol.kurkod.feature.report.dto.response.WorkshopBreedTopDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.ChickenEggStatsResponse;
+import io.github.artsobol.kurkod.feature.report.dto.response.ChickensByWorkshopAndBreedResponse;
+import io.github.artsobol.kurkod.feature.report.dto.response.WorkshopBreedTopResponse;
 import io.github.artsobol.kurkod.feature.report.service.ChickenReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +24,10 @@ public class ChickenReportServiceImpl implements ChickenReportService {
     private final ChickenEggStatsViewRepository eggStatsViewRepository;
 
     @Override
-    public List<ChickensByWorkshopAndBreedDTO> getChickensByWorkshopAndBreed() {
+    public List<ChickensByWorkshopAndBreedResponse> getChickensByWorkshopAndBreed() {
         return viewRepository.findAll()
                              .stream()
-                             .map(v -> new ChickensByWorkshopAndBreedDTO(
+                             .map(v -> new ChickensByWorkshopAndBreedResponse(
                                      v.getWorkshopId(),
                                      v.getWorkshopNumber(),
                                      v.getBreedId(),
@@ -38,11 +38,11 @@ public class ChickenReportServiceImpl implements ChickenReportService {
     }
 
     @Override
-    public WorkshopBreedTopDTO getTopWorkshopByBreed(Long breedId) {
+    public WorkshopBreedTopResponse getTopWorkshopByBreed(Long breedId) {
         return viewRepository.findByBreedIdOrderByChickensCountDesc(breedId)
                              .stream()
                              .findFirst()
-                             .map(v -> new WorkshopBreedTopDTO(
+                             .map(v -> new WorkshopBreedTopResponse(
                                      v.getWorkshopId(),
                                      v.getWorkshopNumber(),
                                      v.getBreedId(),
@@ -53,10 +53,10 @@ public class ChickenReportServiceImpl implements ChickenReportService {
     }
 
     @Override
-    public List<ChickenEggStatsDTO> getEggStats(Integer weight, Long breedId, LocalDate birthDate) {
+    public List<ChickenEggStatsResponse> getEggStats(Integer weight, Long breedId, LocalDate birthDate) {
         return eggStatsViewRepository.findByFilters(weight, breedId, birthDate)
                                      .stream()
-                                     .map(v -> new ChickenEggStatsDTO(
+                                     .map(v -> new ChickenEggStatsResponse(
                                              v.getChickenId(),
                                              v.getChickenName(),
                                              v.getBreedId(),

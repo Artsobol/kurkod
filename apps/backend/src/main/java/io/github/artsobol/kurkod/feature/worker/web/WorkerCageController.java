@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.worker.web;
 
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
-import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
+import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 import io.github.artsobol.kurkod.feature.worker.service.WorkerCageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,19 +23,19 @@ public class WorkerCageController {
 
     @Operation(summary = "Get cages assigned to worker")
     @GetMapping("/{workerId}/cages")
-    public ResponseEntity<List<CageDTO>> getWorkerCages(
+    public ResponseEntity<List<CageResponse>> getWorkerCages(
             @PathVariable Long workerId) {
 
-        List<CageDTO> cages = workerCageService.getWorkerCages(workerId);
+        List<CageResponse> cages = workerCageService.getWorkerCages(workerId);
         return ResponseEntity.ok(cages);
     }
 
     @Operation(summary = "Get workers assigned to cage")
     @GetMapping("/cages/{cageId}/workers")
-    public ResponseEntity<List<WorkerDTO>> getCageWorkers(
+    public ResponseEntity<List<WorkerResponse>> getCageWorkers(
             @PathVariable Long cageId) {
 
-        List<WorkerDTO> workers = workerCageService.getCageWorkers(cageId);
+        List<WorkerResponse> workers = workerCageService.getCageWorkers(cageId);
         return ResponseEntity.ok(workers);
     }
 

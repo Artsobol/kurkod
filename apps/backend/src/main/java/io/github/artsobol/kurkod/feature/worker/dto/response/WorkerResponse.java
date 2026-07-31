@@ -1,17 +1,17 @@
 package io.github.artsobol.kurkod.feature.worker.dto.response;
 
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 
 import java.util.Set;
 
-public record WorkerDTO(
+public record WorkerResponse(
         Long id,
         String firstName,
         String lastName,
         String patronymic,
         String phoneNumber,
         String email,
-        Set<CageDTO> cages,
+        Set<CageResponse> cages,
         Long version
 ) {
 }

@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.rows.web;
 
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.rows.dto.response.RowsDTO;
+import io.github.artsobol.kurkod.feature.rows.dto.response.RowsResponse;
 import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
 import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
 import io.github.artsobol.kurkod.feature.rows.service.RowsService;
@@ -26,12 +26,12 @@ public class RowsController {
 
     @GetMapping("/{rowNumber}")
     @Operation(summary = "Get row by ID")
-    public ResponseEntity<RowsDTO> get(
+    public ResponseEntity<RowsResponse> get(
             @PathVariable Long workshopId,
             @PathVariable(name = "rowNumber")
             Integer rowsNumber) {
 
-        RowsDTO response = rowsService.find(workshopId, rowsNumber);
+        RowsResponse response = rowsService.find(workshopId, rowsNumber);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -39,26 +39,26 @@ public class RowsController {
 
     @GetMapping
     @Operation(summary = "Get all rows")
-    public ResponseEntity<List<RowsDTO>> getAll(
+    public ResponseEntity<List<RowsResponse>> getAll(
             @PathVariable Long workshopId) {
 
-        List<RowsDTO> response = rowsService.findAll(workshopId);
+        List<RowsResponse> response = rowsService.findAll(workshopId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     @Operation(summary = "Create row")
-    public ResponseEntity<RowsDTO> create(
+    public ResponseEntity<RowsResponse> create(
             @PathVariable Long workshopId, @RequestBody @Valid RowsCreateRequest request) {
 
-        RowsDTO response = rowsService.create(workshopId, request);
+        RowsResponse response = rowsService.create(workshopId, request);
         return ResponseEntity.created(LocationUtils.buildLocation(response.rowNumber()))
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
     @PatchMapping("/{rowNumber}")
     @Operation(summary = "Partially update row")
-    public ResponseEntity<RowsDTO> update(
+    public ResponseEntity<RowsResponse> update(
             @PathVariable Long workshopId,
             @PathVariable(name = "rowNumber")
             Integer rowsNumber,
@@ -66,7 +66,7 @@ public class RowsController {
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        RowsDTO response = rowsService.update(workshopId, rowsNumber, request, expected);
+        RowsResponse response = rowsService.update(workshopId, rowsNumber, request, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

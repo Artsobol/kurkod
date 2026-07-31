@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.chicken.service;
 import io.github.artsobol.kurkod.feature.breed.service.BreedLookupService;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
 import io.github.artsobol.kurkod.feature.chicken.mapper.ChickenMapper;
-import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenDTO;
+import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
@@ -36,30 +36,30 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO create(ChickenCreateRequest chickenCreateRequest) {
+    public ChickenResponse create(ChickenCreateRequest chickenCreateRequest) {
         Chicken chicken = chickenMapper.toEntity(chickenCreateRequest);
         chicken.setBreed(getBreedById(chickenCreateRequest.getBreedId()));
         chicken.setCage(cageRepository.findById(chickenCreateRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenCreateRequest.getCageId())));
         chicken = chickenRepository.save(chicken);
 
-        return chickenMapper.toDto(chicken);
+        return chickenMapper.toResponse(chicken);
     }
 
     @Override
-    public ChickenDTO get(Long id) {
-        return chickenMapper.toDto(getChickenById(id));
+    public ChickenResponse get(Long id) {
+        return chickenMapper.toResponse(getChickenById(id));
     }
 
     @Override
-    public List<ChickenDTO> getAll() {
+    public List<ChickenResponse> getAll() {
         return chickenRepository.findAllByIsActiveTrue().stream()
-                                .map(chickenMapper::toDto)
+                                .map(chickenMapper::toResponse)
                                 .toList();
     }
 
     @Override
-    public Page<ChickenDTO> getPage(Pageable pageable) {
-        return chickenRepository.findAllByIsActiveTrue(pageable).map(chickenMapper::toDto);
+    public Page<ChickenResponse> getPage(Pageable pageable) {
+        return chickenRepository.findAllByIsActiveTrue(pageable).map(chickenMapper::toResponse);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ChickenServiceImpl implements ChickenService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenDTO update(Long id, ChickenUpdateRequest chickenUpdateRequest, Long version) {
+    public ChickenResponse update(Long id, ChickenUpdateRequest chickenUpdateRequest, Long version) {
         Chicken chicken = getChickenById(id);
         checkVersion(chicken.getVersion(), version);
         chickenMapper.updatePartially(chicken, chickenUpdateRequest);
@@ -85,7 +85,7 @@ public class ChickenServiceImpl implements ChickenService {
         if (chickenUpdateRequest.getCageId() != null) {
             chicken.setCage(cageRepository.findById(chickenUpdateRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenUpdateRequest.getCageId())));
         }
-        return chickenMapper.toDto(chickenRepository.save(chicken));
+        return chickenMapper.toResponse(chickenRepository.save(chicken));
     }
 
     private Breed getBreedById(Long id) {

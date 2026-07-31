@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.dismissal.mapper;
 
-import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalDTO;
+import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalResponse;
 import io.github.artsobol.kurkod.feature.dismissal.entity.Dismissal;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
@@ -14,7 +14,7 @@ public interface DismissalMapper {
 
     @Mapping(target = "worker", expression = "java(getFullName(dismissal.getWorker()))")
     @Mapping(target = "whoDismiss", expression = "java(getFullName(dismissal.getWhoDismiss()))")
-    DismissalDTO toDTO(Dismissal dismissal);
+    DismissalResponse toResponse(Dismissal dismissal);
 
     @Mapping(target = "worker", ignore = true)
     @Mapping(target = "whoDismiss", ignore = true)

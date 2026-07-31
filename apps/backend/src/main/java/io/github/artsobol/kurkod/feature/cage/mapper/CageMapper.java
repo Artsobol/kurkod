@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.cage.mapper;
 
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
 import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
 import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
@@ -12,7 +12,7 @@ import org.mapstruct.MappingTarget;
 public interface CageMapper {
 
     @Mapping(target = "rowId", source = "row.id")
-    CageDTO toDto(Cage cage);
+    CageResponse toResponse(Cage cage);
 
     @Mapping(target = "row", ignore = true)
     Cage toEntity(CageCreateRequest cageCreateRequest);

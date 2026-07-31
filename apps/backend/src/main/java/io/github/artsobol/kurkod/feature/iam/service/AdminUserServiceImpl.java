@@ -7,7 +7,7 @@ import io.github.artsobol.kurkod.feature.iam.service.AdminUserService;
 import io.github.artsobol.kurkod.feature.iam.entity.Role;
 import io.github.artsobol.kurkod.feature.iam.repository.RoleRepository;
 import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserDTO;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.feature.iam.entity.RegistrationStatus;
 import io.github.artsobol.kurkod.feature.iam.entity.SystemRole;
@@ -32,7 +32,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
 
     @Override
-    public UserDTO changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion) {
+    public UserResponse changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion) {
         VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
         User user = getUserById(userId);
         Role role = getRoleBySystemRole(request.role());
@@ -41,21 +41,21 @@ public class AdminUserServiceImpl implements AdminUserService {
         roles.add(role);
         user.setRoles(roles);
 
-        return userMapper.toDto(userRepository.save(user));
+        return userMapper.toResponse(userRepository.save(user));
     }
 
     @Override
-    public UserDTO activateUser(Long userId, Long expectedVersion) {
+    public UserResponse activateUser(Long userId, Long expectedVersion) {
         VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
         User user = changeStatus(getUserById(userId), RegistrationStatus.ACTIVE);
-        return userMapper.toDto(user);
+        return userMapper.toResponse(user);
     }
 
     @Override
-    public UserDTO deactivateUser(Long userId, Long expectedVersion) {
+    public UserResponse deactivateUser(Long userId, Long expectedVersion) {
         VersionUtils.checkVersion(expectedVersion, getUserById(userId).getVersion());
         User user = changeStatus(getUserById(userId), RegistrationStatus.INACTIVE);
-        return userMapper.toDto(user);
+        return userMapper.toResponse(user);
     }
 
     protected User changeStatus(User user, RegistrationStatus status) {

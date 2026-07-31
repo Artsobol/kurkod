@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.staff.service;
 
 import io.github.artsobol.kurkod.feature.staff.mapper.StaffMapper;
-import io.github.artsobol.kurkod.feature.staff.dto.response.StaffDTO;
+import io.github.artsobol.kurkod.feature.staff.dto.response.StaffResponse;
 import io.github.artsobol.kurkod.feature.staff.entity.Staff;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
@@ -31,42 +31,42 @@ public class StaffServiceImpl implements StaffService {
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO get(Long id) {
-        return staffMapper.toDto(getStaffById(id));
+    public StaffResponse get(Long id) {
+        return staffMapper.toResponse(getStaffById(id));
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public List<StaffDTO> getAll() {
+    public List<StaffResponse> getAll() {
         return staffRepository.findAllByIsActiveTrue().stream()
-                .map(staffMapper::toDto)
+                .map(staffMapper::toResponse)
                 .toList();
     }
 
     @Override
-    public Page<StaffDTO> getAllWithPagination(Pageable pageable) {
-        return staffRepository.findAllByIsActiveTrue(pageable).map(staffMapper::toDto);
+    public Page<StaffResponse> getAllWithPagination(Pageable pageable) {
+        return staffRepository.findAllByIsActiveTrue(pageable).map(staffMapper::toResponse);
     }
 
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO create(StaffCreateRequest request) {
+    public StaffResponse create(StaffCreateRequest request) {
         Staff staff = staffMapper.toEntity(request);
         staff = staffRepository.save(staff);
-        return staffMapper.toDto(staff);
+        return staffMapper.toResponse(staff);
     }
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffDTO update(Long id, StaffUpdateRequest request, Long version) {
+    public StaffResponse update(Long id, StaffUpdateRequest request, Long version) {
         Staff staff = getStaffById(id);
         checkVersion(staff.getVersion(), version);
         staffMapper.updatePartially(staff, request);
         staff = staffRepository.save(staff);
-        return staffMapper.toDto(staff);
+        return staffMapper.toResponse(staff);
     }
 
     @Override

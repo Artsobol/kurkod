@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.cage.service;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
 import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
 import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
@@ -32,26 +32,26 @@ public class CageServiceImpl implements CageService {
 
 
     @Override
-    public CageDTO find(Long rowId, Integer cageNumber) {
-        return cageMapper.toDto(findCageByRowIdAndCageNumber(rowId, cageNumber));
+    public CageResponse find(Long rowId, Integer cageNumber) {
+        return cageMapper.toResponse(findCageByRowIdAndCageNumber(rowId, cageNumber));
     }
 
     @Override
-    public List<CageDTO> findAll(Long rowId) {
+    public List<CageResponse> findAll(Long rowId) {
 
         if (!rowsRepository.existsById(rowId)) {
             throw new NotFoundException("row.not.found", rowId);
         }
 
         return cageRepository.findAllByRow_IdAndIsActiveTrueOrderByCageNumberAsc(rowId).stream()
-                             .map(cageMapper::toDto)
+                             .map(cageMapper::toResponse)
                              .toList();
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO create(Long rowId, CageCreateRequest cageCreateRequest) {
+    public CageResponse create(Long rowId, CageCreateRequest cageCreateRequest) {
         ensureNotExists(rowId, cageCreateRequest.getCageNumber());
         Cage cage = cageMapper.toEntity(cageCreateRequest);
         Rows rows = rowsRepository.findById(rowId).orElseThrow(
@@ -59,12 +59,12 @@ public class CageServiceImpl implements CageService {
         );
         cage.setRow(rows);
         cageRepository.save(cage);
-        return cageMapper.toDto(cage);
+        return cageMapper.toResponse(cage);
     }
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public CageDTO update(Long rowId, Integer cageNumber, CageUpdateRequest cageUpdateRequest, Long version) {
+    public CageResponse update(Long rowId, Integer cageNumber, CageUpdateRequest cageUpdateRequest, Long version) {
         ensureExists(rowId, cageNumber);
         Integer newCageNumber = cageUpdateRequest.getCageNumber();
         if (newCageNumber != null && !newCageNumber.equals(cageNumber)) {
@@ -74,7 +74,7 @@ public class CageServiceImpl implements CageService {
         Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
         checkVersion(cage.getVersion(), version);
         cageMapper.update(cage, cageUpdateRequest);
-        return cageMapper.toDto(cageRepository.save(cage));
+        return cageMapper.toResponse(cageRepository.save(cage));
     }
 
     @Override

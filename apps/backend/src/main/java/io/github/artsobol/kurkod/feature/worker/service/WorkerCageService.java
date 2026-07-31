@@ -1,15 +1,15 @@
 package io.github.artsobol.kurkod.feature.worker.service;
 
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
-import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
+import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 
 import java.util.List;
 
 public interface WorkerCageService {
 
-    List<CageDTO> getWorkerCages(Long workerId);
+    List<CageResponse> getWorkerCages(Long workerId);
 
-    List<WorkerDTO> getCageWorkers(Long cageId);
+    List<WorkerResponse> getCageWorkers(Long cageId);
 
     void assignCageToWorker(Long workerId, Long cageId);
 

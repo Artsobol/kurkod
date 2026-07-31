@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.staff.service;
 
-import io.github.artsobol.kurkod.feature.staff.dto.response.StaffDTO;
+import io.github.artsobol.kurkod.feature.staff.dto.response.StaffResponse;
 import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
 import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;
 import org.springframework.data.domain.Page;
@@ -10,14 +10,14 @@ import java.util.List;
 
 public interface StaffService {
 
-    StaffDTO get(Long id);
+    StaffResponse get(Long id);
 
-    List<StaffDTO> getAll();
+    List<StaffResponse> getAll();
 
-    Page<StaffDTO> getAllWithPagination(Pageable pageable);
+    Page<StaffResponse> getAllWithPagination(Pageable pageable);
 
-    StaffDTO create(StaffCreateRequest request);
-    StaffDTO update(Long id, StaffUpdateRequest request, Long version);
+    StaffResponse create(StaffCreateRequest request);
+    StaffResponse update(Long id, StaffUpdateRequest request, Long version);
 
     void delete(Long id, Long version);
 }

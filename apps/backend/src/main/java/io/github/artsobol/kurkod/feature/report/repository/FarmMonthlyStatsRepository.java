@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.report.repository;
 
-import io.github.artsobol.kurkod.feature.report.dto.response.BreedWorkshopMonthlyReportDTO;
+import io.github.artsobol.kurkod.feature.report.dto.response.BreedWorkshopMonthlyReportResponse;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class FarmMonthlyStatsRepository {
 
     @PersistenceContext private final EntityManager em;
 
-    public List<BreedWorkshopMonthlyReportDTO> findBreedWorkshopMonthlyStats(int year, int month) {
+    public List<BreedWorkshopMonthlyReportResponse> findBreedWorkshopMonthlyStats(int year, int month) {
         List<Object[]> rows = em.createNativeQuery("""
                                                    SELECT
                                                        w.id                       AS workshop_id,
@@ -44,10 +44,10 @@ public class FarmMonthlyStatsRepository {
                                 .setParameter("month", month)
                                 .getResultList();
 
-        return rows.stream().map(this::mapRowToDto).toList();
+        return rows.stream().map(this::mapRowToResponse).toList();
     }
 
-    private BreedWorkshopMonthlyReportDTO mapRowToDto(Object[] r) {
+    private BreedWorkshopMonthlyReportResponse mapRowToResponse(Object[] r) {
         Long workshopId = ((Number) r[0]).longValue();
         Integer workshopNumber = ((Number) r[1]).intValue();
         Long breedId = ((Number) r[2]).longValue();
@@ -58,7 +58,7 @@ public class FarmMonthlyStatsRepository {
                                        ? bd
                                        : BigDecimal.valueOf(((Number) r[6]).doubleValue());
 
-        return new BreedWorkshopMonthlyReportDTO(workshopId,
+        return new BreedWorkshopMonthlyReportResponse(workshopId,
                                                  workshopNumber,
                                                  breedId,
                                                  breedName,

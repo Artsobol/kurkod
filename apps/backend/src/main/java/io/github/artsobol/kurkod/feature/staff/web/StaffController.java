@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.staff.web;
 
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.staff.dto.response.StaffDTO;
+import io.github.artsobol.kurkod.feature.staff.dto.response.StaffResponse;
 import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
 import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;
 import io.github.artsobol.kurkod.feature.staff.service.StaffService;
@@ -27,10 +27,10 @@ public class StaffController {
 
     @Operation(summary = "Get staff by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<StaffDTO> get(
+    public ResponseEntity<StaffResponse> get(
             @PathVariable Long id) {
 
-        StaffDTO response = staffService.get(id);
+        StaffResponse response = staffService.get(id);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -38,30 +38,30 @@ public class StaffController {
 
     @Operation(summary = "Get all staff")
     @GetMapping
-    public ResponseEntity<List<StaffDTO>> getAll() {
+    public ResponseEntity<List<StaffResponse>> getAll() {
 
-        List<StaffDTO> response = staffService.getAll();
+        List<StaffResponse> response = staffService.getAll();
         return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Create staff position")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StaffDTO> create(@Valid @RequestBody StaffCreateRequest staffCreateRequest) {
+    public ResponseEntity<StaffResponse> create(@Valid @RequestBody StaffCreateRequest staffCreateRequest) {
 
-        StaffDTO response = staffService.create(staffCreateRequest);
+        StaffResponse response = staffService.create(staffCreateRequest);
         return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }
     @Operation(summary = "Partially update staff position")
     @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StaffDTO> update(
+    public ResponseEntity<StaffResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody StaffUpdateRequest staffUpdateRequest,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        StaffDTO response = staffService.update(id, staffUpdateRequest, expected);
+        StaffResponse response = staffService.update(id, staffUpdateRequest, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

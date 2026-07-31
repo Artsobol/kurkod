@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.workshop.web;
 
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
-import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopDTO;
+import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequest;
 import io.github.artsobol.kurkod.feature.workshop.service.WorkshopService;
@@ -27,10 +27,10 @@ public class WorkshopController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get workshop by ID")
-    public ResponseEntity<WorkshopDTO> get(
+    public ResponseEntity<WorkshopResponse> get(
             @PathVariable Long id) {
 
-        WorkshopDTO response = workshopService.get(id);
+        WorkshopResponse response = workshopService.get(id);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
@@ -38,30 +38,30 @@ public class WorkshopController {
 
     @GetMapping
     @Operation(summary = "Get all workshops")
-    public ResponseEntity<List<WorkshopDTO>> getAll() {
+    public ResponseEntity<List<WorkshopResponse>> getAll() {
 
-        List<WorkshopDTO> response = workshopService.getAll();
+        List<WorkshopResponse> response = workshopService.getAll();
         return ResponseEntity.ok(response);
     }
 
     @PostMapping
     @Operation(summary = "Create workshop")
-    public ResponseEntity<WorkshopDTO> create(
+    public ResponseEntity<WorkshopResponse> create(
             @RequestBody @Valid WorkshopCreateRequest request) {
 
-        WorkshopDTO response = workshopService.create(request);
+        WorkshopResponse response = workshopService.create(request);
         return ResponseEntity.created(buildLocation(response.id())).eTag(EtagUtils.toEtag(response.version())).body(
                 response);
     }
     @PatchMapping("/{id}")
     @Operation(summary = "Partially update workshop")
-    public ResponseEntity<WorkshopDTO> update(
+    public ResponseEntity<WorkshopResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid WorkshopUpdateRequest request,
             @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
-        WorkshopDTO response = workshopService.update(id, request, expected);
+        WorkshopResponse response = workshopService.update(id, request, expected);
         return ResponseEntity.ok()
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);

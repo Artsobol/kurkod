@@ -1,8 +1,8 @@
 package io.github.artsobol.kurkod.feature.iam.mapper;
 
-import io.github.artsobol.kurkod.feature.iam.dto.response.RoleDTO;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserDTO;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserProfileDTO;
+import io.github.artsobol.kurkod.feature.iam.dto.response.RoleResponse;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserProfileResponse;
 import io.github.artsobol.kurkod.feature.iam.entity.Role;
 import io.github.artsobol.kurkod.feature.iam.entity.User;
 import io.github.artsobol.kurkod.feature.iam.dto.request.RegistrationRequest;
@@ -19,7 +19,7 @@ import java.util.List;
 public interface UserMapper {
 
     @Mapping(target = "roles", expression = "java(mapRoles(user.getRoles()))")
-    UserDTO toDto(User user);
+    UserResponse toResponse(User user);
 
     User toEntity(UserCreateRequest userCreateRequest);
     void updatePartially(@MappingTarget User user, UserUpdateRequest userUpdateRequest);
@@ -29,16 +29,16 @@ public interface UserMapper {
     @Mapping(target = "email", source = "user.email")
     @Mapping(target = "token", source = "token")
     @Mapping(target =  "refreshToken", source = "refreshToken")
-    UserProfileDTO toUserProfileDto(User user, String token, String refreshToken);
+    UserProfileResponse toUserProfileResponse(User user, String token, String refreshToken);
 
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "registrationStatus", expression = "java(RegistrationStatus.PENDING_CONFIRMATION)")
-    User fromDto(RegistrationRequest registrationRequest);
+    User toEntity(RegistrationRequest registrationRequest);
 
-    default List<RoleDTO> mapRoles(Collection<Role> roles) {
+    default List<RoleResponse> mapRoles(Collection<Role> roles) {
         return roles.stream()
-                .map(role -> new RoleDTO(role.getId(), role.getName()))
+                .map(role -> new RoleResponse(role.getId(), role.getName()))
                 .toList();
     }
 }

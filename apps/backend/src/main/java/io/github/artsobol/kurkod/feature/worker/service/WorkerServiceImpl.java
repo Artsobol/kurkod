@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.worker.service;
 
 import io.github.artsobol.kurkod.feature.worker.mapper.WorkerMapper;
-import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerDTO;
+import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerUpdateRequest;
@@ -30,38 +30,38 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO get(Long id) {
-        return workerMapper.toDto(getWorkerById(id));
+    public WorkerResponse get(Long id) {
+        return workerMapper.toResponse(getWorkerById(id));
     }
 
     @Override
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public List<WorkerDTO> getAll() {
-        return workerRepository.findAllByIsActiveTrue().stream().map(workerMapper::toDto).toList();
+    public List<WorkerResponse> getAll() {
+        return workerRepository.findAllByIsActiveTrue().stream().map(workerMapper::toResponse).toList();
     }
 
     @Override
-    public Page<WorkerDTO> getPage(Pageable pageable) {
-        return workerRepository.findAllByIsActiveTrue(pageable).map(workerMapper::toDto);
+    public Page<WorkerResponse> getPage(Pageable pageable) {
+        return workerRepository.findAllByIsActiveTrue(pageable).map(workerMapper::toResponse);
     }
 
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO create(WorkerCreateRequest request) {
+    public WorkerResponse create(WorkerCreateRequest request) {
         Worker worker = workerMapper.toEntity(request);
         worker = workerRepository.save(worker);
-        return workerMapper.toDto(worker);
+        return workerMapper.toResponse(worker);
     }
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkerDTO update(Long id, WorkerUpdateRequest request, Long version) {
+    public WorkerResponse update(Long id, WorkerUpdateRequest request, Long version) {
         Worker worker = getWorkerById(id);
         checkVersion(worker.getVersion(), version);
         workerMapper.updatePartially(worker, request);
         worker = workerRepository.save(worker);
-        return workerMapper.toDto(worker);
+        return workerMapper.toResponse(worker);
     }
 
     @Override

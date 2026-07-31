@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.feature.cage.web;
 
 import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageDTO;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
 import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
 import io.github.artsobol.kurkod.feature.cage.service.CageService;
@@ -25,40 +25,40 @@ public class CageController {
 
   @GetMapping("/{cageNumber}")
   @Operation(summary = "Get cage by cage number")
-  public ResponseEntity<CageDTO> get(
+  public ResponseEntity<CageResponse> get(
       @PathVariable Long rowId,
       @PathVariable Integer cageNumber) {
-    CageDTO response = cageService.find(rowId, cageNumber);
+    CageResponse response = cageService.find(rowId, cageNumber);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
   @GetMapping
   @Operation(summary = "Get all cages")
-  public List<CageDTO> getAll(
+  public List<CageResponse> getAll(
       @PathVariable Long rowId) {
     return cageService.findAll(rowId);
   }
 
   @PostMapping
   @Operation(summary = "Create cage")
-  public ResponseEntity<CageDTO> create(
+  public ResponseEntity<CageResponse> create(
       @PathVariable Long rowId,
       @RequestBody @Valid CageCreateRequest cageCreateRequest) {
-    CageDTO response = cageService.create(rowId, cageCreateRequest);
+    CageResponse response = cageService.create(rowId, cageCreateRequest);
     return ResponseEntity.created(LocationUtils.buildLocation(response.cageNumber()))
         .eTag(EtagUtils.toEtag(response.version()))
         .body(response);
   }
   @PatchMapping("/{cageNumber}")
   @Operation(summary = "Update cage by cage number")
-  public ResponseEntity<CageDTO> update(
+  public ResponseEntity<CageResponse> update(
       @PathVariable Long rowId,
       @PathVariable Integer cageNumber,
       @RequestBody @Valid CageUpdateRequest cageUpdateRequest,
       @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
-    CageDTO response = cageService.update(rowId, cageNumber, cageUpdateRequest, expected);
+    CageResponse response = cageService.update(rowId, cageNumber, cageUpdateRequest, expected);
     return ResponseEntity.ok()
         .eTag(EtagUtils.toEtag(response.version()))
         .body(response);
