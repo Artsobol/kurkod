@@ -1,14 +1,11 @@
 package io.github.artsobol.kurkod.feature.iam.dto.response;
 
-import io.github.artsobol.kurkod.feature.iam.dto.response.RoleResponse;
 import io.github.artsobol.kurkod.feature.iam.entity.RegistrationStatus;
+import java.time.Instant;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.List;
 
 @Data
 @Builder
@@ -20,7 +17,7 @@ public class UserProfileResponse {
     private String email;
 
     private RegistrationStatus registrationStatus;
-    private OffsetDateTime lastLogin;
+    private Instant lastLogin;
 
     private String token;
     private String refreshToken;

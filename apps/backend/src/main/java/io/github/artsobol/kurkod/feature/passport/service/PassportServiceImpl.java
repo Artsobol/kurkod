@@ -1,23 +1,22 @@
 package io.github.artsobol.kurkod.feature.passport.service;
 
 
-import io.github.artsobol.kurkod.feature.passport.mapper.PassportMapper;
-import io.github.artsobol.kurkod.feature.passport.service.PassportService;
-import io.github.artsobol.kurkod.feature.passport.dto.response.PassportResponse;
-import io.github.artsobol.kurkod.feature.passport.entity.Passport;
-import io.github.artsobol.kurkod.feature.worker.entity.Worker;
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.passport.dto.request.PassportUpdateRequest;
 import io.github.artsobol.kurkod.feature.passport.dto.request.PassportCreateRequest;
+import io.github.artsobol.kurkod.feature.passport.dto.request.PassportUpdateRequest;
+import io.github.artsobol.kurkod.feature.passport.dto.response.PassportResponse;
+import io.github.artsobol.kurkod.feature.passport.entity.Passport;
+import io.github.artsobol.kurkod.feature.passport.mapper.PassportMapper;
 import io.github.artsobol.kurkod.feature.passport.repository.PassportRepository;
+import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 @Service
 @Transactional(readOnly = true)
@@ -50,7 +49,6 @@ public class PassportServiceImpl implements PassportService {
 
         Passport passport = passportMapper.toEntity(passportCreateRequest);
         passport.setWorker(worker);
-        passport.setActive(true);
         passport = passportRepository.save(passport);
         return passportMapper.toResponse(passport);
     }
@@ -71,7 +69,7 @@ public class PassportServiceImpl implements PassportService {
     public void delete(Long workerId, Long version) {
         Passport passport = getPassportByWorkerId(workerId);
         checkVersion(passport.getVersion(), version);
-        passport.setActive(false);
+        passport.deactivate();
         passportRepository.save(passport);
     }
 

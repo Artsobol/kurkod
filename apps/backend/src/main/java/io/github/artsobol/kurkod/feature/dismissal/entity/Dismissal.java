@@ -1,16 +1,15 @@
 package io.github.artsobol.kurkod.feature.dismissal.entity;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -18,7 +17,7 @@ import java.time.LocalDate;
 @Table(name = "dismissal")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Dismissal extends BaseEntity {
+public class Dismissal extends AbstractEntity {
 
     @NotNull
     @Column(nullable = false, name = "dismissal_date")

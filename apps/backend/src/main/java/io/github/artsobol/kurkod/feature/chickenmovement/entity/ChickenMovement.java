@@ -2,18 +2,14 @@ package io.github.artsobol.kurkod.feature.chickenmovement.entity;
 
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
 
 @Entity
 @Getter
@@ -21,9 +17,9 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "chicken_movement")
-public class ChickenMovement extends BaseEntity {
+public class ChickenMovement extends AbstractEntity {
 
-    @NotNull @Column(nullable = false, name = "moved_at") private OffsetDateTime movedAt = OffsetDateTime.now();
+    @NotNull @Column(nullable = false, name = "moved_at") private Instant movedAt = Instant.now();
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "chicken_id", nullable = false)
     private Chicken chicken;

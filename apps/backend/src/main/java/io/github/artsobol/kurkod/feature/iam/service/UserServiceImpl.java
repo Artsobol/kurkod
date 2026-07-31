@@ -1,16 +1,20 @@
 package io.github.artsobol.kurkod.feature.iam.service;
 
-import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
-import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
-import io.github.artsobol.kurkod.feature.iam.entity.User;
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
 import io.github.artsobol.kurkod.feature.iam.dto.request.UserCreateRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.request.UserUpdateRequest;
+import io.github.artsobol.kurkod.feature.iam.dto.response.UserResponse;
+import io.github.artsobol.kurkod.feature.iam.entity.User;
+import io.github.artsobol.kurkod.feature.iam.mapper.UserMapper;
 import io.github.artsobol.kurkod.feature.iam.repository.UserRepository;
-import io.github.artsobol.kurkod.feature.iam.service.UserService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.Instant;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,14 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
-
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -35,6 +31,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+
+    static UserDetails getUserDetails(String email, UserRepository userRepository) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NotFoundException("user.not.found.by.email", email));
+
+        user.setLastLogin(Instant.now());
+        userRepository.save(user);
+        return new org.springframework.security.core.userdetails.User(user.getUsername(),
+                user.getPassword(),
+                user.getRoles().stream().map(
+                        role -> new SimpleGrantedAuthority(role.getName())
+                ).collect(Collectors.toList()));
+    }
 
     @Override
     @Transactional
@@ -69,6 +78,7 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
         return userMapper.toResponse(user);
     }
+
     @Override
     @Transactional
     @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
@@ -86,26 +96,13 @@ public class UserServiceImpl implements UserService {
     public void deleteById(@NotNull Long userId, Long version) {
         User user = getUserById(userId);
         checkVersion(user.getVersion(), version);
-        user.setActive(false);
+        user.deactivate();
         userRepository.save(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return getUserDetails(email, userRepository);
-    }
-
-    static UserDetails getUserDetails(String email, UserRepository userRepository) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NotFoundException("user.not.found.by.email", email));
-
-        user.setLastLogin(OffsetDateTime.now());
-        userRepository.save(user);
-        return new org.springframework.security.core.userdetails.User(user.getUsername(),
-                user.getPassword(),
-                user.getRoles().stream().map(
-                        role -> new SimpleGrantedAuthority(role.getName())
-                ).collect(Collectors.toList()));
     }
 
     protected User getUserByUsername(String username) {

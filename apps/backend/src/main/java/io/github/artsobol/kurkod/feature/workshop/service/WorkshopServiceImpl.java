@@ -1,24 +1,22 @@
 package io.github.artsobol.kurkod.feature.workshop.service;
 
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.workshop.mapper.WorkshopMapper;
+import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequest;
+import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
 import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
 import io.github.artsobol.kurkod.feature.workshop.entity.Workshop;
-import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
-import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequest;
+import io.github.artsobol.kurkod.feature.workshop.mapper.WorkshopMapper;
 import io.github.artsobol.kurkod.feature.workshop.repository.WorkshopRepository;
-import io.github.artsobol.kurkod.feature.workshop.service.WorkshopService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 @Service
 @Transactional(readOnly = true)
@@ -82,7 +80,7 @@ public class WorkshopServiceImpl implements WorkshopService {
     public void delete(Long id, Long version) {
         Workshop workshop = getWorkshopById(id);
         checkVersion(workshop.getVersion(), version);
-        workshop.setActive(false);
+        workshop.deactivate();
     }
 
     protected Workshop getWorkshopById(Long id) {

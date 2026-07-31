@@ -1,23 +1,21 @@
 package io.github.artsobol.kurkod.feature.staff.service;
 
-import io.github.artsobol.kurkod.feature.staff.mapper.StaffMapper;
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
+import io.github.artsobol.kurkod.exception.http.NotFoundException;
+import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;
+import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
 import io.github.artsobol.kurkod.feature.staff.dto.response.StaffResponse;
 import io.github.artsobol.kurkod.feature.staff.entity.Staff;
-import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffUpdateRequest;
-import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;
+import io.github.artsobol.kurkod.feature.staff.mapper.StaffMapper;
 import io.github.artsobol.kurkod.feature.staff.repository.StaffRepository;
-import io.github.artsobol.kurkod.feature.staff.service.StaffService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 @Service
 @Transactional(readOnly = true)
@@ -75,7 +73,7 @@ public class StaffServiceImpl implements StaffService {
     public void delete(Long id, Long version) {
         Staff staff = getStaffById(id);
         checkVersion(staff.getVersion(), version);
-        staff.setActive(false);
+        staff.deactivate();
         staffRepository.save(staff);
     }
 

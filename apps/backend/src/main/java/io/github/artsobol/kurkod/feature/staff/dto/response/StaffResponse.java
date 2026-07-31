@@ -1,8 +1,6 @@
 package io.github.artsobol.kurkod.feature.staff.dto.response;
 
-import java.time.OffsetDateTime;
+import java.time.Instant;
 
 public record StaffResponse(
-        Long id, String position, OffsetDateTime createdAt, OffsetDateTime updatedAt, Long version
-) {
-};
+    Long id, String position, Instant createdAt, Instant updatedAt, Long version) {}

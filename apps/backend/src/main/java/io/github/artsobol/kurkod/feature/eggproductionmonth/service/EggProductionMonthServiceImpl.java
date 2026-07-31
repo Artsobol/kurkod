@@ -1,24 +1,22 @@
 package io.github.artsobol.kurkod.feature.eggproductionmonth.service;
 
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.mapper.EggProductionMonthMapper;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthCreateRequest;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthUpdateRequest;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthResponse;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.entity.EggProductionMonth;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthUpdateRequest;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthCreateRequest;
+import io.github.artsobol.kurkod.feature.eggproductionmonth.mapper.EggProductionMonthMapper;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.repository.EggProductionMonthRepository;
-import io.github.artsobol.kurkod.feature.eggproductionmonth.service.EggProductionMonthService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 @Service
 @RequiredArgsConstructor
@@ -80,7 +78,7 @@ public class EggProductionMonthServiceImpl implements EggProductionMonthService 
     public void delete(Long chickenId, int month, int year, Long version) {
         EggProductionMonth eggProductionMonth = findByIdMonthYear(chickenId, month, year);
         checkVersion(eggProductionMonth.getVersion(), version);
-        eggProductionMonth.setActive(false);
+        eggProductionMonth.deactivate();
 
         eggProductionMonthRepository.save(eggProductionMonth);
     }

@@ -1,31 +1,26 @@
 package io.github.artsobol.kurkod.feature.iam.entity;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
-import io.github.artsobol.kurkod.feature.iam.entity.SystemRole;
-import io.github.artsobol.kurkod.infrastructure.persistence.converter.UserRoleTypeConverter;
-import io.github.artsobol.kurkod.feature.iam.entity.User;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @Table(name = "role")
-public class Role extends BaseEntity {
-    @Column(nullable = false)
-    private String name;
+public class Role extends AbstractEntity {
+  @Column(nullable = false)
+  private String name;
 
-    @Column(name = "user_system_role", nullable = false, updatable = false)
-    @Convert(converter = UserRoleTypeConverter.class)
-    private SystemRole userSystemRole;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "user_system_role", nullable = false, updatable = false)
+  private SystemRole userSystemRole;
 
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles", cascade = CascadeType.MERGE)
-    private Set<User> users = new HashSet<>();
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "roles", cascade = CascadeType.MERGE)
+  private Set<User> users = new HashSet<>();
 }

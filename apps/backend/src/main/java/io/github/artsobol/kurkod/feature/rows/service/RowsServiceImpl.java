@@ -1,23 +1,21 @@
 package io.github.artsobol.kurkod.feature.rows.service;
 
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.rows.mapper.RowsMapper;
+import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
+import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
 import io.github.artsobol.kurkod.feature.rows.dto.response.RowsResponse;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsUpdateRequest;
-import io.github.artsobol.kurkod.feature.rows.dto.request.RowsCreateRequest;
+import io.github.artsobol.kurkod.feature.rows.mapper.RowsMapper;
 import io.github.artsobol.kurkod.feature.rows.repository.RowsRepository;
-import io.github.artsobol.kurkod.feature.rows.service.RowsService;
 import io.github.artsobol.kurkod.feature.workshop.repository.WorkshopRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 @Service
 @Transactional(readOnly = true)
@@ -82,7 +80,7 @@ public class RowsServiceImpl implements RowsService {
     public void delete(Long workshopId, Integer rowHumber, Long version) {
         Rows rows = getRowsById(workshopId, rowHumber);
         checkVersion(rows.getVersion(), version);
-        rows.setActive(false);
+        rows.deactivate();
         rowsRepository.save(rows);
     }
 

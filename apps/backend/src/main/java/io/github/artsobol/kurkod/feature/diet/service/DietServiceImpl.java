@@ -1,22 +1,20 @@
 package io.github.artsobol.kurkod.feature.diet.service;
 
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.diet.mapper.DietMapper;
+import io.github.artsobol.kurkod.feature.diet.dto.request.DietCreateRequest;
+import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
 import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
 import io.github.artsobol.kurkod.feature.diet.entity.Diet;
-import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
-import io.github.artsobol.kurkod.feature.diet.dto.request.DietCreateRequest;
+import io.github.artsobol.kurkod.feature.diet.mapper.DietMapper;
 import io.github.artsobol.kurkod.feature.diet.repository.DietRepository;
-import io.github.artsobol.kurkod.feature.diet.service.DietService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 @Service
 @Transactional(readOnly = true)
@@ -66,7 +64,7 @@ public class DietServiceImpl implements DietService {
     public void delete(Long id, Long version) {
         Diet diet = getDietById(id);
         checkVersion(diet.getVersion(), version);
-        diet.setActive(false);
+        diet.deactivate();
         dietRepository.save(diet);
     }
 

@@ -4,18 +4,16 @@ import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
-import io.github.artsobol.kurkod.feature.chickenmovement.mapper.ChickenMovementMapper;
+import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementResponse;
 import io.github.artsobol.kurkod.feature.chickenmovement.entity.ChickenMovement;
-import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
+import io.github.artsobol.kurkod.feature.chickenmovement.mapper.ChickenMovementMapper;
 import io.github.artsobol.kurkod.feature.chickenmovement.repository.ChickenMovementRepository;
-import io.github.artsobol.kurkod.feature.chickenmovement.service.ChickenMovementService;
+import java.time.Instant;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.OffsetDateTime;
-import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -58,7 +56,7 @@ public class ChickenMovementServiceImpl implements ChickenMovementService {
                 .orElseThrow(() -> new NotFoundException("chicken.not.found", chickenId)));
         chickenMovement.setFromCage(fromCage);
         chickenMovement.setToCage(toCage);
-        chickenMovement.setMovedAt(OffsetDateTime.now());
+        chickenMovement.setMovedAt(Instant.now());
         chickenMovement = chickenMovementRepository.save(chickenMovement);
         return chickenMovementMapper.toResponse(chickenMovement);
     }

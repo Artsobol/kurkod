@@ -7,15 +7,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public record RowsDetailedResponse(
-        Long id,
-        Integer rowNumber,
-        Integer workshopNumber,
-        List<Cage> cages,
-        OffsetDateTime createdAt,
-        OffsetDateTime updatedAt
-) {
-};
+    Long id,
+    Integer rowNumber,
+    Integer workshopNumber,
+    List<Cage> cages,
+    Instant createdAt,
+    Instant updatedAt) {}

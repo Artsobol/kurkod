@@ -1,25 +1,21 @@
 package io.github.artsobol.kurkod.feature.diet.entity;
 
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.Season;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "diet")
-public class Diet extends BaseEntity {
+public class Diet extends AbstractEntity {
 
     @NotBlank @Size(min = 2, max = 30, message = "Title should be between 2 and 30 characters")
     @Column(nullable = false, unique = true) private String title;

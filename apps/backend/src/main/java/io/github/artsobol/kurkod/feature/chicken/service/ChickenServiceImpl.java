@@ -1,26 +1,24 @@
 package io.github.artsobol.kurkod.feature.chicken.service;
 
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
+import io.github.artsobol.kurkod.exception.http.NotFoundException;
+import io.github.artsobol.kurkod.feature.breed.entity.Breed;
 import io.github.artsobol.kurkod.feature.breed.service.BreedLookupService;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
-import io.github.artsobol.kurkod.feature.chicken.mapper.ChickenMapper;
-import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
-import io.github.artsobol.kurkod.feature.breed.entity.Breed;
-import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
-import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
 import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
+import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
+import io.github.artsobol.kurkod.feature.chicken.mapper.ChickenMapper;
 import io.github.artsobol.kurkod.feature.chicken.repository.ChickenRepository;
-import io.github.artsobol.kurkod.feature.chicken.service.ChickenService;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 @Service
 @Transactional(readOnly = true)
@@ -68,7 +66,7 @@ public class ChickenServiceImpl implements ChickenService {
     public void delete(Long id, Long version) {
         Chicken chicken = getChickenById(id);
         checkVersion(chicken.getVersion(), version);
-        chicken.setActive(false);
+        chicken.deactivate();
         chickenRepository.save(chicken);
     }
     @Override

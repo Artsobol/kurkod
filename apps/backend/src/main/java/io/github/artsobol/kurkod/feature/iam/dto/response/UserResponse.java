@@ -1,10 +1,8 @@
 package io.github.artsobol.kurkod.feature.iam.dto.response;
 
-import io.github.artsobol.kurkod.feature.iam.dto.response.RoleResponse;
-import io.github.artsobol.kurkod.feature.iam.entity.UserRole;
 import io.github.artsobol.kurkod.feature.iam.entity.RegistrationStatus;
-
-import java.time.OffsetDateTime;
+import io.github.artsobol.kurkod.feature.iam.entity.UserRole;
+import java.time.Instant;
 import java.util.List;
 
 public record UserResponse(
@@ -14,8 +12,8 @@ public record UserResponse(
         UserRole role,
         RegistrationStatus registrationStatus,
         List<RoleResponse> roles,
-        OffsetDateTime createdAt,
-        OffsetDateTime updatedAt,
+        Instant createdAt,
+        Instant updatedAt,
         Long version
 ) {
-};
+}

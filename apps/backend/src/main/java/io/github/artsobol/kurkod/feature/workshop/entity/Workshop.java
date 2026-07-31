@@ -1,15 +1,14 @@
 package io.github.artsobol.kurkod.feature.workshop.entity;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -17,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "workshop")
-public class Workshop extends BaseEntity {
+public class Workshop extends AbstractEntity {
 
     @Positive
     @Column(nullable = false, unique = true, name = "workshop_number")

@@ -1,27 +1,23 @@
 package io.github.artsobol.kurkod.feature.iam.entity;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
-import io.github.artsobol.kurkod.feature.iam.entity.Role;
-import io.github.artsobol.kurkod.feature.iam.entity.RegistrationStatus;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.Instant;
+import java.util.Collection;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.time.OffsetDateTime;
-import java.util.Collection;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
-public class User extends BaseEntity {
+public class User extends AbstractEntity {
 
     @NotBlank
     @Size(max = 30, message = "Username should be less than 30 characters")
@@ -38,7 +34,7 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 80)
     private String email;
 
-    private OffsetDateTime lastLogin;
+    private Instant lastLogin;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "registration_status", nullable = false)

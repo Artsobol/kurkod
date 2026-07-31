@@ -1,24 +1,22 @@
 package io.github.artsobol.kurkod.feature.cage.service;
 
+import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
+import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
-import io.github.artsobol.kurkod.feature.cage.service.CageService;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
 import io.github.artsobol.kurkod.feature.rows.repository.RowsRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +81,7 @@ public class CageServiceImpl implements CageService {
     public void delete(Long rowId, Integer cageNumber, Long version) {
         Cage cage = findCageByRowIdAndCageNumber(rowId, cageNumber);
         checkVersion(cage.getVersion(), version);
-        cage.setActive(false);
+        cage.deactivate();
         cageRepository.save(cage);
     }
 

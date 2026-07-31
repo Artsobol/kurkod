@@ -1,15 +1,14 @@
 package io.github.artsobol.kurkod.feature.breed.entity;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
 import io.github.artsobol.kurkod.feature.diet.entity.Diet;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-
 import java.util.HashSet;
 import java.util.Set;
+import lombok.*;
 
 @Entity
 @Table(name = "breed")
@@ -18,7 +17,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Breed extends BaseEntity {
+public class Breed extends AbstractEntity {
 
     @NotBlank
     @Size(min = 2, max = 20, message = "Name should be between 2 and 20 characters")

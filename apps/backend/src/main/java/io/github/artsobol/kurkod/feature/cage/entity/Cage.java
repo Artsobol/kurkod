@@ -1,8 +1,7 @@
 package io.github.artsobol.kurkod.feature.cage.entity;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
-import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.feature.worker.entity.WorkerCage;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -20,18 +18,22 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "cage",
-       uniqueConstraints = @UniqueConstraint(name = "uq_cage_row_id_cage_number", columnNames = {"row_id", "cage_number"}))
-public class Cage extends BaseEntity {
+@Table(
+    name = "cage",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "uq_cage_row_id_cage_number",
+            columnNames = {"row_id", "cage_number"}))
+public class Cage extends AbstractEntity {
 
-    @Positive
-    @Column(nullable = false, name = "cage_number")
-    private Integer cageNumber;
+  @Positive
+  @Column(nullable = false, name = "cage_number")
+  private Integer cageNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "row_id", nullable = false, referencedColumnName = "id")
-    private Rows row;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "row_id", nullable = false, referencedColumnName = "id")
+  private Rows row;
 
-    @OneToMany(mappedBy = "cage", fetch = FetchType.LAZY)
-    private Set<WorkerCage> workerCages = new HashSet<>();
+  @OneToMany(mappedBy = "cage", fetch = FetchType.LAZY)
+  private Set<WorkerCage> workerCages = new HashSet<>();
 }

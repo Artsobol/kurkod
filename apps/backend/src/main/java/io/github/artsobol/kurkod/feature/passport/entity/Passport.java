@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.passport.entity;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.BaseEntity;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -9,15 +9,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
-
 @Entity
 @Table(name = "passport", uniqueConstraints = @UniqueConstraint(columnNames = {"series", "number"}, name = "uq_passport_series_number"))
 @Getter
 @Setter
 @NoArgsConstructor
-public class Passport extends BaseEntity {
+public class Passport extends AbstractEntity {
 
     @Column(length = 4, nullable = false)
     @Pattern(regexp = "^[0-9]{4}$", message = "Invalid passport series")

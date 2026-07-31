@@ -1,8 +1,6 @@
 package io.github.artsobol.kurkod.feature.diet.dto.response;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.Season;
+import io.github.artsobol.kurkod.feature.diet.entity.Season;
 
 public record DietResponse(
-        Integer id, String title, String code, String description, Season season, Long version
-) {
-};
+    Integer id, String title, String code, String description, Season season, Long version) {}
