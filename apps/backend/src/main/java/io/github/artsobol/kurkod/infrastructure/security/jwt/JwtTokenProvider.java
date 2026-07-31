@@ -12,6 +12,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
@@ -25,15 +26,15 @@ import java.util.Map;
 public class JwtTokenProvider {
     private final SecretKey secretKey;
     private final JwtParser jwtParser;
-    private final Long jwtValidityInMilliseconds;
+    private final Duration accessTokenLifetime;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secret,
-                            @Value("${jwt.expiration:3600000}") long jwtValidityInMilliseconds) {
-        this.secretKey = getKey(secret);
+    public JwtTokenProvider(@Value("${app.security.jwt.base64-signing-key}") String signingKey,
+                            @Value("${app.security.jwt.access-token-lifetime}") Duration accessTokenLifetime) {
+        this.secretKey = getKey(signingKey);
         this.jwtParser = Jwts.parser()
                 .verifyWith(secretKey)
                 .build();
-        this.jwtValidityInMilliseconds = jwtValidityInMilliseconds;
+        this.accessTokenLifetime = accessTokenLifetime;
     }
 
     public String generateToken(@NonNull User user) {
@@ -88,8 +89,8 @@ public class JwtTokenProvider {
         }
     }
 
-    private SecretKey getKey(String secretKey64) {
-        byte[] decode64 = Decoders.BASE64.decode(secretKey64);
+    private SecretKey getKey(String base64SigningKey) {
+        byte[] decode64 = Decoders.BASE64.decode(base64SigningKey);
         return Keys.hmacShaKeyFor(decode64);
     }
 
@@ -98,7 +99,7 @@ public class JwtTokenProvider {
                 .claims(claims)
                 .subject(subject)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + jwtValidityInMilliseconds))
+                .expiration(new Date(System.currentTimeMillis() + accessTokenLifetime.toMillis()))
                 .signWith(secretKey, Jwts.SIG.HS512)
                 .compact();
     }

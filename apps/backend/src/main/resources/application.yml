@@ -3,47 +3,35 @@ spring:
     name: kurkod-service
 
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+    default: dev
 
-  datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/kurkod_service}
-    username: ${DB_USER:kurkod_service_user}
-    password: ${DB_PASSWORD:kurkod_service_password}
+  liquibase:
+    change-log: classpath:/db/changelog/db.changelog-master.yaml
 
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: ${JPA_SHOW_SQL:false}
     open-in-view: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
 
-  liquibase:
-    change-log: classpath:db/changelog/db.changelog-master.yaml
+springdoc:
+  swagger-ui:
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: list
+    display-request-duration: true
 
 server:
   port: ${SERVER_PORT:8189}
-
-jwt:
-  secret: ${JWT_SECRET}
-  lifetime: ${JWT_LIFETIME:PT1H}
 
 swagger:
   servers:
     first: ${SWAGGER_SERVER:http://localhost:${server.port}}
 
-logging:
-  level:
-    io.github.artsobol: ${LOG_LEVEL_APP:TRACE}
-    org.springframework.web: ${LOG_LEVEL_WEB:DEBUG}
-    org.springframework.boot.autoconfigure.liquibase: ${LOG_LEVEL_LIQUIBASE:DEBUG}
-    org.hibernate.SQL: ${LOG_LEVEL_SQL:DEBUG}
-    org.hibernate.type.descriptor.sql.BasicBinder: ${LOG_LEVEL_BINDER:TRACE}
-    org.springframework.web.servlet.DispatcherServlet: ${LOG_LEVEL_DISPATCHER:DEBUG}
-
 app:
+  security:
+    jwt:
+      base64-signing-key: ${JWT_SECRET}
+      access-token-lifetime: ${JWT_LIFETIME:PT1H}
   i18n:
     basename: classpath:i18n/messages/messages,classpath:i18n/errors/errors,classpath:i18n/validations/validations
     encoding: UTF-8
