@@ -1,28 +1,27 @@
 spring:
   application:
-    name: kurkod
+    name: kurkod-service
 
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
 
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USER}
-    password: ${DB_PASSWORD}
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/kurkod_service}
+    username: ${DB_USER:kurkod_service_user}
+    password: ${DB_PASSWORD:kurkod_service_password}
 
   jpa:
     hibernate:
-      ddl-auto: none
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: ${JPA_SHOW_SQL:true}
+      ddl-auto: validate
+    show-sql: ${JPA_SHOW_SQL:false}
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
   liquibase:
-    enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yaml
-
-  messages:
-    basename: messages,validation,i18n/errors/errors
-    encoding: UTF-8
 
 server:
   port: ${SERVER_PORT:8189}

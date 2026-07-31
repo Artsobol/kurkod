@@ -15,7 +15,6 @@
     <artifactId>kurkod</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>kurkod</name>
-    <description>KurKod backend</description>
 
     <properties>
         <java.version>21</java.version>
