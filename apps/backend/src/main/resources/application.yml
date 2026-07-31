@@ -21,11 +21,12 @@ springdoc:
     display-request-duration: true
 
 server:
-  port: ${SERVER_PORT:8189}
+  servlet:
+    context-path: /api/v1
 
 swagger:
   servers:
-    first: ${SWAGGER_SERVER:http://localhost:${server.port}}
+    first: ${SWAGGER_SERVER:${server.servlet.context-path}}
 
 app:
   security:

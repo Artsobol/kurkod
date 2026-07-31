@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/workers/{workerId}/passport", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/workers/{workerId}/passport", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Passport", description = "Passport operations")
 public class PassportController {
 

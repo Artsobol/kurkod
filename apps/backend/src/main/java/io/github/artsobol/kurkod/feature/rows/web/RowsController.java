@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Rows", description = "Rows operations")
-@RequestMapping("/api/v1/workshops/{workshopId}/rows")
+@RequestMapping("/workshops/{workshopId}/rows")
 public class RowsController {
 
     private final RowsService rowsService;

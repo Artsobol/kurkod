@@ -19,7 +19,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Egg Production Month", description = "Egg Production Month operations")
-@RequestMapping("/api/v1/chickens/{chickenId}/egg-productions")
+@RequestMapping("/chickens/{chickenId}/egg-productions")
 public class EggProductionMonthController {
 
     private final EggProductionMonthService eggProductionMonthService;

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/workers/{workerId}/contract", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/workers/{workerId}/contract", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Employment Contract", description = "Employment Contract operations")
 public class EmploymentContractController {
 

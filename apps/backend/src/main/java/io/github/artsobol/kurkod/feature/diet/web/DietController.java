@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Tag(name = "Diet", description = "Diet API")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/diets")
+@RequestMapping("/diets")
 public class DietController {
 
     private final DietService dietService;

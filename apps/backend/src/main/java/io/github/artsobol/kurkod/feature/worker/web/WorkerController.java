@@ -29,7 +29,7 @@ import static io.github.artsobol.kurkod.infrastructure.util.LocationUtils.buildL
 
 @Validated
 @RestController
-@RequestMapping(value = "/api/v1/workers", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/workers", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "Workers", description = "Worker operations")
 public class WorkerController {

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Validated
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/users", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/users", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Users", description = "User operations")
 public class UserController {
 
@@ -52,7 +52,7 @@ public class UserController {
     public ResponseEntity<UserDTO> create(@RequestBody @Valid UserCreateRequest userCreateRequest) {
 
         UserDTO response = userService.create(userCreateRequest);
-        return ResponseEntity.created(LocationUtils.buildLocation("api/v1/users/id/{id}", response.id()))
+        return ResponseEntity.created(LocationUtils.buildLocation("/users/id/{id}", response.id()))
                              .eTag(EtagUtils.toEtag(response.version()))
                              .body(response);
     }

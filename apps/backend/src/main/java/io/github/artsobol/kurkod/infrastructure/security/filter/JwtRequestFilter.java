@@ -42,7 +42,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         Optional<String> authHeader = Optional.ofNullable(request.getHeader(AUTHORIZATION_HEADER));
-        String requestURI = request.getRequestURI();
+        String requestURI = request.getServletPath();
 
         if (authHeader.isPresent() && authHeader.get().startsWith(BEARER_PREFIX)) {
             String jwt = authHeader.get().substring(BEARER_PREFIX.length());

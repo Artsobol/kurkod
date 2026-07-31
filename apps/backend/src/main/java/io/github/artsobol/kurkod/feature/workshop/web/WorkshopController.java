@@ -20,7 +20,7 @@ import static io.github.artsobol.kurkod.infrastructure.util.LocationUtils.buildL
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Workshops", description = "Workshops operations")
-@RequestMapping(value = "/api/v1/workshops", produces = "application/json")
+@RequestMapping(value = "/workshops", produces = "application/json")
 public class WorkshopController {
 
     private final WorkshopService workshopService;

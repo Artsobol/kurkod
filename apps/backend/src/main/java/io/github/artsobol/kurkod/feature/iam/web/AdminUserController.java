@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/api/v1/admin/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/admin/users/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Admin Users", description = "Administrative user management operations")
 public class AdminUserController {
 

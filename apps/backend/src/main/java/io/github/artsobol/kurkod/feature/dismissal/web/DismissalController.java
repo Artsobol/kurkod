@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/dismissals")
+@RequestMapping("/dismissals")
 @RequiredArgsConstructor
 @Tag(name = "Dismissals", description = "Dismissals API")
 public class DismissalController {

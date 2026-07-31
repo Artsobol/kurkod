@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Tag(name = "Cage", description = "Cage operations")
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/rows/{rowId}/cage")
+@RequestMapping("/rows/{rowId}/cage")
 public class CageController {
 
   private final CageService cageService;

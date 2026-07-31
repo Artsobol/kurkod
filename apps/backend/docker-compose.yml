@@ -19,7 +19,6 @@ services:
       DB_USER: kurkod
       DB_PASSWORD: kurkod
 
-      SERVER_PORT: 8080
       SPRING_PROFILES_ACTIVE: dev
 
       JWT_SECRET: Lfdswfw32424erwdsdu8fe8wer25r32r7duwesfuet48t245832re78usfy8ret4FAEFUAJHFEehrwery23475r3FYEDAFGYerwgr3252ry7uwe
@@ -30,4 +29,4 @@ services:
       LOG_LEVEL_BINDER: WARN
       LOG_LEVEL_DISPATCHER: INFO
 
-      SWAGGER_SERVER: http://localhost:8080
+      SWAGGER_SERVER: http://localhost:8080/api/v1

@@ -24,7 +24,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/v1/reports/director", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/reports/director", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "Director Reports", description = "Director-level analytical reports")
 public class DirectorReportController {

@@ -49,8 +49,8 @@
                     .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/register").permitAll()
                     .requestMatchers(HttpMethod.GET, "/auth/refresh/token").permitAll()
                     .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
-                    .requestMatchers(HttpMethod.GET, "/api/v1/staff/**").hasAnyAuthority(adminAccessSecurityRoles())
-                    .requestMatchers("/api/v1/admin/**").hasAnyAuthority(adminAccessSecurityRoles())
+                    .requestMatchers(HttpMethod.GET, "/staff/**").hasAnyAuthority(adminAccessSecurityRoles())
+                    .requestMatchers("/admin/**").hasAnyAuthority(adminAccessSecurityRoles())
                     .anyRequest().authenticated()
             );
 

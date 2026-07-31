@@ -34,7 +34,7 @@ public final class LocationUtils {
     public static URI buildLocation(Long workerId, Long dismissedId) {
         return ServletUriComponentsBuilder
                 .fromCurrentContextPath()
-                .path("/api/v1/dismissals/workers/{workerId}/dismissed/{dismissedId}")
+                .path("/dismissals/workers/{workerId}/dismissed/{dismissedId}")
                 .buildAndExpand(workerId, dismissedId)
                 .toUri();
     }

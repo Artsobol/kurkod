@@ -1,17 +1,17 @@
 # Документация API - КурКод (Backend)
 
 ## Базовая информация
-- Базовый URL: http://localhost:8189/
+- Базовый URL: http://localhost:8080/
 - Формат: application/json; charset=UTF-8
 - Аутентификация: JWT в HttpOnly Secure cookie с именем Authorization
-- Swagger UI: /swagger-ui.html
+- Swagger UI: /api/v1/swagger-ui.html
 - OpenAPI JSON: /v3/api-docs
 
 ---
 
 ## Аутентификация (Authentication)
 
-**POST**: `/auth/login`
+**POST**: `/api/v1/auth/login`
 
 Назначение: аутентификация по email и паролю. На успех устанавливается cookie Authorization.
 
@@ -41,7 +41,7 @@
 }
 ```
 
-**GET**: `/auth/refresh/token?token=<refreshToken>`
+**GET**: `/api/v1/auth/refresh/token?token=<refreshToken>`
 
 Назначение: получить новый access-токен по refresh-токену. На успех устанавливается новая cookie Authorization.
 
@@ -66,7 +66,7 @@
 }
 ```
 
-**POST**: `/auth/register`
+**POST**: `/api/v1/auth/register`
 
 Назначение: регистрация нового пользователя и немедленная аутентификация; cookie Authorization устанавливается в ответе.
 

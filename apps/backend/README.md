@@ -107,8 +107,8 @@ docker-compose ps
 #### 4. Доступ к приложению
 
 После запуска приложение будет доступно по адресу:
-- **API**: http://localhost:8080
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **API**: http://localhost:8080/api/v1
+- **Swagger UI**: http://localhost:8080/api/v1/swagger-ui.html
 - **PostgreSQL**: localhost:5432
 
 #### 5. Остановка
@@ -156,7 +156,6 @@ set SPRING_PROFILES_ACTIVE=dev
 set DB_URL=jdbc:postgresql://localhost:5432/kurkod_db
 set DB_USER=kurkod
 set DB_PASSWORD=kurkod
-set SERVER_PORT=8189
 set JWT_SECRET=your-secret-key-change-in-production-min-256-bits
 set JWT_LIFETIME=PT1H
 set JPA_SHOW_SQL=false
@@ -169,7 +168,6 @@ export SPRING_PROFILES_ACTIVE=dev
 export DB_URL=jdbc:postgresql://localhost:5432/kurkod_db
 export DB_USER=kurkod
 export DB_PASSWORD=kurkod
-export SERVER_PORT=8189
 export JWT_SECRET=your-secret-key-change-in-production-min-256-bits
 export JWT_LIFETIME=PT1H
 export JPA_SHOW_SQL=false
@@ -203,8 +201,8 @@ java -jar target/kurkod-0.0.1-SNAPSHOT.jar
 #### 4. Проверьте работу
 
 Откройте в браузере:
-- **Swagger UI**: http://localhost:8189/swagger-ui.html
-- **API Docs**: http://localhost:8189/v3/api-docs
+- **Swagger UI**: http://localhost:8080/api/v1/swagger-ui.html
+- **API Docs**: http://localhost:8080/api/v1/v3/api-docs
 
 ## Структура проекта
 
@@ -301,7 +299,6 @@ feature/
 | Переменная | Описание | По умолчанию |
 |------------|----------|--------------|
 | `SPRING_PROFILES_ACTIVE` | Активный профиль Spring | `dev` |
-| `SERVER_PORT` | Порт приложения | `8189` |
 | `DB_URL` | URL базы данных | - |
 | `DB_USER` | Пользователь БД | - |
 | `DB_PASSWORD` | Пароль БД | - |
@@ -311,7 +308,7 @@ feature/
 | `LOG_LEVEL_APP` | Уровень логирования приложения | `TRACE` |
 | `LOG_LEVEL_WEB` | Уровень логирования web | `DEBUG` |
 | `LOG_LEVEL_SQL` | Уровень логирования SQL | `DEBUG` |
-| `SWAGGER_SERVER` | URL сервера для Swagger | `http://localhost:${server.port}` |
+| `SWAGGER_SERVER` | URL сервера для Swagger | значение `server.servlet.context-path` |
 
 ### Профили Spring
 
@@ -381,8 +378,8 @@ feature/
 ### Swagger UI
 
 Интерактивная документация API доступна после запуска приложения:
-- **URL**: http://localhost:8189/swagger-ui.html (локально)
-- **URL**: http://localhost:8080/swagger-ui.html (Docker)
+- **URL**: http://localhost:8080/api/v1/swagger-ui.html (локально)
+- **URL**: http://localhost:8080/api/v1/swagger-ui.html (Docker)
 
 Swagger UI позволяет:
 - Просматривать все доступные эндпоинты
@@ -393,7 +390,7 @@ Swagger UI позволяет:
 ### OpenAPI JSON
 
 Спецификация OpenAPI в формате JSON:
-- **URL**: http://localhost:8189/v3/api-docs
+- **URL**: http://localhost:8080/api/v1/v3/api-docs
 
 ### Подробная документация
 
@@ -402,7 +399,7 @@ Swagger UI позволяет:
 
 ### Основные эндпоинты
 
-- **Аутентификация**: `/auth/*`
+- **Аутентификация**: `/api/v1/auth/*`
 - **Пользователи**: `/api/v1/users/*`
 - **Работники**: `/api/v1/workers/*`
 - **Куры**: `/api/v1/chickens/*`
@@ -426,7 +423,7 @@ Swagger UI позволяет:
 
 1. **Регистрация**:
    ```http
-   POST /auth/register
+   POST /api/v1/auth/register
    Content-Type: application/json
    
    {
@@ -439,7 +436,7 @@ Swagger UI позволяет:
 
 2. **Вход**:
    ```http
-   POST /auth/login
+   POST /api/v1/auth/login
    Content-Type: application/json
    
    {
@@ -450,7 +447,7 @@ Swagger UI позволяет:
 
 3. **Обновление токена**:
    ```http
-   GET /auth/refresh/token?token=<refreshToken>
+   GET /api/v1/auth/refresh/token?token=<refreshToken>
    ```
 
 ### Использование токена
@@ -546,7 +543,7 @@ mvnw.cmd clean test jacoco:report
 ### Проблема: Access denied при вызове эндпоинтов
 
 **Решение:**
-- Получите JWT токен через `/auth/login` или `/auth/register`
+- Получите JWT токен через `/api/v1/auth/login` или `/api/v1/auth/register`
 - Передавайте токен в заголовке `Authorization: Bearer <token>`
 - Проверьте, что токен не истек
 - Убедитесь, что у пользователя есть нужные роли
