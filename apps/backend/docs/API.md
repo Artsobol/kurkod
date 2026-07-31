@@ -3,9 +3,9 @@
 ## Базовая информация
 - Базовый URL: http://localhost:8080/
 - Формат: application/json; charset=UTF-8
-- Аутентификация: JWT в HttpOnly Secure cookie с именем Authorization
+- Аутентификация: JWT в заголовке `Authorization: Bearer <access-token>`
 - Swagger UI: /api/v1/swagger-ui.html
-- OpenAPI JSON: /v3/api-docs
+- OpenAPI JSON: /api/v1/v3/api-docs
 
 ---
 
@@ -13,7 +13,7 @@
 
 **POST**: `/api/v1/auth/login`
 
-Назначение: аутентификация по email и паролю. На успех устанавливается cookie Authorization.
+Назначение: аутентификация по email и паролю. Access-токен возвращается в теле ответа.
 
 Тело запроса:
 ```json
@@ -43,7 +43,7 @@
 
 **GET**: `/api/v1/auth/refresh/token?token=<refreshToken>`
 
-Назначение: получить новый access-токен по refresh-токену. На успех устанавливается новая cookie Authorization.
+Назначение: получить новый access-токен по refresh-токену.
 
 Параметры:
 - `token` (query) - refresh токен
@@ -68,7 +68,7 @@
 
 **POST**: `/api/v1/auth/register`
 
-Назначение: регистрация нового пользователя и немедленная аутентификация; cookie Authorization устанавливается в ответе.
+Назначение: регистрация нового пользователя и немедленная аутентификация; токены возвращаются в теле ответа.
 
 Тело запроса:
 ```json

@@ -239,14 +239,12 @@ src/
 │   │   │   └── workshop/
 │   │       │
 │   │   └── infrastructure/                  # Общая техническая инфраструктура
-│   │       ├── constants/
-│   │       ├── error/                       # Advice, DTO и описания ошибок
-│   │       ├── logging/
+│   │       ├── error/                       # Advice и DTO ошибок
 │   │       ├── persistence/                 # Общие entity и конвертеры
 │   │       ├── security/                    # JWT, фильтры и обработчики
 │   │       ├── util/
 │   │       ├── validation/
-│   │       └── web/                         # Общие web DTO и cookies
+│   │       └── web/                         # Общие web DTO
 │   │
 │   └── resources/
 │       ├── application.yml                  # Основная конфигурация
@@ -456,8 +454,6 @@ Swagger UI позволяет:
 ```http
 Authorization: Bearer <access-token>
 ```
-
-Или используйте cookie `Authorization` (HttpOnly, Secure), которая устанавливается автоматически.
 
 ### Роли
 

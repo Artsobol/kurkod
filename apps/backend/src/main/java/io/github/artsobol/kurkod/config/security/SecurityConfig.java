@@ -78,7 +78,6 @@
             config.setAllowedHeaders(List.of("Authorization","Content-Type","Accept","X-Requested-With"));
             config.setExposedHeaders(List.of("Authorization","Location"));
             config.setAllowedHeaders(List.of("*"));
-            config.setAllowCredentials(true);
             config.setMaxAge(3600L);
 
             var source = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
