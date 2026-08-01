@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.infrastructure.persistence.entity;
 
+import io.github.artsobol.kurkod.exception.business.InvalidEntityStateException;
 import jakarta.persistence.*;
 import java.time.Instant;
 import lombok.Getter;
@@ -31,14 +32,14 @@ public abstract class AbstractEntity {
 
   public void activate() {
     if (this.isActive) {
-      throw new IllegalStateException("Entity is already active");
+      throw new InvalidEntityStateException("common.entity.already.active");
     }
     this.isActive = true;
   }
 
   public void deactivate() {
     if (!this.isActive) {
-      throw new IllegalStateException("Entity is not active");
+      throw new InvalidEntityStateException("common.entity.inactive");
     }
     this.isActive = false;
   }

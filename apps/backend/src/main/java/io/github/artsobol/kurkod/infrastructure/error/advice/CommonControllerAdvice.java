@@ -1,120 +1,251 @@
 package io.github.artsobol.kurkod.infrastructure.error.advice;
 
 import io.github.artsobol.kurkod.exception.base.BaseException;
-import io.github.artsobol.kurkod.exception.http.HttpException;
-import io.github.artsobol.kurkod.exception.http.MissingIfMatchException;
-import io.github.artsobol.kurkod.infrastructure.error.dto.IamError;
+import io.github.artsobol.kurkod.infrastructure.error.dto.ErrorResponse;
+import io.github.artsobol.kurkod.infrastructure.error.dto.ValidationErrorResponse;
+import io.github.artsobol.kurkod.infrastructure.error.dto.ValidationFieldError;
+import io.github.artsobol.kurkod.infrastructure.localization.MessageService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
-import java.util.Locale;
+import java.time.Instant;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
-import org.springframework.context.i18n.LocaleContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-@RequiredArgsConstructor
+@Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class CommonControllerAdvice {
 
-    private final MessageSource messageSource;
+  private final MessageService messageService;
 
-    @ExceptionHandler(BaseException.class)
-    public ResponseEntity<IamError> handleBaseException(BaseException ex, HttpServletRequest request) {
-        return buildResponse(ex, request);
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public ResponseEntity<ValidationErrorResponse> handleMethodArgumentNotValidException(
+      MethodArgumentNotValidException ex, HttpServletRequest request) {
+    List<ValidationFieldError> errors =
+        ex.getBindingResult().getFieldErrors().stream()
+            .map(
+                err ->
+                    new ValidationFieldError(
+                        err.getField(), messageService.resolveValidationMessage(err)))
+            .toList();
+
+    ValidationErrorResponse response = buildValidationErrorResponse(request, errors);
+    log.warn("Validation error for request URI: {}. Errors: {}", request.getRequestURI(), errors);
+
+    return ResponseEntity.badRequest().body(response);
+  }
+
+  @ExceptionHandler(ConstraintViolationException.class)
+  public ResponseEntity<ValidationErrorResponse> handleConstraintViolationException(
+      ConstraintViolationException ex, HttpServletRequest request) {
+    List<ValidationFieldError> errors =
+        ex.getConstraintViolations().stream()
+            .map(
+                violation ->
+                    new ValidationFieldError(extractFieldName(violation), violation.getMessage()))
+            .toList();
+
+    ValidationErrorResponse response = buildValidationErrorResponse(request, errors);
+    log.warn(
+        "Constraint validation error for request URI: {}. Errors: {}",
+        request.getRequestURI(),
+        errors);
+
+    return ResponseEntity.badRequest().body(response);
+  }
+
+  @ExceptionHandler(HandlerMethodValidationException.class)
+  public ResponseEntity<ValidationErrorResponse> handleHandlerMethodValidationException(
+      HandlerMethodValidationException ex, HttpServletRequest request) {
+    List<ValidationFieldError> errors =
+        ex.getParameterValidationResults().stream()
+            .flatMap(
+                result ->
+                    result.getResolvableErrors().stream()
+                        .map(
+                            error ->
+                                new ValidationFieldError(
+                                    result.getMethodParameter().getParameterName(),
+                                    messageService.resolveValidationMessage(error))))
+            .toList();
+
+    return ResponseEntity.badRequest().body(buildValidationErrorResponse(request, errors));
+  }
+
+  @ExceptionHandler(MissingServletRequestParameterException.class)
+  public ResponseEntity<ValidationErrorResponse> handleMissingServletRequestParameterException(
+      MissingServletRequestParameterException ex, HttpServletRequest request) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+
+    String parameterName = ex.getParameterName();
+    String localizedMessage =
+        messageService.createMessage("common.parameter.missing", new Object[] {parameterName});
+    List<ValidationFieldError> errors =
+        List.of(new ValidationFieldError(parameterName, localizedMessage));
+
+    String message = messageService.createMessage("common.validation.failed", null);
+
+    ValidationErrorResponse response =
+        new ValidationErrorResponse(
+            Instant.now(),
+            status.value(),
+            status.getReasonPhrase(),
+            message,
+            request.getRequestURI(),
+            errors);
+
+    log.warn(
+        "Missing request parameter for URI: {}. Parameter: {}",
+        request.getRequestURI(),
+        parameterName);
+
+    return ResponseEntity.status(status).body(response);
+  }
+
+  @ExceptionHandler(MissingRequestHeaderException.class)
+  public ResponseEntity<ValidationErrorResponse> handleMissingRequestHeaderException(
+      MissingRequestHeaderException ex, HttpServletRequest request) {
+    String headerName = ex.getHeaderName();
+    String message =
+        messageService.createMessage("common.header.missing", new Object[] {headerName});
+    List<ValidationFieldError> errors =
+        List.of(new ValidationFieldError(headerName, message));
+
+    return ResponseEntity.badRequest().body(buildValidationErrorResponse(request, errors));
+  }
+
+  @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+  public ResponseEntity<ValidationErrorResponse> handleMethodArgumentTypeMismatchException(
+      MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+    String parameterName = ex.getName();
+    String message =
+        messageService.createMessage("common.parameter.invalid", new Object[] {parameterName});
+    List<ValidationFieldError> errors =
+        List.of(new ValidationFieldError(parameterName, message));
+
+    return ResponseEntity.badRequest().body(buildValidationErrorResponse(request, errors));
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(
+      HttpMessageNotReadableException ex, HttpServletRequest request) {
+    return buildErrorResponse(
+        request, HttpStatus.BAD_REQUEST, "BAD_REQUEST", "common.json.malformed");
+  }
+
+  @ExceptionHandler(NoResourceFoundException.class)
+  public ResponseEntity<ErrorResponse> handleNoResourceFoundException(
+      NoResourceFoundException ex, HttpServletRequest request) {
+    return buildErrorResponse(
+        request, HttpStatus.NOT_FOUND, "NOT_FOUND", "common.resource.not.found");
+  }
+
+  @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+  public ResponseEntity<ErrorResponse> handleHttpRequestMethodNotSupportedException(
+      HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
+    return buildErrorResponse(
+        request, HttpStatus.METHOD_NOT_ALLOWED, "METHOD_NOT_ALLOWED", "common.method.not.allowed");
+  }
+
+  @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
+  public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotSupportedException(
+      HttpMediaTypeNotSupportedException ex, HttpServletRequest request) {
+    return buildErrorResponse(
+        request,
+        HttpStatus.UNSUPPORTED_MEDIA_TYPE,
+        "UNSUPPORTED_MEDIA_TYPE",
+        "common.media.type.unsupported");
+  }
+
+  @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+  public ResponseEntity<ErrorResponse> handleHttpMediaTypeNotAcceptableException(
+      HttpMediaTypeNotAcceptableException ex, HttpServletRequest request) {
+    return buildErrorResponse(
+        request, HttpStatus.NOT_ACCEPTABLE, "NOT_ACCEPTABLE", "common.not.acceptable");
+  }
+
+  @ExceptionHandler(BaseException.class)
+  public ResponseEntity<ErrorResponse> handleBaseException(
+      BaseException ex, HttpServletRequest request) {
+    HttpStatus status = ex.getStatus();
+    String message = messageService.createMessage(ex.getMessageKey(), ex.getMessageArgs());
+
+    ErrorResponse response =
+        ErrorResponse.create(status, ex.getErrorCode(), message, request.getRequestURI());
+    log.warn(
+        "Request failed: method={}, URI={}, status={}, error code={}",
+        request.getMethod(),
+        request.getRequestURI(),
+        status.value(),
+        ex.getErrorCode());
+
+    return ResponseEntity.status(status).body(response);
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<ErrorResponse> handleException(Exception ex, HttpServletRequest request) {
+    HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+    String message = messageService.createMessage("common.internal.error", null);
+
+    ErrorResponse response =
+        ErrorResponse.create(status, "INTERNAL_SERVER_ERROR", message, request.getRequestURI());
+    log.error(
+        "Unexpected error: method={}, URI={}, status={}, errorCode={}",
+        request.getMethod(),
+        request.getRequestURI(),
+        500,
+        "INTERNAL_SERVER_ERROR",
+        ex);
+
+    return ResponseEntity.status(status).body(response);
+  }
+
+  private ValidationErrorResponse buildValidationErrorResponse(
+      HttpServletRequest request, List<ValidationFieldError> errors) {
+    HttpStatus status = HttpStatus.BAD_REQUEST;
+    String message = messageService.createMessage("common.validation.failed", null);
+
+    return new ValidationErrorResponse(
+        Instant.now(),
+        status.value(),
+        status.getReasonPhrase(),
+        message,
+        request.getRequestURI(),
+        errors);
+  }
+
+  private ResponseEntity<ErrorResponse> buildErrorResponse(
+      HttpServletRequest request, HttpStatus status, String errorCode, String messageKey) {
+    String message = messageService.createMessage(messageKey, null);
+    ErrorResponse response =
+        ErrorResponse.create(status, errorCode, message, request.getRequestURI());
+    return ResponseEntity.status(status).body(response);
+  }
+
+  private String extractFieldName(ConstraintViolation<?> violation) {
+    String propertyPath = violation.getPropertyPath().toString();
+    int separatorIndex = propertyPath.lastIndexOf('.');
+
+    if (separatorIndex >= 0 && separatorIndex < propertyPath.length() - 1) {
+      return propertyPath.substring(separatorIndex + 1);
     }
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<IamError> handleMissingParameter(
-            HttpServletRequest request) {
-        return buildResponse(new HttpException("common.bad.request", HttpStatus.BAD_REQUEST), request);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<IamError> handleMethodArgumentNotValid(
-            HttpServletRequest request) {
-        return buildResponse(new HttpException("common.validation.failed", HttpStatus.BAD_REQUEST), request);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<IamError> handleConstraintViolation(
-            HttpServletRequest request) {
-        return buildResponse(new HttpException("common.validation.failed", HttpStatus.BAD_REQUEST), request);
-    }
-
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<IamError> handleUnreadableBody(
-            HttpServletRequest request) {
-        return buildResponse(new HttpException("common.json.malformed", HttpStatus.BAD_REQUEST), request);
-    }
-
-    @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
-    public ResponseEntity<IamError> handleUnsupportedMediaType(
-            HttpServletRequest request) {
-        return buildResponse(
-                new HttpException("common.media.type.unsupported", HttpStatus.UNSUPPORTED_MEDIA_TYPE),
-                request);
-    }
-
-    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<IamError> handleMethodNotAllowed(
-            HttpServletRequest request) {
-        return buildResponse(
-                new HttpException("common.method.not.allowed", HttpStatus.METHOD_NOT_ALLOWED),
-                request);
-    }
-
-    @ExceptionHandler(MissingRequestHeaderException.class)
-    public ResponseEntity<IamError> handleMissingHeader(MissingRequestHeaderException ex, HttpServletRequest request) {
-        if ("If-Match".equalsIgnoreCase(ex.getHeaderName())) {
-            return buildResponse(new MissingIfMatchException("common.if.match.missing"), request);
-        }
-        return buildResponse(new HttpException("common.validation.failed", HttpStatus.BAD_REQUEST), request);
-    }
-
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<IamError> handleAccessDenied(
-            HttpServletRequest request) {
-        return buildResponse(new HttpException("user.access.denied", HttpStatus.FORBIDDEN), request);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<IamError> handleUnexpected(Exception ex, HttpServletRequest request) {
-        return buildResponse(
-                new HttpException("common.internal.error", HttpStatus.INTERNAL_SERVER_ERROR),
-                request);
-    }
-
-    private ResponseEntity<IamError> buildResponse(BaseException ex, HttpServletRequest request) {
-        IamError error = createError(ex, request);
-        return ResponseEntity.status(error.getStatus()).contentType(MediaType.APPLICATION_JSON).body(error);
-    }
-
-    protected IamError createError(BaseException ex, HttpServletRequest request) {
-        String message = getLocalizedMessage(ex);
-        String path = request.getRequestURI();
-        return IamError.createError(ex.getStatus(), ex.getErrorCode(), message, path);
-    }
-
-    protected String getLocalizedMessage(BaseException ex) {
-        Locale locale = LocaleContextHolder.getLocale();
-        try {
-            return messageSource.getMessage(ex.getMessageKey(), ex.getMessageArgs(), locale);
-        } catch (NoSuchMessageException e) {
-            if (ex.getMessage() != null) {
-                return ex.getMessage();
-            }
-            return ex.getMessageKey();
-        }
-    }
+    return propertyPath;
+  }
 }

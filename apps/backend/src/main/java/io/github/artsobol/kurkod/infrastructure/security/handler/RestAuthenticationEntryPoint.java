@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.infrastructure.security.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.artsobol.kurkod.infrastructure.error.dto.IamError;
+import io.github.artsobol.kurkod.infrastructure.error.dto.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -15,38 +14,35 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.RequestContextUtils;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
 @RequiredArgsConstructor
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final ObjectMapper objectMapper;
-    private final MessageSource messageSource;
+  private final ObjectMapper objectMapper;
+  private final MessageSource messageSource;
 
-    @Override
-    public void commence(HttpServletRequest request,
-                         HttpServletResponse response,
-                         AuthenticationException authException) throws IOException {
+  @Override
+  public void commence(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      AuthenticationException authException)
+      throws IOException {
 
-        Locale locale = RequestContextUtils.getLocale(request);
+    Locale locale = RequestContextUtils.getLocale(request);
 
-        String message = messageSource.getMessage(
-                "auth.authentication.required",
-                null,
-                "Authentication required",
-                locale
-                                                 );
+    String message =
+        messageSource.getMessage(
+            "auth.authentication.required", null, "Authentication required", locale);
 
-        IamError body = IamError.createError(
-                HttpStatus.UNAUTHORIZED,
-                "AUTH-401",
-                message,
-                request.getRequestURI()
-                                            );
+    ErrorResponse body =
+        ErrorResponse.create(
+            HttpStatus.UNAUTHORIZED, "AUTH-401", message, request.getRequestURI());
 
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.getWriter().write(objectMapper.writeValueAsString(body));
-    }
+    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+    response.getWriter().write(objectMapper.writeValueAsString(body));
+  }
 }
