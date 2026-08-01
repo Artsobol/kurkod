@@ -1,0 +1,48 @@
+databaseChangeLog:
+  - changeSet:
+      id: 030-fix-chicken-movement-timestamp
+      author: codex
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: true
+            sql: |
+              DROP VIEW current_chicken_position CASCADE;
+
+              ALTER TABLE chicken_movement
+              ALTER COLUMN moved_at TYPE timestamp with time zone
+              USING moved_at::timestamp AT TIME ZONE 'UTC';
+
+              CREATE VIEW current_chicken_position AS
+              WITH last_move AS (
+                SELECT chicken_movement.*
+                FROM chicken_movement
+                JOIN (
+                  SELECT chicken_id, MAX(moved_at) AS max_moved_at
+                  FROM chicken_movement
+                  GROUP BY chicken_id
+                ) t ON t.chicken_id = chicken_movement.chicken_id
+                   AND t.max_moved_at = chicken_movement.moved_at
+              )
+              SELECT
+                last_move.chicken_id,
+                last_move.to_cage_id AS cage_id,
+                cage.row_id,
+                rows.workshop_id
+              FROM last_move
+              JOIN cage ON cage.id = last_move.to_cage_id
+              JOIN rows ON rows.id = cage.row_id
+              JOIN workshop ON workshop.id = rows.workshop_id;
+
+              CREATE VIEW report_chickens_by_workshop_and_breed AS
+              SELECT
+                w.id AS workshop_id,
+                w.workshop_number AS workshop_number,
+                b.id AS breed_id,
+                b.name AS breed_name,
+                COUNT(c.id) AS chickens_count
+              FROM current_chicken_position ccp
+              JOIN chicken c ON c.id = ccp.chicken_id
+              JOIN workshop w ON w.id = ccp.workshop_id
+              JOIN breed b ON b.id = c.breed_id
+              GROUP BY w.id, w.workshop_number, b.id, b.name;

@@ -55,3 +55,7 @@ databaseChangeLog:
       file: db/changelog/changeset/1.0/027-create-breed-diet.yaml
   - include:
       file: db/changelog/changeset/1.0/028-create-breed-egg-diff-report.yaml
+  - include:
+      file: db/changelog/changeset/1.0/029-migrate-user-auth-schema.yaml
+  - include:
+      file: db/changelog/changeset/1.0/030-fix-chicken-movement-timestamp.yaml

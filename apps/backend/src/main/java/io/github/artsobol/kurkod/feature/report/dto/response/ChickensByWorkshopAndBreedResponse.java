@@ -1,4 +1,4 @@
 package io.github.artsobol.kurkod.feature.report.dto.response;
 
 public record ChickensByWorkshopAndBreedResponse(
-    Long workshopId, Long workshopNumber, Long breedId, String breedName, Long chickensCount) {}
+    Long workshopId, Integer workshopNumber, Long breedId, String breedName, Long chickensCount) {}

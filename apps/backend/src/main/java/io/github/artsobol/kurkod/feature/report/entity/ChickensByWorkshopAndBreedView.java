@@ -17,7 +17,7 @@ public class ChickensByWorkshopAndBreedView {
   private Long workshopId;
 
   @Column(name = "workshop_number")
-  private Long workshopNumber;
+  private Integer workshopNumber;
 
   @Column(name = "breed_id")
   private Long breedId;
