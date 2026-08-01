@@ -28,7 +28,7 @@ public class AdminUserController {
 
             @Valid @RequestBody ChangeRoleRequest request,
 
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         UserResponse response = userService.changeUserRole(userId, request, expected);
 
@@ -42,7 +42,7 @@ public class AdminUserController {
     public ResponseEntity<UserResponse> activateUser(
             @PathVariable(name = "id") Long userId,
 
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         UserResponse response = userService.activateUser(userId, expected);
 
@@ -56,7 +56,7 @@ public class AdminUserController {
     public ResponseEntity<UserResponse> deactivateUser(
             @PathVariable(name = "id") Long userId,
 
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         UserResponse response = userService.deactivateUser(userId, expected);
 

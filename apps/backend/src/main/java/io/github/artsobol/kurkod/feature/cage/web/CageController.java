@@ -55,7 +55,7 @@ public class CageController {
       @PathVariable Long rowId,
       @PathVariable Integer cageNumber,
       @RequestBody @Valid CageUpdateRequest cageUpdateRequest,
-      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
     CageResponse response = cageService.update(rowId, cageNumber, cageUpdateRequest, expected);
@@ -69,7 +69,7 @@ public class CageController {
   public ResponseEntity<Void> delete(
       @PathVariable Long rowId,
       @PathVariable Integer cageNumber,
-      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
     cageService.delete(rowId, cageNumber, expected);

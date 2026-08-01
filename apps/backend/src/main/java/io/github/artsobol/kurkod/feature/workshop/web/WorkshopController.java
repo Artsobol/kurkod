@@ -57,7 +57,7 @@ public class WorkshopController {
     public ResponseEntity<WorkshopResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid WorkshopUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         WorkshopResponse response = workshopService.update(id, request, expected);
@@ -70,7 +70,7 @@ public class WorkshopController {
     @Operation(summary = "Delete workshop")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         workshopService.delete(id, expected);

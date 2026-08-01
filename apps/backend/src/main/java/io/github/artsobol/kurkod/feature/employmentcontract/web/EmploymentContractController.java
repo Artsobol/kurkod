@@ -47,7 +47,7 @@ public class EmploymentContractController {
   public ResponseEntity<EmploymentContractResponse> update(
       @PathVariable Long workerId,
       @RequestBody @Valid EmploymentContractUpdateRequest request,
-      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
     EmploymentContractResponse response =
@@ -58,7 +58,8 @@ public class EmploymentContractController {
   @Operation(summary = "Delete employment contract")
   @DeleteMapping
   public ResponseEntity<Void> delete(
-      @PathVariable Long workerId, @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+      @PathVariable Long workerId,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
     employmentContractService.delete(workerId, expected);

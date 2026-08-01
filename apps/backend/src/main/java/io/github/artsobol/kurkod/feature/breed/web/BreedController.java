@@ -66,7 +66,7 @@ public class BreedController {
   public ResponseEntity<BreedResponse> updateById(
       @PathVariable Long breedId,
       @Valid @RequestBody BreedUpdateRequest request,
-      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
     BreedResponse response = breedService.update(breedId, request, expected);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
@@ -75,7 +75,8 @@ public class BreedController {
   @Operation(summary = "Delete breed")
   @DeleteMapping("/{breedId}")
   public ResponseEntity<Void> deleteById(
-      @PathVariable Long breedId, @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+      @PathVariable Long breedId,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
     breedService.delete(breedId, expected);
     return ResponseEntity.noContent().build();

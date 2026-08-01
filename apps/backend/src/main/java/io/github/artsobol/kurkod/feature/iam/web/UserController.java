@@ -62,7 +62,7 @@ public class UserController {
     public ResponseEntity<UserResponse> updatePartiallyUser(
             @PathVariable Long userId,
             @RequestBody @Valid UserUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         UserResponse response = userService.update(userId, request, expected);
@@ -74,7 +74,7 @@ public class UserController {
     @DeleteMapping("/{userId}")
     public ResponseEntity<Void> deleteById(
             @PathVariable Long userId,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         userService.deleteById(userId, expected);

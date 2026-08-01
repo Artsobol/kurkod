@@ -57,7 +57,7 @@ public class StaffController {
     public ResponseEntity<StaffResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody StaffUpdateRequest staffUpdateRequest,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         StaffResponse response = staffService.update(id, staffUpdateRequest, expected);
@@ -70,7 +70,7 @@ public class StaffController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         staffService.delete(id, expected);

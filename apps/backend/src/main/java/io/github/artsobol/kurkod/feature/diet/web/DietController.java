@@ -55,7 +55,7 @@ public class DietController {
     public ResponseEntity<DietResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid DietUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         DietResponse response = dietService.update(id, request, expected);
@@ -68,7 +68,7 @@ public class DietController {
     @Operation(summary = "Delete diet")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         dietService.delete(id, expected);

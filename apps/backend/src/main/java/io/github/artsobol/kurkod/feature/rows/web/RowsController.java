@@ -62,7 +62,7 @@ public class RowsController {
             @PathVariable(name = "rowNumber")
             Integer rowsNumber,
             @RequestBody @Valid RowsUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         RowsResponse response = rowsService.update(workshopId, rowsNumber, request, expected);
@@ -77,7 +77,7 @@ public class RowsController {
             @PathVariable Long workshopId,
             @PathVariable(name = "rowNumber")
             Integer rowsNumber,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         rowsService.delete(workshopId, rowsNumber, expected);

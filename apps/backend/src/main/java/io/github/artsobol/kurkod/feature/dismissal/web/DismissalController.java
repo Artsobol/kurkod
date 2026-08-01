@@ -71,7 +71,7 @@ public class DismissalController {
   public ResponseEntity<DismissalResponse> update(
       @PathVariable Long workerId,
       @RequestBody @Valid DismissalUpdateRequest request,
-      @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
     DismissalResponse response = dismissalService.update(workerId, request, expected);

@@ -74,7 +74,7 @@ public class ChickenController {
     public ResponseEntity<ChickenResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody ChickenUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         ChickenResponse response = chickenService.update(id, request, expected);
         return ResponseEntity.ok()
@@ -86,7 +86,7 @@ public class ChickenController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         chickenService.delete(id, expected);
         return ResponseEntity.noContent().build();

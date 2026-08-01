@@ -48,7 +48,7 @@ public class PassportController {
     public ResponseEntity<PassportResponse> update(
             @PathVariable(name = "workerId") Long id,
             @RequestBody @Valid PassportUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         PassportResponse response = passportService.update(id, request, expected);
@@ -61,7 +61,7 @@ public class PassportController {
     @DeleteMapping
     public ResponseEntity<Void> delete(
             @PathVariable(name = "workerId") Long id,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         passportService.delete(id, expected);

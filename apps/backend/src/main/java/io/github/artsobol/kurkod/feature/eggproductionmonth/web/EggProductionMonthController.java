@@ -74,7 +74,7 @@ public class EggProductionMonthController {
             @PathVariable Integer year,
             @PathVariable Integer month,
             @Valid @RequestBody EggProductionMonthUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         EggProductionMonthResponse response = eggProductionMonthService.update(chickenId, month, year, request, expected);
@@ -89,7 +89,7 @@ public class EggProductionMonthController {
             @PathVariable Long chickenId,
             @PathVariable Integer year,
             @PathVariable Integer month,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
         long expected = EtagUtils.parseIfMatch(ifMatch);
         eggProductionMonthService.delete(chickenId, month, year, expected);

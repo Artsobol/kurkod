@@ -74,7 +74,7 @@ public class WorkerController {
     public ResponseEntity<WorkerResponse> update(
             @PathVariable Long id,
             @RequestBody @Valid WorkerUpdateRequest request,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         WorkerResponse response = workerService.update(id, request, expected);
         return ResponseEntity.ok()
@@ -86,7 +86,7 @@ public class WorkerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            @RequestHeader(HttpHeaders.IF_MATCH) String ifMatch) {
+            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
         long expected = EtagUtils.parseIfMatch(ifMatch);
         workerService.delete(id, expected);
         return ResponseEntity.noContent().build();
