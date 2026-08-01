@@ -156,8 +156,10 @@ set SPRING_PROFILES_ACTIVE=dev
 set DB_URL=jdbc:postgresql://localhost:5432/kurkod_db
 set DB_USER=kurkod
 set DB_PASSWORD=kurkod
-set JWT_SECRET=your-secret-key-change-in-production-min-256-bits
-set JWT_LIFETIME=PT1H
+set JWT_SECRET=<base64-encoded-key-min-256-bits>
+set JWT_LIFETIME=PT15M
+set REFRESH_TTL=PT720H
+set REFRESH_PEPPER=<random-secret>
 set JPA_SHOW_SQL=false
 set LOG_LEVEL_APP=INFO
 ```
@@ -168,8 +170,10 @@ export SPRING_PROFILES_ACTIVE=dev
 export DB_URL=jdbc:postgresql://localhost:5432/kurkod_db
 export DB_USER=kurkod
 export DB_PASSWORD=kurkod
-export JWT_SECRET=your-secret-key-change-in-production-min-256-bits
-export JWT_LIFETIME=PT1H
+export JWT_SECRET=<base64-encoded-key-min-256-bits>
+export JWT_LIFETIME=PT15M
+export REFRESH_TTL=PT720H
+export REFRESH_PEPPER=<random-secret>
 export JPA_SHOW_SQL=false
 export LOG_LEVEL_APP=INFO
 ```
@@ -300,8 +304,10 @@ feature/
 | `DB_URL` | URL базы данных | - |
 | `DB_USER` | Пользователь БД | - |
 | `DB_PASSWORD` | Пароль БД | - |
-| `JWT_SECRET` | Секретный ключ для JWT | - |
-| `JWT_LIFETIME` | Время жизни access токена | `PT1H` (1 час) |
+| `JWT_SECRET` | Base64-ключ подписи JWT (минимум 256 бит после декодирования) | - |
+| `JWT_LIFETIME` | Время жизни access-токена | `PT15M` |
+| `REFRESH_TTL` | Время жизни refresh-сессии | `PT720H` |
+| `REFRESH_PEPPER` | Секрет HMAC для хеширования refresh-токенов | - |
 | `JPA_SHOW_SQL` | Показывать SQL запросы | `true` |
 | `LOG_LEVEL_APP` | Уровень логирования приложения | `TRACE` |
 | `LOG_LEVEL_WEB` | Уровень логирования web | `DEBUG` |
@@ -317,7 +323,7 @@ feature/
 
  **Безопасность**: Никогда не храните секреты и пароли в репозитории. Используйте переменные окружения или секретные менеджеры.
 
- **JWT_SECRET**: Должен быть минимум 256 бит (32 символа) для безопасности. В продакшне используйте криптографически стойкий ключ.
+ **JWT_SECRET**: Должен быть Base64-строкой, содержащей минимум 256 бит. В продакшне используйте криптографически стойкий ключ.
 
 ## База данных и миграции
 
@@ -354,6 +360,8 @@ feature/
 - `017-create-current-chicken-position-view.yaml` - представление текущих позиций
 - `018-create-report-chicken-by-workshop-and-breed-view.yaml` - отчетное представление
 - `019-create-refresh-token.yaml` - refresh токены
+- `029-migrate-user-auth-schema.yaml` - единая роль пользователя и безопасные refresh-сессии
+- `030-fix-chicken-movement-timestamp.yaml` - синхронизация типа времени перемещения с entity
 - `020-create-report-breed-by-avg-diff-view.yaml` - отчет по породам
 - `021-create-report-chicken-eggs-stats-view.yaml` - статистика яиц
 - `022-add-cage-field-by-chicken.yaml` - добавление поля клетки
@@ -445,7 +453,14 @@ Swagger UI позволяет:
 
 3. **Обновление токена**:
    ```http
-   GET /api/v1/auth/refresh/token?token=<refreshToken>
+   POST /api/v1/auth/refresh
+   ```
+
+   Refresh-токен передаётся автоматически в HttpOnly-cookie и ротируется при каждом обновлении.
+
+4. **Выход**:
+   ```http
+   POST /api/v1/auth/logout
    ```
 
 ### Использование токена
@@ -458,9 +473,10 @@ Authorization: Bearer <access-token>
 ### Роли
 
 Система поддерживает следующие роли:
-- `ROLE_USER` - обычный пользователь
-- `ROLE_DIRECTOR` - директор (доступ к отчетам)
-- `ROLE_SUPER_ADMIN` - супер администратор
+- `USER` - обычный пользователь
+- `DIRECTOR` - директор (доступ к отчётам)
+- `ADMIN` - администратор
+- `SUPER_ADMIN` - супер-администратор
 
 ### Оптимистичная блокировка
 

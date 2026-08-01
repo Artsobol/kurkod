@@ -13,7 +13,7 @@
 
 **POST**: `/api/v1/auth/login`
 
-Назначение: аутентификация по email и паролю. Access-токен возвращается в теле ответа.
+Назначение: аутентификация по email и паролю. Access-токен возвращается в теле, refresh-токен — также в HttpOnly-cookie.
 
 Тело запроса:
 ```json
@@ -26,77 +26,43 @@
 Ответ:
 ```json
 {
-  "message": "",
-  "payload": {
-    "id": 5,
+  "accessToken": "<access-token>",
+  "refreshToken": "<refresh-token>",
+  "user": {
+    "userId": 5,
     "username": "john",
-    "email": "user@example.com",
-    "registrationStatus": "ACTIVE",
-    "lastLogin": "2024-01-01T12:34:56",
-    "token": "<access-token>",
-    "refreshToken": "<refresh-token>",
-    "roles": [ { "id": 1, "name": "ROLE_USER" } ]
-  },
-  "success": true
+    "role": "USER"
+  }
 }
 ```
 
-**GET**: `/api/v1/auth/refresh/token?token=<refreshToken>`
+**POST**: `/api/v1/auth/refresh`
 
-Назначение: получить новый access-токен по refresh-токену.
+Назначение: ротировать refresh-токен и получить новую пару токенов. Основной способ передачи refresh-токена — HttpOnly-cookie; для API-клиентов допускается тело `{"refreshToken":"..."}`.
 
-Параметры:
-- `token` (query) - refresh токен
+Ответ имеет тот же формат, что и `/auth/login`; cookie обновляется новым refresh-токеном.
 
-Ответ:
-```json
-{
-  "message": "",
-  "payload": {
-    "id": 5,
-    "username": "john",
-    "email": "user@example.com",
-    "registrationStatus": "ACTIVE",
-    "lastLogin": "2024-01-01T12:34:56",
-    "token": "<new-access-token>",
-    "refreshToken": "<refresh-token>",
-    "roles": [ { "id": 1, "name": "ROLE_USER" } ]
-  },
-  "success": true
-}
-```
+**POST**: `/api/v1/auth/logout`
+
+Назначение: отозвать текущую refresh-сессию и удалить cookie.
+
+Ответ: `204 No Content`.
 
 **POST**: `/api/v1/auth/register`
 
-Назначение: регистрация нового пользователя и немедленная аутентификация; токены возвращаются в теле ответа.
+Назначение: регистрация нового пользователя и немедленная аутентификация.
 
 Тело запроса:
 ```json
 {
   "username": "john",
   "email": "user@example.com",
-  "password": "secret",
-  "confirmPassword": "secret"
+  "password": "Password1!",
+  "confirmPassword": "Password1!"
 }
 ```
 
-Ответ:
-```json
-{
-  "message": "",
-  "payload": {
-    "id": 6,
-    "username": "john",
-    "email": "user@example.com",
-    "registrationStatus": "ACTIVE",
-    "lastLogin": "2024-01-01T12:34:56",
-    "token": "<access-token>",
-    "refreshToken": "<refresh-token>",
-    "roles": [ { "id": 1, "name": "ROLE_USER" } ]
-  },
-  "success": true
-}
-```
+Ответ имеет тот же формат, что и `/auth/login`, со статусом `201 Created`.
 
 ---
 
