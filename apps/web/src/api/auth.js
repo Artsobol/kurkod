@@ -3,11 +3,8 @@ import http, { setTokens, clearTokens } from "./http.js";
 export const registerUser = async (data) => {
   const res = await http.post("/auth/register", data);
 
-  const payload = res.data.payload;
-  setTokens({
-    token: payload.token,
-    refreshToken: payload.refreshToken
-  });
+  const payload = res.data;
+  setTokens({ token: payload.accessToken });
 
   return payload;
 };
@@ -15,19 +12,20 @@ export const registerUser = async (data) => {
 export const loginUser = async (data) => {
   const res = await http.post("/auth/login", data);
 
-  const payload = res.data.payload;
-  setTokens({
-    token: payload.token,
-    refreshToken: payload.refreshToken
-  });
+  const payload = res.data;
+  setTokens({ token: payload.accessToken });
 
   return payload;
 };
 
-export const refreshToken = (token) => {
-  return http.get(`/auth/refresh/token?token=${token}`);
+export const refreshToken = () => {
+  return http.post("/auth/refresh");
 };
 
-export const logoutUser = () => {
-  clearTokens();
+export const logoutUser = async () => {
+  try {
+    await http.post("/auth/logout");
+  } finally {
+    clearTokens();
+  }
 };

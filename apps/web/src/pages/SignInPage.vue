@@ -91,8 +91,7 @@ const login = async () => {
     const res = await loginUser({email: email.value, password: password.value});
     console.log("LOGIN RESPONSE:", res);
 
-    localStorage.setItem("refreshToken", res.refreshToken);
-    ui.accessToken = res.token;
+    ui.accessToken = res.accessToken;
 
     successMessage.value = "Успешный вход!";
     setTimeout(() => window.location.href = "/", 500);

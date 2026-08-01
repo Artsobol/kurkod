@@ -2,27 +2,26 @@ import axios from "axios";
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
+});
+
+const refreshHttp = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  withCredentials: true,
 });
 
 let accessToken = null;
 
-const savedToken = localStorage.getItem("token");
-if (savedToken) {
-  accessToken = savedToken;
-}
-
-export function setTokens({ token, refreshToken }) {
+export function setTokens({ token }) {
   accessToken = token;
-  localStorage.setItem("refreshToken", refreshToken);
-  localStorage.setItem("token", token);
 }
 
 export function clearTokens() {
   accessToken = null;
-  localStorage.removeItem("refreshToken");
   localStorage.removeItem("token");
-  sessionStorage.removeItem("refreshToken");
+  localStorage.removeItem("refreshToken");
   sessionStorage.removeItem("token");
+  sessionStorage.removeItem("refreshToken");
 }
 
 http.interceptors.request.use(cfg => {
@@ -39,42 +38,40 @@ http.interceptors.response.use(
   res => res,
   async err => {
     const original = err.config;
+    const isAuthRequest = ["/auth/login", "/auth/register", "/auth/refresh"]
+      .some(path => original?.url?.includes(path));
 
-    if (err.response?.status !== 401 || original._retry) {
-      return Promise.reject(err);
-    }
-
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (!refreshToken) {
-      clearTokens();
+    if (err.response?.status !== 401 || original._retry || isAuthRequest) {
       return Promise.reject(err);
     }
 
     original._retry = true;
 
     if (isRefreshing) {
-      return new Promise(resolve => {
-        queue.push(() => resolve(http(original)));
-      });
+      return new Promise((resolve, reject) => queue.push({resolve, reject}))
+        .then(token => {
+          original.headers.Authorization = `Bearer ${token}`;
+          return http(original);
+        });
     }
 
     isRefreshing = true;
 
     try {
-      const res = await http.get(`/auth/refresh/token?token=${refreshToken}`);
+      const res = await refreshHttp.post("/auth/refresh");
 
-      const newTokens = res.data.payload;
-      setTokens({
-        token: newTokens.token,
-        refreshToken: newTokens.refreshToken
-      });
+      const token = res.data.accessToken;
+      setTokens({token});
 
-      queue.forEach(cb => cb());
+      queue.forEach(item => item.resolve(token));
       queue = [];
 
+      original.headers.Authorization = `Bearer ${token}`;
       return http(original);
 
     } catch (e) {
+      queue.forEach(item => item.reject(e));
+      queue = [];
       clearTokens();
 
       if (!window.location.pathname.includes('/sign')) {
