@@ -19,3 +19,12 @@ logging:
     io.github.artsobol: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
+
+
+app:
+  security-config:
+    allowed-origins:
+      - http://localhost:*
+      - http://127.0.0.1:*
+    max-age:
+      3600
