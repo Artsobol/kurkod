@@ -1,12 +1,12 @@
 package io.github.artsobol.kurkod.feature.worker.web;
 
-import static io.github.artsobol.kurkod.infrastructure.util.LocationUtils.buildLocation;
+import static io.github.artsobol.kurkod.infrastructure.utils.LocationUtils.buildLocation;
 
 import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerCreateRequest;
 import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerUpdateRequest;
 import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 import io.github.artsobol.kurkod.feature.worker.service.WorkerService;
-import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.employmentcontract.web;
 
-import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
-import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.LocationUtils;
 import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.EmploymentContractResponse;
 import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractUpdateRequest;
 import io.github.artsobol.kurkod.feature.employmentcontract.dto.request.EmploymentContractCreateRequest;

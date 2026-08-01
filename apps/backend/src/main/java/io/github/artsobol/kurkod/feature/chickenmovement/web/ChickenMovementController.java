@@ -3,7 +3,7 @@ package io.github.artsobol.kurkod.feature.chickenmovement.web;
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.request.ChickenMovementCreateRequest;
 import io.github.artsobol.kurkod.feature.chickenmovement.dto.response.ChickenMovementResponse;
 import io.github.artsobol.kurkod.feature.chickenmovement.service.ChickenMovementService;
-import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.LocationUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

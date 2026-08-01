@@ -4,8 +4,8 @@ import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProdu
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.request.EggProductionMonthUpdateRequest;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.dto.response.EggProductionMonthResponse;
 import io.github.artsobol.kurkod.feature.eggproductionmonth.service.EggProductionMonthService;
-import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
-import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.LocationUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

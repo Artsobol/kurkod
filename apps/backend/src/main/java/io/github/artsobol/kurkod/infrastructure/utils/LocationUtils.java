@@ -1,4 +1,4 @@
-package io.github.artsobol.kurkod.infrastructure.util;
+package io.github.artsobol.kurkod.infrastructure.utils;
 
 import java.net.URI;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

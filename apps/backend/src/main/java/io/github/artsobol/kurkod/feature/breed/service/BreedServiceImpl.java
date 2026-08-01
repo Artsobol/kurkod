@@ -4,7 +4,7 @@ import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
 import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
 
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+import static io.github.artsobol.kurkod.infrastructure.utils.VersionUtils.checkVersion;
 
 import io.github.artsobol.kurkod.feature.breed.mapper.BreedMapper;
 import io.github.artsobol.kurkod.feature.breed.dto.response.BreedResponse;

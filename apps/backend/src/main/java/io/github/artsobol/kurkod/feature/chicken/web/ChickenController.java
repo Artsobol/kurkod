@@ -4,8 +4,8 @@ import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateReques
 import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
 import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
 import io.github.artsobol.kurkod.feature.chicken.service.ChickenService;
-import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
-import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.LocationUtils;
 import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

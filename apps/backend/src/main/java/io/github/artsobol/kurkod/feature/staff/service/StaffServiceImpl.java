@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.staff.service;
 
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+import static io.github.artsobol.kurkod.infrastructure.utils.VersionUtils.checkVersion;
 
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.staff.dto.request.StaffCreateRequest;

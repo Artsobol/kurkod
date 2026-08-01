@@ -7,7 +7,6 @@ import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerUpdateRequest;
 import io.github.artsobol.kurkod.feature.worker.dto.request.WorkerCreateRequest;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerRepository;
-import io.github.artsobol.kurkod.feature.worker.service.WorkerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+import static io.github.artsobol.kurkod.infrastructure.utils.VersionUtils.checkVersion;
 
 @Service
 @Transactional(readOnly = true)

@@ -1,12 +1,12 @@
 package io.github.artsobol.kurkod.feature.workshop.web;
 
-import static io.github.artsobol.kurkod.infrastructure.util.LocationUtils.buildLocation;
+import static io.github.artsobol.kurkod.infrastructure.utils.LocationUtils.buildLocation;
 
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequest;
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
 import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
 import io.github.artsobol.kurkod.feature.workshop.service.WorkshopService;
-import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

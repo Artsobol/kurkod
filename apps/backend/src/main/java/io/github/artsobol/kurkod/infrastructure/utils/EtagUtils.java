@@ -1,4 +1,4 @@
-package io.github.artsobol.kurkod.infrastructure.util;
+package io.github.artsobol.kurkod.infrastructure.utils;
 
 import io.github.artsobol.kurkod.exception.http.InvalidIfMatchException;
 import io.github.artsobol.kurkod.exception.http.MissingIfMatchException;
