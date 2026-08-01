@@ -21,7 +21,10 @@ services:
 
       SPRING_PROFILES_ACTIVE: dev
 
-      JWT_SECRET: Lfdswfw32424erwdsdu8fe8wer25r32r7duwesfuet48t245832re78usfy8ret4FAEFUAJHFEehrwery23475r3FYEDAFGYerwgr3252ry7uwe
+      JWT_SECRET: ${JWT_SECRET:-ZGV2LW9ubHkta3Vya29kLWp3dC1zZWNyZXQta2V5LTMyaXRlcw==}
+      JWT_LIFETIME: ${JWT_LIFETIME:-PT15M}
+      REFRESH_TTL: ${REFRESH_TTL:-PT720H}
+      REFRESH_PEPPER: ${REFRESH_PEPPER:-dev-only-refresh-token-pepper-change-me}
       JPA_SHOW_SQL: "false"
       LOG_LEVEL_APP: INFO
       LOG_LEVEL_WEB: INFO

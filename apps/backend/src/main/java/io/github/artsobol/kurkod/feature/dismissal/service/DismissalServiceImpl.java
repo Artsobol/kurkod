@@ -1,6 +1,6 @@
 package io.github.artsobol.kurkod.feature.dismissal.service;
 
-import static io.github.artsobol.kurkod.infrastructure.util.VersionUtils.checkVersion;
+import static io.github.artsobol.kurkod.infrastructure.utils.VersionUtils.checkVersion;
 
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
@@ -11,7 +11,6 @@ import io.github.artsobol.kurkod.feature.dismissal.mapper.DismissalMapper;
 import io.github.artsobol.kurkod.feature.dismissal.repository.DismissalRepository;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerRepository;
-import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,13 +25,7 @@ public class DismissalServiceImpl implements DismissalService {
 
     private final DismissalRepository dismissalRepository;
     private final DismissalMapper dismissalMapper;
-    private final SecurityContextFacade securityContextFacade;
     private final WorkerRepository workerRepository;
-
-
-    private Long getCurrentUserId() {
-        return securityContextFacade.getCurrentUserId();
-    }
 
     @Override
     public DismissalResponse getByWorkerAndDismissed(Long workerId, Long dismissedId) {
@@ -57,10 +50,10 @@ public class DismissalServiceImpl implements DismissalService {
 
     @Override
     @Transactional
-    public DismissalResponse create(DismissalCreateRequest request) {
+    public DismissalResponse create(DismissalCreateRequest request, Long currentUserId) {
         Dismissal dismissal = dismissalMapper.toEntity(request);
         Worker worker = getWorkerById(request.getWorkerId());
-        Worker whoDismiss = getWorkerById(getCurrentUserId());
+        Worker whoDismiss = getWorkerById(currentUserId);
         dismissal.setWorker(worker);
         dismissal.setWhoDismiss(whoDismiss);
         dismissalRepository.save(dismissal);

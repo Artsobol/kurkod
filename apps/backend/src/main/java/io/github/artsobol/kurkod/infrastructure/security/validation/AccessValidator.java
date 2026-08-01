@@ -2,7 +2,7 @@ package io.github.artsobol.kurkod.infrastructure.security.validation;
 
 import io.github.artsobol.kurkod.exception.business.InvalidPasswordException;
 import io.github.artsobol.kurkod.exception.http.DataExistException;
-import io.github.artsobol.kurkod.feature.iam.repository.UserRepository;
+import io.github.artsobol.kurkod.feature.user.repository.UserRepository;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

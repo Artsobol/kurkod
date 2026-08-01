@@ -22,9 +22,25 @@ logging:
 
 
 app:
-  security-config:
-    allowed-origins:
-      - http://localhost:*
-      - http://127.0.0.1:*
-    max-age:
-      3600
+  security:
+    cookie:
+      secure: false
+      max-age: ${REFRESH_TTL:PT720H}
+      same-site: Lax
+      cookie-name: refresh_token
+      path: /api/v1/auth
+    jwt:
+      secret: ${JWT_SECRET:ZGV2LW9ubHkta3Vya29kLWp3dC1zZWNyZXQta2V5LTMyaXRlcw==}
+      access-token-expiration: PT15M
+    refresh-token:
+      ttl: ${REFRESH_TTL:PT720H}
+      pepper: ${REFRESH_PEPPER:dev-only-refresh-token-pepper-change-me}
+      length: 64
+    session:
+      max-sessions: 5
+    security-config:
+      allowed-origins:
+        - http://localhost:*
+        - http://127.0.0.1:*
+      max-age:
+        3600

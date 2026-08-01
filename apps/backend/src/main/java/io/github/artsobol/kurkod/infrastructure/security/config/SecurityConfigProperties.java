@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
 
-@ConfigurationProperties(prefix = "app.security-config")
+@ConfigurationProperties(prefix = "app.security.security-config")
 public record SecurityConfigProperties(
         List<String> allowedOrigins,
         Long maxAge

@@ -13,6 +13,6 @@ public interface DismissalService {
 
     List<DismissalResponse> getAllByDismissed(Long dismissedId);
 
-    DismissalResponse create(DismissalCreateRequest request);
+    DismissalResponse create(DismissalCreateRequest request, Long currentUserId);
     DismissalResponse update(Long workerId, DismissalUpdateRequest request, Long version);
 }

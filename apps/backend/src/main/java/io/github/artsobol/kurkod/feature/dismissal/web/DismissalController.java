@@ -1,8 +1,8 @@
 package io.github.artsobol.kurkod.feature.dismissal.web;
 
-import io.github.artsobol.kurkod.infrastructure.util.EtagUtils;
-import io.github.artsobol.kurkod.infrastructure.util.LocationUtils;
-import io.github.artsobol.kurkod.infrastructure.security.facade.SecurityContextFacade;
+import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
+import io.github.artsobol.kurkod.infrastructure.utils.LocationUtils;
+import io.github.artsobol.kurkod.infrastructure.security.user.UserPrincipal;
 import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalResponse;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
 import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,6 @@ import java.util.List;
 public class DismissalController {
 
   private final DismissalService dismissalService;
-  private final SecurityContextFacade securityContextFacade;
 
   @GetMapping("/workers/{workerId}/dismissed/{dismissedId}")
   @Operation(summary = "Get dismissal by worker and dismissed")
@@ -54,14 +54,15 @@ public class DismissalController {
   @PostMapping
   @Operation(summary = "Create dismissal")
   public ResponseEntity<DismissalResponse> create(
-      @RequestBody @Valid DismissalCreateRequest request) {
+      @RequestBody @Valid DismissalCreateRequest request,
+      @AuthenticationPrincipal UserPrincipal principal) {
 
-    DismissalResponse response = dismissalService.create(request);
+    DismissalResponse response = dismissalService.create(request, principal.userId());
     return ResponseEntity.created(
             LocationUtils.buildLocation(
                 "/dismissals/workers/{workerId}/dismissed/{dismissedId}",
                 request.getWorkerId(),
-                securityContextFacade.getCurrentUserId()))
+                principal.userId()))
         .eTag(EtagUtils.toEtag(response.version()))
         .body(response);
   }
