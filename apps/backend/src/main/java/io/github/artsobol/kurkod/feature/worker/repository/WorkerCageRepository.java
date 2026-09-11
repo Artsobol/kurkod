@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.worker.repository;
 
 import io.github.artsobol.kurkod.feature.worker.entity.WorkerCage;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WorkerCageRepository extends JpaRepository<WorkerCage, Long> {
 

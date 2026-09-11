@@ -1,22 +1,21 @@
 package io.github.artsobol.kurkod.feature.dismissal.web;
 
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
+import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalResponse;
+import io.github.artsobol.kurkod.feature.dismissal.service.DismissalService;
+import io.github.artsobol.kurkod.infrastructure.security.user.UserPrincipal;
 import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.utils.LocationUtils;
-import io.github.artsobol.kurkod.infrastructure.security.user.UserPrincipal;
-import io.github.artsobol.kurkod.feature.dismissal.dto.response.DismissalResponse;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalUpdateRequest;
-import io.github.artsobol.kurkod.feature.dismissal.dto.request.DismissalCreateRequest;
-import io.github.artsobol.kurkod.feature.dismissal.service.DismissalService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/dismissals")

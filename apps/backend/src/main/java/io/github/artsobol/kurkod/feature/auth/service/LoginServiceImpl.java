@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.auth.service;
 
-import io.github.artsobol.kurkod.exception.security.AuthenticationException;
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
+import io.github.artsobol.kurkod.exception.security.AuthenticationException;
 import io.github.artsobol.kurkod.feature.auth.dto.request.LoginRequest;
 import io.github.artsobol.kurkod.feature.auth.dto.request.SessionMetadata;
 import io.github.artsobol.kurkod.feature.auth.dto.response.AuthResponse;
@@ -37,10 +37,6 @@ public class LoginServiceImpl implements LoginService {
     UUID sessionId = UUID.randomUUID();
     return authResponseFactory.create(
         new CreateRefreshTokenRequest(
-            user,
-            sessionId,
-            metadata.ipAddress(),
-            metadata.userAgent(),
-            metadata.deviceName()));
+            user, sessionId, metadata.ipAddress(), metadata.userAgent(), metadata.deviceName()));
   }
 }

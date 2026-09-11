@@ -58,22 +58,21 @@ public class AuthController {
   @Operation(summary = "Refresh access token")
   @PostMapping("/refresh")
   public ResponseEntity<AuthResponse> refresh(
-      @RequestBody(required = false) RefreshTokenRequest body,
-      HttpServletRequest servletRequest) {
+      @RequestBody(required = false) RefreshTokenRequest body, HttpServletRequest servletRequest) {
     String rawToken = resolveRefreshToken(body, servletRequest);
-    AuthResponse response = refreshService.refresh(
-        new RotateRefreshTokenRequest(
-            rawToken,
-            servletRequest.getRemoteAddr(),
-            normalize(servletRequest.getHeader(HttpHeaders.USER_AGENT))));
+    AuthResponse response =
+        refreshService.refresh(
+            new RotateRefreshTokenRequest(
+                rawToken,
+                servletRequest.getRemoteAddr(),
+                normalize(servletRequest.getHeader(HttpHeaders.USER_AGENT))));
     return withRefreshCookie(response, HttpStatus.OK);
   }
 
   @Operation(summary = "Log out current session")
   @PostMapping("/logout")
   public ResponseEntity<Void> logout(
-      @RequestBody(required = false) RefreshTokenRequest body,
-      HttpServletRequest servletRequest) {
+      @RequestBody(required = false) RefreshTokenRequest body, HttpServletRequest servletRequest) {
     refreshService.logout(resolveRefreshToken(body, servletRequest));
     return ResponseEntity.noContent()
         .header(HttpHeaders.SET_COOKIE, deleteCookie().toString())
@@ -93,8 +92,7 @@ public class AuthController {
     return cookie == null ? null : cookie.getValue();
   }
 
-  private ResponseEntity<AuthResponse> withRefreshCookie(
-      AuthResponse response, HttpStatus status) {
+  private ResponseEntity<AuthResponse> withRefreshCookie(AuthResponse response, HttpStatus status) {
     ResponseCookie cookie = cookie(response.refreshToken(), cookieProperties.maxAge());
     return ResponseEntity.status(status)
         .header(HttpHeaders.SET_COOKIE, cookie.toString())

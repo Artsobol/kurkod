@@ -18,10 +18,13 @@ import lombok.Setter;
 @Table(name = "workshop")
 public class Workshop extends AbstractEntity {
 
-    @Positive
-    @Column(nullable = false, unique = true, name = "workshop_number")
-    private Integer workshopNumber;
+  @Positive @Column(nullable = false, unique = true, name = "workshop_number")
+  private Integer workshopNumber;
 
-    @OneToMany(mappedBy = "workshop", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Rows> rows;
+  @OneToMany(
+      mappedBy = "workshop",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Rows> rows;
 }

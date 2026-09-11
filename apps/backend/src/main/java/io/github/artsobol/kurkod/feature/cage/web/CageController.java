@@ -26,29 +26,27 @@ public class CageController {
   @GetMapping("/{cageNumber}")
   @Operation(summary = "Get cage by cage number")
   public ResponseEntity<CageResponse> get(
-      @PathVariable Long rowId,
-      @PathVariable Integer cageNumber) {
+      @PathVariable Long rowId, @PathVariable Integer cageNumber) {
     CageResponse response = cageService.find(rowId, cageNumber);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
   @GetMapping
   @Operation(summary = "Get all cages")
-  public List<CageResponse> getAll(
-      @PathVariable Long rowId) {
+  public List<CageResponse> getAll(@PathVariable Long rowId) {
     return cageService.findAll(rowId);
   }
 
   @PostMapping
   @Operation(summary = "Create cage")
   public ResponseEntity<CageResponse> create(
-      @PathVariable Long rowId,
-      @RequestBody @Valid CageCreateRequest cageCreateRequest) {
+      @PathVariable Long rowId, @RequestBody @Valid CageCreateRequest cageCreateRequest) {
     CageResponse response = cageService.create(rowId, cageCreateRequest);
     return ResponseEntity.created(LocationUtils.buildLocation(response.cageNumber()))
         .eTag(EtagUtils.toEtag(response.version()))
         .body(response);
   }
+
   @PatchMapping("/{cageNumber}")
   @Operation(summary = "Update cage by cage number")
   public ResponseEntity<CageResponse> update(
@@ -59,9 +57,7 @@ public class CageController {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
     CageResponse response = cageService.update(rowId, cageNumber, cageUpdateRequest, expected);
-    return ResponseEntity.ok()
-        .eTag(EtagUtils.toEtag(response.version()))
-        .body(response);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
   @DeleteMapping("/{cageNumber}")

@@ -13,8 +13,8 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -124,8 +124,7 @@ public class CommonControllerAdvice {
     String headerName = ex.getHeaderName();
     String message =
         messageService.createMessage("common.header.missing", new Object[] {headerName});
-    List<ValidationFieldError> errors =
-        List.of(new ValidationFieldError(headerName, message));
+    List<ValidationFieldError> errors = List.of(new ValidationFieldError(headerName, message));
 
     return ResponseEntity.badRequest().body(buildValidationErrorResponse(request, errors));
   }
@@ -136,8 +135,7 @@ public class CommonControllerAdvice {
     String parameterName = ex.getName();
     String message =
         messageService.createMessage("common.parameter.invalid", new Object[] {parameterName});
-    List<ValidationFieldError> errors =
-        List.of(new ValidationFieldError(parameterName, message));
+    List<ValidationFieldError> errors = List.of(new ValidationFieldError(parameterName, message));
 
     return ResponseEntity.badRequest().body(buildValidationErrorResponse(request, errors));
   }

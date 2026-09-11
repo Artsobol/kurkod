@@ -1,9 +1,9 @@
 package io.github.artsobol.kurkod.feature.cage.mapper;
 
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

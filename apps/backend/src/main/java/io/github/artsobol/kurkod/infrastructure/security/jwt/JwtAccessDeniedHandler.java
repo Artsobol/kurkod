@@ -21,51 +21,50 @@ import tools.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 
-    private final MessageService messageService;
-    private final ObjectMapper objectMapper;
+  private final MessageService messageService;
+  private final ObjectMapper objectMapper;
 
-    @Override
-    public void handle(
-            @NonNull HttpServletRequest request,
-            HttpServletResponse response,
-            @NonNull AccessDeniedException accessDeniedException
-    ) throws IOException {
-        if (response.isCommitted()) {
-            return;
-        }
+  @Override
+  public void handle(
+      @NonNull HttpServletRequest request,
+      HttpServletResponse response,
+      @NonNull AccessDeniedException accessDeniedException)
+      throws IOException {
+    if (response.isCommitted()) {
+      return;
+    }
 
-        String message = messageService.createMessage("auth.access.denied", null);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication != null ? authentication.getName() : "anonymous";
-        String role = authentication != null ? authentication
-                .getAuthorities()
-                .stream()
+    String message = messageService.createMessage("auth.access.denied", null);
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String username = authentication != null ? authentication.getName() : "anonymous";
+    String role =
+        authentication != null
+            ? authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
-                .orElse("Unknown") : "Unknown";
-        log.warn(
-                "Access denied: method={}, URI={}, user={}, role={}, IP={}",
-                request.getMethod(),
-                request.getRequestURI(),
-                username,
-                role,
-                request.getRemoteAddr()
-        );
+                .orElse("Unknown")
+            : "Unknown";
+    log.warn(
+        "Access denied: method={}, URI={}, user={}, role={}, IP={}",
+        request.getMethod(),
+        request.getRequestURI(),
+        username,
+        role,
+        request.getRemoteAddr());
 
+    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            java.time.Instant.now(),
+            HttpServletResponse.SC_FORBIDDEN,
+            "Forbidden",
+            "ACCESS_DENIED",
+            message,
+            request.getRequestURI());
 
-        ErrorResponse errorResponse = new ErrorResponse(
-                java.time.Instant.now(),
-                HttpServletResponse.SC_FORBIDDEN,
-                "Forbidden",
-                "ACCESS_DENIED",
-                message,
-                request.getRequestURI()
-        );
-
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        objectMapper.writeValue(response.getWriter(), errorResponse);
-    }
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+    objectMapper.writeValue(response.getWriter(), errorResponse);
+  }
 }

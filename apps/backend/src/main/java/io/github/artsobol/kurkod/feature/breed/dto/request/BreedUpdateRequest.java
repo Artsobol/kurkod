@@ -1,12 +1,11 @@
 package io.github.artsobol.kurkod.feature.breed.dto.request;
 
 import jakarta.validation.constraints.Positive;
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
 
 @Data
 @Builder

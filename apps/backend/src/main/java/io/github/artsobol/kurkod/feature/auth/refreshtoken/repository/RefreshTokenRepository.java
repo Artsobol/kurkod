@@ -2,6 +2,9 @@ package io.github.artsobol.kurkod.feature.auth.refreshtoken.repository;
 
 import io.github.artsobol.kurkod.feature.auth.refreshtoken.entity.RefreshToken;
 import jakarta.persistence.LockModeType;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -9,16 +12,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   Optional<RefreshToken> findByTokenHash(String tokenHash);
 
-  @Query("""
+  @Query(
+      """
             select t
             from RefreshToken t
             where t.user.id=:userId
@@ -26,9 +26,11 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
             and t.expiresAt > CURRENT_TIMESTAMP
             and t.revokedAt is null
             """)
-  List<RefreshToken> findActiveByUserIdAndSessionId(@Param("userId") Long userId, @Param("sessionId") UUID sessionId);
+  List<RefreshToken> findActiveByUserIdAndSessionId(
+      @Param("userId") Long userId, @Param("sessionId") UUID sessionId);
 
-  @Query("""
+  @Query(
+      """
             select count(*)
             from RefreshToken t
             where t.user.id=:userId
@@ -36,9 +38,11 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
             and t.expiresAt > CURRENT_TIMESTAMP
             and t.revokedAt is null
             """)
-  long countActiveByUserIdAndSessionId(@Param("userId") Long userId, @Param("sessionId") UUID sessionId);
+  long countActiveByUserIdAndSessionId(
+      @Param("userId") Long userId, @Param("sessionId") UUID sessionId);
 
-  @Query("""
+  @Query(
+      """
             select count(*)
             from RefreshToken t
             where t.user.id=:userId
@@ -47,7 +51,8 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
             """)
   long countActiveSessions(@Param("userId") Long userId);
 
-  @Query("""
+  @Query(
+      """
                 select t
                     from RefreshToken t
                         where t.user.id=:userId
@@ -58,7 +63,8 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
   List<RefreshToken> findOldestActiveSessions(@Param("userId") Long userId, Pageable pageable);
 
   @Modifying
-  @Query("""
+  @Query(
+      """
                     update RefreshToken t
                                 set t.revokedAt = CURRENT_TIMESTAMP
                     where t.user.id=:userId
@@ -66,5 +72,6 @@ public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long
                     and t.expiresAt > CURRENT_TIMESTAMP
                     and t.revokedAt is null
             """)
-  void revokeSessionByUserIdAndSessionId(@Param("userId") Long userId,@Param("sessionId") UUID sessionId);
+  void revokeSessionByUserIdAndSessionId(
+      @Param("userId") Long userId, @Param("sessionId") UUID sessionId);
 }

@@ -22,20 +22,13 @@ import lombok.*;
 @AllArgsConstructor
 public class EggProductionMonth extends AbstractEntity {
 
-  @NotNull
-  @Positive
-  @Column(nullable = false)
+  @NotNull @Positive @Column(nullable = false)
   private Integer year;
 
-  @Min(1)
-  @Max(12)
-  @NotNull
-  @Column(nullable = false)
+  @Min(1) @Max(12) @NotNull @Column(nullable = false)
   private Integer month;
 
-  @NotNull
-  @Positive
-  @Column(nullable = false)
+  @NotNull @Positive @Column(nullable = false)
   private Integer count;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)

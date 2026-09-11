@@ -22,63 +22,61 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class StaffServiceImpl implements StaffService {
 
-    private final StaffRepository staffRepository;
-    private final StaffMapper staffMapper;
+  private final StaffRepository staffRepository;
+  private final StaffMapper staffMapper;
 
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public StaffResponse get(Long id) {
+    return staffMapper.toResponse(getStaffById(id));
+  }
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffResponse get(Long id) {
-        return staffMapper.toResponse(getStaffById(id));
-    }
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public List<StaffResponse> getAll() {
+    return staffRepository.findAllByIsActiveTrue().stream().map(staffMapper::toResponse).toList();
+  }
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public List<StaffResponse> getAll() {
-        return staffRepository.findAllByIsActiveTrue().stream()
-                .map(staffMapper::toResponse)
-                .toList();
-    }
+  @Override
+  public Page<StaffResponse> getAllWithPagination(Pageable pageable) {
+    return staffRepository.findAllByIsActiveTrue(pageable).map(staffMapper::toResponse);
+  }
 
-    @Override
-    public Page<StaffResponse> getAllWithPagination(Pageable pageable) {
-        return staffRepository.findAllByIsActiveTrue(pageable).map(staffMapper::toResponse);
-    }
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public StaffResponse create(StaffCreateRequest request) {
+    Staff staff = staffMapper.toEntity(request);
+    staff = staffRepository.save(staff);
+    return staffMapper.toResponse(staff);
+  }
 
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public StaffResponse update(Long id, StaffUpdateRequest request, Long version) {
+    Staff staff = getStaffById(id);
+    checkVersion(staff.getVersion(), version);
+    staffMapper.updatePartially(staff, request);
+    staff = staffRepository.save(staff);
+    return staffMapper.toResponse(staff);
+  }
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffResponse create(StaffCreateRequest request) {
-        Staff staff = staffMapper.toEntity(request);
-        staff = staffRepository.save(staff);
-        return staffMapper.toResponse(staff);
-    }
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public StaffResponse update(Long id, StaffUpdateRequest request, Long version) {
-        Staff staff = getStaffById(id);
-        checkVersion(staff.getVersion(), version);
-        staffMapper.updatePartially(staff, request);
-        staff = staffRepository.save(staff);
-        return staffMapper.toResponse(staff);
-    }
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public void delete(Long id, Long version) {
+    Staff staff = getStaffById(id);
+    checkVersion(staff.getVersion(), version);
+    staff.deactivate();
+    staffRepository.save(staff);
+  }
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Long id, Long version) {
-        Staff staff = getStaffById(id);
-        checkVersion(staff.getVersion(), version);
-        staff.deactivate();
-        staffRepository.save(staff);
-    }
-
-    protected Staff getStaffById(Long id) {
-        return staffRepository.findStaffByIdAndIsActiveTrue(id).orElseThrow(() ->
-                new NotFoundException("staff.not.found", id));
-    }
+  protected Staff getStaffById(Long id) {
+    return staffRepository
+        .findStaffByIdAndIsActiveTrue(id)
+        .orElseThrow(() -> new NotFoundException("staff.not.found", id));
+  }
 }

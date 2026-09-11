@@ -30,7 +30,8 @@ class RegistrationServiceImplTest {
 
   @Test
   void registerCreatesUserWithEncodedPasswordAndSession() {
-    RegistrationRequest request = new RegistrationRequest("alice", "alice@example.com", "Password1!", "Password1!");
+    RegistrationRequest request =
+        new RegistrationRequest("alice", "alice@example.com", "Password1!", "Password1!");
     SessionMetadata metadata = new SessionMetadata("127.0.0.1", "browser", "device");
     User user = User.create("alice", "alice@example.com", "{argon2}hash");
     AuthResponse expected = new AuthResponse("access", "refresh", null);
@@ -41,7 +42,8 @@ class RegistrationServiceImplTest {
     AuthResponse actual = service.register(request, metadata);
 
     assertThat(actual).isSameAs(expected);
-    ArgumentCaptor<CreateUserRequest> userRequest = ArgumentCaptor.forClass(CreateUserRequest.class);
+    ArgumentCaptor<CreateUserRequest> userRequest =
+        ArgumentCaptor.forClass(CreateUserRequest.class);
     verify(userService).createUser(userRequest.capture());
     assertThat(userRequest.getValue().passwordHash()).isEqualTo("{argon2}hash");
     ArgumentCaptor<CreateRefreshTokenRequest> tokenRequest =

@@ -1,17 +1,16 @@
 package io.github.artsobol.kurkod.feature.cage.entity;
 
-import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import io.github.artsobol.kurkod.feature.rows.entity.Rows;
 import io.github.artsobol.kurkod.feature.worker.entity.WorkerCage;
+import io.github.artsobol.kurkod.infrastructure.persistence.entity.AbstractEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Positive;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -26,8 +25,7 @@ import java.util.Set;
             columnNames = {"row_id", "cage_number"}))
 public class Cage extends AbstractEntity {
 
-  @Positive
-  @Column(nullable = false, name = "cage_number")
+  @Positive @Column(nullable = false, name = "cage_number")
   private Integer cageNumber;
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)

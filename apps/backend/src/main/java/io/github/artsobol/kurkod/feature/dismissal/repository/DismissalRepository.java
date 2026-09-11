@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DismissalRepository extends JpaRepository<Dismissal, Long> {
 
-    Optional<Dismissal> findDismissalByWorker_Id(Long id);
+  Optional<Dismissal> findDismissalByWorker_Id(Long id);
 
-    Optional<Dismissal> findDismissalByWorker_IdAndWhoDismiss_Id(Long workerId, Long whoDismissedId);
+  Optional<Dismissal> findDismissalByWorker_IdAndWhoDismiss_Id(Long workerId, Long whoDismissedId);
 
-    List<Dismissal> findAllByWorker_Id(Long id);
+  List<Dismissal> findAllByWorker_Id(Long id);
 
-    List<Dismissal> findAllByWhoDismiss_Id(Long id);
+  List<Dismissal> findAllByWhoDismiss_Id(Long id);
 
-    boolean existsByWorker_IdAndWhoDismiss_Id(Long workerId, Long whoDismissedId);
+  boolean existsByWorker_IdAndWhoDismiss_Id(Long workerId, Long whoDismissedId);
 }

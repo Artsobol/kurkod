@@ -10,21 +10,23 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuditorAwareImpl implements AuditorAware<Long> {
-    @Override
-    @NullMarked
-    public Optional<Long> getCurrentAuditor() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+  @Override
+  @NullMarked
+  public Optional<Long> getCurrentAuditor() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated() || authentication instanceof AnonymousAuthenticationToken) {
-            return Optional.empty();
-        }
-
-        Object principal = authentication.getPrincipal();
-
-        if (!(principal instanceof UserPrincipal userPrincipal)) {
-            return Optional.empty();
-        }
-
-        return Optional.of(userPrincipal.userId());
+    if (authentication == null
+        || !authentication.isAuthenticated()
+        || authentication instanceof AnonymousAuthenticationToken) {
+      return Optional.empty();
     }
+
+    Object principal = authentication.getPrincipal();
+
+    if (!(principal instanceof UserPrincipal userPrincipal)) {
+      return Optional.empty();
+    }
+
+    return Optional.of(userPrincipal.userId());
+  }
 }

@@ -2,7 +2,6 @@ package io.github.artsobol.kurkod.feature.workshop.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @Getter

@@ -18,43 +18,37 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Worker Cages", description = "Assign or remove cages for workers")
 public class WorkerCageController {
 
-    private final WorkerCageService workerCageService;
+  private final WorkerCageService workerCageService;
 
-    @Operation(summary = "Get cages assigned to worker")
-    @GetMapping("/{workerId}/cages")
-    public ResponseEntity<List<CageResponse>> getWorkerCages(
-            @PathVariable Long workerId) {
+  @Operation(summary = "Get cages assigned to worker")
+  @GetMapping("/{workerId}/cages")
+  public ResponseEntity<List<CageResponse>> getWorkerCages(@PathVariable Long workerId) {
 
-        List<CageResponse> cages = workerCageService.getWorkerCages(workerId);
-        return ResponseEntity.ok(cages);
-    }
+    List<CageResponse> cages = workerCageService.getWorkerCages(workerId);
+    return ResponseEntity.ok(cages);
+  }
 
-    @Operation(summary = "Get workers assigned to cage")
-    @GetMapping("/cages/{cageId}/workers")
-    public ResponseEntity<List<WorkerResponse>> getCageWorkers(
-            @PathVariable Long cageId) {
+  @Operation(summary = "Get workers assigned to cage")
+  @GetMapping("/cages/{cageId}/workers")
+  public ResponseEntity<List<WorkerResponse>> getCageWorkers(@PathVariable Long cageId) {
 
-        List<WorkerResponse> workers = workerCageService.getCageWorkers(cageId);
-        return ResponseEntity.ok(workers);
-    }
+    List<WorkerResponse> workers = workerCageService.getCageWorkers(cageId);
+    return ResponseEntity.ok(workers);
+  }
 
-    @Operation(summary = "Assign cage to worker")
-    @PostMapping("/{workerId}/cages/{cageId}")
-    public ResponseEntity<Void> assignCage(
-            @PathVariable Long workerId,
-            @PathVariable Long cageId) {
+  @Operation(summary = "Assign cage to worker")
+  @PostMapping("/{workerId}/cages/{cageId}")
+  public ResponseEntity<Void> assignCage(@PathVariable Long workerId, @PathVariable Long cageId) {
 
-        workerCageService.assignCageToWorker(workerId, cageId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+    workerCageService.assignCageToWorker(workerId, cageId);
+    return ResponseEntity.status(HttpStatus.CREATED).build();
+  }
 
-    @Operation(summary = "Unassign cage from worker")
-    @DeleteMapping("/{workerId}/cages/{cageId}")
-    public ResponseEntity<Void> unassignCage(
-            @PathVariable Long workerId,
-            @PathVariable Long cageId) {
+  @Operation(summary = "Unassign cage from worker")
+  @DeleteMapping("/{workerId}/cages/{cageId}")
+  public ResponseEntity<Void> unassignCage(@PathVariable Long workerId, @PathVariable Long cageId) {
 
-        workerCageService.unassignCageFromWorker(workerId, cageId);
-        return ResponseEntity.noContent().build();
-    }
+    workerCageService.unassignCageFromWorker(workerId, cageId);
+    return ResponseEntity.noContent().build();
+  }
 }

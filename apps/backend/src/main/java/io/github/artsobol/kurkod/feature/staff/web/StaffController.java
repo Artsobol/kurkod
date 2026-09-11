@@ -22,58 +22,55 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Staff", description = "Staff operations")
 public class StaffController {
 
-    private final StaffService staffService;
+  private final StaffService staffService;
 
-    @Operation(summary = "Get staff by ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<StaffResponse> get(
-            @PathVariable Long id) {
+  @Operation(summary = "Get staff by ID")
+  @GetMapping("/{id}")
+  public ResponseEntity<StaffResponse> get(@PathVariable Long id) {
 
-        StaffResponse response = staffService.get(id);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    StaffResponse response = staffService.get(id);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-    @Operation(summary = "Get all staff")
-    @GetMapping
-    public ResponseEntity<List<StaffResponse>> getAll() {
+  @Operation(summary = "Get all staff")
+  @GetMapping
+  public ResponseEntity<List<StaffResponse>> getAll() {
 
-        List<StaffResponse> response = staffService.getAll();
-        return ResponseEntity.ok(response);
-    }
+    List<StaffResponse> response = staffService.getAll();
+    return ResponseEntity.ok(response);
+  }
 
-    @Operation(summary = "Create staff position")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StaffResponse> create(@Valid @RequestBody StaffCreateRequest staffCreateRequest) {
+  @Operation(summary = "Create staff position")
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<StaffResponse> create(
+      @Valid @RequestBody StaffCreateRequest staffCreateRequest) {
 
-        StaffResponse response = staffService.create(staffCreateRequest);
-        return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
-    @Operation(summary = "Partially update staff position")
-    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StaffResponse> update(
-            @PathVariable Long id,
-            @Valid @RequestBody StaffUpdateRequest staffUpdateRequest,
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    StaffResponse response = staffService.create(staffCreateRequest);
+    return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
+        .eTag(EtagUtils.toEtag(response.version()))
+        .body(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        StaffResponse response = staffService.update(id, staffUpdateRequest, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+  @Operation(summary = "Partially update staff position")
+  @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<StaffResponse> update(
+      @PathVariable Long id,
+      @Valid @RequestBody StaffUpdateRequest staffUpdateRequest,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
-    @Operation(summary = "Delete staff position")
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long id,
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    StaffResponse response = staffService.update(id, staffUpdateRequest, expected);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        staffService.delete(id, expected);
-        return ResponseEntity.noContent().build();
-    }
+  @Operation(summary = "Delete staff position")
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(
+      @PathVariable Long id,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    staffService.delete(id, expected);
+    return ResponseEntity.noContent().build();
+  }
 }

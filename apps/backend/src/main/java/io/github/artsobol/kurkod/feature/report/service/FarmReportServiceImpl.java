@@ -17,19 +17,19 @@ import org.springframework.transaction.annotation.Transactional;
 @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
 public class FarmReportServiceImpl implements FarmReportService {
 
-    private final FarmMonthlyStatsRepository farmMonthlyStatsRepository;
-    private final ChickenRepository chickenRepository;
-    private final EggProductionMonthRepository eggProductionMonthRepository;
+  private final FarmMonthlyStatsRepository farmMonthlyStatsRepository;
+  private final ChickenRepository chickenRepository;
+  private final EggProductionMonthRepository eggProductionMonthRepository;
 
-    @Override
-    public FarmMonthlyReportResponse getMonthlyReport(int year, int month) {
-        List<BreedWorkshopMonthlyReportResponse> stats = farmMonthlyStatsRepository.findBreedWorkshopMonthlyStats(year,
-                                                                                                             month);
+  @Override
+  public FarmMonthlyReportResponse getMonthlyReport(int year, int month) {
+    List<BreedWorkshopMonthlyReportResponse> stats =
+        farmMonthlyStatsRepository.findBreedWorkshopMonthlyStats(year, month);
 
-        long totalChickens = chickenRepository.countActiveChickens();
+    long totalChickens = chickenRepository.countActiveChickens();
 
-        long totalEggs = eggProductionMonthRepository.countEggsByMonth(year, month);
+    long totalEggs = eggProductionMonthRepository.countEggsByMonth(year, month);
 
-        return new FarmMonthlyReportResponse(year, month, stats, totalChickens, totalEggs);
-    }
+    return new FarmMonthlyReportResponse(year, month, stats, totalChickens, totalEggs);
+  }
 }

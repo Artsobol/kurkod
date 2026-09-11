@@ -2,15 +2,14 @@ package io.github.artsobol.kurkod.feature.chicken.repository;
 
 import io.github.artsobol.kurkod.feature.chicken.entity.Chicken;
 import io.github.artsobol.kurkod.feature.report.projection.BreedWorkshopMonthlyProjection;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
-import java.util.List;
-import java.util.Optional;
 
 public interface ChickenRepository extends JpaRepository<Chicken, Long> {
 

@@ -19,13 +19,18 @@ import lombok.Setter;
 @Table(name = "chicken_movement")
 public class ChickenMovement extends AbstractEntity {
 
-    @NotNull @Column(nullable = false, name = "moved_at") private Instant movedAt = Instant.now();
+  @NotNull @Column(nullable = false, name = "moved_at")
+  private Instant movedAt = Instant.now();
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "chicken_id", nullable = false)
-    private Chicken chicken;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "chicken_id", nullable = false)
+  private Chicken chicken;
 
-    @ManyToOne(fetch = FetchType.LAZY) @JoinColumn(name = "from_cage_id") private Cage fromCage;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "from_cage_id")
+  private Cage fromCage;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false) @JoinColumn(name = "to_cage_id", nullable = false)
-    private Cage toCage;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "to_cage_id", nullable = false)
+  private Cage toCage;
 }

@@ -4,11 +4,10 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Immutable;
-
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "breed_egg_diff_report")

@@ -9,8 +9,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface StaffRepository extends JpaRepository<Staff, Long> {
 
-    Optional<Staff> findStaffByIdAndIsActiveTrue(Long id);
+  Optional<Staff> findStaffByIdAndIsActiveTrue(Long id);
 
-    List<Staff> findAllByIsActiveTrue();
-    Page<Staff> findAllByIsActiveTrue(Pageable pageable);
+  List<Staff> findAllByIsActiveTrue();
+
+  Page<Staff> findAllByIsActiveTrue(Pageable pageable);
 }

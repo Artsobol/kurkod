@@ -15,23 +15,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class BreedReportServiceImpl implements BreedReportService {
 
-    private final BreedEggDiffReportRepository repository;
+  private final BreedEggDiffReportRepository repository;
 
-    @Override
-    public List<BreedEggDiffReportResponse> getEggDiff() {
-        return repository.findAll()
-                         .stream()
-                         .map(this::toResponse)
-                         .toList();
-    }
+  @Override
+  public List<BreedEggDiffReportResponse> getEggDiff() {
+    return repository.findAll().stream().map(this::toResponse).toList();
+  }
 
-    private BreedEggDiffReportResponse toResponse(BreedEggDiffReport entity) {
-        return new BreedEggDiffReportResponse(
-                entity.getBreedId(),
-                entity.getBreedName(),
-                entity.getBreedAvgEggs(),
-                entity.getFarmAvgEggs(),
-                entity.getDiffEggs()
-        );
-    }
+  private BreedEggDiffReportResponse toResponse(BreedEggDiffReport entity) {
+    return new BreedEggDiffReportResponse(
+        entity.getBreedId(),
+        entity.getBreedName(),
+        entity.getBreedAvgEggs(),
+        entity.getFarmAvgEggs(),
+        entity.getDiffEggs());
+  }
 }

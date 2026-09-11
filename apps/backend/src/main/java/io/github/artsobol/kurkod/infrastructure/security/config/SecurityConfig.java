@@ -53,16 +53,14 @@ public class SecurityConfig {
     "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**"
   };
 
-  private static final String[] ADMIN_AUTHORITIES = {
-    Role.SUPER_ADMIN.name(), Role.ADMIN.name()
-  };
+  private static final String[] ADMIN_AUTHORITIES = {Role.SUPER_ADMIN.name(), Role.ADMIN.name()};
 
   @Bean
   public SecurityFilterChain securityFilterChain(
-          HttpSecurity http,
-          JwtAuthenticationFilter jwtAuthenticationFilter,
-          AuthenticationEntryPoint authenticationEntryPoint,
-          AccessDeniedHandler accessDeniedHandler) {
+      HttpSecurity http,
+      JwtAuthenticationFilter jwtAuthenticationFilter,
+      AuthenticationEntryPoint authenticationEntryPoint,
+      AccessDeniedHandler accessDeniedHandler) {
 
     http.csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
@@ -116,19 +114,19 @@ public class SecurityConfig {
 
   @Bean
   public JwtAuthenticationFilter jwtAuthenticationFilter(
-          JwtTokenProvider provider,
-          RefreshTokenService refreshTokenService
-  ) {
+      JwtTokenProvider provider, RefreshTokenService refreshTokenService) {
     return new JwtAuthenticationFilter(provider, refreshTokenService);
   }
 
   @Bean
-  public AuthenticationEntryPoint authenticationEntryPoint(MessageService messageService, ObjectMapper objectMapper) {
+  public AuthenticationEntryPoint authenticationEntryPoint(
+      MessageService messageService, ObjectMapper objectMapper) {
     return new JwtAuthenticationEntryPoint(messageService, objectMapper);
   }
 
   @Bean
-  public AccessDeniedHandler accessDeniedHandler(MessageService messageService, ObjectMapper objectMapper) {
+  public AccessDeniedHandler accessDeniedHandler(
+      MessageService messageService, ObjectMapper objectMapper) {
     return new JwtAccessDeniedHandler(messageService, objectMapper);
   }
 

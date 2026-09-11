@@ -11,11 +11,11 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface DietMapper {
 
-    DietResponse toResponse(Diet diet);
+  DietResponse toResponse(Diet diet);
 
-    @Mapping(target = "breeds", ignore = true)
-    Diet toEntity(DietCreateRequest dietCreateRequest);
+  @Mapping(target = "breeds", ignore = true)
+  Diet toEntity(DietCreateRequest dietCreateRequest);
 
-    @Mapping(target = "breeds", ignore = true)
-    void update(@MappingTarget Diet diet, DietUpdateRequest dietUpdateRequest);
+  @Mapping(target = "breeds", ignore = true)
+  void update(@MappingTarget Diet diet, DietUpdateRequest dietUpdateRequest);
 }

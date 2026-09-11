@@ -14,17 +14,26 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "rows",
-       uniqueConstraints = @UniqueConstraint(name = "uq_rows_workshop_id_row_number",
-                                             columnNames = {"workshop_id", "row_number"}))
+@Table(
+    name = "rows",
+    uniqueConstraints =
+        @UniqueConstraint(
+            name = "uq_rows_workshop_id_row_number",
+            columnNames = {"workshop_id", "row_number"}))
 @AllArgsConstructor
 @NoArgsConstructor
 public class Rows extends AbstractEntity {
-    @Positive @Column(nullable = false, name = "row_number") private Integer rowNumber;
+  @Positive @Column(nullable = false, name = "row_number")
+  private Integer rowNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "workshop_id", nullable = false, referencedColumnName = "id") private Workshop workshop;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "workshop_id", nullable = false, referencedColumnName = "id")
+  private Workshop workshop;
 
-    @OneToMany(mappedBy = "row", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Cage> cages;
+  @OneToMany(
+      mappedBy = "row",
+      fetch = FetchType.LAZY,
+      cascade = CascadeType.ALL,
+      orphanRemoval = true)
+  private List<Cage> cages;
 }

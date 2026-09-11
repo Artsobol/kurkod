@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User findActiveByEmail(String email) {
-    return userRepository.findByEmailAndIsActiveTrue(email)
+    return userRepository
+        .findByEmailAndIsActiveTrue(email)
         .orElseThrow(() -> new NotFoundException("user.not.found.by.email", email));
   }
 
@@ -65,8 +66,10 @@ public class UserServiceImpl implements UserService {
   @Override
   @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
   public UserResponse getByUsername(@NotBlank String username) {
-    User user = userRepository.findByUsernameAndIsActiveTrue(username)
-        .orElseThrow(() -> new NotFoundException("user.not.found.by.username", username));
+    User user =
+        userRepository
+            .findByUsernameAndIsActiveTrue(username)
+            .orElseThrow(() -> new NotFoundException("user.not.found.by.username", username));
     return userMapper.toResponse(user);
   }
 
@@ -74,10 +77,12 @@ public class UserServiceImpl implements UserService {
   @Transactional
   @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
   public UserResponse create(@NotNull UserCreateRequest request) {
-    User user = createUser(new CreateUserRequest(
-        request.getUsername(),
-        request.getEmail(),
-        passwordEncoder.encode(request.getPassword())));
+    User user =
+        createUser(
+            new CreateUserRequest(
+                request.getUsername(),
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword())));
     return userMapper.toResponse(user);
   }
 
@@ -88,11 +93,13 @@ public class UserServiceImpl implements UserService {
     User user = getActiveUserById(userId);
     checkVersion(user.getVersion(), version);
 
-    if (StringUtils.hasText(request.getUsername()) && !request.getUsername().equals(user.getUsername())) {
+    if (StringUtils.hasText(request.getUsername())
+        && !request.getUsername().equals(user.getUsername())) {
       ensureNotExistsByUsername(request.getUsername());
       user.changeUsername(request.getUsername());
     }
-    if (StringUtils.hasText(request.getEmail()) && !request.getEmail().equalsIgnoreCase(user.getEmail())) {
+    if (StringUtils.hasText(request.getEmail())
+        && !request.getEmail().equalsIgnoreCase(user.getEmail())) {
       ensureNotExistsByEmail(request.getEmail());
       user.changeEmail(request.getEmail());
     }
@@ -114,7 +121,8 @@ public class UserServiceImpl implements UserService {
   }
 
   private User getActiveUserById(Long id) {
-    return userRepository.findByIdAndIsActiveTrue(id)
+    return userRepository
+        .findByIdAndIsActiveTrue(id)
         .orElseThrow(() -> new NotFoundException("user.not.found.by.id", id));
   }
 

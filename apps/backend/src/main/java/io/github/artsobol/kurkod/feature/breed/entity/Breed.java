@@ -19,19 +19,15 @@ import lombok.*;
 @AllArgsConstructor
 public class Breed extends AbstractEntity {
 
-    @NotBlank
-    @Size(min = 2, max = 20, message = "Name should be between 2 and 20 characters")
-    @Column(nullable = false, unique = true)
-    private String name;
+  @NotBlank @Size(min = 2, max = 20, message = "Name should be between 2 and 20 characters") @Column(nullable = false, unique = true)
+  private String name;
 
-    @NotNull
-    @Column(nullable = false, name = "eggs_number")
-    private Integer eggsNumber;
+  @NotNull @Column(nullable = false, name = "eggs_number")
+  private Integer eggsNumber;
 
-    @NotNull
-    @Column(nullable = false)
-    private Integer weight;
+  @NotNull @Column(nullable = false)
+  private Integer weight;
 
-    @ManyToMany(mappedBy = "breeds")
-    private Set<Diet> diets = new HashSet<>();
+  @ManyToMany(mappedBy = "breeds")
+  private Set<Diet> diets = new HashSet<>();
 }

@@ -21,79 +21,77 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/chickens/{chickenId}/egg-productions")
 public class EggProductionMonthController {
 
-    private final EggProductionMonthService eggProductionMonthService;
+  private final EggProductionMonthService eggProductionMonthService;
 
-    @PostMapping("/{year}/{month}")
-    @Operation(summary = "Create egg production month")
-    public ResponseEntity<EggProductionMonthResponse> create(
-            @PathVariable Long chickenId,
-            @PathVariable Integer year,
-            @PathVariable Integer month,
-            @Valid @RequestBody EggProductionMonthCreateRequest request) {
+  @PostMapping("/{year}/{month}")
+  @Operation(summary = "Create egg production month")
+  public ResponseEntity<EggProductionMonthResponse> create(
+      @PathVariable Long chickenId,
+      @PathVariable Integer year,
+      @PathVariable Integer month,
+      @Valid @RequestBody EggProductionMonthCreateRequest request) {
 
-        EggProductionMonthResponse response = eggProductionMonthService.create(chickenId, month, year, request);
-        return ResponseEntity.created(LocationUtils.buildLocation()).eTag(EtagUtils.toEtag(response.version())).body(
-                response);
-    }
+    EggProductionMonthResponse response =
+        eggProductionMonthService.create(chickenId, month, year, request);
+    return ResponseEntity.created(LocationUtils.buildLocation())
+        .eTag(EtagUtils.toEtag(response.version()))
+        .body(response);
+  }
 
-    @GetMapping("/{year}/{month}")
-    @Operation(summary = "Get egg production month by chicken ID, year and month")
-    public ResponseEntity<EggProductionMonthResponse> getById(
-            @PathVariable Long chickenId,
-            @PathVariable Integer year,
-            @PathVariable Integer month) {
+  @GetMapping("/{year}/{month}")
+  @Operation(summary = "Get egg production month by chicken ID, year and month")
+  public ResponseEntity<EggProductionMonthResponse> getById(
+      @PathVariable Long chickenId, @PathVariable Integer year, @PathVariable Integer month) {
 
-        EggProductionMonthResponse response = eggProductionMonthService.get(chickenId, month, year);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    EggProductionMonthResponse response = eggProductionMonthService.get(chickenId, month, year);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-    @GetMapping
-    @Operation(summary = "Get all egg production months")
-    public ResponseEntity<List<EggProductionMonthResponse>> getAllByChickenId(
-            @PathVariable Long chickenId) {
+  @GetMapping
+  @Operation(summary = "Get all egg production months")
+  public ResponseEntity<List<EggProductionMonthResponse>> getAllByChickenId(
+      @PathVariable Long chickenId) {
 
-        List<EggProductionMonthResponse> response = eggProductionMonthService.getAllByChicken(chickenId);
-        return ResponseEntity.ok(response);
-    }
+    List<EggProductionMonthResponse> response =
+        eggProductionMonthService.getAllByChicken(chickenId);
+    return ResponseEntity.ok(response);
+  }
 
-    @GetMapping("/{year}")
-    @Operation(summary = "Get all egg production months for year")
-    public ResponseEntity<List<EggProductionMonthResponse>> getAllByChickenIdAndYear(
-            @PathVariable Long chickenId,
-            @PathVariable Integer year) {
+  @GetMapping("/{year}")
+  @Operation(summary = "Get all egg production months for year")
+  public ResponseEntity<List<EggProductionMonthResponse>> getAllByChickenIdAndYear(
+      @PathVariable Long chickenId, @PathVariable Integer year) {
 
-        List<EggProductionMonthResponse> response = eggProductionMonthService.getAllByChickenAndYear(chickenId, year);
-        return ResponseEntity.ok(response);
-    }
-    @PatchMapping("/{year}/{month}")
-    @Operation(summary = "Update egg production month")
-    public ResponseEntity<EggProductionMonthResponse> update(
-            @PathVariable Long chickenId,
-            @PathVariable Integer year,
-            @PathVariable Integer month,
-            @Valid @RequestBody EggProductionMonthUpdateRequest request,
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    List<EggProductionMonthResponse> response =
+        eggProductionMonthService.getAllByChickenAndYear(chickenId, year);
+    return ResponseEntity.ok(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        EggProductionMonthResponse response = eggProductionMonthService.update(chickenId, month, year, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+  @PatchMapping("/{year}/{month}")
+  @Operation(summary = "Update egg production month")
+  public ResponseEntity<EggProductionMonthResponse> update(
+      @PathVariable Long chickenId,
+      @PathVariable Integer year,
+      @PathVariable Integer month,
+      @Valid @RequestBody EggProductionMonthUpdateRequest request,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
-    @DeleteMapping("/{year}/{month}")
-    @Operation(summary = "Delete egg production month")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long chickenId,
-            @PathVariable Integer year,
-            @PathVariable Integer month,
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    EggProductionMonthResponse response =
+        eggProductionMonthService.update(chickenId, month, year, request, expected);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        eggProductionMonthService.delete(chickenId, month, year, expected);
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("/{year}/{month}")
+  @Operation(summary = "Delete egg production month")
+  public ResponseEntity<Void> delete(
+      @PathVariable Long chickenId,
+      @PathVariable Integer year,
+      @PathVariable Integer month,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    eggProductionMonthService.delete(chickenId, month, year, expected);
+    return ResponseEntity.noContent().build();
+  }
 }

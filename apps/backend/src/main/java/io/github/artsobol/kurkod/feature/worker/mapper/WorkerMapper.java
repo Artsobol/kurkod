@@ -11,18 +11,20 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring",
-nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE,
-        uses = {CageMapper.class})
+@Mapper(
+    componentModel = "spring",
+    nullValuePropertyMappingStrategy = org.mapstruct.NullValuePropertyMappingStrategy.IGNORE,
+    uses = {CageMapper.class})
 public interface WorkerMapper {
 
-    @Mapping(target = "cages", source = "workerCages")
-    WorkerResponse toResponse(Worker worker);
+  @Mapping(target = "cages", source = "workerCages")
+  WorkerResponse toResponse(Worker worker);
 
-    Worker toEntity(WorkerCreateRequest workerCreateRequest);
-    void updatePartially(@MappingTarget Worker worker, WorkerUpdateRequest workerUpdateRequest);
+  Worker toEntity(WorkerCreateRequest workerCreateRequest);
 
-    default Cage mapWorkerCageToCage(WorkerCage workerCage) {
-        return workerCage.getCage();
-    }
+  void updatePartially(@MappingTarget Worker worker, WorkerUpdateRequest workerUpdateRequest);
+
+  default Cage mapWorkerCageToCage(WorkerCage workerCage) {
+    return workerCage.getCage();
+  }
 }

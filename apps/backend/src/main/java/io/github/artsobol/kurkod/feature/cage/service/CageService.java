@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.cage.service;
 
-import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
-import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
 import io.github.artsobol.kurkod.feature.cage.dto.request.CageCreateRequest;
-
+import io.github.artsobol.kurkod.feature.cage.dto.request.CageUpdateRequest;
+import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import java.util.List;
 
 public interface CageService {

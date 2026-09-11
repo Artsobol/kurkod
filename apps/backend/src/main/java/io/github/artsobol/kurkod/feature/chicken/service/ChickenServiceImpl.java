@@ -25,73 +25,82 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ChickenServiceImpl implements ChickenService {
 
-    private final CageRepository cageRepository;
-    private final ChickenRepository chickenRepository;
-    private final ChickenMapper chickenMapper;
-    private final BreedLookupService breedLookupService;
+  private final CageRepository cageRepository;
+  private final ChickenRepository chickenRepository;
+  private final ChickenMapper chickenMapper;
+  private final BreedLookupService breedLookupService;
 
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public ChickenResponse create(ChickenCreateRequest chickenCreateRequest) {
+    Chicken chicken = chickenMapper.toEntity(chickenCreateRequest);
+    chicken.setBreed(getBreedById(chickenCreateRequest.getBreedId()));
+    chicken.setCage(
+        cageRepository
+            .findById(chickenCreateRequest.getCageId())
+            .orElseThrow(
+                () -> new NotFoundException("cage.not.found", chickenCreateRequest.getCageId())));
+    chicken = chickenRepository.save(chicken);
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenResponse create(ChickenCreateRequest chickenCreateRequest) {
-        Chicken chicken = chickenMapper.toEntity(chickenCreateRequest);
-        chicken.setBreed(getBreedById(chickenCreateRequest.getBreedId()));
-        chicken.setCage(cageRepository.findById(chickenCreateRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenCreateRequest.getCageId())));
-        chicken = chickenRepository.save(chicken);
+    return chickenMapper.toResponse(chicken);
+  }
 
-        return chickenMapper.toResponse(chicken);
+  @Override
+  public ChickenResponse get(Long id) {
+    return chickenMapper.toResponse(getChickenById(id));
+  }
+
+  @Override
+  public List<ChickenResponse> getAll() {
+    return chickenRepository.findAllByIsActiveTrue().stream()
+        .map(chickenMapper::toResponse)
+        .toList();
+  }
+
+  @Override
+  public Page<ChickenResponse> getPage(Pageable pageable) {
+    return chickenRepository.findAllByIsActiveTrue(pageable).map(chickenMapper::toResponse);
+  }
+
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public void delete(Long id, Long version) {
+    Chicken chicken = getChickenById(id);
+    checkVersion(chicken.getVersion(), version);
+    chicken.deactivate();
+    chickenRepository.save(chicken);
+  }
+
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public ChickenResponse update(Long id, ChickenUpdateRequest chickenUpdateRequest, Long version) {
+    Chicken chicken = getChickenById(id);
+    checkVersion(chicken.getVersion(), version);
+    chickenMapper.updatePartially(chicken, chickenUpdateRequest);
+    if (chickenUpdateRequest.getBreedId() != null) {
+      Breed breed = getBreedById(chickenUpdateRequest.getBreedId());
+      chicken.setBreed(breed);
     }
+    if (chickenUpdateRequest.getCageId() != null) {
+      chicken.setCage(
+          cageRepository
+              .findById(chickenUpdateRequest.getCageId())
+              .orElseThrow(
+                  () -> new NotFoundException("cage.not.found", chickenUpdateRequest.getCageId())));
+    }
+    return chickenMapper.toResponse(chickenRepository.save(chicken));
+  }
 
-    @Override
-    public ChickenResponse get(Long id) {
-        return chickenMapper.toResponse(getChickenById(id));
-    }
+  private Breed getBreedById(Long id) {
+    return breedLookupService.getBreedByIdOrThrow(id);
+  }
 
-    @Override
-    public List<ChickenResponse> getAll() {
-        return chickenRepository.findAllByIsActiveTrue().stream()
-                                .map(chickenMapper::toResponse)
-                                .toList();
-    }
-
-    @Override
-    public Page<ChickenResponse> getPage(Pageable pageable) {
-        return chickenRepository.findAllByIsActiveTrue(pageable).map(chickenMapper::toResponse);
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Long id, Long version) {
-        Chicken chicken = getChickenById(id);
-        checkVersion(chicken.getVersion(), version);
-        chicken.deactivate();
-        chickenRepository.save(chicken);
-    }
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public ChickenResponse update(Long id, ChickenUpdateRequest chickenUpdateRequest, Long version) {
-        Chicken chicken = getChickenById(id);
-        checkVersion(chicken.getVersion(), version);
-        chickenMapper.updatePartially(chicken, chickenUpdateRequest);
-        if (chickenUpdateRequest.getBreedId() != null) {
-            Breed breed = getBreedById(chickenUpdateRequest.getBreedId());
-            chicken.setBreed(breed);
-        }
-        if (chickenUpdateRequest.getCageId() != null) {
-            chicken.setCage(cageRepository.findById(chickenUpdateRequest.getCageId()).orElseThrow(() -> new NotFoundException("cage.not.found", chickenUpdateRequest.getCageId())));
-        }
-        return chickenMapper.toResponse(chickenRepository.save(chicken));
-    }
-
-    private Breed getBreedById(Long id) {
-        return breedLookupService.getBreedByIdOrThrow(id);
-    }
-
-    protected Chicken getChickenById(Long id) {
-        return chickenRepository.findChickenByIdAndIsActiveTrue(id).orElseThrow(() ->
-                new NotFoundException("chicken.not.found", id));
-    }
+  protected Chicken getChickenById(Long id) {
+    return chickenRepository
+        .findChickenByIdAndIsActiveTrue(id)
+        .orElseThrow(() -> new NotFoundException("chicken.not.found", id));
+  }
 }

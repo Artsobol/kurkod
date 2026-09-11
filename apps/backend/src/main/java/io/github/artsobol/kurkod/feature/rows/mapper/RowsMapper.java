@@ -11,12 +11,12 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface RowsMapper {
 
-    @Mapping(target = "workshopId", source = "workshop.id")
-    RowsResponse toResponse(Rows rows);
+  @Mapping(target = "workshopId", source = "workshop.id")
+  RowsResponse toResponse(Rows rows);
 
-    @Mapping(target = "workshop", ignore = true)
-    Rows toEntity(RowsCreateRequest rowsCreateRequest);
+  @Mapping(target = "workshop", ignore = true)
+  Rows toEntity(RowsCreateRequest rowsCreateRequest);
 
-    @Mapping(target = "workshop", ignore = true)
-    void update(@MappingTarget Rows rows, RowsUpdateRequest rowsUpdateRequest);
+  @Mapping(target = "workshop", ignore = true)
+  void update(@MappingTarget Rows rows, RowsUpdateRequest rowsUpdateRequest);
 }

@@ -13,10 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChickenMovementCreateRequest {
 
-    private Instant movedAt;
+  private Instant movedAt;
 
-    private Long fromCageId;
+  private Long fromCageId;
 
-    @NotNull
-    private Long toCageId;
+  @NotNull private Long toCageId;
 }

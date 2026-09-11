@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface ChickenMovementService {
 
-    ChickenMovementResponse get(Long movementId);
+  ChickenMovementResponse get(Long movementId);
 
-    ChickenMovementResponse getCurrentCage(Long chickenId);
+  ChickenMovementResponse getCurrentCage(Long chickenId);
 
-    List<ChickenMovementResponse> getAllByChickenId(Long chickenId);
+  List<ChickenMovementResponse> getAllByChickenId(Long chickenId);
 
-    ChickenMovementResponse create(Long chickenId, ChickenMovementCreateRequest request);
+  ChickenMovementResponse create(Long chickenId, ChickenMovementCreateRequest request);
 }

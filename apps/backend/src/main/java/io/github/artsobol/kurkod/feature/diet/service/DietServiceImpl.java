@@ -21,64 +21,63 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class DietServiceImpl implements DietService {
 
-    private final DietRepository dietRepository;
-    private final DietMapper dietMapper;
+  private final DietRepository dietRepository;
+  private final DietMapper dietMapper;
 
+  @Override
+  public DietResponse get(Long id) {
+    return dietMapper.toResponse(getDietById(id));
+  }
 
-    @Override
-    public DietResponse get(Long id) {
-        return dietMapper.toResponse(getDietById(id));
-    }
+  @Override
+  public List<DietResponse> getAll() {
+    return dietRepository.findAllByIsActiveTrue().stream().map(dietMapper::toResponse).toList();
+  }
 
-    @Override
-    public List<DietResponse> getAll() {
-        return dietRepository.findAllByIsActiveTrue()
-                .stream()
-                .map(dietMapper::toResponse)
-                .toList();
-    }
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public DietResponse create(DietCreateRequest request) {
+    ensureNotExists(request.getCode());
+    Diet diet = dietMapper.toEntity(request);
+    dietRepository.save(diet);
+    return dietMapper.toResponse(diet);
+  }
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietResponse create(DietCreateRequest request) {
-        ensureNotExists(request.getCode());
-        Diet diet = dietMapper.toEntity(request);
-        dietRepository.save(diet);
-        return dietMapper.toResponse(diet);
-    }
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public DietResponse update(Long id, DietUpdateRequest request, Long version) {
+    Diet diet = getDietById(id);
+    checkVersion(diet.getVersion(), version);
+    dietMapper.update(diet, request);
+    dietRepository.save(diet);
+    return dietMapper.toResponse(diet);
+  }
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public DietResponse update(Long id, DietUpdateRequest request, Long version) {
-        Diet diet = getDietById(id);
-        checkVersion(diet.getVersion(), version);
-        dietMapper.update(diet, request);
-        dietRepository.save(diet);
-        return dietMapper.toResponse(diet);
-    }
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Long id, Long version) {
-        Diet diet = getDietById(id);
-        checkVersion(diet.getVersion(), version);
-        diet.deactivate();
-        dietRepository.save(diet);
-    }
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public void delete(Long id, Long version) {
+    Diet diet = getDietById(id);
+    checkVersion(diet.getVersion(), version);
+    diet.deactivate();
+    dietRepository.save(diet);
+  }
 
-    protected void ensureNotExists(String code) {
-        if (existsByCode(code)){
-            throw new DataExistException("diet.already.exists", code);
-        }
+  protected void ensureNotExists(String code) {
+    if (existsByCode(code)) {
+      throw new DataExistException("diet.already.exists", code);
     }
+  }
 
-    protected boolean existsByCode(String code){
-        return dietRepository.existsByCodeAndIsActiveTrue(code);
-    }
+  protected boolean existsByCode(String code) {
+    return dietRepository.existsByCodeAndIsActiveTrue(code);
+  }
 
-    protected Diet getDietById(Long id){
-        return dietRepository.findById(id).orElseThrow(() -> new NotFoundException("diet.not.found", id));
-    }
+  protected Diet getDietById(Long id) {
+    return dietRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException("diet.not.found", id));
+  }
 }

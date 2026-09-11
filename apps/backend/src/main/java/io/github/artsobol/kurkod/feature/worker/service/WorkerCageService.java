@@ -2,7 +2,6 @@ package io.github.artsobol.kurkod.feature.worker.service;
 
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
-
 import java.util.List;
 
 public interface WorkerCageService {

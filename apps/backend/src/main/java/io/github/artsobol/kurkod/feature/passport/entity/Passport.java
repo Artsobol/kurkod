@@ -10,22 +10,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "passport", uniqueConstraints = @UniqueConstraint(columnNames = {"series", "number"}, name = "uq_passport_series_number"))
+@Table(
+    name = "passport",
+    uniqueConstraints =
+        @UniqueConstraint(
+            columnNames = {"series", "number"},
+            name = "uq_passport_series_number"))
 @Getter
 @Setter
 @NoArgsConstructor
 public class Passport extends AbstractEntity {
 
-    @Column(length = 4, nullable = false)
-    @Pattern(regexp = "^[0-9]{4}$", message = "Invalid passport series")
-    private String series;
+  @Column(length = 4, nullable = false)
+  @Pattern(regexp = "^[0-9]{4}$", message = "Invalid passport series") private String series;
 
-    @Column(length = 6, nullable = false)
-    @Pattern(regexp = "^[0-9]{6}$", message = "Invalid passport number")
-    private String number;
+  @Column(length = 6, nullable = false)
+  @Pattern(regexp = "^[0-9]{6}$", message = "Invalid passport number") private String number;
 
-    @NotNull
-    @OneToOne(optional = false)
-    @JoinColumn(name = "worker_id", nullable = false)
-    private Worker worker;
+  @NotNull @OneToOne(optional = false)
+  @JoinColumn(name = "worker_id", nullable = false)
+  private Worker worker;
 }

@@ -11,20 +11,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmploymentContractCreateRequest {
 
-    @NotBlank
-    @Size(min = 2, max = 20, message = "Contract number should be between 2 and 20 characters")
-    private String contractNumber;
+  @NotBlank @Size(min = 2, max = 20, message = "Contract number should be between 2 and 20 characters") private String contractNumber;
 
-    @NotNull
-    @Positive
-    private Integer salary;
+  @NotNull @Positive private Integer salary;
 
-    @NotNull
-    private Long staffId;
+  @NotNull private Long staffId;
 
-    @NotNull
-    private LocalDate startDate;
+  @NotNull private LocalDate startDate;
 
-    @NotNull
-    private LocalDate endDate;
+  @NotNull private LocalDate endDate;
 }

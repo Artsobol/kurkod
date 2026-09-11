@@ -1,12 +1,11 @@
 package io.github.artsobol.kurkod.feature.chicken.service;
 
-import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
-import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
 import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
+import io.github.artsobol.kurkod.feature.chicken.dto.response.ChickenResponse;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface ChickenService {
 

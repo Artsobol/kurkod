@@ -1,14 +1,13 @@
 package io.github.artsobol.kurkod.infrastructure.utils;
 
 import io.github.artsobol.kurkod.exception.security.CryptoException;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Base64;
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
 
 public final class TokenUtils {
 
@@ -28,10 +27,8 @@ public final class TokenUtils {
   public static String hmacSha256Base64Url(String raw, String pepper) {
     try {
       Mac mac = Mac.getInstance("HmacSHA256");
-      SecretKeySpec secretKeySpec = new SecretKeySpec(
-              pepper.getBytes(StandardCharsets.UTF_8),
-              mac.getAlgorithm()
-      );
+      SecretKeySpec secretKeySpec =
+          new SecretKeySpec(pepper.getBytes(StandardCharsets.UTF_8), mac.getAlgorithm());
       mac.init(secretKeySpec);
       byte[] digest = mac.doFinal(raw.getBytes(StandardCharsets.UTF_8));
       return ENCODER.encodeToString(digest);

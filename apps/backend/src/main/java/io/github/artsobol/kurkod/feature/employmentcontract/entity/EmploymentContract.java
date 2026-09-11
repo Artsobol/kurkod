@@ -21,28 +21,23 @@ import lombok.Setter;
 @Table(name = "employment_contract")
 public class EmploymentContract extends AbstractEntity {
 
-    @NotBlank
-    @Column(nullable = false, unique = true, length = 20)
-    @Size(max = 20, message = "Contract number should be less than 20 characters")
-    private String contractNumber;
+  @NotBlank @Column(nullable = false, unique = true, length = 20)
+  @Size(max = 20, message = "Contract number should be less than 20 characters") private String contractNumber;
 
-    @NotNull
-    @Column(nullable = false)
-    private Integer salary;
+  @NotNull @Column(nullable = false)
+  private Integer salary;
 
-    @ManyToOne()
-    @JoinColumn(name = "staff_id", nullable = false)
-    private Staff staff;
+  @ManyToOne()
+  @JoinColumn(name = "staff_id", nullable = false)
+  private Staff staff;
 
-    @ManyToOne()
-    @JoinColumn(name = "worker_id", nullable = false)
-    private Worker worker;
+  @ManyToOne()
+  @JoinColumn(name = "worker_id", nullable = false)
+  private Worker worker;
 
-    @NotNull
-    @Column(nullable = false, name = "start_date")
-    private LocalDate startDate;
+  @NotNull @Column(nullable = false, name = "start_date")
+  private LocalDate startDate;
 
-    @NotNull
-    @Column(nullable = false, name = "end_date")
-    private LocalDate endDate;
+  @NotNull @Column(nullable = false, name = "end_date")
+  private LocalDate endDate;
 }

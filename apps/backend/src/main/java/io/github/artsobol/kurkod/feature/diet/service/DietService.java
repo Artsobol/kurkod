@@ -1,9 +1,8 @@
 package io.github.artsobol.kurkod.feature.diet.service;
 
-import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
-import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
 import io.github.artsobol.kurkod.feature.diet.dto.request.DietCreateRequest;
-
+import io.github.artsobol.kurkod.feature.diet.dto.request.DietUpdateRequest;
+import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
 import java.util.List;
 
 public interface DietService {

@@ -19,19 +19,17 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Dismissal extends AbstractEntity {
 
-    @NotNull
-    @Column(nullable = false, name = "dismissal_date")
-    private LocalDate dismissalDate;
+  @NotNull @Column(nullable = false, name = "dismissal_date")
+  private LocalDate dismissalDate;
 
-    @NotBlank
-    @Column(nullable = false)
-    private String reason;
+  @NotBlank @Column(nullable = false)
+  private String reason;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "worker_id", nullable = false)
-    private Worker worker;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "worker_id", nullable = false)
+  private Worker worker;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "who_dismiss_id", nullable = false)
-    private Worker whoDismiss;
+  @ManyToOne(optional = false)
+  @JoinColumn(name = "who_dismiss_id", nullable = false)
+  private Worker whoDismiss;
 }

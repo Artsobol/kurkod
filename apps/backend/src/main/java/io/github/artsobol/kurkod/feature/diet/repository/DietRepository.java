@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DietRepository extends JpaRepository<Diet, Long> {
 
-    Optional<Diet> findDietByIdAndIsActiveTrue(Long id);
+  Optional<Diet> findDietByIdAndIsActiveTrue(Long id);
 
-    List<Diet> findAllByIsActiveTrue();
+  List<Diet> findAllByIsActiveTrue();
 
-    boolean existsByCodeAndIsActiveTrue(String code);
+  boolean existsByCodeAndIsActiveTrue(String code);
 }

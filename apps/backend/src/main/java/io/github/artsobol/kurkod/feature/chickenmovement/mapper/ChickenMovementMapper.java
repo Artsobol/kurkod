@@ -9,13 +9,13 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ChickenMovementMapper {
 
-    @Mapping(target = "fromCageId", source = "fromCage.id")
-    @Mapping(target = "toCageId", source = "toCage.id")
-    @Mapping(target = "chickenId", source = "chicken.id")
-    ChickenMovementResponse toResponse(ChickenMovement chickenMovement);
+  @Mapping(target = "fromCageId", source = "fromCage.id")
+  @Mapping(target = "toCageId", source = "toCage.id")
+  @Mapping(target = "chickenId", source = "chicken.id")
+  ChickenMovementResponse toResponse(ChickenMovement chickenMovement);
 
-    @Mapping(target = "chicken", ignore = true)
-    @Mapping(target = "fromCage", ignore = true)
-    @Mapping(target = "toCage", ignore = true)
-    ChickenMovement toEntity(ChickenMovementCreateRequest chickenMovementCreateRequest);
+  @Mapping(target = "chicken", ignore = true)
+  @Mapping(target = "fromCage", ignore = true)
+  @Mapping(target = "toCage", ignore = true)
+  ChickenMovement toEntity(ChickenMovementCreateRequest chickenMovementCreateRequest);
 }

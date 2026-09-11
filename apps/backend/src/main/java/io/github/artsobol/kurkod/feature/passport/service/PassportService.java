@@ -1,8 +1,8 @@
 package io.github.artsobol.kurkod.feature.passport.service;
 
-import io.github.artsobol.kurkod.feature.passport.dto.response.PassportResponse;
 import io.github.artsobol.kurkod.feature.passport.dto.request.PassportCreateRequest;
 import io.github.artsobol.kurkod.feature.passport.dto.request.PassportUpdateRequest;
+import io.github.artsobol.kurkod.feature.passport.dto.response.PassportResponse;
 
 public interface PassportService {
 

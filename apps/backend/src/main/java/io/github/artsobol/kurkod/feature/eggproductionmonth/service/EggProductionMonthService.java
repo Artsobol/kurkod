@@ -7,16 +7,19 @@ import java.util.List;
 
 public interface EggProductionMonthService {
 
-    EggProductionMonthResponse get(Long chickenId, int month, int year);
+  EggProductionMonthResponse get(Long chickenId, int month, int year);
 
-    List<EggProductionMonthResponse> getAllByChicken(Long chickenId);
+  List<EggProductionMonthResponse> getAllByChicken(Long chickenId);
 
-    List<EggProductionMonthResponse> getAllByChickenAndYear(Long chickenId, int year);
+  List<EggProductionMonthResponse> getAllByChickenAndYear(Long chickenId, int year);
 
-    EggProductionMonthResponse create(Long chickenId, int month, int year, EggProductionMonthCreateRequest request);
-    EggProductionMonthResponse update(Long chickenId, int month, int year, EggProductionMonthUpdateRequest request, Long version);
+  EggProductionMonthResponse create(
+      Long chickenId, int month, int year, EggProductionMonthCreateRequest request);
 
-    void delete(Long chickenId, int month, int year, Long version);
+  EggProductionMonthResponse update(
+      Long chickenId, int month, int year, EggProductionMonthUpdateRequest request, Long version);
 
-    Long countEggsByMonthAndYear(int month, int year);
+  void delete(Long chickenId, int month, int year, Long version);
+
+  Long countEggsByMonthAndYear(int month, int year);
 }

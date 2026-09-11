@@ -7,12 +7,13 @@ import java.util.List;
 
 public interface DismissalService {
 
-    DismissalResponse getByWorkerAndDismissed(Long workerId, Long dismissedId);
+  DismissalResponse getByWorkerAndDismissed(Long workerId, Long dismissedId);
 
-    List<DismissalResponse> getAllByWorker(Long workerId);
+  List<DismissalResponse> getAllByWorker(Long workerId);
 
-    List<DismissalResponse> getAllByDismissed(Long dismissedId);
+  List<DismissalResponse> getAllByDismissed(Long dismissedId);
 
-    DismissalResponse create(DismissalCreateRequest request, Long currentUserId);
-    DismissalResponse update(Long workerId, DismissalUpdateRequest request, Long version);
+  DismissalResponse create(DismissalCreateRequest request, Long currentUserId);
+
+  DismissalResponse update(Long workerId, DismissalUpdateRequest request, Long version);
 }

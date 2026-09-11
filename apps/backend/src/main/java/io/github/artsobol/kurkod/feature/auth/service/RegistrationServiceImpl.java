@@ -24,18 +24,15 @@ public class RegistrationServiceImpl implements RegistrationService {
   @Override
   @Transactional
   public AuthResponse register(RegistrationRequest request, SessionMetadata metadata) {
-    User user = userService.createUser(
-        new CreateUserRequest(
-            request.getUsername(),
-            request.getEmail(),
-            passwordEncoder.encode(request.getPassword())));
+    User user =
+        userService.createUser(
+            new CreateUserRequest(
+                request.getUsername(),
+                request.getEmail(),
+                passwordEncoder.encode(request.getPassword())));
     UUID sessionId = UUID.randomUUID();
     return authResponseFactory.create(
         new CreateRefreshTokenRequest(
-            user,
-            sessionId,
-            metadata.ipAddress(),
-            metadata.userAgent(),
-            metadata.deviceName()));
+            user, sessionId, metadata.ipAddress(), metadata.userAgent(), metadata.deviceName()));
   }
 }

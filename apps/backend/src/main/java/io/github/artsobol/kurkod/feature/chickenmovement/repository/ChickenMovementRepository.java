@@ -1,12 +1,10 @@
 package io.github.artsobol.kurkod.feature.chickenmovement.repository;
 
 import io.github.artsobol.kurkod.feature.chickenmovement.entity.ChickenMovement;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.time.LocalDateTime;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ChickenMovementRepository extends JpaRepository<ChickenMovement, Long> {
 

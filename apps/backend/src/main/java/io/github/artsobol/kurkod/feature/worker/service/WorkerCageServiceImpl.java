@@ -1,24 +1,22 @@
 package io.github.artsobol.kurkod.feature.worker.service;
 
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
-import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
 import io.github.artsobol.kurkod.feature.cage.entity.Cage;
+import io.github.artsobol.kurkod.feature.cage.mapper.CageMapper;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
-import io.github.artsobol.kurkod.feature.worker.mapper.WorkerMapper;
 import io.github.artsobol.kurkod.feature.worker.dto.response.WorkerResponse;
 import io.github.artsobol.kurkod.feature.worker.entity.Worker;
 import io.github.artsobol.kurkod.feature.worker.entity.WorkerCage;
+import io.github.artsobol.kurkod.feature.worker.mapper.WorkerMapper;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerCageRepository;
 import io.github.artsobol.kurkod.feature.worker.repository.WorkerRepository;
-import io.github.artsobol.kurkod.feature.worker.service.WorkerCageService;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional

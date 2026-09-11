@@ -39,10 +39,12 @@ class RefreshTokenServiceImplTest {
     UUID sessionId = UUID.randomUUID();
     CreateRefreshTokenRequest oldRequest =
         new CreateRefreshTokenRequest(user, sessionId, "old-ip", "old-agent", "device");
-    RefreshToken oldToken = RefreshToken.create(oldRequest, "old-hash", Instant.now().plusSeconds(60));
+    RefreshToken oldToken =
+        RefreshToken.create(oldRequest, "old-hash", Instant.now().plusSeconds(60));
     CreateRefreshTokenRequest newRequest =
         new CreateRefreshTokenRequest(user, sessionId, "new-ip", "new-agent", "device");
-    RefreshToken newToken = RefreshToken.create(newRequest, "new-hash", Instant.now().plusSeconds(60));
+    RefreshToken newToken =
+        RefreshToken.create(newRequest, "new-hash", Instant.now().plusSeconds(60));
     when(encoder.hash("raw-old")).thenReturn("old-hash");
     when(repository.findByTokenHash("old-hash")).thenReturn(Optional.of(oldToken));
     when(encoder.create(newRequest)).thenReturn(new RefreshTokenResponse("raw-new", newToken));

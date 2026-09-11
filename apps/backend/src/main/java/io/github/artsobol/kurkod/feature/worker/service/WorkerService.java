@@ -9,14 +9,15 @@ import org.springframework.data.domain.Pageable;
 
 public interface WorkerService {
 
-    WorkerResponse get(Long id);
+  WorkerResponse get(Long id);
 
-    List<WorkerResponse> getAll();
+  List<WorkerResponse> getAll();
 
-    Page<WorkerResponse> getPage(Pageable pageable);
+  Page<WorkerResponse> getPage(Pageable pageable);
 
-    WorkerResponse create(WorkerCreateRequest request);
-    WorkerResponse update(Long id, WorkerUpdateRequest request, Long version);
+  WorkerResponse create(WorkerCreateRequest request);
 
-    void delete(Long id, Long version);
+  WorkerResponse update(Long id, WorkerUpdateRequest request, Long version);
+
+  void delete(Long id, Long version);
 }

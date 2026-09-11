@@ -5,11 +5,11 @@ import java.util.Objects;
 
 public final class VersionUtils {
 
-    private VersionUtils() {}
+  private VersionUtils() {}
 
-    public static void checkVersion(Long entityVersion, Long requestVersion) {
-        if (!Objects.equals(entityVersion, requestVersion)) {
-            throw new VersionConflictException("common.version.mismatch", entityVersion, requestVersion);
-        }
+  public static void checkVersion(Long entityVersion, Long requestVersion) {
+    if (!Objects.equals(entityVersion, requestVersion)) {
+      throw new VersionConflictException("common.version.mismatch", entityVersion, requestVersion);
     }
+  }
 }

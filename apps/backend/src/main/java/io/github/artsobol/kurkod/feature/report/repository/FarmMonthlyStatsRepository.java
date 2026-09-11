@@ -12,10 +12,13 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class FarmMonthlyStatsRepository {
 
-    @PersistenceContext private final EntityManager em;
+  @PersistenceContext private final EntityManager em;
 
-    public List<BreedWorkshopMonthlyReportResponse> findBreedWorkshopMonthlyStats(int year, int month) {
-        List<Object[]> rows = em.createNativeQuery("""
+  public List<BreedWorkshopMonthlyReportResponse> findBreedWorkshopMonthlyStats(
+      int year, int month) {
+    List<Object[]> rows =
+        em.createNativeQuery(
+                """
                                                    SELECT
                                                        w.id                       AS workshop_id,
                                                        w.workshop_number          AS workshop_number,
@@ -23,7 +26,7 @@ public class FarmMonthlyStatsRepository {
                                                        b.name                     AS breed_name,
                                                        COUNT(DISTINCT c.id)       AS chickens_count,
                                                        COALESCE(SUM(epm.count), 0) AS eggs_total,
-                                                       CASE 
+                                                       CASE
                                                            WHEN COUNT(DISTINCT c.id) = 0 THEN 0
                                                            ELSE COALESCE(SUM(epm.count), 0)::decimal / COUNT(DISTINCT c.id)
                                                        END                        AS avg_eggs_per_chicken
@@ -31,7 +34,7 @@ public class FarmMonthlyStatsRepository {
                                                    JOIN chicken c ON c.id = ccp.chicken_id
                                                    JOIN workshop w ON w.id = ccp.workshop_id
                                                    JOIN breed b ON b.id = c.breed_id
-                                                   LEFT JOIN egg_production_month epm 
+                                                   LEFT JOIN egg_production_month epm
                                                        ON epm.chicken_id = c.id
                                                       AND epm.year = :year
                                                       AND epm.month = :month
@@ -39,31 +42,30 @@ public class FarmMonthlyStatsRepository {
                                                    GROUP BY w.id, w.workshop_number, b.id, b.name
                                                    ORDER BY w.workshop_number, b.name
                                                    """)
-                                .setParameter("year", year)
-                                .setParameter("month", month)
-                                .getResultList();
+            .setParameter("year", year)
+            .setParameter("month", month)
+            .getResultList();
 
-        return rows.stream().map(this::mapRowToResponse).toList();
-    }
+    return rows.stream().map(this::mapRowToResponse).toList();
+  }
 
-    private BreedWorkshopMonthlyReportResponse mapRowToResponse(Object[] r) {
-        Long workshopId = ((Number) r[0]).longValue();
-        Integer workshopNumber = ((Number) r[1]).intValue();
-        Long breedId = ((Number) r[2]).longValue();
-        String breedName = (String) r[3];
-        Long chickensCount = ((Number) r[4]).longValue();
-        Long eggsTotal = ((Number) r[5]).longValue();
-        BigDecimal avgEggsPerChicken = (r[6] instanceof BigDecimal bd)
-                                       ? bd
-                                       : BigDecimal.valueOf(((Number) r[6]).doubleValue());
+  private BreedWorkshopMonthlyReportResponse mapRowToResponse(Object[] r) {
+    Long workshopId = ((Number) r[0]).longValue();
+    Integer workshopNumber = ((Number) r[1]).intValue();
+    Long breedId = ((Number) r[2]).longValue();
+    String breedName = (String) r[3];
+    Long chickensCount = ((Number) r[4]).longValue();
+    Long eggsTotal = ((Number) r[5]).longValue();
+    BigDecimal avgEggsPerChicken =
+        (r[6] instanceof BigDecimal bd) ? bd : BigDecimal.valueOf(((Number) r[6]).doubleValue());
 
-        return new BreedWorkshopMonthlyReportResponse(workshopId,
-                                                 workshopNumber,
-                                                 breedId,
-                                                 breedName,
-                                                 chickensCount,
-                                                 eggsTotal,
-                                                 avgEggsPerChicken);
-    }
+    return new BreedWorkshopMonthlyReportResponse(
+        workshopId,
+        workshopNumber,
+        breedId,
+        breedName,
+        chickensCount,
+        eggsTotal,
+        avgEggsPerChicken);
+  }
 }
-

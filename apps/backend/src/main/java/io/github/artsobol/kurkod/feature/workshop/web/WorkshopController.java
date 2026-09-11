@@ -22,58 +22,55 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/workshops", produces = "application/json")
 public class WorkshopController {
 
-    private final WorkshopService workshopService;
+  private final WorkshopService workshopService;
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get workshop by ID")
-    public ResponseEntity<WorkshopResponse> get(
-            @PathVariable Long id) {
+  @GetMapping("/{id}")
+  @Operation(summary = "Get workshop by ID")
+  public ResponseEntity<WorkshopResponse> get(@PathVariable Long id) {
 
-        WorkshopResponse response = workshopService.get(id);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    WorkshopResponse response = workshopService.get(id);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-    @GetMapping
-    @Operation(summary = "Get all workshops")
-    public ResponseEntity<List<WorkshopResponse>> getAll() {
+  @GetMapping
+  @Operation(summary = "Get all workshops")
+  public ResponseEntity<List<WorkshopResponse>> getAll() {
 
-        List<WorkshopResponse> response = workshopService.getAll();
-        return ResponseEntity.ok(response);
-    }
+    List<WorkshopResponse> response = workshopService.getAll();
+    return ResponseEntity.ok(response);
+  }
 
-    @PostMapping
-    @Operation(summary = "Create workshop")
-    public ResponseEntity<WorkshopResponse> create(
-            @RequestBody @Valid WorkshopCreateRequest request) {
+  @PostMapping
+  @Operation(summary = "Create workshop")
+  public ResponseEntity<WorkshopResponse> create(
+      @RequestBody @Valid WorkshopCreateRequest request) {
 
-        WorkshopResponse response = workshopService.create(request);
-        return ResponseEntity.created(buildLocation(response.id())).eTag(EtagUtils.toEtag(response.version())).body(
-                response);
-    }
-    @PatchMapping("/{id}")
-    @Operation(summary = "Partially update workshop")
-    public ResponseEntity<WorkshopResponse> update(
-            @PathVariable Long id,
-            @RequestBody @Valid WorkshopUpdateRequest request,
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    WorkshopResponse response = workshopService.create(request);
+    return ResponseEntity.created(buildLocation(response.id()))
+        .eTag(EtagUtils.toEtag(response.version()))
+        .body(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        WorkshopResponse response = workshopService.update(id, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+  @PatchMapping("/{id}")
+  @Operation(summary = "Partially update workshop")
+  public ResponseEntity<WorkshopResponse> update(
+      @PathVariable Long id,
+      @RequestBody @Valid WorkshopUpdateRequest request,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
-    @DeleteMapping("/{id}")
-    @Operation(summary = "Delete workshop")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long id,
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    WorkshopResponse response = workshopService.update(id, request, expected);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        workshopService.delete(id, expected);
-        return ResponseEntity.noContent().build();
-    }
+  @DeleteMapping("/{id}")
+  @Operation(summary = "Delete workshop")
+  public ResponseEntity<Void> delete(
+      @PathVariable Long id,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    workshopService.delete(id, expected);
+    return ResponseEntity.noContent().build();
+  }
 }

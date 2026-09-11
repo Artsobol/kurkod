@@ -23,61 +23,55 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Users", description = "User operations")
 public class UserController {
 
-    private final UserService userService;
+  private final UserService userService;
 
-    @Operation(summary = "Get user by ID")
-    @GetMapping("/id/{userId}")
-    public ResponseEntity<UserResponse> getById(
-            @PathVariable Long userId) {
+  @Operation(summary = "Get user by ID")
+  @GetMapping("/id/{userId}")
+  public ResponseEntity<UserResponse> getById(@PathVariable Long userId) {
 
-        UserResponse response = userService.getById(userId);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    UserResponse response = userService.getById(userId);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-    @Operation(summary = "Get user by username")
-    @GetMapping("/username/{username}")
-    public ResponseEntity<UserResponse> getByUsername(
-            @PathVariable String username) {
+  @Operation(summary = "Get user by username")
+  @GetMapping("/username/{username}")
+  public ResponseEntity<UserResponse> getByUsername(@PathVariable String username) {
 
-        UserResponse response = userService.getByUsername(username);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    UserResponse response = userService.getByUsername(username);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-    @Operation(summary = "Create user")
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserResponse> create(@RequestBody @Valid UserCreateRequest userCreateRequest) {
+  @Operation(summary = "Create user")
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<UserResponse> create(
+      @RequestBody @Valid UserCreateRequest userCreateRequest) {
 
-        UserResponse response = userService.create(userCreateRequest);
-        return ResponseEntity.created(LocationUtils.buildLocation("/users/id/{id}", response.id()))
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    UserResponse response = userService.create(userCreateRequest);
+    return ResponseEntity.created(LocationUtils.buildLocation("/users/id/{id}", response.id()))
+        .eTag(EtagUtils.toEtag(response.version()))
+        .body(response);
+  }
 
-    @Operation(summary = "Partially update user")
-    @PatchMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserResponse> updatePartiallyUser(
-            @PathVariable Long userId,
-            @RequestBody @Valid UserUpdateRequest request,
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+  @Operation(summary = "Partially update user")
+  @PatchMapping(value = "/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<UserResponse> updatePartiallyUser(
+      @PathVariable Long userId,
+      @RequestBody @Valid UserUpdateRequest request,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        UserResponse response = userService.update(userId, request, expected);
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
-    @Operation(summary = "Delete user")
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Void> deleteById(
-            @PathVariable Long userId,
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    UserResponse response = userService.update(userId, request, expected);
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        userService.deleteById(userId, expected);
-        return ResponseEntity.noContent().build();
-    }
+  @Operation(summary = "Delete user")
+  @DeleteMapping("/{userId}")
+  public ResponseEntity<Void> deleteById(
+      @PathVariable Long userId,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    userService.deleteById(userId, expected);
+    return ResponseEntity.noContent().build();
+  }
 }

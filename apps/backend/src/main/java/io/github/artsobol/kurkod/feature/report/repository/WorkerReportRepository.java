@@ -10,7 +10,9 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface WorkerReportRepository extends JpaRepository<Worker, Long> {
 
-    @Query(value = """
+  @Query(
+      value =
+          """
         SELECT
             w.id          AS workerId,
             w.first_name  AS firstName,
@@ -30,7 +32,7 @@ public interface WorkerReportRepository extends JpaRepository<Worker, Long> {
         GROUP BY w.id, w.first_name, w.last_name
         ORDER BY w.last_name, w.first_name
         """,
-           nativeQuery = true)
-    List<WorkerMonthlyEggsProjection> getMonthlyEggsPerWorker(@Param("year") int year,
-                                                          @Param("month") int month);
+      nativeQuery = true)
+  List<WorkerMonthlyEggsProjection> getMonthlyEggsPerWorker(
+      @Param("year") int year, @Param("month") int month);
 }

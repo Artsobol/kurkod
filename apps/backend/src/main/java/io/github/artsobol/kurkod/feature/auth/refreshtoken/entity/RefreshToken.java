@@ -15,11 +15,13 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
-@Table(name = "refresh_token", indexes = {
-        @Index(name = "idx_refresh_token_user_id", columnList = "user_id"),
-        @Index(name = "idx_refresh_token_session_id", columnList = "session_id"),
-        @Index(name = "idx_refresh_token_token_hash", columnList = "token_hash")
-})
+@Table(
+    name = "refresh_token",
+    indexes = {
+      @Index(name = "idx_refresh_token_user_id", columnList = "user_id"),
+      @Index(name = "idx_refresh_token_session_id", columnList = "session_id"),
+      @Index(name = "idx_refresh_token_token_hash", columnList = "token_hash")
+    })
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class RefreshToken {
@@ -36,7 +38,10 @@ public class RefreshToken {
 
   @Getter
   @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(name = "fk_refresh_token_user_id"))
+  @JoinColumn(
+      name = "user_id",
+      nullable = false,
+      foreignKey = @ForeignKey(name = "fk_refresh_token_user_id"))
   private User user;
 
   @Getter
@@ -62,12 +67,10 @@ public class RefreshToken {
   @Column(name = "session_id", nullable = false)
   private UUID sessionId;
 
-  @NotBlank
-  @Column(name = "ip_address", nullable = false)
+  @NotBlank @Column(name = "ip_address", nullable = false)
   private String ipAddress;
 
-  @NotBlank
-  @Column(name = "user_agent", nullable = false)
+  @NotBlank @Column(name = "user_agent", nullable = false)
   private String userAgent;
 
   @Getter
@@ -82,7 +85,8 @@ public class RefreshToken {
   @Column(name = "last_used_at", nullable = false)
   private Instant lastUsedAt;
 
-  public static RefreshToken create(CreateRefreshTokenRequest request, String tokenHash, Instant expiresAt) {
+  public static RefreshToken create(
+      CreateRefreshTokenRequest request, String tokenHash, Instant expiresAt) {
     RefreshToken entity = new RefreshToken();
     entity.tokenHash = Objects.requireNonNull(tokenHash, "Token hash is null");
     entity.expiresAt = Objects.requireNonNull(expiresAt, "ExpiresAt is null");
@@ -113,5 +117,4 @@ public class RefreshToken {
     this.replaceBy = newToken;
     newToken.replacedToken = this;
   }
-
 }

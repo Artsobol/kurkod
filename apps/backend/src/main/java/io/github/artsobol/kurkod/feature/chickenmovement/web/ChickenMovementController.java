@@ -16,46 +16,48 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-@Tag(name = "Chicken Movement", description = "Operations with chicken movements (history of relocations)")
+@Tag(
+    name = "Chicken Movement",
+    description = "Operations with chicken movements (history of relocations)")
 public class ChickenMovementController {
 
-    private final ChickenMovementService chickenMovementService;
+  private final ChickenMovementService chickenMovementService;
 
-    @Operation(summary = "Get movement by ID")
-    @GetMapping("/chicken-movements/{id}")
-    public ResponseEntity<ChickenMovementResponse> getById(
-            @PathVariable Long id) {
+  @Operation(summary = "Get movement by ID")
+  @GetMapping("/chicken-movements/{id}")
+  public ResponseEntity<ChickenMovementResponse> getById(@PathVariable Long id) {
 
-        ChickenMovementResponse response = chickenMovementService.get(id);
-        return ResponseEntity.ok(response);
-    }
+    ChickenMovementResponse response = chickenMovementService.get(id);
+    return ResponseEntity.ok(response);
+  }
 
-    @Operation(summary = "List movements by chicken")
-    @GetMapping("/chickens/{chickenId}/movements")
-    public ResponseEntity<List<ChickenMovementResponse>> getAllByChicken(
-            @PathVariable Long chickenId) {
+  @Operation(summary = "List movements by chicken")
+  @GetMapping("/chickens/{chickenId}/movements")
+  public ResponseEntity<List<ChickenMovementResponse>> getAllByChicken(
+      @PathVariable Long chickenId) {
 
-        List<ChickenMovementResponse> response = chickenMovementService.getAllByChickenId(chickenId);
-        return ResponseEntity.ok(response);
-    }
+    List<ChickenMovementResponse> response = chickenMovementService.getAllByChickenId(chickenId);
+    return ResponseEntity.ok(response);
+  }
 
-    @Operation(summary = "Get current movement for chicken")
-    @GetMapping("/chickens/{chickenId}/movements/current")
-    public ResponseEntity<ChickenMovementResponse> getCurrent(
-            @PathVariable Long chickenId) {
+  @Operation(summary = "Get current movement for chicken")
+  @GetMapping("/chickens/{chickenId}/movements/current")
+  public ResponseEntity<ChickenMovementResponse> getCurrent(@PathVariable Long chickenId) {
 
-        ChickenMovementResponse response = chickenMovementService.getCurrentCage(chickenId);
-        return ResponseEntity.ok(response);
-    }
+    ChickenMovementResponse response = chickenMovementService.getCurrentCage(chickenId);
+    return ResponseEntity.ok(response);
+  }
 
-    @Operation(summary = "Create movement for chicken")
-    @PostMapping(value = "/chickens/{chickenId}/movements", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ChickenMovementResponse> create(
-            @PathVariable Long chickenId,
-            @Valid @RequestBody ChickenMovementCreateRequest request) {
+  @Operation(summary = "Create movement for chicken")
+  @PostMapping(
+      value = "/chickens/{chickenId}/movements",
+      consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<ChickenMovementResponse> create(
+      @PathVariable Long chickenId, @Valid @RequestBody ChickenMovementCreateRequest request) {
 
-        ChickenMovementResponse response = chickenMovementService.create(chickenId, request);
-        return ResponseEntity.created(
-                LocationUtils.buildLocation("/chicken-movements/{id}", response.id())).body(response);
-    }
+    ChickenMovementResponse response = chickenMovementService.create(chickenId, request);
+    return ResponseEntity.created(
+            LocationUtils.buildLocation("/chicken-movements/{id}", response.id()))
+        .body(response);
+  }
 }

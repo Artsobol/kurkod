@@ -11,10 +11,11 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring", uses = ChickenMapper.class)
 public interface EggProductionMonthMapper {
 
-    EggProductionMonthResponse toResponse(EggProductionMonth eggProductionMonth);
+  EggProductionMonthResponse toResponse(EggProductionMonth eggProductionMonth);
 
-    EggProductionMonth toEntity(EggProductionMonthCreateRequest eggProductionMonthCreateRequest);
-    void update(@MappingTarget EggProductionMonth eggProductionMonth, EggProductionMonthUpdateRequest eggProductionMonthUpdateRequest);
+  EggProductionMonth toEntity(EggProductionMonthCreateRequest eggProductionMonthCreateRequest);
 
-
+  void update(
+      @MappingTarget EggProductionMonth eggProductionMonth,
+      EggProductionMonthUpdateRequest eggProductionMonthUpdateRequest);
 }

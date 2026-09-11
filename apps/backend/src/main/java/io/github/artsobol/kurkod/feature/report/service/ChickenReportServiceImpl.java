@@ -1,18 +1,16 @@
 package io.github.artsobol.kurkod.feature.report.service;
 
-import io.github.artsobol.kurkod.feature.report.repository.ChickenEggStatsViewRepository;
-import io.github.artsobol.kurkod.feature.report.repository.ChickensByWorkshopAndBreedViewRepository;
 import io.github.artsobol.kurkod.feature.report.dto.response.ChickenEggStatsResponse;
 import io.github.artsobol.kurkod.feature.report.dto.response.ChickensByWorkshopAndBreedResponse;
 import io.github.artsobol.kurkod.feature.report.dto.response.WorkshopBreedTopResponse;
-import io.github.artsobol.kurkod.feature.report.service.ChickenReportService;
+import io.github.artsobol.kurkod.feature.report.repository.ChickenEggStatsViewRepository;
+import io.github.artsobol.kurkod.feature.report.repository.ChickensByWorkshopAndBreedViewRepository;
+import java.time.LocalDate;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

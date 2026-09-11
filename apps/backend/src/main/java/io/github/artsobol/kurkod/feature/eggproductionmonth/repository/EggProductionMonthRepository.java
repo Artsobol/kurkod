@@ -9,18 +9,20 @@ import org.springframework.data.repository.query.Param;
 
 public interface EggProductionMonthRepository extends JpaRepository<EggProductionMonth, Long> {
 
-    List<EggProductionMonth> findAllByChicken_IdAndIsActiveTrue(Long chickenId);
+  List<EggProductionMonth> findAllByChicken_IdAndIsActiveTrue(Long chickenId);
 
-    List<EggProductionMonth> findAllByChicken_IdAndYearAndIsActiveTrue(Long chickenId, int year);
+  List<EggProductionMonth> findAllByChicken_IdAndYearAndIsActiveTrue(Long chickenId, int year);
 
-    Optional<EggProductionMonth> findByChicken_IdAndMonthAndYearAndIsActiveTrue(Long chickenId, int month, int year);
+  Optional<EggProductionMonth> findByChicken_IdAndMonthAndYearAndIsActiveTrue(
+      Long chickenId, int month, int year);
 
-    boolean existsByChicken_IdAndMonthAndYearAndIsActiveTrue(Long chickenId, int month, int year);
+  boolean existsByChicken_IdAndMonthAndYearAndIsActiveTrue(Long chickenId, int month, int year);
 
-    @Query("""
+  @Query(
+      """
         SELECT COALESCE(SUM(e.count), 0)
         FROM EggProductionMonth e
         WHERE e.year = :year AND e.month = :month
     """)
-    Long countEggsByMonth(@Param("year") int year, @Param("month") int month);
+  Long countEggsByMonth(@Param("year") int year, @Param("month") int month);
 }

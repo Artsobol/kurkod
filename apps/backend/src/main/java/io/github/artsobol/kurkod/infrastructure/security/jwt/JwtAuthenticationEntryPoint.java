@@ -22,41 +22,40 @@ import tools.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private final MessageService messageService;
-    private final ObjectMapper objectMapper;
+  private final MessageService messageService;
+  private final ObjectMapper objectMapper;
 
-    @Override
-    public void commence(
-            @NonNull HttpServletRequest request,
-            @NonNull HttpServletResponse response,
-            @NonNull AuthenticationException authException
-    ) throws IOException, ServletException {
-        if (response.isCommitted()) {
-            return;
-        }
-
-        String message = messageService.createMessage("auth.unauthorized", null);
-        log.warn(
-                "Unauthorized request: method={}, URI={}, IP={}",
-                request.getMethod(),
-                request.getRequestURI(),
-                request.getRemoteAddr()
-        );
-        HttpStatus status = HttpStatus.UNAUTHORIZED;
-
-        ErrorResponse errorResponse = new ErrorResponse(
-                Instant.now(),
-                status.value(),
-                status.getReasonPhrase(),
-                "UNAUTHORIZED",
-                message,
-                request.getRequestURI()
-        );
-
-        response.setStatus(status.value());
-        response.setHeader(HttpHeaders.WWW_AUTHENTICATE, "Bearer");
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        objectMapper.writeValue(response.getWriter(), errorResponse);
+  @Override
+  public void commence(
+      @NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      @NonNull AuthenticationException authException)
+      throws IOException, ServletException {
+    if (response.isCommitted()) {
+      return;
     }
+
+    String message = messageService.createMessage("auth.unauthorized", null);
+    log.warn(
+        "Unauthorized request: method={}, URI={}, IP={}",
+        request.getMethod(),
+        request.getRequestURI(),
+        request.getRemoteAddr());
+    HttpStatus status = HttpStatus.UNAUTHORIZED;
+
+    ErrorResponse errorResponse =
+        new ErrorResponse(
+            Instant.now(),
+            status.value(),
+            status.getReasonPhrase(),
+            "UNAUTHORIZED",
+            message,
+            request.getRequestURI());
+
+    response.setStatus(status.value());
+    response.setHeader(HttpHeaders.WWW_AUTHENTICATE, "Bearer");
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+    objectMapper.writeValue(response.getWriter(), errorResponse);
+  }
 }

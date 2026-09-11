@@ -1,7 +1,6 @@
 package io.github.artsobol.kurkod.feature.worker.dto.response;
 
 import io.github.artsobol.kurkod.feature.cage.dto.response.CageResponse;
-
 import java.util.Set;
 
 public record WorkerResponse(

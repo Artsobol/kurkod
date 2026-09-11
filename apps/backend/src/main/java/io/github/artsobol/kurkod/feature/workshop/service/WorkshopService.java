@@ -1,12 +1,11 @@
 package io.github.artsobol.kurkod.feature.workshop.service;
 
-import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
-import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
 import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopCreateRequest;
+import io.github.artsobol.kurkod.feature.workshop.dto.request.WorkshopUpdateRequest;
+import io.github.artsobol.kurkod.feature.workshop.dto.response.WorkshopResponse;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface WorkshopService {
 

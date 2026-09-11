@@ -7,12 +7,13 @@ import java.util.List;
 
 public interface RowsService {
 
-    RowsResponse find(Long workshopId, Integer rowHumber);
+  RowsResponse find(Long workshopId, Integer rowHumber);
 
-    List<RowsResponse> findAll(Long workshopId);
+  List<RowsResponse> findAll(Long workshopId);
 
-    RowsResponse create(Long workshopId, RowsCreateRequest request);
+  RowsResponse create(Long workshopId, RowsCreateRequest request);
 
-    RowsResponse update(Long workshopId, Integer rowHumber, RowsUpdateRequest request, Long version);
-    void delete(Long workshopId, Integer rowHumber, Long version);
+  RowsResponse update(Long workshopId, Integer rowHumber, RowsUpdateRequest request, Long version);
+
+  void delete(Long workshopId, Integer rowHumber, Long version);
 }

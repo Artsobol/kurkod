@@ -22,81 +22,83 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class RowsServiceImpl implements RowsService {
 
-    private final RowsRepository rowsRepository;
-    private final RowsMapper rowsMapper;
-    private final WorkshopRepository workshopRepository;
+  private final RowsRepository rowsRepository;
+  private final RowsMapper rowsMapper;
+  private final WorkshopRepository workshopRepository;
 
+  @Override
+  public RowsResponse find(Long workshopId, Integer rowHumber) {
+    return rowsMapper.toResponse(getRowsById(workshopId, rowHumber));
+  }
 
-    @Override
-    public RowsResponse find(Long workshopId, Integer rowHumber) {
-        return rowsMapper.toResponse(getRowsById(workshopId, rowHumber));
+  @Override
+  public List<RowsResponse> findAll(Long workshopId) {
+
+    if (!workshopRepository.existsById(workshopId)) {
+      throw new NotFoundException("workshop.not.found", workshopId);
     }
 
-    @Override
-    public List<RowsResponse> findAll(Long workshopId) {
+    return rowsRepository.findAllByWorkshop_IdAndIsActiveTrue(workshopId).stream()
+        .map(rowsMapper::toResponse)
+        .toList();
+  }
 
-        if (!workshopRepository.existsById(workshopId)) {
-            throw new NotFoundException("workshop.not.found", workshopId);
-        }
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public RowsResponse create(Long workshopId, RowsCreateRequest request) {
+    Integer rowNumber = request.getRowNumber();
+    ensureNotExists(workshopId, rowNumber);
 
-        return rowsRepository.findAllByWorkshop_IdAndIsActiveTrue(workshopId).stream()
-                .map(rowsMapper::toResponse)
-                .toList();
+    Rows rows = rowsMapper.toEntity(request);
+    rows.setWorkshop(
+        workshopRepository
+            .findById(workshopId)
+            .orElseThrow(() -> new NotFoundException("workshop.not.found", workshopId)));
+    rowsRepository.save(rows);
+    return rowsMapper.toResponse(rows);
+  }
+
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public RowsResponse update(
+      Long workshopId, Integer rowHumber, RowsUpdateRequest request, Long version) {
+    Integer updatedRowNumber = request.getRowNumber();
+    if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
+      ensureNotExists(workshopId, updatedRowNumber);
     }
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsResponse create(Long workshopId, RowsCreateRequest request) {
-        Integer rowNumber = request.getRowNumber();
-        ensureNotExists(workshopId, rowNumber);
+    Rows rows = getRowsById(workshopId, rowHumber);
+    checkVersion(rows.getVersion(), version);
+    rowsMapper.update(rows, request);
+    rowsRepository.save(rows);
+    return rowsMapper.toResponse(rows);
+  }
 
-        Rows rows = rowsMapper.toEntity(request);
-        rows.setWorkshop(workshopRepository.findById(workshopId).orElseThrow(
-                () -> new NotFoundException("workshop.not.found", workshopId)
-        ));
-        rowsRepository.save(rows);
-        return rowsMapper.toResponse(rows);
-    }
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public void delete(Long workshopId, Integer rowHumber, Long version) {
+    Rows rows = getRowsById(workshopId, rowHumber);
+    checkVersion(rows.getVersion(), version);
+    rows.deactivate();
+    rowsRepository.save(rows);
+  }
 
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public RowsResponse update(Long workshopId, Integer rowHumber, RowsUpdateRequest request, Long version) {
-        Integer updatedRowNumber = request.getRowNumber();
-        if (updatedRowNumber != null && !updatedRowNumber.equals(rowHumber)) {
-            ensureNotExists(workshopId, updatedRowNumber);
-        }
+  protected Rows getRowsById(Long workshopId, Integer rowHumber) {
+    return rowsRepository
+        .findByWorkshop_IdAndRowNumberAndIsActiveTrue(workshopId, rowHumber)
+        .orElseThrow(() -> new NotFoundException("row.not.found.by.keys", workshopId, rowHumber));
+  }
 
-        Rows rows = getRowsById(workshopId, rowHumber);
-        checkVersion(rows.getVersion(), version);
-        rowsMapper.update(rows, request);
-        rowsRepository.save(rows);
-        return rowsMapper.toResponse(rows);
+  protected void ensureNotExists(Long workshopId, Integer rowNumber) {
+    if (existsByWorkshopIdAndRowNumber(workshopId, rowNumber)) {
+      throw new DataExistException("row.already.exists", workshopId, rowNumber);
     }
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Long workshopId, Integer rowHumber, Long version) {
-        Rows rows = getRowsById(workshopId, rowHumber);
-        checkVersion(rows.getVersion(), version);
-        rows.deactivate();
-        rowsRepository.save(rows);
-    }
+  }
 
-    protected Rows getRowsById(Long workshopId, Integer rowHumber) {
-        return rowsRepository.findByWorkshop_IdAndRowNumberAndIsActiveTrue(workshopId, rowHumber).orElseThrow(
-                () -> new NotFoundException("row.not.found.by.keys", workshopId, rowHumber)
-        );
-    }
-
-    protected void ensureNotExists(Long workshopId, Integer rowNumber) {
-        if (existsByWorkshopIdAndRowNumber(workshopId, rowNumber)) {
-            throw new DataExistException("row.already.exists", workshopId, rowNumber);
-        }
-    }
-
-    protected boolean existsByWorkshopIdAndRowNumber(Long workshopId, Integer rowNumber) {
-        return rowsRepository.existsByWorkshop_IdAndRowNumberAndIsActiveTrue(workshopId, rowNumber);
-    }
+  protected boolean existsByWorkshopIdAndRowNumber(Long workshopId, Integer rowNumber) {
+    return rowsRepository.existsByWorkshop_IdAndRowNumberAndIsActiveTrue(workshopId, rowNumber);
+  }
 }

@@ -1,8 +1,8 @@
 package io.github.artsobol.kurkod.feature.user.admin.web;
 
 import io.github.artsobol.kurkod.feature.user.admin.dto.request.ChangeRoleRequest;
-import io.github.artsobol.kurkod.feature.user.dto.response.UserResponse;
 import io.github.artsobol.kurkod.feature.user.admin.service.AdminUserService;
+import io.github.artsobol.kurkod.feature.user.dto.response.UserResponse;
 import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,49 +19,39 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Admin Users", description = "Administrative user management operations")
 public class AdminUserController {
 
-    private final AdminUserService userService;
+  private final AdminUserService userService;
 
-    @Operation(summary = "Change user role")
-    @PatchMapping("/role")
-    public ResponseEntity<UserResponse> changeRole(
-            @PathVariable(name = "id") Long userId,
+  @Operation(summary = "Change user role")
+  @PatchMapping("/role")
+  public ResponseEntity<UserResponse> changeRole(
+      @PathVariable(name = "id") Long userId,
+      @Valid @RequestBody ChangeRoleRequest request,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    UserResponse response = userService.changeUserRole(userId, request, expected);
 
-            @Valid @RequestBody ChangeRoleRequest request,
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        UserResponse response = userService.changeUserRole(userId, request, expected);
+  @Operation(summary = "Activate user")
+  @PostMapping("/activate")
+  public ResponseEntity<UserResponse> activateUser(
+      @PathVariable(name = "id") Long userId,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    UserResponse response = userService.activateUser(userId, expected);
 
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 
-    @Operation(summary = "Activate user")
-    @PostMapping("/activate")
-    public ResponseEntity<UserResponse> activateUser(
-            @PathVariable(name = "id") Long userId,
+  @Operation(summary = "Deactivate user")
+  @PostMapping("/deactivate")
+  public ResponseEntity<UserResponse> deactivateUser(
+      @PathVariable(name = "id") Long userId,
+      @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
+    long expected = EtagUtils.parseIfMatch(ifMatch);
+    UserResponse response = userService.deactivateUser(userId, expected);
 
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        UserResponse response = userService.activateUser(userId, expected);
-
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
-
-    @Operation(summary = "Deactivate user")
-    @PostMapping("/deactivate")
-    public ResponseEntity<UserResponse> deactivateUser(
-            @PathVariable(name = "id") Long userId,
-
-            @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
-        long expected = EtagUtils.parseIfMatch(ifMatch);
-        UserResponse response = userService.deactivateUser(userId, expected);
-
-        return ResponseEntity.ok()
-                             .eTag(EtagUtils.toEtag(response.version()))
-                             .body(response);
-    }
+    return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
+  }
 }

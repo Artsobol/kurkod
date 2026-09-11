@@ -1,11 +1,11 @@
 package io.github.artsobol.kurkod.feature.breed.service;
 
-import io.github.artsobol.kurkod.feature.breed.dto.response.BreedResponse;
-import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
 import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
+import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
+import io.github.artsobol.kurkod.feature.breed.dto.response.BreedResponse;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import java.util.List;
 
 public interface BreedService {
 

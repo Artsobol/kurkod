@@ -1,7 +1,7 @@
 package io.github.artsobol.kurkod.feature.employmentcontract.dto.response;
 
-import java.time.LocalDate;
 import java.time.Instant;
+import java.time.LocalDate;
 
 public record EmploymentContractResponse(
     String contractNumber,

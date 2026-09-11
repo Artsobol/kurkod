@@ -12,17 +12,18 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface DismissalMapper {
 
-    @Mapping(target = "worker", expression = "java(getFullName(dismissal.getWorker()))")
-    @Mapping(target = "whoDismiss", expression = "java(getFullName(dismissal.getWhoDismiss()))")
-    DismissalResponse toResponse(Dismissal dismissal);
+  @Mapping(target = "worker", expression = "java(getFullName(dismissal.getWorker()))")
+  @Mapping(target = "whoDismiss", expression = "java(getFullName(dismissal.getWhoDismiss()))")
+  DismissalResponse toResponse(Dismissal dismissal);
 
-    @Mapping(target = "worker", ignore = true)
-    @Mapping(target = "whoDismiss", ignore = true)
-    Dismissal toEntity(DismissalCreateRequest dismissalCreateRequest);
+  @Mapping(target = "worker", ignore = true)
+  @Mapping(target = "whoDismiss", ignore = true)
+  Dismissal toEntity(DismissalCreateRequest dismissalCreateRequest);
 
-    void  update(@MappingTarget Dismissal dismissal, DismissalUpdateRequest dismissalUpdateRequest);
-    default String getFullName(Worker worker) {
-        if (worker == null) return null;
-        return worker.getFirstName() + " " + worker.getLastName();
-    }
+  void update(@MappingTarget Dismissal dismissal, DismissalUpdateRequest dismissalUpdateRequest);
+
+  default String getFullName(Worker worker) {
+    if (worker == null) return null;
+    return worker.getFirstName() + " " + worker.getLastName();
+  }
 }

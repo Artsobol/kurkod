@@ -23,67 +23,69 @@ import org.springframework.transaction.annotation.Transactional;
 @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
 public class DismissalServiceImpl implements DismissalService {
 
-    private final DismissalRepository dismissalRepository;
-    private final DismissalMapper dismissalMapper;
-    private final WorkerRepository workerRepository;
+  private final DismissalRepository dismissalRepository;
+  private final DismissalMapper dismissalMapper;
+  private final WorkerRepository workerRepository;
 
-    @Override
-    public DismissalResponse getByWorkerAndDismissed(Long workerId, Long dismissedId) {
-        return dismissalMapper.toResponse(getDismissalByWorkerAndDismissed(workerId, dismissedId));
-    }
+  @Override
+  public DismissalResponse getByWorkerAndDismissed(Long workerId, Long dismissedId) {
+    return dismissalMapper.toResponse(getDismissalByWorkerAndDismissed(workerId, dismissedId));
+  }
 
-    @Override
-    public List<DismissalResponse> getAllByWorker(Long workerId) {
-        return dismissalRepository.findAllByWorker_Id(workerId)
-                .stream()
-                .map(dismissalMapper::toResponse)
-                .toList();
-    }
+  @Override
+  public List<DismissalResponse> getAllByWorker(Long workerId) {
+    return dismissalRepository.findAllByWorker_Id(workerId).stream()
+        .map(dismissalMapper::toResponse)
+        .toList();
+  }
 
-    @Override
-    public List<DismissalResponse> getAllByDismissed(Long dismissedId) {
-        return dismissalRepository.findAllByWhoDismiss_Id(dismissedId)
-                .stream()
-                .map(dismissalMapper::toResponse)
-                .toList();
-    }
+  @Override
+  public List<DismissalResponse> getAllByDismissed(Long dismissedId) {
+    return dismissalRepository.findAllByWhoDismiss_Id(dismissedId).stream()
+        .map(dismissalMapper::toResponse)
+        .toList();
+  }
 
-    @Override
-    @Transactional
-    public DismissalResponse create(DismissalCreateRequest request, Long currentUserId) {
-        Dismissal dismissal = dismissalMapper.toEntity(request);
-        Worker worker = getWorkerById(request.getWorkerId());
-        Worker whoDismiss = getWorkerById(currentUserId);
-        dismissal.setWorker(worker);
-        dismissal.setWhoDismiss(whoDismiss);
-        dismissalRepository.save(dismissal);
-        return dismissalMapper.toResponse(dismissal);
-    }
-    @Override
-    @Transactional
-    public DismissalResponse update(Long workerId, DismissalUpdateRequest request, Long version) {
-        Dismissal dismissal = getDismissalByWorkerId(workerId);
-        checkVersion(dismissal.getVersion(), version);
-        dismissalMapper.update(dismissal, request);
-        dismissal = dismissalRepository.save(dismissal);
-        return dismissalMapper.toResponse(dismissal);
-    }
+  @Override
+  @Transactional
+  public DismissalResponse create(DismissalCreateRequest request, Long currentUserId) {
+    Dismissal dismissal = dismissalMapper.toEntity(request);
+    Worker worker = getWorkerById(request.getWorkerId());
+    Worker whoDismiss = getWorkerById(currentUserId);
+    dismissal.setWorker(worker);
+    dismissal.setWhoDismiss(whoDismiss);
+    dismissalRepository.save(dismissal);
+    return dismissalMapper.toResponse(dismissal);
+  }
 
-    protected Worker getWorkerById(Long id) {
-        return workerRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("worker.not.found", id)
-        );
-    }
+  @Override
+  @Transactional
+  public DismissalResponse update(Long workerId, DismissalUpdateRequest request, Long version) {
+    Dismissal dismissal = getDismissalByWorkerId(workerId);
+    checkVersion(dismissal.getVersion(), version);
+    dismissalMapper.update(dismissal, request);
+    dismissal = dismissalRepository.save(dismissal);
+    return dismissalMapper.toResponse(dismissal);
+  }
 
-    protected Dismissal getDismissalByWorkerId(Long id) {
-        return dismissalRepository.findDismissalByWorker_Id(id)
-                .orElseThrow(() -> new NotFoundException("dismissal.not.found.by.worker", id));
-    }
+  protected Worker getWorkerById(Long id) {
+    return workerRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException("worker.not.found", id));
+  }
 
-    protected Dismissal getDismissalByWorkerAndDismissed(Long workerId, Long dismissId) {
-        return dismissalRepository.findDismissalByWorker_IdAndWhoDismiss_Id(workerId, dismissId)
-                .orElseThrow(() -> new NotFoundException("dismissal.not.found.by.worker.and.user", workerId, dismissId));
-    }
+  protected Dismissal getDismissalByWorkerId(Long id) {
+    return dismissalRepository
+        .findDismissalByWorker_Id(id)
+        .orElseThrow(() -> new NotFoundException("dismissal.not.found.by.worker", id));
+  }
 
-
+  protected Dismissal getDismissalByWorkerAndDismissed(Long workerId, Long dismissId) {
+    return dismissalRepository
+        .findDismissalByWorker_IdAndWhoDismiss_Id(workerId, dismissId)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "dismissal.not.found.by.worker.and.user", workerId, dismissId));
+  }
 }

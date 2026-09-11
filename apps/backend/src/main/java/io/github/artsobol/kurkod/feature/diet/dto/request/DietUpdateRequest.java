@@ -14,12 +14,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DietUpdateRequest {
 
-    Set<Integer> addBreedsIds;
-    Set<Integer> removeBreedsIds;
-    @Size(min=2, max=30)
-    private String title;
-    @Size(min=2, max=10)
-    private String code;
-    private String description;
-    private Season season;
+  Set<Integer> addBreedsIds;
+  Set<Integer> removeBreedsIds;
+
+  @Size(min = 2, max = 30) private String title;
+
+  @Size(min = 2, max = 10) private String code;
+
+  private String description;
+  private Season season;
 }

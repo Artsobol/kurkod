@@ -18,25 +18,20 @@ import lombok.*;
 @Table(name = "chicken")
 public class Chicken extends AbstractEntity {
 
-    @NotBlank
-    @Column(length = 30, nullable = false)
-    private String name;
+  @NotBlank @Column(length = 30, nullable = false)
+  private String name;
 
-    @NotNull
-    @Column(nullable = false)
-    private Integer weight;
+  @NotNull @Column(nullable = false)
+  private Integer weight;
 
-    @NotNull
-    @Column(nullable = false, name = "birth_date")
-    private LocalDate birthDate;
+  @NotNull @Column(nullable = false, name = "birth_date")
+  private LocalDate birthDate;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "breed_id", nullable = false)
-    private Breed breed;
+  @NotNull @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "breed_id", nullable = false)
+  private Breed breed;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "cage_id", nullable = false)
-    private Cage cage;
+  @NotNull @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "cage_id", nullable = false)
+  private Cage cage;
 }

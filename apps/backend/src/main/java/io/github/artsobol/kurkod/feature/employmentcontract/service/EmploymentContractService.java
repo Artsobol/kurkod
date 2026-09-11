@@ -6,10 +6,12 @@ import io.github.artsobol.kurkod.feature.employmentcontract.dto.response.Employm
 
 public interface EmploymentContractService {
 
-    EmploymentContractResponse get(Long workerId);
+  EmploymentContractResponse get(Long workerId);
 
-    EmploymentContractResponse create(Long workerId, EmploymentContractCreateRequest request);
-    EmploymentContractResponse update(Long workerId, EmploymentContractUpdateRequest request, Long expectedVersion);
+  EmploymentContractResponse create(Long workerId, EmploymentContractCreateRequest request);
 
-    void delete(Long workerId, Long expectedVersion);
+  EmploymentContractResponse update(
+      Long workerId, EmploymentContractUpdateRequest request, Long expectedVersion);
+
+  void delete(Long workerId, Long expectedVersion);
 }

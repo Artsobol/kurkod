@@ -13,34 +13,35 @@ import org.springframework.security.core.GrantedAuthority;
 
 public class JwtTokenProvider {
 
-    private final SecretKey secretKey;
-    private final Duration accessTokenExpiration;
+  private final SecretKey secretKey;
+  private final Duration accessTokenExpiration;
 
-    public JwtTokenProvider(JwtProperties properties) {
-        byte[] keyBytes = Decoders.BASE64.decode(properties.secret());
-        this.secretKey = Keys.hmacShaKeyFor(keyBytes);
-        this.accessTokenExpiration = properties.accessTokenExpiration();
-    }
+  public JwtTokenProvider(JwtProperties properties) {
+    byte[] keyBytes = Decoders.BASE64.decode(properties.secret());
+    this.secretKey = Keys.hmacShaKeyFor(keyBytes);
+    this.accessTokenExpiration = properties.accessTokenExpiration();
+  }
 
-    public String generateToken(JwtSubject subject) {
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + accessTokenExpiration.toMillis());
+  public String generateToken(JwtSubject subject) {
+    Date now = new Date();
+    Date expiryDate = new Date(now.getTime() + accessTokenExpiration.toMillis());
 
-        return Jwts.builder()
-                .subject(subject.userId().toString())
-                .claim("roles",
-                        subject.authorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toSet())
-                )
-                .claim("username", subject.username())
-                .claim("sessionId", subject.sessionId().toString())
-                .issuedAt(now)
-                .expiration(expiryDate)
-                .signWith(secretKey)
-                .compact();
-    }
+    return Jwts.builder()
+        .subject(subject.userId().toString())
+        .claim(
+            "roles",
+            subject.authorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet()))
+        .claim("username", subject.username())
+        .claim("sessionId", subject.sessionId().toString())
+        .issuedAt(now)
+        .expiration(expiryDate)
+        .signWith(secretKey)
+        .compact();
+  }
 
-    public Claims parseToken(String token) {
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
-    }
-
+  public Claims parseToken(String token) {
+    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+  }
 }

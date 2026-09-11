@@ -23,79 +23,77 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class WorkshopServiceImpl implements WorkshopService {
 
-    private final WorkshopRepository workshopRepository;
-    private final WorkshopMapper workshopMapper;
+  private final WorkshopRepository workshopRepository;
+  private final WorkshopMapper workshopMapper;
 
+  @Override
+  public WorkshopResponse get(Long id) {
+    return workshopMapper.toResponse(getWorkshopById(id));
+  }
 
+  @Override
+  public List<WorkshopResponse> getAll() {
+    return workshopRepository.findAllByIsActiveTrue().stream()
+        .map(workshopMapper::toResponse)
+        .toList();
+  }
 
-    @Override
-    public WorkshopResponse get(Long id) {
-        return workshopMapper.toResponse(getWorkshopById(id));
+  @Override
+  public Page<WorkshopResponse> getAllWithPagination(Pageable pageable) {
+    return workshopRepository.findAllByIsActiveTrue(pageable).map(workshopMapper::toResponse);
+  }
+
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public WorkshopResponse create(WorkshopCreateRequest request) {
+    Integer workshopNumber = request.getWorkshopNumber();
+    ensureNotExists(workshopNumber);
+
+    Workshop workshop = workshopMapper.toEntity(request);
+    workshopRepository.save(workshop);
+    return workshopMapper.toResponse(workshop);
+  }
+
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public WorkshopResponse update(Long id, WorkshopUpdateRequest request, Long version) {
+    Workshop workshop = getWorkshopById(id);
+    checkVersion(workshop.getVersion(), version);
+    Integer newWorkshopNumber = request.getWorkshopNumber();
+    if (newWorkshopNumber != null && !newWorkshopNumber.equals(workshop.getWorkshopNumber())) {
+      ensureNotExists(newWorkshopNumber);
     }
 
-    @Override
-    public List<WorkshopResponse> getAll() {
-        return workshopRepository.findAllByIsActiveTrue().stream()
-                .map(workshopMapper::toResponse)
-                .toList();
+    workshopMapper.update(workshop, request);
+    workshopRepository.save(workshop);
+
+    return workshopMapper.toResponse(workshop);
+  }
+
+  @Override
+  @Transactional
+  @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
+  public void delete(Long id, Long version) {
+    Workshop workshop = getWorkshopById(id);
+    checkVersion(workshop.getVersion(), version);
+    workshop.deactivate();
+  }
+
+  protected Workshop getWorkshopById(Long id) {
+    return workshopRepository
+        .findWorkshopByIdAndIsActiveTrue(id)
+        .orElseThrow(() -> new NotFoundException("workshop.not.found", id));
+  }
+
+  protected void ensureNotExists(Integer id) {
+    if (existsById(id)) {
+      throw new DataExistException("workshop.already.exists", id);
     }
+  }
 
-    @Override
-    public Page<WorkshopResponse> getAllWithPagination(Pageable pageable) {
-        return workshopRepository.findAllByIsActiveTrue(pageable)
-                .map(workshopMapper::toResponse);
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopResponse create(WorkshopCreateRequest request) {
-        Integer workshopNumber = request.getWorkshopNumber();
-        ensureNotExists(workshopNumber);
-
-        Workshop workshop = workshopMapper.toEntity(request);
-        workshopRepository.save(workshop);
-        return workshopMapper.toResponse(workshop);
-    }
-
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public WorkshopResponse update(Long id, WorkshopUpdateRequest request, Long version) {
-        Workshop workshop = getWorkshopById(id);
-        checkVersion(workshop.getVersion(), version);
-        Integer newWorkshopNumber = request.getWorkshopNumber();
-        if (newWorkshopNumber != null && !newWorkshopNumber.equals(workshop.getWorkshopNumber())) {
-            ensureNotExists(newWorkshopNumber);
-        }
-
-        workshopMapper.update(workshop, request);
-        workshopRepository.save(workshop);
-
-        return workshopMapper.toResponse(workshop);
-    }
-    @Override
-    @Transactional
-    @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-    public void delete(Long id, Long version) {
-        Workshop workshop = getWorkshopById(id);
-        checkVersion(workshop.getVersion(), version);
-        workshop.deactivate();
-    }
-
-    protected Workshop getWorkshopById(Long id) {
-        return workshopRepository.findWorkshopByIdAndIsActiveTrue(id).orElseThrow(
-                () -> new NotFoundException("workshop.not.found", id)
-        );
-    }
-
-    protected void ensureNotExists(Integer id) {
-        if (existsById(id)){
-            throw new DataExistException("workshop.already.exists", id);
-        }
-    }
-
-    protected boolean existsById(Integer id){
-        return workshopRepository.existsByWorkshopNumberAndIsActiveTrue(id);
-    }
+  protected boolean existsById(Integer id) {
+    return workshopRepository.existsByWorkshopNumberAndIsActiveTrue(id);
+  }
 }

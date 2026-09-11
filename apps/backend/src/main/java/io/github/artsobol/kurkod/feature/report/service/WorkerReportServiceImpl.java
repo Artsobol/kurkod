@@ -17,24 +17,22 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class WorkerReportServiceImpl implements WorkerReportService {
 
-    private final WorkerReportRepository workerRepository;
+  private final WorkerReportRepository workerRepository;
 
-    @Override
-    public List<WorkerReportDailyEggsResponse> getWorkerDailyEggs(int year, int month) {
-        YearMonth ym = YearMonth.of(year, month);
-        int daysInMonth = ym.lengthOfMonth();
+  @Override
+  public List<WorkerReportDailyEggsResponse> getWorkerDailyEggs(int year, int month) {
+    YearMonth ym = YearMonth.of(year, month);
+    int daysInMonth = ym.lengthOfMonth();
 
-        return workerRepository.getMonthlyEggsPerWorker(year, month)
-                               .stream()
-                               .map(p -> new WorkerReportDailyEggsResponse(
-                                       p.getWorkerId(),
-                                       p.getFirstName(),
-                                       p.getLastName(),
-                                       BigDecimal.valueOf(p.getEggsPerMonth())
-                                                 .divide(BigDecimal.valueOf(daysInMonth), 2, RoundingMode.HALF_UP)
-                               ))
-                               .toList();
-    }
+    return workerRepository.getMonthlyEggsPerWorker(year, month).stream()
+        .map(
+            p ->
+                new WorkerReportDailyEggsResponse(
+                    p.getWorkerId(),
+                    p.getFirstName(),
+                    p.getLastName(),
+                    BigDecimal.valueOf(p.getEggsPerMonth())
+                        .divide(BigDecimal.valueOf(daysInMonth), 2, RoundingMode.HALF_UP)))
+        .toList();
+  }
 }
-
-

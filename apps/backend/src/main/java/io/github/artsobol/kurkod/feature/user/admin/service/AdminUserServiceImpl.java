@@ -18,42 +18,43 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AdminUserServiceImpl implements AdminUserService {
 
-    private final UserRepository userRepository;
-    private final UserMapper userMapper;
+  private final UserRepository userRepository;
+  private final UserMapper userMapper;
 
+  @Override
+  public UserResponse changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion) {
+    User user = getUserById(userId);
+    VersionUtils.checkVersion(user.getVersion(), expectedVersion);
+    user.changeRole(request.role());
 
-    @Override
-    public UserResponse changeUserRole(Long userId, ChangeRoleRequest request, Long expectedVersion) {
-        User user = getUserById(userId);
-        VersionUtils.checkVersion(user.getVersion(), expectedVersion);
-        user.changeRole(request.role());
+    return userMapper.toResponse(userRepository.save(user));
+  }
 
-        return userMapper.toResponse(userRepository.save(user));
-    }
+  @Override
+  public UserResponse activateUser(Long userId, Long expectedVersion) {
+    User user = getUserByIdIncludingInactive(userId);
+    VersionUtils.checkVersion(user.getVersion(), expectedVersion);
+    user.activate();
+    return userMapper.toResponse(userRepository.save(user));
+  }
 
-    @Override
-    public UserResponse activateUser(Long userId, Long expectedVersion) {
-        User user = getUserByIdIncludingInactive(userId);
-        VersionUtils.checkVersion(user.getVersion(), expectedVersion);
-        user.activate();
-        return userMapper.toResponse(userRepository.save(user));
-    }
+  @Override
+  public UserResponse deactivateUser(Long userId, Long expectedVersion) {
+    User user = getUserByIdIncludingInactive(userId);
+    VersionUtils.checkVersion(user.getVersion(), expectedVersion);
+    user.deactivate();
+    return userMapper.toResponse(userRepository.save(user));
+  }
 
-    @Override
-    public UserResponse deactivateUser(Long userId, Long expectedVersion) {
-        User user = getUserByIdIncludingInactive(userId);
-        VersionUtils.checkVersion(user.getVersion(), expectedVersion);
-        user.deactivate();
-        return userMapper.toResponse(userRepository.save(user));
-    }
+  protected User getUserById(Long id) {
+    return userRepository
+        .findByIdAndIsActiveTrue(id)
+        .orElseThrow(() -> new NotFoundException("user.not.found.by.id", id));
+  }
 
-    protected User getUserById(Long id) {
-        return userRepository.findByIdAndIsActiveTrue(id)
-                             .orElseThrow(() -> new NotFoundException("user.not.found.by.id", id));
-    }
-
-    protected User getUserByIdIncludingInactive(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("user.not.found.by.id", id));
-    }
+  protected User getUserByIdIncludingInactive(Long id) {
+    return userRepository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException("user.not.found.by.id", id));
+  }
 }
