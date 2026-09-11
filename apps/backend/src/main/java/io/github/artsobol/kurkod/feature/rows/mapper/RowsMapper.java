@@ -14,9 +14,11 @@ public interface RowsMapper {
   @Mapping(target = "workshopId", source = "workshop.id")
   RowsResponse toResponse(Rows rows);
 
+  @Mapping(target = "cages", ignore = true)
   @Mapping(target = "workshop", ignore = true)
   Rows toEntity(RowsCreateRequest rowsCreateRequest);
 
+  @Mapping(target = "cages", ignore = true)
   @Mapping(target = "workshop", ignore = true)
   void update(@MappingTarget Rows rows, RowsUpdateRequest rowsUpdateRequest);
 }

@@ -20,6 +20,8 @@ public interface DismissalMapper {
   @Mapping(target = "whoDismiss", ignore = true)
   Dismissal toEntity(DismissalCreateRequest dismissalCreateRequest);
 
+  @Mapping(target = "worker", ignore = true)
+  @Mapping(target = "whoDismiss", ignore = true)
   void update(@MappingTarget Dismissal dismissal, DismissalUpdateRequest dismissalUpdateRequest);
 
   default String getFullName(Worker worker) {

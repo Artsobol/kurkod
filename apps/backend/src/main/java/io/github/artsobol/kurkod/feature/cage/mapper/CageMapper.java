@@ -14,9 +14,11 @@ public interface CageMapper {
   @Mapping(target = "rowId", source = "row.id")
   CageResponse toResponse(Cage cage);
 
+  @Mapping(target = "workerCages", ignore = true)
   @Mapping(target = "row", ignore = true)
   Cage toEntity(CageCreateRequest cageCreateRequest);
 
   @Mapping(target = "row", ignore = true)
+  @Mapping(target = "workerCages", ignore = true)
   void update(@MappingTarget Cage cage, CageUpdateRequest cageUpdateRequest);
 }

@@ -17,9 +17,11 @@ public interface EmploymentContractMapper {
   EmploymentContractResponse toResponse(EmploymentContract employmentContract);
 
   @Mapping(target = "staff", ignore = true)
+  @Mapping(target = "worker", ignore = true)
   EmploymentContract toEntity(EmploymentContractCreateRequest employmentContractCreateRequest);
 
   @Mapping(target = "staff", ignore = true)
+  @Mapping(target = "worker", ignore = true)
   void updatePartially(
       @MappingTarget EmploymentContract employmentContract,
       EmploymentContractUpdateRequest employmentContractUpdateRequest);
