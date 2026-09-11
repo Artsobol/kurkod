@@ -11,4 +11,9 @@ public record WorkerResponse(
     String phoneNumber,
     String email,
     Set<CageResponse> cages,
-    Long version) {}
+    Long version) {
+
+  public WorkerResponse {
+    cages = Set.copyOf(cages);
+  }
+}

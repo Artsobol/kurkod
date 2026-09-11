@@ -14,6 +14,7 @@ import io.github.artsobol.kurkod.feature.user.repository.UserRepository;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -93,20 +94,11 @@ public class UserServiceImpl implements UserService {
     User user = getActiveUserById(userId);
     checkVersion(user.getVersion(), version);
 
-    if (StringUtils.hasText(request.getUsername())
-        && !request.getUsername().equals(user.getUsername())) {
-      ensureNotExistsByUsername(request.getUsername());
-      user.changeUsername(request.getUsername());
-    }
-    if (StringUtils.hasText(request.getEmail())
-        && !request.getEmail().equalsIgnoreCase(user.getEmail())) {
-      ensureNotExistsByEmail(request.getEmail());
-      user.changeEmail(request.getEmail());
-    }
-    if (StringUtils.hasText(request.getPassword())) {
-      user.changePasswordHash(passwordEncoder.encode(request.getPassword()));
-    }
+    changeUsername(request, user);
+    changeEmail(request, user);
+    changePassword(request, user);
 
+    log.info("User updated userId={}", userId);
     return userMapper.toResponse(userRepository.save(user));
   }
 
@@ -135,6 +127,32 @@ public class UserServiceImpl implements UserService {
   private void ensureNotExistsByEmail(String email) {
     if (userRepository.existsByEmail(email)) {
       throw new DataExistException("user.email.already.exists", email);
+    }
+  }
+
+  private void changePassword(UserUpdateRequest request, User user) {
+    String password = request.getPassword();
+    if (StringUtils.hasText(password)) {
+      String passwordHash =
+          Objects.requireNonNull(
+              passwordEncoder.encode(password), "Password encoder returned null");
+      user.changePasswordHash(passwordHash);
+    }
+  }
+
+  private void changeEmail(UserUpdateRequest request, User user) {
+    String email = request.getEmail();
+    if (StringUtils.hasText(email) && !email.equalsIgnoreCase(user.getEmail())) {
+      ensureNotExistsByEmail(email);
+      user.changeEmail(email);
+    }
+  }
+
+  private void changeUsername(UserUpdateRequest request, User user) {
+    String username = request.getUsername();
+    if (StringUtils.hasText(username) && !username.equals(user.getUsername())) {
+      ensureNotExistsByUsername(username);
+      user.changeUsername(username);
     }
   }
 }

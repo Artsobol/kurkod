@@ -1,5 +1,6 @@
 package io.github.artsobol.kurkod.feature.auth.refreshtoken.entity;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.github.artsobol.kurkod.feature.auth.refreshtoken.dto.request.CreateRefreshTokenRequest;
 import io.github.artsobol.kurkod.feature.user.entity.User;
 import jakarta.persistence.*;
@@ -112,6 +113,9 @@ public class RefreshToken {
     this.revokedReason = reason;
   }
 
+  @SuppressFBWarnings(
+      value = "EI_EXPOSE_REP2",
+      justification = "Stores an intentional bidirectional relationship between JPA entities")
   public void replaceWith(RefreshToken newToken, Instant now) {
     revoke(now, RevokedReason.ROTATED);
     this.replaceBy = newToken;

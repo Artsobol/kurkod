@@ -19,6 +19,8 @@ public interface ChickenMapper {
 
   ChickenResponse toResponse(Chicken chicken);
 
+  @Mapping(target = "cage", ignore = true)
+  @Mapping(target = "breed", ignore = true)
   Chicken toEntity(ChickenCreateRequest chickenCreateRequest);
 
   @Mapping(target = "cage", ignore = true)

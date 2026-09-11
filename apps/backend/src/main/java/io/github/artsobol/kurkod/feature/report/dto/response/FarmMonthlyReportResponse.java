@@ -7,4 +7,9 @@ public record FarmMonthlyReportResponse(
     int month,
     List<BreedWorkshopMonthlyReportResponse> stats,
     long totalChickens,
-    long totalEggs) {}
+    long totalEggs) {
+
+  public FarmMonthlyReportResponse {
+    stats = List.copyOf(stats);
+  }
+}

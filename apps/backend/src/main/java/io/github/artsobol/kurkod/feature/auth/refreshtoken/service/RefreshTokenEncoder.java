@@ -1,9 +1,6 @@
 package io.github.artsobol.kurkod.feature.auth.refreshtoken.service;
 
 import io.github.artsobol.kurkod.config.security.RefreshTokenProperties;
-import io.github.artsobol.kurkod.feature.auth.refreshtoken.dto.request.CreateRefreshTokenRequest;
-import io.github.artsobol.kurkod.feature.auth.refreshtoken.dto.response.RefreshTokenResponse;
-import io.github.artsobol.kurkod.feature.auth.refreshtoken.entity.RefreshToken;
 import io.github.artsobol.kurkod.infrastructure.utils.TokenUtils;
 import java.time.Instant;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +12,10 @@ public class RefreshTokenEncoder {
 
   private final RefreshTokenProperties properties;
 
-  public RefreshTokenResponse create(CreateRefreshTokenRequest request) {
-
+  public GeneratedRefreshToken generate() {
     String rawToken = TokenUtils.generateRawToken(properties.length());
-    RefreshToken token = RefreshToken.create(request, hash(rawToken), calculateExpiresAt());
 
-    return new RefreshTokenResponse(rawToken, token);
+    return new GeneratedRefreshToken(rawToken, hash(rawToken), calculateExpiresAt());
   }
 
   public String hash(String rawToken) {

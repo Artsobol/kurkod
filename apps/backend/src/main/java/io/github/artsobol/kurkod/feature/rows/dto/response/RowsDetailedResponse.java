@@ -10,4 +10,9 @@ public record RowsDetailedResponse(
     Integer workshopNumber,
     List<Cage> cages,
     Instant createdAt,
-    Instant updatedAt) {}
+    Instant updatedAt) {
+
+  public RowsDetailedResponse {
+    cages = List.copyOf(cages);
+  }
+}

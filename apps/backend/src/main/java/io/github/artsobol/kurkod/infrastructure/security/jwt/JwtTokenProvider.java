@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import javax.crypto.SecretKey;
 import org.springframework.security.core.GrantedAuthority;
 
-public class JwtTokenProvider {
+public final class JwtTokenProvider {
 
   private final SecretKey secretKey;
   private final Duration accessTokenExpiration;

@@ -4,7 +4,6 @@ import io.github.artsobol.kurkod.config.security.SessionProperties;
 import io.github.artsobol.kurkod.exception.security.AuthenticationException;
 import io.github.artsobol.kurkod.feature.auth.refreshtoken.dto.request.CreateRefreshTokenRequest;
 import io.github.artsobol.kurkod.feature.auth.refreshtoken.dto.request.RotateRefreshTokenRequest;
-import io.github.artsobol.kurkod.feature.auth.refreshtoken.dto.response.RefreshTokenResponse;
 import io.github.artsobol.kurkod.feature.auth.refreshtoken.dto.response.RefreshTokenRotationResponse;
 import io.github.artsobol.kurkod.feature.auth.refreshtoken.entity.RefreshToken;
 import io.github.artsobol.kurkod.feature.auth.refreshtoken.entity.RevokedReason;
@@ -35,11 +34,15 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     Long id = request.user().getId();
     long activeSessions = refreshTokenRepository.countActiveSessions(id);
     ensureHasSessions(id, activeSessions);
-    RefreshTokenResponse encoded = encoder.create(request);
-    refreshTokenRepository.save(encoded.refreshToken());
+    GeneratedRefreshToken generated = encoder.generate();
 
+    RefreshToken refreshToken =
+        RefreshToken.create(request, generated.tokenHash(), generated.expiresAt());
+
+    refreshTokenRepository.save(refreshToken);
     log.info("Refresh token created userId={}", request.user().getId());
-    return encoded.rawToken();
+
+    return generated.rawToken();
   }
 
   @Override
@@ -71,16 +74,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
             request.ipAddress(),
             request.userAgent(),
             token.getDeviceName());
-    RefreshTokenResponse encoded = encoder.create(refreshTokenRequest);
-    RefreshToken newToken = encoded.refreshToken();
+    GeneratedRefreshToken generated = encoder.generate();
+
+    RefreshToken newToken =
+        RefreshToken.create(refreshTokenRequest, generated.tokenHash(), generated.expiresAt());
 
     token.replaceWith(newToken, Instant.now());
-
     refreshTokenRepository.save(newToken);
 
     log.info("Refresh token rotated");
     return new RefreshTokenRotationResponse(
-        token.getUser(), encoded.rawToken(), token.getSessionId());
+        token.getUser(), generated.rawToken(), token.getSessionId());
   }
 
   @Override

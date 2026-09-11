@@ -20,8 +20,10 @@ public interface WorkerMapper {
   @Mapping(target = "cages", source = "workerCages")
   WorkerResponse toResponse(Worker worker);
 
+  @Mapping(target = "workerCages", ignore = true)
   Worker toEntity(WorkerCreateRequest workerCreateRequest);
 
+  @Mapping(target = "workerCages", ignore = true)
   void updatePartially(@MappingTarget Worker worker, WorkerUpdateRequest workerUpdateRequest);
 
   default Cage mapWorkerCageToCage(WorkerCage workerCage) {

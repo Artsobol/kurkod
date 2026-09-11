@@ -12,6 +12,10 @@ public record PageResponse<T>(
     boolean hasNext,
     boolean hasPrevious) {
 
+  public PageResponse {
+    content = List.copyOf(content);
+  }
+
   public static <T> PageResponse<T> from(Page<T> page) {
     return new PageResponse<>(
         page.getContent(),
