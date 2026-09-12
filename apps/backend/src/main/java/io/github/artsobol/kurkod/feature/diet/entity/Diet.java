@@ -13,9 +13,9 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 @Entity
@@ -43,15 +43,19 @@ public class Diet extends AbstractEntity {
       inverseJoinColumns = @JoinColumn(name = "breed_id"))
   private Set<Breed> breeds = new HashSet<>();
 
-  public void addBreed(@NonNull Breed breed) {
+  public void addBreed(Breed breed) {
+    Objects.requireNonNull(breed, "Breed must not be null");
+
     if (breeds.add(breed)) {
-      breed.getDiets().add(this);
+      breed.addDiet(this);
     }
   }
 
   public void removeBreed(Breed breed) {
+    Objects.requireNonNull(breed, "Breed must not be null");
+
     if (breeds.remove(breed)) {
-      breed.getDiets().remove(this);
+      breed.removeDiet(this);
     }
   }
 
