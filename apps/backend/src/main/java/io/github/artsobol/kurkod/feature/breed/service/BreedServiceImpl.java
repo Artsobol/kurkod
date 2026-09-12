@@ -3,6 +3,7 @@ package io.github.artsobol.kurkod.feature.breed.service;
 import static io.github.artsobol.kurkod.infrastructure.utils.VersionUtils.checkVersion;
 
 import io.github.artsobol.kurkod.exception.http.DataExistException;
+import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.breed.dto.request.BreedCreateRequest;
 import io.github.artsobol.kurkod.feature.breed.dto.request.BreedUpdateRequest;
 import io.github.artsobol.kurkod.feature.breed.dto.response.BreedResponse;
@@ -10,46 +11,48 @@ import io.github.artsobol.kurkod.feature.breed.entity.Breed;
 import io.github.artsobol.kurkod.feature.breed.mapper.BreedMapper;
 import io.github.artsobol.kurkod.feature.breed.repository.BreedRepository;
 import jakarta.validation.constraints.NotNull;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class BreedServiceImpl implements BreedService {
+public class BreedServiceImpl implements BreedService, BreedFinderService {
 
   private final BreedRepository breedRepository;
-  private final BreedLookupService breedLookupService;
   private final BreedMapper breedMapper;
 
   @Override
   @Transactional
   @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
   public BreedResponse create(BreedCreateRequest breedCreateRequest) {
-    ensureNotExists(breedCreateRequest.getName());
+    log.debug("Creating breed: breedName={}", breedCreateRequest.name());
 
-    Breed breed = breedMapper.toEntity(breedCreateRequest);
+    ensureNotExists(breedCreateRequest.name());
+    Breed breed =
+        Breed.create(
+            breedCreateRequest.name(),
+            breedCreateRequest.eggsNumber(),
+            breedCreateRequest.weight());
     breed = breedRepository.save(breed);
 
+    log.info("Breed created: breedId={}", breed.getId());
     return breedMapper.toResponse(breed);
   }
 
   @Override
-  public BreedResponse get(@NotNull Long id) {
-    return breedMapper.toResponse(breedLookupService.getBreedByIdOrThrow(id));
+  @Transactional(readOnly = true)
+  public BreedResponse getById(@NotNull Long breedId) {
+    return breedMapper.toResponse(findByIdOrThrow(breedId));
   }
 
   @Override
-  public List<BreedResponse> getAll() {
-    return breedRepository.findAllByIsActiveTrue().stream().map(breedMapper::toResponse).toList();
-  }
-
-  @Override
+  @Transactional(readOnly = true)
   public Page<BreedResponse> getPage(Pageable pageable) {
     return breedRepository.findAllByIsActiveTrue(pageable).map(breedMapper::toResponse);
   }
@@ -57,33 +60,45 @@ public class BreedServiceImpl implements BreedService {
   @Override
   @Transactional
   @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-  public BreedResponse update(Long id, BreedUpdateRequest breedUpdateRequest, Long version) {
-    Breed breed = breedLookupService.getBreedByIdOrThrow(id);
-    checkVersion(breed.getVersion(), version);
-    breedMapper.updatePartially(breed, breedUpdateRequest);
-    breed = breedRepository.save(breed);
+  public BreedResponse update(Long breedId, BreedUpdateRequest breedUpdateRequest, Long version) {
+    log.debug("Updating breed: breedId={}", breedId);
 
+    Breed breed = findByIdOrThrow(breedId);
+    checkVersion(breed.getVersion(), version);
+    breed.updateDetails(
+        breedUpdateRequest.name(), breedUpdateRequest.eggsNumber(), breedUpdateRequest.weight());
+
+    log.info("Breed updated: breedId={}", breedId);
     return breedMapper.toResponse(breed);
   }
 
   @Override
   @Transactional
   @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-  public void delete(Long id, Long version) {
-    Breed breed = breedLookupService.getBreedByIdOrThrow(id);
+  public void delete(Long breedId, Long version) {
+    log.debug("Deleting breed: breedId={} version={}", breedId, version);
+
+    Breed breed = findByIdOrThrow(breedId);
     checkVersion(breed.getVersion(), version);
     breed.deactivate();
 
-    breedRepository.save(breed);
+    log.info("Breed deleted: breedId={}", breedId);
   }
 
-  protected void ensureNotExists(String name) {
-    if (existsByName(name)) {
-      throw new DataExistException("breed.already.exists", name);
+  @Override
+  @Transactional(readOnly = true)
+  public Breed findByIdOrThrow(Long breedId) {
+    log.debug("Fetching breed: breedId={}", breedId);
+
+    return breedRepository
+        .findByIdAndIsActiveTrue(breedId)
+        .orElseThrow(() -> new NotFoundException("breed.not.found", breedId));
+  }
+
+  protected void ensureNotExists(String breedName) {
+    log.debug("Fetching breedName not exists: breedName={}", breedName);
+    if (breedRepository.existsByNameAndIsActiveTrue(breedName)) {
+      throw new DataExistException("breed.already.exists", breedName);
     }
-  }
-
-  protected boolean existsByName(String name) {
-    return breedRepository.existsByNameAndIsActiveTrue(name);
   }
 }

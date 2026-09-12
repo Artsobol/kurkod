@@ -4,7 +4,7 @@ import static io.github.artsobol.kurkod.infrastructure.utils.VersionUtils.checkV
 
 import io.github.artsobol.kurkod.exception.http.NotFoundException;
 import io.github.artsobol.kurkod.feature.breed.entity.Breed;
-import io.github.artsobol.kurkod.feature.breed.service.BreedLookupService;
+import io.github.artsobol.kurkod.feature.breed.service.BreedFinderService;
 import io.github.artsobol.kurkod.feature.cage.repository.CageRepository;
 import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenCreateRequest;
 import io.github.artsobol.kurkod.feature.chicken.dto.request.ChickenUpdateRequest;
@@ -28,7 +28,7 @@ public class ChickenServiceImpl implements ChickenService {
   private final CageRepository cageRepository;
   private final ChickenRepository chickenRepository;
   private final ChickenMapper chickenMapper;
-  private final BreedLookupService breedLookupService;
+  private final BreedFinderService breedService;
 
   @Override
   @Transactional
@@ -95,7 +95,7 @@ public class ChickenServiceImpl implements ChickenService {
   }
 
   private Breed getBreedById(Long id) {
-    return breedLookupService.getBreedByIdOrThrow(id);
+    return breedService.findByIdOrThrow(id);
   }
 
   protected Chicken getChickenById(Long id) {

@@ -26,22 +26,22 @@ import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
-@RequestMapping(value = "/breeds", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 @Tag(name = "Breeds", description = "Breed operations")
+@RequestMapping(value = "/breeds", produces = MediaType.APPLICATION_JSON_VALUE)
 public class BreedController {
 
   private final BreedService breedService;
 
-  @Operation(summary = "Get breed by ID")
   @GetMapping("/{breedId}")
-  public ResponseEntity<BreedResponse> getById(@PathVariable Long breedId) {
-    BreedResponse response = breedService.get(breedId);
+  @Operation(summary = "Get breed by ID")
+  public ResponseEntity<BreedResponse> getById(@PathVariable @Positive Long breedId) {
+    BreedResponse response = breedService.getById(breedId);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
-  @Operation(summary = "Get a page of breeds")
   @GetMapping
+  @Operation(summary = "Get a page of breeds")
   public PageResponse<BreedResponse> getPage(
       @RequestParam(defaultValue = "0") @PositiveOrZero int page,
       @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
@@ -52,19 +52,19 @@ public class BreedController {
     return PageResponse.from(response);
   }
 
-  @Operation(summary = "Create breed")
   @PostMapping
-  public ResponseEntity<BreedResponse> createBreed(@Valid @RequestBody BreedCreateRequest request) {
+  @Operation(summary = "Create breed")
+  public ResponseEntity<BreedResponse> create(@Valid @RequestBody BreedCreateRequest request) {
     BreedResponse response = breedService.create(request);
     return ResponseEntity.created(LocationUtils.buildLocation(response.id()))
         .eTag(EtagUtils.toEtag(response.version()))
         .body(response);
   }
 
-  @Operation(summary = "Partially update breed")
   @PatchMapping("/{breedId}")
+  @Operation(summary = "Partially update breed")
   public ResponseEntity<BreedResponse> updateById(
-      @PathVariable Long breedId,
+      @PathVariable @Positive Long breedId,
       @Valid @RequestBody BreedUpdateRequest request,
       @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
@@ -72,10 +72,10 @@ public class BreedController {
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
-  @Operation(summary = "Delete breed")
   @DeleteMapping("/{breedId}")
+  @Operation(summary = "Delete breed")
   public ResponseEntity<Void> deleteById(
-      @PathVariable Long breedId,
+      @PathVariable @Positive Long breedId,
       @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
     long expected = EtagUtils.parseIfMatch(ifMatch);
     breedService.delete(breedId, expected);
