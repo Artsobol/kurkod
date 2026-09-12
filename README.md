@@ -238,3 +238,7 @@ Frontend будет доступен по адресу: http://localhost:5173 (�
 
 - [Backend README](apps/backend/README.md) - подробная документация по backend
 - [Backend API Documentation](apps/backend/docs/API.md) - полная документация API
+
+## План развития
+
+[Дорожная карта проекта](ROADMAP.md)
