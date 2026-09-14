@@ -26,7 +26,7 @@ public class DietController {
   @Operation(summary = "Get diet by ID")
   public ResponseEntity<DietResponse> get(@PathVariable Long id) {
 
-    DietResponse response = dietService.get(id);
+    DietResponse response = dietService.getById(id);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
@@ -34,7 +34,7 @@ public class DietController {
   @Operation(summary = "Get all diets")
   public ResponseEntity<Iterable<DietResponse>> getAll() {
 
-    Iterable<DietResponse> response = dietService.getAll();
+    Iterable<DietResponse> response = dietService.getPage();
     return ResponseEntity.ok(response);
   }
 
