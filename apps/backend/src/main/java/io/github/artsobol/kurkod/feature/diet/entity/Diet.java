@@ -12,11 +12,9 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,19 +25,14 @@ import lombok.NoArgsConstructor;
 public class Diet extends AbstractEntity {
 
   @Getter
-  @NotBlank
-  @Size(min = 2, max = 30)
-  @Column(nullable = false, unique = true)
+  @NotBlank @Size(min = 2, max = 30) @Column(nullable = false, unique = true)
   private String title;
 
   @Getter
-  @NotBlank
-  @Size(min = 2, max = 10)
-  @Column(nullable = false, unique = true)
+  @NotBlank @Size(min = 2, max = 10) @Column(nullable = false, unique = true)
   private String code;
 
-  @Getter
-  private String description;
+  @Getter private String description;
 
   @Getter
   @Enumerated(EnumType.STRING)
@@ -48,9 +41,9 @@ public class Diet extends AbstractEntity {
 
   @ManyToMany
   @JoinTable(
-    name = "breed_diet",
-    joinColumns = @JoinColumn(name = "diet_id"),
-    inverseJoinColumns = @JoinColumn(name = "breed_id"))
+      name = "breed_diet",
+      joinColumns = @JoinColumn(name = "diet_id"),
+      inverseJoinColumns = @JoinColumn(name = "breed_id"))
   private Set<Breed> breeds = new HashSet<>();
 
   public static Diet create(String title, String description, String code, Season season) {
@@ -150,25 +143,23 @@ public class Diet extends AbstractEntity {
     return 31;
   }
 
-
   private void validateTitle(String title) {
     if (title == null || title.isBlank() || title.length() < 2 || title.length() > 30) {
       throw new IllegalArgumentException(
-        "Title must not be blank and must be between 2 and 30 characters");
+          "Title must not be blank and must be between 2 and 30 characters");
     }
   }
 
   private void validateCode(String code) {
     if (code == null || code.isBlank() || code.length() < 2 || code.length() > 10) {
       throw new IllegalArgumentException(
-        "Code must not be blank and must be between 2 and 10 characters");
+          "Code must not be blank and must be between 2 and 10 characters");
     }
   }
 
   private void validateSeason(Season season) {
     if (season == null) {
-      throw new IllegalArgumentException(
-        "Season not be null");
+      throw new IllegalArgumentException("Season not be null");
     }
   }
 }

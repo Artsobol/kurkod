@@ -50,7 +50,8 @@ public class DietServiceImpl implements DietService, DietFinderService {
     log.debug("Creating diet: dietCode={}", request.code());
     ensureNotExists(request.code());
 
-    Diet diet = Diet.create(request.title(), request.description(), request.code(), request.season());
+    Diet diet =
+        Diet.create(request.title(), request.description(), request.code(), request.season());
     dietRepository.save(diet);
 
     log.info("Diet created: dietId={} dietCode={}", diet.getId(), request.code());
@@ -88,8 +89,8 @@ public class DietServiceImpl implements DietService, DietFinderService {
   public Diet findByIdOrThrow(Long dietId) {
     log.debug("Fetching diet: dietId={}", dietId);
     return dietRepository
-      .findByIdAndIsActiveTrue(dietId)
-      .orElseThrow(() -> new NotFoundException("diet.not.found", dietId));
+        .findByIdAndIsActiveTrue(dietId)
+        .orElseThrow(() -> new NotFoundException("diet.not.found", dietId));
   }
 
   protected void ensureNotExists(String code) {
