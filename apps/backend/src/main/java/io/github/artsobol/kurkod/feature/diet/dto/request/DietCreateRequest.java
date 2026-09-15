@@ -14,8 +14,6 @@ public record DietCreateRequest(
     @NotNull Season season) {
 
   public DietCreateRequest {
-    if (breedIds != null) {
-      breedIds = Set.copyOf(breedIds);
-    }
+    breedIds = breedIds == null ? Set.of() : Set.copyOf(breedIds);
   }
 }
