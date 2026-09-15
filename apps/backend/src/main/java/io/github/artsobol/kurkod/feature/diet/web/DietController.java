@@ -6,14 +6,24 @@ import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
 import io.github.artsobol.kurkod.feature.diet.service.DietService;
 import io.github.artsobol.kurkod.infrastructure.utils.EtagUtils;
 import io.github.artsobol.kurkod.infrastructure.utils.LocationUtils;
+import io.github.artsobol.kurkod.infrastructure.web.dto.PageResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+@Validated
 @RestController
 @Tag(name = "Diet", description = "Diet API")
 @RequiredArgsConstructor
@@ -22,20 +32,23 @@ public class DietController {
 
   private final DietService dietService;
 
-  @GetMapping("/{id}")
+  @GetMapping("/{dietId}")
   @Operation(summary = "Get diet by ID")
-  public ResponseEntity<DietResponse> get(@PathVariable Long id) {
-
-    DietResponse response = dietService.get(id);
+  public ResponseEntity<DietResponse> getById(@PathVariable @PositiveOrZero Long dietId) {
+    DietResponse response = dietService.getById(dietId);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
   @GetMapping
   @Operation(summary = "Get all diets")
-  public ResponseEntity<Iterable<DietResponse>> getAll() {
+  public PageResponse<DietResponse> getPage(
+      @RequestParam(defaultValue = "0") @PositiveOrZero int page,
+      @RequestParam(defaultValue = "10") @Positive @Max(100) int size) {
+    Pageable pageable =
+        PageRequest.of(page, size, Sort.by(Sort.Order.asc("title"), Sort.Order.asc("id")));
 
-    Iterable<DietResponse> response = dietService.getAll();
-    return ResponseEntity.ok(response);
+    Page<DietResponse> response = dietService.getPage(pageable);
+    return PageResponse.from(response);
   }
 
   @PostMapping
@@ -48,26 +61,26 @@ public class DietController {
         .body(response);
   }
 
-  @PatchMapping("/{id}")
+  @PatchMapping("/{dietId}")
   @Operation(summary = "Partially update diet")
   public ResponseEntity<DietResponse> update(
-      @PathVariable Long id,
+      @PathVariable @PositiveOrZero Long dietId,
       @RequestBody @Valid DietUpdateRequest request,
       @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
-    DietResponse response = dietService.update(id, request, expected);
+    DietResponse response = dietService.update(dietId, request, expected);
     return ResponseEntity.ok().eTag(EtagUtils.toEtag(response.version())).body(response);
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("/{dietId}")
   @Operation(summary = "Delete diet")
   public ResponseEntity<Void> delete(
-      @PathVariable Long id,
+      @PathVariable @PositiveOrZero Long dietId,
       @RequestHeader(value = HttpHeaders.IF_MATCH, required = false) String ifMatch) {
 
     long expected = EtagUtils.parseIfMatch(ifMatch);
-    dietService.delete(id, expected);
+    dietService.delete(dietId, expected);
     return ResponseEntity.noContent().build();
   }
 }

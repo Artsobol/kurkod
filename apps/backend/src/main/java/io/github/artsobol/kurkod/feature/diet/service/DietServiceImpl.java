@@ -10,74 +10,98 @@ import io.github.artsobol.kurkod.feature.diet.dto.response.DietResponse;
 import io.github.artsobol.kurkod.feature.diet.entity.Diet;
 import io.github.artsobol.kurkod.feature.diet.mapper.DietMapper;
 import io.github.artsobol.kurkod.feature.diet.repository.DietRepository;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class DietServiceImpl implements DietService {
+public class DietServiceImpl implements DietService, DietFinderService {
 
   private final DietRepository dietRepository;
   private final DietMapper dietMapper;
 
   @Override
-  public DietResponse get(Long id) {
-    return dietMapper.toResponse(getDietById(id));
+  public DietResponse getById(Long dietId) {
+    return dietMapper.toResponse(findByIdOrThrow(dietId));
   }
 
   @Override
-  public List<DietResponse> getAll() {
-    return dietRepository.findAllByIsActiveTrue().stream().map(dietMapper::toResponse).toList();
+  public Page<DietResponse> getPage(Pageable pageable) {
+    log.debug(
+        "Fetching diets: active=true, paged={}, page={}, size={}, offset={}, sort=[{}]",
+        pageable.isPaged(),
+        pageable.isPaged() ? pageable.getPageNumber() : null,
+        pageable.isPaged() ? pageable.getPageSize() : null,
+        pageable.isPaged() ? pageable.getOffset() : null,
+        pageable.getSort());
+    return dietRepository.findAllByIsActiveTrue(pageable).map(dietMapper::toResponse);
   }
 
   @Override
   @Transactional
   @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
   public DietResponse create(DietCreateRequest request) {
-    ensureNotExists(request.getCode());
-    Diet diet = dietMapper.toEntity(request);
+    log.debug("Creating diet: dietCode={}", request.code());
+    ensureNotExists(request.code());
+
+    Diet diet =
+        Diet.create(request.title(), request.description(), request.code(), request.season());
     dietRepository.save(diet);
+
+    log.info("Diet created: dietId={} dietCode={}", diet.getId(), request.code());
     return dietMapper.toResponse(diet);
   }
 
   @Override
   @Transactional
   @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-  public DietResponse update(Long id, DietUpdateRequest request, Long version) {
-    Diet diet = getDietById(id);
+  public DietResponse update(Long dietId, DietUpdateRequest request, Long version) {
+    log.debug("Updating diet: dietId={}", dietId);
+    Diet diet = findByIdOrThrow(dietId);
+
     checkVersion(diet.getVersion(), version);
-    dietMapper.update(diet, request);
+    diet.updateDetails(request.title(), request.description(), request.code(), request.season());
     dietRepository.save(diet);
+
+    log.info("Diet updated: dietId={}", dietId);
     return dietMapper.toResponse(diet);
   }
 
   @Override
   @Transactional
   @PreAuthorize("hasAnyAuthority('DIRECTOR', 'SUPER_ADMIN')")
-  public void delete(Long id, Long version) {
-    Diet diet = getDietById(id);
+  public void delete(Long dietId, Long version) {
+    log.debug("Deleting diet: dietId={}", dietId);
+    Diet diet = findByIdOrThrow(dietId);
     checkVersion(diet.getVersion(), version);
     diet.deactivate();
     dietRepository.save(diet);
+    log.info("Diet deleted: dietId={}", dietId);
+  }
+
+  @Override
+  public Diet findByIdOrThrow(Long dietId) {
+    log.debug("Fetching diet: dietId={}", dietId);
+    return dietRepository
+        .findByIdAndIsActiveTrue(dietId)
+        .orElseThrow(() -> new NotFoundException("diet.not.found", dietId));
   }
 
   protected void ensureNotExists(String code) {
+    log.debug("Fetching dietCode not exists: dietCode={}", code);
     if (existsByCode(code)) {
       throw new DataExistException("diet.already.exists", code);
     }
   }
 
   protected boolean existsByCode(String code) {
+    log.debug("Checking if diet exists: dietCode={}", code);
     return dietRepository.existsByCodeAndIsActiveTrue(code);
-  }
-
-  protected Diet getDietById(Long id) {
-    return dietRepository
-        .findById(id)
-        .orElseThrow(() -> new NotFoundException("diet.not.found", id));
   }
 }
