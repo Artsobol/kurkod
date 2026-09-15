@@ -124,7 +124,7 @@ public class Diet extends AbstractEntity {
   }
 
   public void clearBreeds() {
-    for (Breed breed : breeds) {
+    for (Breed breed : Set.copyOf(breeds)) {
       breed.removeDiet(this);
     }
     breeds.clear();
